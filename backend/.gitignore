@@ -1,0 +1,13 @@
+# Secretos
+.env
+
+# Dependencias
+node_modules/
+backend/bin/
+
+# Binarios de Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib

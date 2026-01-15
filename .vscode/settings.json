@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "aws-1-us-east-2.pooler.supabase.com",
+            "port": 6543,
+            "driver": "PostgreSQL",
+            "name": "Congregacion_Real",
+            "database": "postgres",
+            "username": "postgres.zigdywbtvyvubgnziwtn",
+            "password": "GestionCongregacion_2026"
+        }
+    ]
+}
