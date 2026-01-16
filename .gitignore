@@ -1,0 +1,13 @@
+# Secretos
+.env
+
+# Go
+backend/backend
+*.exe
+
+# React
+node_modules/
+frontend/dist/
+
+# Sistema
+.DS_Store
