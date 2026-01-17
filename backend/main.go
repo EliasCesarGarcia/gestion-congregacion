@@ -29,10 +29,10 @@ func main() {
 	// 2. Cargar el archivo .env
 	err := godotenv.Load()
 	if err != nil {
-		log.Println("Aviso: No se pudo encontrar el archivo .env, se usarán variables de entorno del sistema")
+		log.Println("Aviso: No se pudo encontrar el archivo .env, usando variables del sistema")
 	}
 
-	// 3. Construir la cadena de conexión (DSN) usando los datos del .env
+	// 3. Construir la cadena de conexión (DSN)
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_USER"),
@@ -55,10 +55,11 @@ func main() {
 	// Ruta para que React pida las publicaciones
 	mux.HandleFunc("/api/publicaciones", getPublicaciones)
 
-	// 6. CAMBIO SOLICITADO: Configurar CORS para permitir TODO (Ideal para pruebas de desarrollo)
+	// 6. Configurar CORS (Permitir todo para desarrollo)
 	handler := cors.AllowAll().Handler(mux)
 
-	// 7. Iniciar el servidor especificando la IP local 127.0.0.1 y puerto 8080
+	// 7. INICIAR EL SERVIDOR (Configuración de IP fija para el Proxy)
+	// Forzamos 127.0.0.1 en lugar de ":" para evitar conflictos en Windows
 	direccion := "127.0.0.1:8080"
 	fmt.Println("🚀 Servidor Backend corriendo en http://" + direccion)
 
@@ -72,7 +73,7 @@ func main() {
 func getPublicaciones(w http.ResponseWriter, r *http.Request) {
 	var publicaciones []Publicacion
 
-	// Forzamos a GORM a usar el nombre de tabla exacto
+	// GORM busca en la tabla "pub_catalogo"
 	result := db.Table("pub_catalogo").Find(&publicaciones)
 
 	if result.Error != nil {
