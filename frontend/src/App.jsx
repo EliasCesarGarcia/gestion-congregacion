@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import RutaProtegida from "./components/RutaProtegida";
 import LoginPage from "./pages/LoginPage";
 import PublicacionesPage from "./pages/PublicacionesPage";
+import HomePage from "./pages/HomePage";
 
 function App() {
   return (
@@ -12,9 +13,9 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         
         {/* Rutas que requieren estar logueado */}
-        <Route path="/publicaciones" element={
+        <Route path="/" element={
           <RutaProtegida>
-            <PublicacionesPage />
+            <HomePage />
           </RutaProtegida>
         } />
         
