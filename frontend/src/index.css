@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+@theme {
+  /* Colores Institucionales */
+  --color-jw-navy: #1a335a;
+  --color-jw-blue: #214382;
+  --color-jw-accent: #4a6da7;
+  --color-jw-body: #f5f5f5;
+  --color-jw-card: #ffffff;
+  --color-jw-border: #d1d1d1;
+  
+  /* Tipografía */
+  --font-sans: "Open Sans", ui-sans-serif, system-ui;
+}
+
+/* Aumentar 2 puntos la fuente base (de 16px a 18px) */
+:root {
+  font-size: 112.5%; 
+}
+
+body {
+  @apply bg-jw-body text-gray-900;
+  margin: 0;
+}
