@@ -1,91 +1,48 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { BookOpen, BarChart3, Users, Map, Settings, Calendar } from 'lucide-react';
+import { BookOpen, BarChart3, Map, Calendar, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function HomePage() {
   const { user } = useContext(AppContext);
 
-  // Definimos los módulos para el tablero
   const modulos = [
-    {
-      titulo: 'Publicaciones',
-      desc: 'Suscripciones, pedidos y stock de literatura.',
-      icon: <BookOpen className="w-8 h-8 text-blue-600" />,
-      path: '/publicaciones',
-      color: 'bg-blue-50'
-    },
-    {
-      titulo: 'Informes',
-      desc: 'Carga de actividad mensual y estadísticas.',
-      icon: <BarChart3 className="w-8 h-8 text-green-600" />,
-      path: '/informes',
-      color: 'bg-green-50'
-    },
-    {
-      titulo: 'Reuniones',
-      desc: 'Programa semanal y asignaciones.',
-      icon: <Calendar className="w-8 h-8 text-purple-600" />,
-      path: '/reuniones',
-      color: 'bg-purple-50'
-    },
-    {
-      titulo: 'Predicación',
-      desc: 'Territorios, tarjetas y salidas al campo.',
-      icon: <Map className="w-8 h-8 text-orange-600" />,
-      path: '/predicacion',
-      color: 'bg-orange-50'
-    },
+    { titulo: 'Publicaciones', icon: <BookOpen />, path: '/publicaciones' },
+    { titulo: 'Informes', icon: <BarChart3 />, path: '/informes' },
+    { titulo: 'Reuniones', icon: <Calendar />, path: '/reuniones' },
+    { titulo: 'Predicación', icon: <Map />, path: '/predicacion' },
   ];
 
   return (
-    <div className="max-w-7xl mx-auto p-6 lg:p-12">
-      {/* Sección de Bienvenida */}
-      <header className="mb-12">
-        <h1 className="text-4xl font-black text-gray-900 tracking-tight">
-          ¡Hola, <span className="text-blue-600">{user?.username}</span>! 👋
-        </h1>
-        <p className="text-gray-500 mt-2 text-lg">
-          Bienvenido al sistema de gestión de la congregación.
-        </p>
-      </header>
+    <div className="bg-jw-body min-h-screen">
+      <div className="max-w-7xl mx-auto px-6 py-16">
+        
+        <header className="mb-14 border-b border-jw-border pb-10">
+          <h1 className="text-5xl text-jw-navy font-light tracking-tight mb-4 leading-tight">
+            Bienvenido, <span className="font-medium text-jw-blue">{user?.nombre_completo}</span>
+          </h1>
+          <p className="text-lg text-gray-500 italic max-w-3xl">
+            Acceda a los departamentos para gestionar los asuntos locales de forma eficiente.
+          </p>
+        </header>
 
-      {/* Grid de Módulos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {modulos.map((mod, index) => (
-          <Link 
-            key={index} 
-            to={mod.path}
-            className="group relative bg-white p-8 rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
-          >
-            <div className={`w-16 h-16 ${mod.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-              {mod.icon}
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">{mod.titulo}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{mod.desc}</p>
-            
-            <div className="mt-6 flex items-center text-blue-600 font-bold text-sm">
-              Acceder ahora
-              <svg className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Footer del Dashboard / Acciones Rápidas */}
-      <section className="mt-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[3rem] p-8 lg:p-12 text-white shadow-xl shadow-blue-200">
-        <div className="md:flex items-center justify-between">
-          <div className="mb-8 md:mb-0">
-            <h2 className="text-3xl font-bold mb-2 text-white">Anuncios de la Congregación</h2>
-            <p className="text-blue-100">Mantente al día con las últimas novedades de los departamentos.</p>
-          </div>
-          <button className="bg-white text-blue-700 font-black px-8 py-4 rounded-2xl hover:bg-blue-50 transition-colors shadow-lg">
-            VER ANUNCIOS
-          </button>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          {modulos.map((mod, i) => (
+            <Link key={i} to={mod.path} className="group bg-white border border-jw-border rounded-sm hover:border-jw-blue transition-all shadow-sm hover:shadow-xl flex flex-col">
+              <div className="p-10 flex flex-col items-center flex-grow">
+                <div className="mb-6 text-jw-blue transition-transform group-hover:scale-110">
+                  {React.cloneElement(mod.icon, { size: 44, strokeWidth: 1.2 })}
+                </div>
+                <h3 className="text-xl font-medium text-jw-navy">{mod.titulo}</h3>
+              </div>
+              <div className="bg-jw-body px-6 py-4 flex justify-between items-center group-hover:bg-jw-navy group-hover:text-white transition-colors">
+                <span className="text-xs uppercase font-black tracking-[0.2em]">Entrar</span>
+                <ChevronRight size={20} />
+              </div>
+            </Link>
+          ))}
         </div>
-      </section>
+      </div>
     </div>
   );
 }
