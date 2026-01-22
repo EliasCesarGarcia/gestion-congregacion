@@ -1,33 +1,51 @@
 import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { MapPin, MessageSquare } from 'lucide-react';
+import { MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 function Footer() {
   const { user } = useContext(AppContext);
   if (!user) return null;
 
   return (
-    <footer className="bg-jw-navy text-white py-8 px-6 border-t-4 border-jw-blue">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-        <div className="text-center md:text-left space-y-1">
-          <h3 className="text-xl font-medium">
+    <footer className="w-full bg-jw-navy border-t-4 border-jw-blue text-white py-3 px-4 mt-auto overflow-hidden">
+      {/* Container principal con ancho máximo pero evitando desbordar el viewport */}
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-2">
+        
+        {/* Lado Izquierdo - min-w-0 es vital para que el truncado funcione en Flexbox */}
+        <div className="flex flex-col items-start min-w-0 w-full md:w-auto">
+          <h3 className="text-sm font-medium tracking-tight truncate w-full">
             Congregación {user.congregacion_nombre} 
-            <span className="text-jw-accent text-sm ml-3">({user.numero_congregacion})</span>
+            <span className="text-gray-300 text-[13px] ml-2 font-light shrink-0">
+              ({user.numero_congregacion})
+            </span>
           </h3>
-          <div className="flex items-center justify-center md:justify-start gap-2 text-sm text-gray-400">
-            <MapPin className="w-4 h-4 text-jw-accent" />
-            <p>{user.direccion}, {user.ciudad}, {user.partido}, {user.provincia}, {user.pais}</p>
+          
+          <div className="flex items-center gap-2 text-[11px] sm:text-xs text-gray-200 font-light italic w-full min-w-0">
+            <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+            {/* 'truncate' asegura una sola línea y pone '...' si es muy largo */}
+            <p className="truncate w-full">
+              {user.direccion}, {user.ciudad}, {user.partido}, {user.provincia}, {user.pais}
+            </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-center md:items-end gap-3">
-          <button className="flex items-center gap-2 bg-jw-blue hover:bg-jw-accent text-white px-6 py-2 rounded-sm transition-all text-sm font-bold uppercase tracking-widest border border-white/10 shadow-lg">
-            <MessageSquare className="w-4 h-4" /> Contáctenos
-          </button>
-          <p className="text-[10px] text-gray-500 tracking-[0.3em]">© 2026 GESTIÓN LOCAL TEOCRÁTICA</p>
+        {/* Lado Derecho */}
+        <div className="flex flex-col items-start md:items-end gap-1 w-full md:w-auto shrink-0 pt-1 md:pt-0 border-t border-white/5 md:border-none">
+          <Link 
+            to="/contacto" 
+            className="text-[11px] sm:text-xs text-gray-200 hover:text-white transition-colors font-light"
+          >
+            Contáctenos
+          </Link>
+          <p className="text-[9px] text-gray-300 tracking-[0.2em] uppercase font-light">
+            © 2026 GESTIÓN LOCAL TEOCRÁTICA
+          </p>
         </div>
+        
       </div>
     </footer>
   );
 }
+
 export default Footer;
