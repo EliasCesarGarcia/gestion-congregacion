@@ -3,38 +3,32 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import RutaProtegida from "./components/RutaProtegida";
+
+// Páginas
 import LoginPage from "./pages/LoginPage";
 import PublicacionesPage from "./pages/PublicacionesPage";
 import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage"; // <--- Esta faltaba y es clave
 
 function App() {
   return (
     /**
      * ESTRUCTURA GLOBAL PROFESIONAL:
-     * 1. min-h-screen: Asegura que el sitio ocupe toda la pantalla.
-     * 2. bg-jw-body: Aplica el color de fondo gris suave institucional.
-     * 3. flex-col: Permite que el footer sea empujado al fondo.
-     * 4. overflow-x-hidden: (CRÍTICO) Bloquea el scroll horizontal en toda la App.
+     * bg-jw-body: Color gris suave de jw.org definido en index.css
+     * overflow-x-hidden: Evita el scroll horizontal en móviles
      */
     <div className="min-h-screen bg-jw-body text-gray-900 flex flex-col overflow-x-hidden">
       
-      {/* Barra de Navegación Institucional */}
+      {/* Barra de Navegación Institucional (Título dinámico) */}
       <Navbar />
 
-      {/* 
-          CONTENEDOR PRINCIPAL:
-          - flex-grow: Expande el espacio para que el Footer siempre esté abajo.
-          - w-full overflow-x-hidden: Segunda capa de seguridad contra desbordamientos de texto.
-      */}
+      {/* Contenedor Principal que empuja el Footer al fondo */}
       <main className="flex-grow w-full overflow-x-hidden">
         <Routes>
-          {/* Ruta Pública: Acceso al Login */}
+          {/* RUTA PÚBLICA */}
           <Route path="/login" element={<LoginPage />} />
           
-          {/* 
-              RUTAS PROTEGIDAS:
-              Solo accesibles si el usuario está logueado (gestionado por RutaProtegida.jsx) 
-          */}
+          {/* RUTAS PROTEGIDAS (Requieren Login) */}
           <Route 
             path="/" 
             element={
@@ -53,15 +47,20 @@ function App() {
             } 
           />
 
-          {/* 
-              Próximos módulos a desarrollar:
-              <Route path="/informes" element={<RutaProtegida><InformesPage /></RutaProtegida>} />
-              <Route path="/reuniones" element={<RutaProtegida><ReunionesPage /></RutaProtegida>} />
-          */}
+          {/* RUTA DE PERFIL / ADMINISTRACIÓN DE CUENTA */}
+          <Route 
+            path="/perfil" 
+            element={
+              <RutaProtegida>
+                <ProfilePage />
+              </RutaProtegida>
+            } 
+          />
+
         </Routes>
       </main>
       
-      {/* Pie de Página con datos dinámicos de la congregación */}
+      {/* Footer con datos de la congregación */}
       <Footer />
     </div>
   );
