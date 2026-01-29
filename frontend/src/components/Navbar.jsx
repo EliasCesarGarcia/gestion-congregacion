@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { Menu, Home, User, LogOut, Settings, X, BookOpen } from 'lucide-react';
@@ -8,6 +8,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const closeMenus = () => {
     setIsMenuOpen(false);
@@ -18,6 +19,12 @@ function Navbar() {
     logout();
     closeMenus();
     navigate('/login');
+  };
+
+  const getTitle = () => {
+    if (location.pathname === '/perfil') return "Administración de Cuenta";
+    if (location.pathname === '/publicaciones') return "Módulo Publicaciones";
+    return `Congregación ${user?.congregacion_nombre || ''}`;
   };
 
   const PROJECT_ID = "zigdywbtvyvubgnziwtn";
@@ -48,8 +55,8 @@ function Navbar() {
             <span className="text-sm font-light tracking-wide text-gray-300 hidden lg:block italic">
               Sistema de Gestión
             </span>
-            <span className="text-lg font-medium tracking-tight">
-              Congregación <span className="text-white">{user?.congregacion_nombre}</span>
+            <span className="text-lg font-medium tracking-tight text-white">
+              {getTitle()}
             </span>
           </div>
         </div>
@@ -64,12 +71,13 @@ function Navbar() {
               Hola, <span className="font-medium not-italic">{user?.nombre_completo}</span>
             </span>
             
+            {/* AVATAR PEQUEÑO CON OBJECT-COVER */}
             <div className="w-11 h-11 rounded-full bg-jw-blue border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-md">
               {user?.foto_url ? (
                 <img 
                   src={fotoFinal} 
                   alt="P" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
                   onError={(e) => { e.target.style.display = 'none'; }}
                 />
               ) : null}
@@ -77,10 +85,9 @@ function Navbar() {
             </div>
           </button>
 
-          {/* VENTANA EMERGENTE PERFIL (Más pequeña y compacta) */}
+          {/* VENTANA EMERGENTE PERFIL */}
           {isProfileOpen && (
             <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
-              {/* Encabezado reducido */}
               <div className="p-4 bg-jw-body border-b border-jw-border">
                 <p className="text-lg font-medium leading-tight text-jw-navy">
                   {user?.nombre_completo}
@@ -88,13 +95,11 @@ function Navbar() {
                 <p className="text-xs text-jw-blue italic mt-0.5 font-light">@{user?.username}</p>
               </div>
               
-              {/* Cuerpo del menú con menos padding y gaps */}
               <div className="p-3 space-y-3 text-xs text-gray-700 leading-relaxed italic">
                 <div className="px-1 border-l-2 border-jw-accent pl-2">
                   <p className="font-medium not-italic text-jw-navy text-sm">{user?.congregacion_nombre}</p>
                   <p>{user?.direccion}</p>
                   <p>{user?.ciudad}, {user?.partido}</p>
-                  {/* Cambio solicitado: Eliminado "ID" y puesto entre paréntesis */}
                   <p className="text-jw-blue mt-1 font-bold not-italic tracking-wider uppercase">
                     ({user?.numero_congregacion})
                   </p>
