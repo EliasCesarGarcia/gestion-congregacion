@@ -8,27 +8,19 @@ import RutaProtegida from "./components/RutaProtegida";
 import LoginPage from "./pages/LoginPage";
 import PublicacionesPage from "./pages/PublicacionesPage";
 import HomePage from "./pages/HomePage";
-import ProfilePage from "./pages/ProfilePage"; // <--- Esta faltaba y es clave
+import ProfilePage from "./pages/ProfilePage"; 
+import SecurityTipsPage from "./pages/SecurityTipsPage"; // <--- ESTA LÍNEA FALTABA
 
 function App() {
   return (
-    /**
-     * ESTRUCTURA GLOBAL PROFESIONAL:
-     * bg-jw-body: Color gris suave de jw.org definido en index.css
-     * overflow-x-hidden: Evita el scroll horizontal en móviles
-     */
     <div className="min-h-screen bg-jw-body text-gray-900 flex flex-col overflow-x-hidden">
       
-      {/* Barra de Navegación Institucional (Título dinámico) */}
       <Navbar />
 
-      {/* Contenedor Principal que empuja el Footer al fondo */}
       <main className="flex-grow w-full overflow-x-hidden">
         <Routes>
-          {/* RUTA PÚBLICA */}
           <Route path="/login" element={<LoginPage />} />
           
-          {/* RUTAS PROTEGIDAS (Requieren Login) */}
           <Route 
             path="/" 
             element={
@@ -47,7 +39,6 @@ function App() {
             } 
           />
 
-          {/* RUTA DE PERFIL / ADMINISTRACIÓN DE CUENTA */}
           <Route 
             path="/perfil" 
             element={
@@ -57,10 +48,18 @@ function App() {
             } 
           />
 
+          <Route 
+            path="/seguridad-tips" 
+            element={
+              <RutaProtegida>
+                <SecurityTipsPage />
+              </RutaProtegida>
+            } 
+          />
+
         </Routes>
       </main>
       
-      {/* Footer con datos de la congregación */}
       <Footer />
     </div>
   );
