@@ -1,26 +1,35 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const saved = sessionStorage.getItem('user_session');
+    return saved ? JSON.parse(saved) : null;
+  });
 
-  // Al cargar la app, revisamos si ya había un usuario guardado en la PC
-  useEffect(() => {
-    const savedUser = localStorage.getItem('usuario_congregacion');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+  const logout = useCallback(() => {
+    setUser(null);
+    sessionStorage.removeItem('user_session');
+    window.location.href = '/login';
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    let timer = setTimeout(logout, 10 * 60 * 1000); // 10 min
+    const reset = () => { clearTimeout(timer); timer = setTimeout(logout, 10 * 60 * 1000); };
+    window.addEventListener('mousemove', reset);
+    window.addEventListener('keypress', reset);
+    return () => {
+      window.removeEventListener('mousemove', reset);
+      window.removeEventListener('keypress', reset);
+      clearTimeout(timer);
+    };
+  }, [user, logout]);
 
   const login = (userData) => {
     setUser(userData);
-    localStorage.setItem('usuario_congregacion', JSON.stringify(userData));
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('usuario_congregacion');
+    sessionStorage.setItem('user_session', JSON.stringify(userData));
   };
 
   return (

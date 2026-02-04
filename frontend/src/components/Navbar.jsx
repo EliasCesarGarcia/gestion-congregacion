@@ -3,6 +3,8 @@ import { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 import { Menu, Home, User, LogOut, Settings, X, BookOpen } from 'lucide-react';
 
+//if (!user) return null; // El Navbar no existe hasta que haya login
+
 function Navbar() {
   const { user, logout } = useContext(AppContext);
   const [isMenuOpen, setIsMenuOpen] = useState(false);

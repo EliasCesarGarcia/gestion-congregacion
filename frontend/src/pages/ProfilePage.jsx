@@ -107,24 +107,35 @@ function ProfilePage() {
     } finally { setLoading(false); }
   };
 
-  const processUpdate = async () => {
+  // Dentro de processUpdate en ProfilePage.jsx:
+const processUpdate = async () => {
     setModal({ ...modal, show: false });
     setLoading(true);
     try {
-      await axios.post('/api/update-profile', {
-        persona_id: String(user.persona_id),
-        usuario_id: user.id,
-        campo: editingField,
-        valor: formValues.newValue
-      });
+      if (editingField === 'password') {
+        // Usamos la ruta específica para encriptar la clave
+        await axios.post('/api/reset-password', { 
+            username: user.username, 
+            new_password: formValues.newValue 
+        });
+      } else {
+        // Otros cambios (email, username)
+        await axios.post('/api/update-profile', {
+            persona_id: String(user.persona_id),
+            usuario_id: user.id,
+            campo: editingField,
+            valor: formValues.newValue
+        });
+      }
+      
       login({ ...user, [editingField]: formValues.newValue });
-      setModal({ show: true, type: 'success', title: '¡Hecho!', message: 'Información actualizada.' });
+      setModal({ show: true, type: 'success', title: '¡Hecho!', message: 'Información actualizada correctamente.' });
       setEditingField(null);
       setVerificationStep(0);
     } catch (err) {
-      setModal({ show: true, type: 'error', title: 'Error', message: 'No se pudo actualizar.' });
+      setModal({ show: true, type: 'error', title: 'Error', message: "No se pudo actualizar." });
     } finally { setLoading(false); }
-  };
+};
 
   const handleSaveClick = () => {
     if (editingField === 'email' && !isEmailValid(formValues.newValue)) {
