@@ -49,15 +49,26 @@ function PassInput({ placeholder, show, setShow, value, onChange, isValidMatch }
 
 function EditableRow({ label, value, icon, onEdit }) {
     return (
-      <div className="flex justify-between items-center border-b border-gray-50 pb-4">
-        <div className="text-left flex items-center gap-4">
-          <div className="p-2 bg-jw-body rounded-lg text-gray-400">{icon}</div>
-          <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{label}</p>
-            <p className="text-base text-jw-navy font-medium tracking-tight">{value}</p>
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-100 pb-4 gap-3">
+        <div className="flex items-center gap-4 text-left">
+          <div className="p-2.5 bg-jw-body rounded-xl text-gray-400 shrink-0">
+            {icon}
+          </div>
+          <div className="min-w-0"> {/* min-w-0 evita que el texto rompa el layout */}
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5">
+              {label}
+            </p>
+            <p className="text-sm sm:text-base text-jw-navy font-semibold truncate">
+              {value}
+            </p>
           </div>
         </div>
-        <button onClick={onEdit} className="bg-jw-body px-4 py-2 rounded-lg text-jw-blue font-bold text-[10px] hover:bg-jw-blue hover:text-white transition-all uppercase tracking-widest border border-transparent hover:border-jw-blue italic">Modificar</button>
+        <button 
+          onClick={onEdit} 
+          className="w-full sm:w-auto bg-jw-body px-5 py-2.5 sm:px-4 sm:py-2 rounded-xl text-jw-blue font-bold text-[11px] hover:bg-jw-blue hover:text-white transition-all uppercase tracking-widest border border-jw-border sm:border-transparent hover:border-jw-blue italic shadow-sm sm:shadow-none"
+        >
+          Modificar
+        </button>
       </div>
     );
 }
@@ -121,6 +132,24 @@ function ProfilePage() {
       return () => clearTimeout(delay);
     }
   }, [formValues.newValue, editingField, user.persona_id]);
+
+  
+
+  useEffect(() => {
+  if (window.location.hash === '#seguridad') {
+    // Usamos 'instant' para que no haya desplazamiento visual (parece carga estática)
+    const element = document.getElementById('seguridad');
+    if (element) {
+      // Un micro-delay para asegurar que el DOM procesó los estilos
+      const timer = setTimeout(() => {
+        element.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }
+}, [window.location.hash]); // Se activa cada vez que el hash cambie
+
+
 
   const maskEmail = (email) => {
     if (!email) return "";
@@ -426,25 +455,27 @@ function ProfilePage() {
           </div>
           <div className="p-8 space-y-6 text-sm">
             
-            <div className="pb-4 border-b border-gray-50 opacity-60">
-                <div className="flex items-center gap-4">
-                    <div className="p-2 bg-gray-100 rounded-lg text-gray-400"><Hash size={20}/></div>
-                    <div>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase">ID Personal</p>
-                        <p className="text-base text-jw-navy font-mono">#{user?.persona_id}</p>
-                    </div>
-                </div>
-            </div>
+            {/* BLOQUE: ID */}
+<div className="pb-4 border-b border-gray-50 opacity-60">
+    <div className="flex items-center gap-4">
+        <div className="p-2.5 bg-gray-100 rounded-xl text-gray-400"><Hash size={20}/></div>
+        <div>
+            <p className="text-[10px] font-bold text-gray-400 uppercase">ID Personal</p>
+            <p className="text-base text-jw-navy font-mono">#{user?.persona_id}</p>
+        </div>
+    </div>
+</div>
 
-            <div className="pb-4 border-b border-gray-50 opacity-60">
-                <div className="flex items-center gap-4">
-                    <div className="p-2 bg-gray-100 rounded-lg text-gray-400"><UserCircle size={20}/></div>
-                    <div>
-                        <p className="text-[10px] font-bold text-gray-400 uppercase">Nombre de usuario activo</p>
-                        <p className="text-base text-jw-navy font-medium">@{user?.username}</p>
-                    </div>
-                </div>
-            </div>
+            {/* BLOQUE: USUARIO ACTUAL */}
+<div className="pb-4 border-b border-gray-50 opacity-60">
+    <div className="flex items-center gap-4">
+        <div className="p-2.5 bg-gray-100 rounded-xl text-gray-400"><UserCircle size={20}/></div>
+        <div>
+            <p className="text-[10px] font-bold text-gray-400 uppercase">Nombre de usuario activo</p>
+            <p className="text-base text-jw-navy font-medium">@{user?.username}</p>
+        </div>
+    </div>
+</div>
 
             <div className="group">
                 <EditableRow label="Nombre de Usuario" value="Modificar alias de acceso" icon={<UserCircle size={20}/>} onEdit={() => handleEditClick('username')} />
@@ -469,8 +500,9 @@ function ProfilePage() {
           </div>
         </section>
 
-        <section className="bg-white rounded-xl shadow-sm border border-jw-border p-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-jw-body p-6 rounded-2xl border border-jw-border">
+        {/* SECCIÓN 2: CONSEJOS - Buscala por el texto "Recordatorios de Seguridad" */}
+<section id="seguridad" className="bg-white rounded-xl shadow-sm border border-jw-border p-8 scroll-mt-20">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-jw-body p-6 rounded-2xl border border-jw-border">
                 <div className="text-left">
                     <h3 className="text-jw-navy font-medium flex items-center gap-2 leading-tight">
                         <FileText className="w-5 h-5 text-jw-blue" /> Recordatorios de Seguridad
