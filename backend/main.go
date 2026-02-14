@@ -44,6 +44,11 @@ func main() {
 	// 3. Registro de Rutas
 	mux := http.NewServeMux()
 
+	// Ruta de prueba para confirmar que el backend está vivo
+    mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte("🚀 Backend de Gestión Teocrática funcionando correctamente"))
+    })
+
 	mux.HandleFunc("/api/publicaciones", handlers.GetPublicaciones(db))
 	mux.HandleFunc("/api/login-final", handlers.LoginFinalHandler(db))
 	mux.HandleFunc("/api/identify-user", handlers.IdentifyUserHandler(db))
@@ -69,5 +74,5 @@ func main() {
 	}
 
 	fmt.Println("🚀 Servidor Backend corriendo en el puerto: " + puerto)
-	log.Fatal(http.ListenAndServe(":"+puerto, handler))
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+puerto, handler))
 }
