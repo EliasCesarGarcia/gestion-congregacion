@@ -47,7 +47,10 @@ function EditableRow({ label, value, icon, onEdit }) {
             <p className="text-sm sm:text-base text-jw-navy font-semibold truncate">{value}</p>
           </div>
         </div>
-        <button onClick={onEdit} className="w-full sm:w-auto bg-jw-body px-5 py-2.5 sm:px-4 sm:py-2 rounded-xl text-jw-blue font-bold text-[11px] hover:bg-jw-blue hover:text-white transition-all uppercase tracking-widest border border-jw-border sm:border-transparent hover:border-jw-blue italic shadow-sm sm:shadow-none">
+        <button 
+          onClick={onEdit} 
+          className="w-full sm:w-auto bg-jw-body px-5 py-2.5 sm:px-4 sm:py-2 rounded-xl text-jw-blue font-bold text-[11px] hover:bg-jw-blue hover:text-white transition-all duration-300 hover:scale-105 active:scale-95 uppercase tracking-widest border border-jw-border sm:border-transparent hover:border-jw-blue italic shadow-sm sm:shadow-none"
+        >
           Modificar
         </button>
       </div>
@@ -73,7 +76,6 @@ function ProfilePage() {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   
-  // SE AGREGÓ descripcionLarga AL ESTADO INICIAL
   const [formValues, setFormValues] = useState({ 
     newValue: '', 
     currentPass: '', 
@@ -95,7 +97,7 @@ function ProfilePage() {
     });
   };
 
-const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
+  const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
 
   useEffect(() => {
     axios.get('/api/seguridad-info').then(res => {
@@ -232,7 +234,6 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
     finally { setLoading(false); }
   };
 
-  // --- NUEVAS FUNCIONES PARA EL PANEL ADMIN ---
   const handlePublicarUpdate = async () => {
     setModal({ ...modal, show: false });
     setLoading(true);
@@ -283,7 +284,7 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
                     <div className="space-y-4">
                         <input type="text" className={`w-full p-4 rounded-2xl border-2 transition-all outline-none ${usernameExists ? 'border-orange-400 bg-orange-50 text-jw-navy' : 'border-jw-blue bg-white text-jw-navy'}`} placeholder="Nuevo usuario" value={formValues.newValue} onChange={(e) => {setFormValues({...formValues, newValue: e.target.value}); validateRequirements(e.target.value);}} />
                         <div className="grid grid-cols-2 gap-3 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm"><ReqItem met={reqs.length} text="8+ carac." /><ReqItem met={reqs.upper} text="Mayúscula" /><ReqItem met={reqs.number} text="Número" /><ReqItem met={reqs.symbol} text="Símbolo" /></div>
-                        {usernameExists && <div className="bg-orange-100 p-4 rounded-2xl border border-orange-200"><p className="text-orange-800 text-[11px] font-bold mb-3 flex items-center gap-2"><AlertCircle size={14}/> No disponible. Sugerencias:</p><div className="flex flex-wrap gap-2">{suggestions.map((s, i) => (<button key={i} onClick={() => { setFormValues({...formValues, newValue: s}); validateRequirements(s); setUsernameExists(false); }} className="bg-white text-orange-600 px-3 py-1.5 rounded-full text-xs font-bold border border-orange-300">{s}</button>))}</div></div>}
+                        {usernameExists && <div className="bg-orange-100 p-4 rounded-2xl border border-orange-200"><p className="text-orange-800 text-[11px] font-bold mb-3 flex items-center gap-2"><AlertCircle size={14}/> No disponible. Sugerencias:</p><div className="flex flex-wrap gap-2">{suggestions.map((s, i) => (<button key={i} onClick={() => { setFormValues({...formValues, newValue: s}); validateRequirements(s); setUsernameExists(false); }} className="bg-white text-orange-600 px-3 py-1.5 rounded-full text-xs font-bold border border-orange-300 hover:bg-orange-600 hover:text-white transition-all">{s}</button>))}</div></div>}
                     </div>
                 ) : (
                     <div className="space-y-2">
@@ -292,8 +293,19 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
                     </div>
                 )}
                 <div className="flex gap-2 pt-2">
-                    <button onClick={handleSaveClick} disabled={loading || (editingField === 'username' && usernameExists)} className="flex-1 bg-jw-blue text-white p-3 rounded-xl font-bold text-xs uppercase hover:bg-jw-navy transition-all shadow-md">Confirmar Cambio</button>
-                    <button onClick={() => {setEditingField(null); setVerificationStep(0);}} className="p-3 text-gray-400 text-xs font-bold uppercase hover:text-jw-navy">Cancelar</button>
+                    <button 
+                      onClick={handleSaveClick} 
+                      disabled={loading || (editingField === 'username' && usernameExists)} 
+                      className="flex-1 bg-jw-blue text-white p-3 rounded-xl font-bold text-xs uppercase transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-jw-navy shadow-md"
+                    >
+                      Confirmar Cambio
+                    </button>
+                    <button 
+                      onClick={() => {setEditingField(null); setVerificationStep(0);}} 
+                      className="p-3 text-gray-400 text-xs font-bold uppercase transition-all duration-300 hover:scale-105 active:scale-95 hover:text-jw-navy"
+                    >
+                      Cancelar
+                    </button>
                 </div>
             </div>
         </div>
@@ -320,21 +332,21 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
                     <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-red-600" />
                     <p><b>¡Atención!</b> Su estado pasará a <b>BAJA</b>. No podrá volver a ingresar sin autorización.</p>
                   </div>
-                  <button onClick={() => setVerificationStep(2)} className="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs">ENTIENDO, CONTINUAR</button>
+                  <button onClick={() => setVerificationStep(2)} className="w-full bg-red-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all duration-300 hover:scale-[1.02] active:scale-95 shadow-lg">ENTIENDO, CONTINUAR</button>
                 </div>
               ) : verificationStep === 2 ? (
                 <>
                   <p className="text-gray-500 text-sm mb-6 font-light">Código a:<br/><span className="text-jw-blue font-bold text-lg">{maskEmail(user.email)}</span></p>
-                  <button onClick={handleSendCode} disabled={loading} className="w-full bg-jw-blue text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg">ENVIAR CÓDIGO</button>
+                  <button onClick={handleSendCode} disabled={loading} className="w-full bg-jw-blue text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg transition-all duration-300 hover:scale-[1.02] active:scale-95">ENVIAR CÓDIGO</button>
                 </>
               ) : (
                 <>
                   <p className="text-gray-500 text-sm mb-6 font-light">Ingrese el código de 6 dígitos.</p>
                   <input type="text" maxLength="6" value={pin} className="w-full text-center text-3xl tracking-[0.5em] font-black p-4 bg-jw-body rounded-2xl border-2 border-jw-blue outline-none mb-6 text-jw-navy" onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} />
-                  <button onClick={handleVerifyCode} disabled={loading || pin.length < 6} className="w-full bg-green-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs">VERIFICAR Y CONTINUAR</button>
+                  <button onClick={handleVerifyCode} disabled={loading || pin.length < 6} className="w-full bg-green-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all duration-300 hover:scale-[1.02] active:scale-95">VERIFICAR Y CONTINUAR</button>
                 </>
               )}
-              <button onClick={() => {setEditingField(null); setVerificationStep(0);}} className="mt-6 text-gray-400 text-[10px] font-bold uppercase tracking-widest">Cancelar proceso</button>
+              <button onClick={() => {setEditingField(null); setVerificationStep(0);}} className="mt-6 text-gray-400 text-[10px] font-bold uppercase tracking-widest transition-all hover:text-jw-navy hover:scale-105 active:scale-95">Cancelar proceso</button>
             </div>
           </div>
         </div>
@@ -356,7 +368,6 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
 
         {/* SECCIÓN 2: CONSEJOS Y PANEL ADMIN */}
         <section id="seguridad" className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden scroll-mt-20">
-    {/* CABECERA SIEMPRE VISIBLE */}
     <div className="p-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 bg-jw-body p-6 rounded-2xl border border-jw-border">
             <div className="text-left flex-1">
@@ -369,19 +380,17 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
             </div>
             
             <div className="flex items-center gap-3">
-                {/* Botón Ver Consejos */}
                 <button 
                     onClick={() => navigate('/seguridad-tips')} 
-                    className="bg-jw-blue text-white px-6 py-2.5 rounded-lg text-xs font-bold flex items-center gap-2 hover:bg-jw-navy transition-all shadow-md uppercase shrink-0"
+                    className="bg-jw-blue text-white px-6 py-2.5 rounded-lg text-xs font-bold flex items-center gap-2 transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-jw-navy shadow-md uppercase shrink-0"
                 >
                     Ver Consejos <ArrowRight className="w-4 h-4" />
                 </button>
 
-                {/* Botón Flecha para el Admin (Solo aparece si eres admin) */}
                 {user?.es_admin_local && (
                     <button 
                         onClick={() => setShowAdminBroadcast(!showAdminBroadcast)}
-                        className={`p-2.5 rounded-lg transition-all ${showAdminBroadcast ? 'bg-amber-100 text-amber-600 rotate-180' : 'bg-gray-100 text-gray-400'}`}
+                        className={`p-2.5 rounded-lg transition-all duration-300 hover:scale-110 active:scale-90 ${showAdminBroadcast ? 'bg-amber-100 text-amber-600 rotate-180' : 'bg-gray-100 text-gray-400'}`}
                         title="Panel de Difusión"
                     >
                         <ChevronDown size={20} />
@@ -394,7 +403,6 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
             Si sospecha de un acceso no autorizado, cambie su clave de inmediato en la sección superior.
         </p>
 
-        {/* PANEL ADMIN OCULTO / DESPLEGABLE */}
         {user?.es_admin_local && showAdminBroadcast && (
             <div className="mt-8 p-8 bg-amber-50 border-2 border-dashed border-amber-200 rounded-[2rem] animate-in slide-in-from-top-4 duration-500 text-left">
                 <div className="flex items-center gap-3 mb-6">
@@ -430,7 +438,7 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
                     <button 
                         onClick={triggerConfirmPublicar}
                         disabled={loading}
-                        className="w-full bg-amber-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-xl hover:bg-amber-700 flex items-center justify-center gap-3 transition-all active:scale-95"
+                        className="w-full bg-amber-600 text-white py-5 rounded-2xl font-black uppercase text-xs shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-95 hover:bg-amber-700 flex items-center justify-center gap-3 shadow-amber-200"
                     >
                         {loading ? <Loader2 className="animate-spin" size={20} /> : <Mail size={20} />}
                         DIFUNDIR A LA CONGREGACIÓN
@@ -446,16 +454,32 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
           <div className="p-5 bg-red-600 text-white border-b-4 border-red-800"><h2 className="text-lg font-bold italic flex items-center gap-3"><Trash2 className="w-5 h-5"/> Zona de Peligro</h2></div>
           <div className="p-8 text-jw-navy">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 text-left">
-                <div><h3 className="text-sm font-black text-red-600 uppercase italic">Desactivar mi acceso</h3><p className="text-xs text-gray-400 font-light italic mt-1 leading-tight">Su cuenta pasará a estado de BAJA permanentemente.</p></div>
-                <button onClick={() => handleEditClick('eliminar_cuenta')} className="w-full sm:w-auto bg-red-50 text-red-600 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest border border-red-200 hover:bg-red-600 hover:text-white transition-all shadow-sm italic">ELIMINAR MI CUENTA</button>
+                <div><h3 className="text-sm font-black text-red-600 uppercase italic leading-tight">Desactivar mi acceso</h3><p className="text-xs text-gray-400 font-light italic mt-1 leading-tight">Su cuenta pasará a estado de BAJA permanentemente.</p></div>
+                <button 
+                  onClick={() => handleEditClick('eliminar_cuenta')} 
+                  className="w-full sm:w-auto bg-red-50 text-red-600 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest border border-red-200 transition-all duration-300 hover:scale-105 active:scale-95 hover:bg-red-600 hover:text-white shadow-sm italic"
+                >
+                  ELIMINAR MI CUENTA
+                </button>
             </div>
             {editingField === 'eliminar_cuenta' && verificationStep === 4 && (
                 <div className="mt-8 p-6 bg-red-50 border border-red-200 rounded-3xl animate-in slide-in-from-bottom-4 text-left">
                     <div className="flex items-center gap-2 mb-4 text-red-600 font-bold text-[10px] uppercase italic"><ShieldCheck size={14}/> Verificado</div>
                     <p className="text-red-800 text-sm font-light italic mb-6 leading-relaxed">Ha verificado mediante PIN. Al confirmar, su sesión se cerrará inmediatamente.</p>
                     <div className="flex flex-col sm:flex-row gap-3">
-                        <button onClick={processDeleteAccountFinal} disabled={loading} className="flex-1 bg-red-600 text-white p-4 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl hover:bg-red-700">CONFIRMO ELIMINACIÓN</button>
-                        <button onClick={() => {setEditingField(null); setVerificationStep(0);}} className="p-4 text-gray-400 font-bold uppercase text-[10px]">Cancelar</button>
+                        <button 
+                          onClick={processDeleteAccountFinal} 
+                          disabled={loading} 
+                          className="flex-1 bg-red-600 text-white p-4 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-95 hover:bg-red-700"
+                        >
+                          CONFIRMO ELIMINACIÓN
+                        </button>
+                        <button 
+                          onClick={() => {setEditingField(null); setVerificationStep(0);}} 
+                          className="p-4 text-gray-400 font-bold uppercase text-[10px] transition-all duration-300 hover:scale-105 active:scale-95 hover:text-jw-navy"
+                        >
+                          Cancelar
+                        </button>
                     </div>
                 </div>
             )}
@@ -471,7 +495,12 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
                 {loading ? <Loader2 className="w-10 h-10 text-jw-blue animate-spin"/> : user?.foto_url ? <img src={`${urlBase}${user.foto_url}?v=${imgTimestamp}`} alt="P" className="w-full h-full object-cover object-center" /> : <User className="w-16 h-16 text-gray-300"/>}
               </div>
               <input type="file" ref={fileInputRef} onChange={handleUpdateImage} className="hidden" accept="image/*"/>
-              <button onClick={() => fileInputRef.current.click()} className="absolute bottom-2 right-2 bg-jw-blue text-white p-3 rounded-full shadow-lg hover:scale-110 transition-all"><Camera className="w-5 h-5"/></button>
+              <button 
+                onClick={() => fileInputRef.current.click()} 
+                className="absolute bottom-2 right-2 bg-jw-blue text-white p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 active:scale-90 shadow-blue-500/50"
+              >
+                <Camera className="w-5 h-5"/>
+              </button>
             </div>
             <div className="flex-1 space-y-6 pt-4 w-full text-jw-navy">
               <div><label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Nombre Completo</label><p className="text-2xl font-medium leading-tight">{user?.nombre_completo}</p></div>
@@ -487,7 +516,13 @@ const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
                     <AddressLine icon={<Globe />} value={user?.region} label="Región" />
                 </div>
               </div>
-              <div className="bg-jw-body p-6 rounded-2xl border border-jw-border flex items-start gap-4"><HelpCircle className="w-6 h-6 text-jw-blue shrink-0 mt-1" /><div className="text-[13px] text-gray-600 leading-relaxed italic"><p className="font-bold not-italic mb-1 leading-tight text-sm">¿Necesitas ayuda?</p>Pídale ayuda al <span className="text-jw-blue font-medium not-italic">Anciano Coordinador</span>, <span className="text-jw-blue font-medium not-italic">Anciano Secretario</span> o al <span className="text-jw-blue font-medium not-italic">Anciano de Servicio</span> de su congregación.</div></div>
+              <div className="bg-jw-body p-6 rounded-2xl border border-jw-border flex items-start gap-4">
+                <HelpCircle className="w-6 h-6 text-jw-blue shrink-0 mt-1" />
+                <div className="text-[13px] text-gray-600 leading-relaxed italic">
+                  <p className="font-bold not-italic text-jw-navy mb-1 leading-tight text-sm">¿Necesitas ayuda?</p>
+                  Pídale ayuda al <span className="text-jw-blue font-medium not-italic">Anciano Coordinador</span>, <span className="text-jw-blue font-medium not-italic">Anciano Secretario</span> o al <span className="text-jw-blue font-medium not-italic">Anciano de Servicio</span> de su congregación.
+                </div>
+              </div>
             </div>
           </div>
         </section>
