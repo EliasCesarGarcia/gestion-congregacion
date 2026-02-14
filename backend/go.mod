@@ -13,9 +13,9 @@ require (
 	github.com/lib/pq v1.10.9 // indirect
 	github.com/resend/resend-go/v2 v2.28.0 // indirect
 	github.com/rs/cors v1.11.1 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/text v0.21.0 // indirect
+	golang.org/x/crypto v0.47.0 // indirect
+	golang.org/x/sync v0.19.0 // indirect
+	golang.org/x/text v0.33.0 // indirect
 	gorm.io/driver/postgres v1.6.0 // indirect
 	gorm.io/gorm v1.31.1 // indirect
 )
