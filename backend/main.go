@@ -40,9 +40,9 @@ func main() {
 	// Esto evita el error de "Max client connections reached"
 	sqlDB, err := db.DB()
 	if err == nil {
-		sqlDB.SetMaxIdleConns(2)           // Máximo de conexiones inactivas
-		sqlDB.SetMaxOpenConns(3)           // Máximo de conexiones abiertas totales
-		sqlDB.SetConnMaxLifetime(0)        // Las conexiones no expiran por tiempo
+		sqlDB.SetMaxIdleConns(2)    // Máximo de conexiones inactivas
+		sqlDB.SetMaxOpenConns(3)    // Máximo de conexiones abiertas totales
+		sqlDB.SetConnMaxLifetime(0) // Las conexiones no expiran por tiempo
 	}
 	// --------------------------------------------------
 
@@ -51,10 +51,12 @@ func main() {
 	// 3. Registro de Rutas
 	mux := http.NewServeMux()
 
-	// Ruta de prueba para confirmar que el backend está vivo
-    mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        w.Write([]byte("🚀 Backend de Gestión Teocrática funcionando correctamente"))
-    })
+	// Ruta de salud mejorada para que Render sepa que despertamos rápido
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
 
 	mux.HandleFunc("/api/publicaciones", handlers.GetPublicaciones(db))
 	mux.HandleFunc("/api/login-final", handlers.LoginFinalHandler(db))
