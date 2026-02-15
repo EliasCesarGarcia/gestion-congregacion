@@ -1,9 +1,15 @@
+/**
+ * ARCHIVO: Navbar.jsx
+ * UBICACIÓN: src/components/Navbar.jsx
+ * DESCRIPCIÓN: Barra de navegación principal del sistema. 
+ * Maneja el menú lateral de módulos, el título dinámico según la ruta 
+ * y el acceso rápido al perfil del usuario con datos de congregación.
+ */
+
 import { useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
-import { Menu, Home, User, LogOut, Settings, X, BookOpen } from 'lucide-react';
-
-//if (!user) return null; // El Navbar no existe hasta que haya login
+import { Menu, Home, User, LogOut, Settings, X, BookOpen, ChevronDown } from 'lucide-react';
 
 function Navbar() {
   const { user, logout } = useContext(AppContext);
@@ -26,30 +32,40 @@ function Navbar() {
   const getTitle = () => {
     if (location.pathname === '/perfil') return "Administración de Cuenta";
     if (location.pathname === '/publicaciones') return "Módulo Publicaciones";
+    if (location.pathname === '/seguridad-tips') return "Seguridad Digital";
     return `Congregación ${user?.congregacion_nombre || ''}`;
   };
 
   const PROJECT_ID = "zigdywbtvyvubgnziwtn";
   const BUCKET_NAME = "People_profile";
   
+  // URL de la foto con truco de "Cache-Buster" para que se actualice al instante
   const fotoFinal = user?.foto_url 
-    ? `https://${PROJECT_ID}.supabase.co/storage/v1/object/public/${BUCKET_NAME}/${user.foto_url}`
+    ? `https://${PROJECT_ID}.supabase.co/storage/v1/object/public/${BUCKET_NAME}/${user.foto_url}?t=${Date.now()}`
     : null;
 
   return (
-    <nav className="bg-jw-navy text-white sticky top-0 z-50 h-16 flex items-center shadow-lg px-2 sm:px-6">
+    // sticky top-0 y z-50 mantienen la barra fija arriba de todo al hacer scroll
+    <nav className="bg-jw-navy text-white sticky top-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full">
       {(isMenuOpen || isProfileOpen) && (
         <div className="fixed inset-0 z-40 bg-transparent" onClick={closeMenus}></div>
       )}
 
       <div className="w-full flex items-center justify-between">
-        {/* IZQUIERDA */}
+        {/* LADO IZQUIERDO: Menú y Home */}
         <div className="flex items-center z-50">
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 hover:bg-white/10 rounded-md transition-colors mr-1">
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            className="p-2 hover:bg-white/10 rounded-md transition-all active:scale-90 mr-1"
+          >
             <Menu className="w-6 h-6" />
           </button>
           
-          <NavLink to="/" onClick={closeMenus} className="p-2 hover:bg-white/10 rounded-md transition-colors mr-3 text-jw-accent">
+          <NavLink 
+            to="/" 
+            onClick={closeMenus} 
+            className="p-2 hover:bg-white/10 rounded-md transition-all active:scale-90 mr-3 text-jw-accent"
+          >
             <Home className="w-6 h-6" />
           </NavLink>
 
@@ -57,71 +73,73 @@ function Navbar() {
             <span className="text-sm font-light tracking-wide text-gray-300 hidden lg:block italic">
               Sistema de Gestión
             </span>
-            <span className="text-lg font-medium tracking-tight text-white">
+            <span className="text-base sm:text-lg font-medium tracking-tight text-white truncate max-w-[150px] sm:max-w-none">
               {getTitle()}
             </span>
           </div>
         </div>
 
-        {/* DERECHA */}
+        {/* LADO DERECHO: Perfil de Usuario */}
         <div className="relative z-50">
           <button 
             onClick={() => setIsProfileOpen(!isProfileOpen)} 
-            className="flex items-center gap-4 p-1 hover:bg-white/10 rounded-full transition-all border border-transparent"
+            className="flex items-center gap-2 sm:gap-4 p-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
           >
             <span className="hidden md:block text-base font-light italic">
-              Hola, <span className="font-medium not-italic">{user?.nombre_completo}</span>
+              Hola, <span className="font-medium not-italic">{user?.nombre_completo?.split(' ')[0]}</span>
             </span>
             
-            {/* AVATAR PEQUEÑO CON OBJECT-COVER */}
-            <div className="w-11 h-11 rounded-full bg-jw-blue border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-md">
+            {/* AVATAR CON ACTUALIZACIÓN EN TIEMPO REAL */}
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-jw-blue border-2 border-white/30 flex items-center justify-center overflow-hidden shadow-md">
               {user?.foto_url ? (
                 <img 
                   src={fotoFinal} 
-                  alt="P" 
+                  alt="Perfil" 
                   className="w-full h-full object-cover object-center"
-                  onError={(e) => { e.target.style.display = 'none'; }}
+                  onError={(e) => { e.target.src = ""; }} 
                 />
-              ) : null}
-              <User className="w-6 h-6 text-white/50" />
+              ) : (
+                <User className="w-6 h-6 text-white/50" />
+              )}
             </div>
           </button>
 
-          {/* VENTANA EMERGENTE PERFIL */}
+          {/* DESPLEGABLE DE PERFIL */}
           {isProfileOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="p-4 bg-jw-body border-b border-jw-border">
-                <p className="text-lg font-medium leading-tight text-jw-navy">
+                <p className="text-base font-bold leading-tight text-jw-navy">
                   {user?.nombre_completo}
                 </p>
                 <p className="text-xs text-jw-blue italic mt-0.5 font-light">@{user?.username}</p>
               </div>
               
-              <div className="p-3 space-y-3 text-xs text-gray-700 leading-relaxed italic">
-                <div className="px-1 border-l-2 border-jw-accent pl-2">
-                  <p className="font-medium not-italic text-jw-navy text-sm">{user?.congregacion_nombre}</p>
-                  <p>{user?.direccion}</p>
+              <div className="p-4 space-y-3 text-xs text-gray-700 leading-relaxed italic">
+                <div className="px-1 border-l-4 border-jw-accent pl-3">
+                  <p className="font-bold not-italic text-jw-navy text-sm mb-1">{user?.congregacion_nombre}</p>
+                  <p className="font-medium">{user?.direccion}</p>
                   <p>{user?.ciudad}, {user?.partido}</p>
-                  <p className="text-jw-blue mt-1 font-bold not-italic tracking-wider uppercase">
-                    ({user?.numero_congregacion})
+                  <p className="text-gray-400">{user?.provincia}, {user?.pais}</p>
+                  <p className="text-jw-blue mt-2 font-black not-italic tracking-widest uppercase text-[10px]">
+                    N° {user?.numero_congregacion}
                   </p>
                 </div>
                 
-                <hr className="border-jw-border" />
+                <hr className="border-jw-border my-2" />
                 
-                <div className="space-y-0.5">
+                <div className="space-y-1">
                   <button 
                     onClick={() => {navigate('/perfil'); closeMenus();}} 
-                    className="w-full flex items-center gap-3 p-2 hover:bg-jw-body rounded-lg text-sm transition-all text-gray-600 group text-left font-light"
+                    className="w-full flex items-center gap-3 p-2.5 hover:bg-jw-body rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
                   >
-                    <Settings className="w-4 h-4 text-gray-400 group-hover:text-jw-blue" /> 
+                    <Settings className="w-4 h-4 text-gray-400 group-hover:text-jw-blue transition-colors" /> 
                     <span>Administrar cuenta</span>
                   </button>
                   <button 
                     onClick={handleLogout} 
-                    className="w-full flex items-center gap-3 p-2 hover:bg-red-50 rounded-lg text-sm transition-all text-red-600 group text-left font-light"
+                    className="w-full flex items-center gap-3 p-2.5 hover:bg-red-50 rounded-xl text-sm transition-all text-red-600 group text-left font-medium active:scale-95"
                   >
-                    <LogOut className="w-4 h-4 text-red-400 group-hover:text-red-600" /> 
+                    <LogOut className="w-4 h-4 text-red-400 group-hover:text-red-600 transition-colors" /> 
                     <span>Cerrar sesión</span>
                   </button>
                 </div>
@@ -131,11 +149,14 @@ function Navbar() {
         </div>
       </div>
 
-      {/* MENÚ LATERAL */}
-      <div className={`fixed left-0 top-0 h-full w-72 bg-jw-body text-gray-800 z-[60] shadow-2xl transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-4 bg-jw-navy text-white flex justify-between items-center shadow-lg">
-          <span className="text-base tracking-widest font-light uppercase italic">Navegación</span>
-          <button onClick={() => setIsMenuOpen(false)}>
+      {/* MENÚ LATERAL (SIDEBAR) */}
+      <div className={`fixed left-0 top-0 h-full w-72 bg-white text-gray-800 z-[110] shadow-2xl transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="p-5 bg-jw-navy text-white flex justify-between items-center shadow-lg border-b-4 border-jw-blue">
+          <div className="flex items-center gap-2">
+            <ShieldCheck size={20} className="text-jw-accent" />
+            <span className="text-sm tracking-widest font-black uppercase italic">Navegación</span>
+          </div>
+          <button onClick={() => setIsMenuOpen(false)} className="hover:bg-white/10 p-1 rounded-full transition-colors">
             <X className="w-6 h-6 text-gray-300" />
           </button>
         </div>
@@ -143,14 +164,14 @@ function Navbar() {
           <NavLink 
             to="/publicaciones" 
             onClick={closeMenus} 
-            className={({isActive}) => `flex items-center gap-4 p-3 rounded-lg text-base transition-all border ${
+            className={({isActive}) => `flex items-center gap-4 p-4 rounded-xl text-base font-medium transition-all border active:scale-95 ${
               isActive 
                 ? 'bg-jw-blue text-white border-jw-blue shadow-lg' 
-                : 'bg-white border-gray-100 text-gray-600 hover:bg-jw-gray_hover'
+                : 'bg-white border-gray-100 text-gray-600 hover:bg-jw-body hover:border-jw-blue/20'
             }`}
           >
             <BookOpen className="w-5 h-5" />
-            <span className="font-light">Publicaciones</span>
+            <span>Publicaciones</span>
           </NavLink>
         </div>
       </div>
@@ -158,4 +179,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default Navbar;s
