@@ -30,6 +30,24 @@ function LoginPage() {
 
   useEffect(() => { if (user) window.location.href = '/'; }, [user]);
 
+  // Añade este useEffect después de los otros que ya tienes
+useEffect(() => {
+  // Intentar capturar datos si el navegador autocompleta al cargar
+  const timer = setTimeout(() => {
+    const userField = document.querySelector('input[placeholder="Usuario"]');
+    const passField = document.querySelector('input[placeholder="Contraseña"]');
+    
+    if (userField?.value || passField?.value) {
+      setInputs(prev => ({
+        ...prev,
+        username: userField?.value || prev.username,
+        password: passField?.value || prev.password
+      }));
+    }
+  }, 500);
+  return () => clearTimeout(timer);
+}, [step]);
+
   // --- VARIABLES DE VALIDACIÓN (DEFINIDAS AL INICIO PARA EVITAR PANTALLA EN BLANCO) ---
   const hasUpper = /[A-Z]/.test(inputs.password);
   const hasNumber = /\d/.test(inputs.password);
@@ -143,7 +161,7 @@ function LoginPage() {
                 <button onClick={()=>setShowPass(!showPass)} className="absolute right-4 top-4 text-gray-400">{showPass ? <EyeOff size={16}/> : <Eye size={16}/>}</button>
               </div>
               {errorMsg && <p className="text-[10px] text-red-500 text-center font-bold italic">{errorMsg}</p>}
-              <button onClick={handleLoginDirect} disabled={loading || !inputs.username} className="w-full bg-jw-blue text-white py-4 rounded-2xl font-bold text-xs tracking-widest uppercase shadow-lg disabled:opacity-30">Entrar</button>
+              <button onClick={handleLoginDirect} disabled={loading} className="w-full bg-jw-blue text-white py-4 rounded-2xl font-bold text-xs tracking-widest uppercase shadow-lg disabled:opacity-30">Entrar</button>
               <div className="text-center pt-1 space-y-2 text-[10px] text-gray-400 font-bold uppercase tracking-tighter cursor-pointer italic">
                 <p onClick={() => { setRecoveryType('user'); setStep('identify'); }} className="hover:text-jw-blue transition-all">¿Olvidó su usuario?</p>
                 <p onClick={() => { setRecoveryType('pass'); setStep('identify'); }} className="hover:text-jw-blue transition-all">¿Olvidó su contraseña?</p>
