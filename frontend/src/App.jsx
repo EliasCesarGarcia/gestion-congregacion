@@ -17,7 +17,7 @@ function App() {
       
       <Navbar />
 
-      <main className="flex-grow w-full overflow-x-hidden">
+      <main className="flex-grow w-full pt-16 overflow-x-hidden">
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           
