@@ -21,23 +21,30 @@ func main() {
 		log.Println("Aviso: No se pudo encontrar el archivo .env (Ignorar si estás en Render)")
 	}
 
-	// 1. Construimos la cadena de conexión en formato URI (Más robusta para la nube)
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=require",
+	// 1. Construimos la cadena de conexión (Usamos el puerto 6543 del Pooler)
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=require&prepare_threshold=0",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_PORT"),
 		os.Getenv("DB_NAME"))
 
-	// 2. Conexión a la base de datos (Una sola vez)
-	db, err := gorm.Open(postgres.New(postgres.Config{
-		DSN:                  dsn,
-		PreferSimpleProtocol: true, // Importante para Supabase Pooler
-	}), &gorm.Config{})
+	// 2. Conexión a la base de datos
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal("❌ Error al conectar a la base de datos:", err)
 	}
+
+	// --- NUEVO: CONFIGURACIÓN DE POOL DE CONEXIONES ---
+	// Esto evita el error de "Max client connections reached"
+	sqlDB, err := db.DB()
+	if err == nil {
+		sqlDB.SetMaxIdleConns(2)           // Máximo de conexiones inactivas
+		sqlDB.SetMaxOpenConns(3)           // Máximo de conexiones abiertas totales
+		sqlDB.SetConnMaxLifetime(0)        // Las conexiones no expiran por tiempo
+	}
+	// --------------------------------------------------
 
 	fmt.Println("✅ ¡Conexión exitosa a Supabase!")
 
