@@ -133,11 +133,11 @@ function SecurityTipsPage() {
             <ShieldCheck size={30} className="sm:w-[40px] sm:h-[40px]" />
           </motion.div>
           <div className="space-y-1">
-            <h2 className="text-xl sm:text-2xl font-light italic text-sky-900 leading-tight">
+            <h2 className="text-2x1 sm:text-2xl font-light italic text-sky-900 leading-tight">
               Protegemos lo que{" "}
               <span className="font-black text-sky-700">más importa.</span>
             </h2>
-            <p className="text-slate-550 max-w-lg mx-auto leading-tight text-[12px] sm:text-base font-light italic">
+            <p className="text-slate-550 max-w-lg mx-auto leading-tight text-[14px] sm:text-base font-light italic">
               "La seguridad no es un producto, es un hábito". Guía actualizada
               para tu protección digital.
             </p>
@@ -164,15 +164,15 @@ function SecurityTipsPage() {
                 <Smartphone size={24} className="sm:w-[32px] sm:h-[32px]" />
               </motion.div>
               <div className="space-y-2 flex-1 text-left">
-                <h3 className="text-sm sm:text-lg font-black uppercase italic text-purple-900 tracking-tight">
+                <h3 className="text-xl sm:text-lg font-black uppercase italic text-purple-900 tracking-tight">
                   1. El Perímetro Físico
                 </h3>
-                <p className="text-[11px] sm:text-sm text-slate-600 leading-snug">
+                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
                   Tu móvil es la llave maestra de tu identidad. Un equipo sin
                   bloqueo es una puerta abierta a tu vida privada.
                 </p>
                 <div className="bg-slate-50 p-3 sm:p-4 rounded-lg border border-slate-100 space-y-2">
-                  <p className="text-[8px] sm:text-[12px] font-bold text-purple-700 uppercase tracking-widest">
+                  <p className="text-[14px] sm:text-[12px] font-bold text-purple-700 uppercase tracking-widest">
                     Ejemplos de blindaje:
                   </p>
                   <ul className="space-y-3 text-left mt-3">
