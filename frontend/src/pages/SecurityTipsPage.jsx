@@ -133,7 +133,7 @@ function SecurityTipsPage() {
             <ShieldCheck size={30} className="sm:w-[40px] sm:h-[40px]" />
           </motion.div>
           <div className="space-y-1">
-            <h2 className="text-lg sm:text-2xl font-light italic text-sky-900 leading-tight">
+            <h2 className="text-xl sm:text-2xl font-light italic text-sky-900 leading-tight">
               Protegemos lo que{" "}
               <span className="font-black text-sky-700">más importa.</span>
             </h2>
