@@ -133,11 +133,11 @@ function SecurityTipsPage() {
             <ShieldCheck size={30} className="sm:w-[40px] sm:h-[40px]" />
           </motion.div>
           <div className="space-y-1">
-            <h2 className="text-2x1 sm:text-2xl font-light italic text-sky-900 leading-tight">
+            <h2 className="text-3x1 sm:text-2xl font-light italic text-sky-900 leading-tight">
               Protegemos lo que{" "}
               <span className="font-black text-sky-700">más importa.</span>
             </h2>
-            <p className="text-slate-550 max-w-lg mx-auto leading-tight text-[14px] sm:text-base font-light italic">
+            <p className="text-slate-550 max-w-lg mx-auto leading-tight text-[16px] sm:text-base font-light italic">
               "La seguridad no es un producto, es un hábito". Guía actualizada
               para tu protección digital.
             </p>
@@ -194,7 +194,7 @@ function SecurityTipsPage() {
                         <span className="shrink-0 text-xl sm:text-2xl leading-none text-purple-500 mt-[-8px] font-black select-none">
                           •
                         </span>
-                        <p className="text-[12px] sm:text-[14px] leading-snug text-left">
+                        <p className="text-[14px] sm:text-[14px] leading-snug text-left">
                           <span className="font-bold text-slate-800">
                             {item.t}
                           </span>{" "}
@@ -227,10 +227,10 @@ function SecurityTipsPage() {
                 <Key size={24} className="sm:w-[32px] sm:h-[32px]" />
               </motion.div>
               <div className="space-y-2 flex-1 min-w-0 text-left">
-                <h3 className="text-sm sm:text-lg font-black uppercase italic text-sky-900 tracking-tight">
+                <h3 className="text-xl sm:text-lg font-black uppercase italic text-sky-900 tracking-tight">
                   2. Claves de Alto Impacto
                 </h3>
-                <p className="text-[11px] sm:text-sm text-slate-600 leading-snug">
+                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
                   Evita usar datos obvios. La mayoría de los ataques ocurren por
                   contraseñas débiles o repetidas.
                 </p>
@@ -275,19 +275,19 @@ function SecurityTipsPage() {
                 <MousePointer2 size={24} className="sm:w-[32px] sm:h-[32px]" />
               </motion.div>
               <div className="space-y-2 flex-1 text-left">
-                <h3 className="text-sm sm:text-lg font-black uppercase italic text-orange-900 tracking-tight">
+                <h3 className="text-xl sm:text-lg font-black uppercase italic text-orange-900 tracking-tight">
                   3. Detectando el Anzuelo
                 </h3>
-                <p className="text-[11px] sm:text-sm text-slate-600 leading-snug">
+                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
                   Los criminales fingen ser soporte técnico o bancos para robar
                   tus datos mediante el miedo.
                 </p>
                 <div className="border border-orange-200 p-3 sm:p-4 rounded-lg bg-orange-50/30 text-left">
-                  <p className="text-[10px] sm:text-xs font-bold text-orange-800 italic mb-2">
+                  <p className="text-[14px] sm:text-xs font-bold text-orange-800 italic mb-2">
                     Identifica la estafa:
                   </p>
                   <div className="border border-orange-200 p-4 rounded-lg bg-orange-50/30 text-left mt-3">
-                    <p className="text-[11px] sm:text-sm font-bold text-orange-800 italic mb-3">
+                    <p className="text-[14px] sm:text-sm font-bold text-orange-800 italic mb-3">
                       Identifica la estafa:
                     </p>
                     <ul className="space-y-3">
@@ -309,7 +309,7 @@ function SecurityTipsPage() {
                           <span className="shrink-0 text-xl sm:text-2xl leading-none text-orange-500 mt-[-7px] font-black select-none">
                             •
                           </span>
-                          <p className="text-[12px] sm:text-[14px] leading-snug text-left">
+                          <p className="text-[14px] sm:text-[14px] leading-snug text-left">
                             <span className="font-bold text-slate-800">
                               {item.t}
                             </span>{" "}
@@ -342,10 +342,10 @@ function SecurityTipsPage() {
               <Users size={24} className="sm:w-[32px] sm:h-[32px]" />
             </motion.div>
             <div className="space-y-2 flex-1 text-left">
-              <h3 className="text-sm sm:text-lg font-black uppercase italic text-sky-300 tracking-tight">
+              <h3 className="text-xl sm:text-lg font-black uppercase italic text-sky-300 tracking-tight">
                 4. El Legado de los Hijos
               </h3>
-              <p className="text-[11px] sm:text-sm text-slate-300 leading-snug font-light">
+              <p className="text-[14px] sm:text-sm text-slate-300 leading-snug font-light">
                 Los niños no tienen malicia para detectar trampas. Enséñales que
                 lo que se sube, se queda.
               </p>
@@ -389,15 +389,15 @@ function SecurityTipsPage() {
                 <HardDrive size={24} className="sm:w-[32px] sm:h-[32px]" />
               </motion.div>
               <div className="space-y-2 flex-1 text-left">
-                <h3 className="text-sm sm:text-lg font-black uppercase italic text-emerald-900 tracking-tight">
+                <h3 className="text-xl sm:text-lg font-black uppercase italic text-emerald-900 tracking-tight">
                   5. Supervivencia de Datos
                 </h3>
-                <p className="text-[11px] sm:text-sm text-slate-600 leading-snug">
+                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
                   Un virus puede bloquear tus archivos. La única copia segura es
                   la que está físicamente desconectada.
                 </p>
                 <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-100 italic text-left">
-                  <p className="text-[12px] sm:text-[14px] text-slate-500 leading-relaxed">
+                  <p className="text-[14px] sm:text-[14px] text-slate-500 leading-relaxed">
                     Una vez al mes, copia tus archivos a un disco externo y{" "}
                     <b>desconéctalo</b>.
                   </p>
@@ -415,10 +415,10 @@ function SecurityTipsPage() {
               whileInView={{ opacity: 1 }}
               className="bg-slate-200 p-4 rounded-xl border border-sky-100 text-left overflow-hidden"
             >
-              <h4 className="text-sky-900 font-black uppercase text-[8px] sm:text-[9px] mb-1.5 flex items-center gap-2 italic">
+              <h4 className="text-sky-900 font-black uppercase text-[14px] sm:text-[9px] mb-1.5 flex items-center gap-2 italic">
                 <AlertTriangle size={12} /> Actualización Especial:
               </h4>
-              <p className="text-[10px] sm:text-xs text-sky-800 leading-snug italic font-light">
+              <p className="text-[14px] sm:text-xs text-sky-800 leading-snug italic font-light">
                 {info.contenido}
               </p>
             </motion.div>
@@ -438,7 +438,7 @@ function SecurityTipsPage() {
             ACEPTO Y VUELVO <CheckCircle size={16} />
           </motion.button>
 
-          <p className="text-[8px] sm:text-[10px] text-slate-400 uppercase font-normal tracking-[0.1em] px-4 leading-tight">
+          <p className="text-[12px] sm:text-[10px] text-slate-400 uppercase font-normal tracking-[0.1em] px-4 leading-tight">
             Gestión Local Teocrática • Seguridad 2.0
           </p>
         </section>
