@@ -57,7 +57,11 @@ function Navbar() {
      * CONTENEDOR PRINCIPAL (FIXED)
      * Se mantiene fijo arriba de todo. pt-16 en App.jsx compensa este espacio.
      */
-    <nav className="bg-jw-navy text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full">
+    // Cambia la etiqueta <nav> actual por esta:
+<nav 
+  className="bg-jw-navy text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full"
+  style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}
+>
       
       {/* Fondo invisible para cerrar menús al hacer clic fuera */}
       {(isMenuOpen || isProfileOpen) && (

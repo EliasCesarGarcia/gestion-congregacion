@@ -10,13 +10,20 @@
   --color-jw-border: #d1d1d1;
 }
 
-/* Forzar el tamaño de fuente base en el navegador */
-html {
-  font-size: 112.5%; /* Esto sube la base de 16px a 18px automáticamente */
+/* --- MODIFICACIÓN AQUÍ --- */
+html, body {
+  font-size: 112.5%;
+  overscroll-behavior-y: none; /* Desactiva el rebote elástico arriba y abajo */
+  height: 100%;
 }
 
 body {
   @apply bg-jw-body text-gray-900 antialiased;
   max-width: 100vw;
   overflow-x: hidden;
+  position: relative; /* Ayuda a fijar elementos fixed */
+}
+
+#root {
+  height: 100%;
 }
