@@ -133,7 +133,7 @@ function SecurityTipsPage() {
             <ShieldCheck size={30} className="sm:w-[40px] sm:h-[40px]" />
           </motion.div>
           <div className="space-y-1">
-            <h2 className="text-3x1 sm:text-2xl font-light italic text-sky-900 leading-tight">
+            <h2 className="text-2x1 sm:text-2xl font-light italic text-sky-900 leading-tight">
               Protegemos lo que{" "}
               <span className="font-black text-sky-700">más importa.</span>
             </h2>
@@ -433,7 +433,7 @@ function SecurityTipsPage() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleBack}
-            className="bg-sky-600 text-white w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-3.5 rounded-full font-black uppercase tracking-widest text-[9px] sm:text-xs shadow-lg flex items-center justify-center gap-2 mx-auto transition-all"
+            className="bg-sky-600 text-white w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-3.5 rounded-full font-black uppercase tracking-widest text-[14px] sm:text-xs shadow-lg flex items-center justify-center gap-2 mx-auto transition-all"
           >
             ACEPTO Y VUELVO <CheckCircle size={16} />
           </motion.button>
