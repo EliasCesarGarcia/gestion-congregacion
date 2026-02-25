@@ -175,7 +175,7 @@ function Navbar() {
                   <p className="text-gray-400">
                     {user?.provincia}, {user?.pais} ({user?.region})
                   </p>
-                  <p className="text-jw-blue mt-2 font-black not-italic tracking-widest uppercase text-[10px]">
+                  <p className="text-jw-blue mt-1 font-normal not-italic tracking-widest uppercase text-[13px]">
                     N° {user?.numero_congregacion}
                   </p>
                 </div>
@@ -183,7 +183,7 @@ function Navbar() {
                 <hr className="border-jw-border my-2" />
 
                 {/* Botones de Acción */}
-                <div className="space-y-1">
+                <div className="space-y-0">
                   <button
                     onClick={() => {
                       navigate("/perfil");

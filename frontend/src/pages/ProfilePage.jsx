@@ -538,7 +538,7 @@ function ProfilePage() {
       )}
       <Modal isOpen={modal.show} type={modal.type} title={modal.title} message={modal.message} onConfirm={modal.onConfirm} onClose={() => setModal({ ...modal, show: false })} />
 
-      {/* POPUP DE VERIFICACIÓN ESTILIZADO */}
+     {/* POPUP DE VERIFICACIÓN ESTILIZADO CON FUENTES RESPONSIVAS */}
 {editingField && verificationStep < 4 && (
   <div className="fixed inset-0 z-[150] flex items-center justify-center bg-jw-navy/40 backdrop-blur-md p-4 animate-in fade-in duration-300">
     <div className="bg-white rounded-[2.5rem] shadow-2xl max-w-[360px] w-full overflow-hidden border border-jw-border/50 animate-in zoom-in-95 duration-300">
@@ -548,43 +548,47 @@ function ProfilePage() {
         <div className="w-14 h-14 bg-jw-body rounded-2xl flex items-center justify-center mx-auto mb-4 border border-jw-border shadow-sm">
           <Lock className="w-6 h-6 text-jw-blue" />
         </div>
-        <h3 className="text-sm font-black italic tracking-[0.2em] uppercase text-jw-navy">Verificación</h3>
+        {/* FUENTE: text-base en móvil, text-sm en PC */}
+        <h3 className="text-base sm:text-sm font-black italic tracking-[0.2em] uppercase text-jw-navy">Verificación</h3>
       </div>
 
-      <div className="px-10 pb-10 text-center">
+      <div className="px-8 sm:px-10 pb-10 text-center">
         {verificationStep === 1 ? (
           <div className="space-y-5">
             <div className="p-4 bg-red-50 rounded-2xl border border-red-100">
-              <p className="text-red-700 text-[11px] leading-tight font-bold italic uppercase tracking-tighter">
+              {/* FUENTE: text-xs en móvil, text-[11px] en PC */}
+              <p className="text-xs sm:text-[12px] leading-tight font-bold italic uppercase tracking-tighter text-red-700">
                 Tu cuenta pasará a estado de "BAJA".
               </p>
             </div>
-            <button onClick={() => setVerificationStep(2)} className="w-full bg-red-600 text-white py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-red-700 transition-all shadow-lg shadow-red-200">CONTINUAR</button>
+            <button onClick={() => setVerificationStep(2)} className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold uppercase text-xs sm:text-[13px] tracking-widest hover:bg-red-700 transition-all shadow-lg shadow-red-200">CONTINUAR</button>
           </div>
         ) : verificationStep === 2 ? (
           <div className="space-y-6">
-            <p className="text-gray-400 text-[11px] font-medium leading-relaxed italic">
+            {/* FUENTE: text-sm en móvil, text-[15px] en PC */}
+            <p className="text-sm sm:text-[15px] text-gray-400 font-medium leading-relaxed italic">
               Enviaremos un código de seguridad a:<br />
-              <span className="text-jw-blue font-black not-italic text-xs">{maskEmail(user?.email)}</span>
+              <span className="text-jw-blue font-black not-italic text-base sm:text-xs">{maskEmail(user?.email)}</span>
             </p>
-            <button onClick={handleSendCode} disabled={loading} className="w-full bg-jw-blue text-white py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-jw-navy transition-all shadow-lg shadow-blue-100">ENVIAR PIN</button>
+            <button onClick={handleSendCode} disabled={loading} className="w-full bg-jw-blue text-white py-3.5 rounded-xl font-bold uppercase text-xs sm:text-[13px] tracking-widest hover:bg-jw-navy transition-all shadow-lg shadow-blue-100">ENVIAR PIN</button>
           </div>
         ) : (
-          <div className="space-y-8"> {/* Aumentado el espacio entre elementos */}
+          <div className="space-y-8">
             <div>
-              <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mb-4">Ingresa el código</p>
+              {/* FUENTE: text-xs en móvil, text-[10px] en PC */}
+              <p className="text-xs sm:text-[13px] text-gray-400 font-black uppercase tracking-widest mb-4">Ingresa el código</p>
               <input 
                 type="text" 
                 maxLength="6" 
                 value={pin} 
-                className="w-full text-center text-2xl tracking-[0.4em] font-black py-3 bg-jw-body rounded-2xl border-2 border-jw-border focus:border-jw-blue outline-none text-jw-navy transition-all" 
+                className="w-full text-center text-3xl sm:text-2xl tracking-[0.4em] font-black py-3 bg-jw-body rounded-2xl border-2 border-jw-border focus:border-jw-blue outline-none text-jw-navy transition-all" 
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} 
               />
             </div>
             <button 
               onClick={handleVerifyCode} 
               disabled={loading || pin.length < 6} 
-              className="w-full bg-green-600 text-white py-3 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-green-700 transition-all shadow-lg shadow-green-100"
+              className="w-full bg-green-600 text-white py-3.5 rounded-xl font-bold uppercase text-xs sm:text-[13px] tracking-widest hover:bg-green-700 transition-all shadow-lg shadow-green-100"
             >
               {loading ? "VERIFICANDO..." : "VERIFICAR AHORA"}
             </button>
@@ -593,7 +597,7 @@ function ProfilePage() {
         
         <button 
           onClick={() => { setEditingField(null); setVerificationStep(0); }} 
-          className="mt-6 text-gray-600 hover:text-red-400 text-[9px] font-black uppercase tracking-widest transition-colors"
+          className="mt-6 text-gray-600 hover:text-red-400 text-[10px] sm:text-[13px] font-black uppercase tracking-widest transition-colors"
         >
           Cancelar proceso
         </button>
