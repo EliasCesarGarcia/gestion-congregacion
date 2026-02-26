@@ -532,9 +532,9 @@ function ProfilePage() {
   return (
     <div className="bg-jw-body min-h-screen py-10 px-4 relative font-sans text-left text-jw-navy">
       {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[200] bg-jw-blue text-white px-8 py-3 rounded-full shadow-2xl animate-bounce text-sm font-bold uppercase">
-          ✅ CÓDIGO ENVIADO
-        </div>
+       <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[200] bg-jw-blue text-white px-6 sm:px-8 py-3 rounded-full shadow-2xl animate-bounce text-[12px] sm:text-sm font-bold uppercase whitespace-nowrap">
+  ✅ CÓDIGO ENVIADO
+</div>
       )}
       <Modal isOpen={modal.show} type={modal.type} title={modal.title} message={modal.message} onConfirm={modal.onConfirm} onClose={() => setModal({ ...modal, show: false })} />
 
@@ -581,7 +581,7 @@ function ProfilePage() {
                 type="text" 
                 maxLength="6" 
                 value={pin} 
-                className="w-full text-center text-3xl sm:text-2xl tracking-[0.4em] font-black py-3 bg-jw-body rounded-2xl border-2 border-jw-border focus:border-jw-blue outline-none text-jw-navy transition-all" 
+                className="w-full text-center text-3xl sm:text-3xl tracking-[0.4em] font-medium py-3 bg-jw-body rounded-2xl border-2 border-jw-border focus:border-jw-blue outline-none text-jw-navy transition-all" 
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, ""))} 
               />
             </div>
@@ -597,7 +597,7 @@ function ProfilePage() {
         
         <button 
           onClick={() => { setEditingField(null); setVerificationStep(0); }} 
-          className="mt-6 text-gray-600 hover:text-red-400 text-[10px] sm:text-[13px] font-black uppercase tracking-widest transition-colors"
+          className="mt-6 text-gray-600 hover:text-red-400 text-[13px] sm:text-[13px] font-black uppercase tracking-widest transition-colors"
         >
           Cancelar proceso
         </button>
