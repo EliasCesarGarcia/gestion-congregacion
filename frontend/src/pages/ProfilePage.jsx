@@ -556,10 +556,36 @@ function ProfilePage() {
         {verificationStep === 1 ? (
           <div className="space-y-5">
             <div className="p-4 bg-red-50 rounded-2xl border border-red-100">
+             
               {/* FUENTE: text-xs en móvil, text-[11px] en PC */}
-              <p className="text-xs sm:text-[12px] leading-tight font-bold italic uppercase tracking-tighter text-red-700">
-                Tu cuenta pasará a estado de "BAJA".
-              </p>
+             <div className="mt-2 mb-1 text-left">
+  {/* Etiqueta de Advertencia superior */}
+  <span className="text-[13px] font-black text-red-500 uppercase tracking-[0.2em] block mb-0 ml-0">
+    ADVERTENCIA:
+  </span>
+
+  {/* Contenedor del texto y la línea animada */}
+  <div className="relative inline-block">
+    <p className="text-xs sm:text-[13px] leading-tight font-medium uppercase tracking-tighter text-red-700 pb-1">
+      Tu cuenta pasará a estado de "BAJA"
+    </p>
+    
+    {/* Línea roja animada (Scanner) */}
+    <motion.div 
+      className="absolute bottom-0 left-0 h-[2.5px] bg-red-600 rounded-full"
+      initial={{ width: "30%", left: "0%" }}
+      animate={{ 
+        left: ["0%", "70%", "0%"] 
+      }}
+      transition={{ 
+        duration: 2, 
+        repeat: Infinity, 
+        ease: "easeInOut" 
+      }}
+    />
+  </div>
+</div>
+
             </div>
             <button onClick={() => setVerificationStep(2)} className="w-full bg-red-600 text-white py-3.5 rounded-xl font-bold uppercase text-xs sm:text-[13px] tracking-widest hover:bg-red-700 transition-all shadow-lg shadow-red-200">CONTINUAR</button>
           </div>
@@ -610,7 +636,7 @@ function ProfilePage() {
         {/* SECCIÓN 1: ADMINISTRACIÓN */}
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden">
           <div className="p-5 bg-jw-navy text-white border-b-4 border-jw-blue">
-            <h2 className="text-lg font-light italic flex items-center gap-3"><Shield className="w-5 h-5 text-jw-accent" /> Administración de Cuenta</h2>
+            <h2 className="text-lg font-light italic flex items-center gap-3"><Shield className="w-9 h-9 text-slate-400" /> Administración de Cuenta</h2>
           </div>
           <div className="p-8 space-y-6 text-sm">
             <div className="pb-4 border-b border-gray-50 opacity-60">
@@ -668,10 +694,10 @@ function ProfilePage() {
         {/* ==========================================
     SECCIÓN: GALERÍA DE ILUSTRACIONES REALES (LOCALES)
     ========================================== */}
-<section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden text-jw-navy">
+<section className="bg-white rounded-x1 shadow-sm border border-jw-border overflow-hidden text-jw-navy">
     <div className="p-5 bg-jw-navy text-white border-b-4 border-jw-blue flex justify-between items-center">
         <h2 className="text-lg font-normal italic flex items-center gap-3 text-left">
-            <UserRoundPlus className="w-5 h-5 text-jw-accent"/> Galería de Avatares
+            <UserRoundPlus className="w-9 h-9 text-slate-400"/> Galería de Avatares
         </h2>
         <button onClick={() => setShowGallery(!showGallery)} className="p-2 hover:bg-white/10 rounded-full transition-all">
             {showGallery ? <ChevronUp size={24}/> : <ChevronDown size={24}/>}
@@ -778,7 +804,7 @@ function ProfilePage() {
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden">
           <div className="p-5 bg-red-600 text-white border-b-4 border-red-800 text-left">
             <h2 className="text-lg font-bold italic flex items-center gap-3">
-              <Trash2 className="w-5 h-5" /> Zona de Peligro
+              <Trash2 className="w-9 h-9 text-slate-300" /> Zona de Peligro
             </h2>
           </div>
           <div className="p-8 text-jw-navy text-left">
@@ -814,7 +840,7 @@ function ProfilePage() {
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden text-jw-navy">
           <div className="p-5 bg-jw-navy text-white border-b-4 border-jw-blue text-left">
             <h2 className="text-lg font-light italic flex items-center gap-3">
-              <User className="w-5 h-5 text-jw-accent" /> Mi perfil público
+              <User className="w-9 h-9 text-slate-400" /> Mi perfil público
             </h2>
           </div>
           <div className="p-8 flex flex-col md:flex-row gap-10 items-center md:items-start text-left">
