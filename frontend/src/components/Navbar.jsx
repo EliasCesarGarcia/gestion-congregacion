@@ -149,7 +149,7 @@ function Navbar() {
                   alt="Mi perfil"
                   className="w-full h-full object-cover"
                   key={user.foto_url}
-                  fetchpriority="high" // SEO 2026: Le dice al navegador que esta es prioridad 1
+                  fetchPriority="high" // SEO 2026: Le dice al navegador que esta es prioridad 1
                 />
               ) : (
                 <User className="text-gray-400 w-7 h-7" />

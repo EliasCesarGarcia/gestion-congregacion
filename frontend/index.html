@@ -1,38 +1,73 @@
 <!doctype html>
-<html lang="es"> <!-- 1. Corregido a español -->
+<html lang="es">
+  <!-- 1. Corregido a español -->
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
+
     <!-- 2. Metadatos de SEO básico para 2026 -->
     <title>Gestión Local Teocrática</title>
-    <meta name="description" content="Sistema integral de gestión congregacional para la administración de publicaciones, informes y seguridad digital." />
+    <meta
+      name="description"
+      content="Sistema integral de gestión congregacional para la administración de publicaciones, informes y seguridad digital."
+    />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#1a335a" />
 
     <!-- 3. Pre-renderizado visual para evitar el "salto" de carga -->
     <style>
-      #root:empty {
-        background-color: #f5f5f5;
-        height: 100vh;
+      /* 1. Fondo consistente con tu app para que no haya flash de colores */
+      body {
+        margin: 0;
+        background-color: #f5f5f5; /* bg-jw-body */
+      }
+
+      /* 2. Contenedor de carga centrado y fijo */
+      .initial-loader {
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-family: sans-serif;
-        color: #1a335a;
+        height: 100vh;
+        width: 100vw;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: #1a335a; /* jw-navy */
+        transition: opacity 0.3s ease;
       }
-      #root:empty::after {
-        content: "Cargando Gestión Local...";
-        font-weight: bold;
-        letter-spacing: 2px;
+
+      /* 3. Animación sutil para que el usuario sepa que la app no está trabada */
+      .loader-text {
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        opacity: 0.6;
+        animation: pulse 1.5s infinite ease-in-out;
+        font-style: italic;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+          transform: scale(0.98);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1);
+        }
       }
     </style>
   </head>
   <body>
-    <!-- El contenido vacío dentro de div root es lo que ve el bot. 
-         Ahora verá el texto del estilo superior en lugar de nada. -->
-    <div id="root"></div>
+    <div id="root">
+      <!-- Esto es lo que verá el BOT de Google y la IA.
+         Es HTML real, no CSS, por lo que es mucho mejor para SEO. -->
+      <div class="initial-loader">
+        <div class="loader-text">Gestión Local Teocrática</div>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

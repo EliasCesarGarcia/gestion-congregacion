@@ -18,7 +18,7 @@ function Footer() {
         
         <div className="flex flex-col items-start min-w-0 w-full md:w-auto">
           <h3 className="text-sm font-medium tracking-tight truncate w-full">
-            <span itemprop="name">Congregación {user.congregacion_nombre}</span>
+            <span itemProp="name">Congregación {user.congregacion_nombre}</span>
             <span className="text-gray-300 text-[13px] ml-2 font-light shrink-0">
               ({user.numero_congregacion})
             </span>
