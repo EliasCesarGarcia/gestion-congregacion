@@ -47,6 +47,7 @@ function Navbar() {
     if (location.pathname === "/perfil") return "Administración de Cuenta";
     if (location.pathname === "/publicaciones") return "Módulo Publicaciones";
     if (location.pathname === "/seguridad-tips") return "Seguridad Digital";
+    if (location.pathname === "/contacto") return "Centro de Ayuda y Contacto";
     return `Congregación ${user?.congregacion_nombre || ""}`;
   };
 
@@ -54,14 +55,17 @@ function Navbar() {
   // Esta función centraliza la lógica para que el Navbar siempre muestre la foto correcta
   const getProfileImage = () => {
     if (!user?.foto_url) return null;
-    
+
     // Si la foto es una ilustración local o un link externo
-    if (user.foto_url.startsWith("/avatars/") || user.foto_url.startsWith("http")) {
+    if (
+      user.foto_url.startsWith("/avatars/") ||
+      user.foto_url.startsWith("http")
+    ) {
       return user.foto_url;
     }
-    
+
     // Si es una foto subida a Supabase
-    return `https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/${user.foto_url}`;
+    return `https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/${user.foto_url}?width=120&quality=80&format=webp`;
   };
 
   return (
@@ -75,7 +79,7 @@ function Navbar() {
       {/* Fondo invisible para cerrar menús al hacer clic fuera */}
       {(isMenuOpen || isProfileOpen) && (
         <div
-          className="fixed inset-0 z-40 bg-transparent"
+          className="fixed inset-0 z-[45] w-screen h-screen bg-transparent cursor-default"
           onClick={closeMenus}
         ></div>
       )}
@@ -88,18 +92,20 @@ function Navbar() {
           {/* Botón Hamburguesa Menú Lateral */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-1.5 sm:p-2 hover:bg-white/10 rounded-md transition-all active:scale-90 mr-1 shrink-0"
+            aria-label="Abrir menú de navegación"
+            className="p-1.5 sm:p-2 hover:bg-white/20 hover:text-white hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-1 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
           >
-            <Menu className="w-6 h-6" />
+            <Menu className="w-7 h-7" />
           </button>
 
           {/* Botón Inicio */}
           <NavLink
             to="/"
             onClick={closeMenus}
-            className="p-1.5 sm:p-2 hover:bg-white/10 rounded-md transition-all active:scale-90 mr-2 sm:mr-3 text-jw-accent shrink-0"
+            aria-label="Ir al inicio"
+            className="p-1.5 sm:p-2 hover:bg-white/20 hover:text-white hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-2 sm:mr-3 text-jw-accent-light shrink-0 hover:shadow-[0_0_15px_rgba(74,109,167,0.3)]"
           >
-            <Home className="w-6 h-6" />
+            <Home className="w-7 h-7" />
           </NavLink>
 
           {/* Contenedor de Título */}
@@ -119,11 +125,14 @@ function Navbar() {
         <div className="relative z-50 flex items-center justify-end">
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
+            aria-label="Ver opciones de mi cuenta" // <--- AGREGAR ESTO
             className="flex items-center gap-3 sm:gap-5 p-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
           >
             {/* Saludo y Nombre: Empujado a la derecha */}
             <div className="hidden md:flex flex-col items-end text-right leading-none">
-              <span className="text-[10px] font-black text-jw-accent uppercase tracking-widest mb-1">Mi Cuenta</span>
+              <span className="text-[10px] font-medium text-jw-accent-light uppercase tracking-widest mb-1">
+                Mi Cuenta
+              </span>
               <span className="text-base font-light italic">
                 Hola,{" "}
                 <span className="font-medium not-italic">
@@ -137,9 +146,10 @@ function Navbar() {
               {user?.foto_url ? (
                 <img
                   src={getProfileImage()}
-                  alt="Perfil"
+                  alt="Mi perfil"
                   className="w-full h-full object-cover"
-                  key={user.foto_url} // Fuerza el refresco si cambia la URL
+                  key={user.foto_url}
+                  fetchpriority="high" // SEO 2026: Le dice al navegador que esta es prioridad 1
                 />
               ) : (
                 <User className="text-gray-400 w-7 h-7" />
@@ -189,14 +199,14 @@ function Navbar() {
                       navigate("/perfil");
                       closeMenus();
                     }}
-                    className="w-full flex items-center gap-3 p-2.5 hover:bg-jw-body rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-2.5 hover:bg-blue-100 rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
                   >
                     <Settings className="w-4 h-4 text-gray-400 group-hover:text-jw-blue" />
                     <span>Administrar cuenta</span>
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 p-2.5 hover:bg-red-50 rounded-xl text-sm transition-all text-red-600 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-2.5 hover:bg-red-100 rounded-xl text-sm transition-all text-red-600 group text-left font-medium active:scale-95"
                   >
                     <LogOut className="w-4 h-4 text-red-400 group-hover:text-red-600" />
                     <span>Cerrar sesión</span>

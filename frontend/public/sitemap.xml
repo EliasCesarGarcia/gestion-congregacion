@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Página de Inicio -->
+  <url>
+    <loc>https://tu-dominio.com/</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Catálogo de Publicaciones -->
+  <url>
+    <loc>https://tu-dominio.com/publicaciones</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Consejos de Seguridad (Contenido de Alta Autoridad) -->
+  <url>
+    <loc>https://tu-dominio.com/seguridad-tips</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Página de Contacto -->
+  <url>
+    <loc>https://tu-dominio.com/contacto</loc>
+    <lastmod>2026-02-27</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>

@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /publicaciones
+Allow: /seguridad-tips
+Disallow: /api/ # Bloqueamos el rastreo directo de la API para ahorrar recursos
+Disallow: /perfil # Bloqueamos la zona privada del usuario por privacidad
+
+# Ubicación del Sitemap (Reemplaza con tu dominio real cuando lo tengas)
+Sitemap: https://tu-dominio-real.com/sitemap.xml

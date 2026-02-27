@@ -10,6 +10,7 @@ import PublicacionesPage from "./pages/PublicacionesPage";
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage"; 
 import SecurityTipsPage from "./pages/SecurityTipsPage"; // <--- ESTA LÍNEA FALTABA
+import ContactoPage from "./pages/ContactoPage";
 
 function App() {
   return (
@@ -56,6 +57,16 @@ function App() {
               </RutaProtegida>
             } 
           />
+
+          <Route 
+            path="/contacto" 
+            element={
+              <RutaProtegida>
+                <ContactoPage />
+              </RutaProtegida>
+            } 
+          />
+
 
         </Routes>
       </main>

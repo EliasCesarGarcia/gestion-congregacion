@@ -2,9 +2,9 @@
  * ARCHIVO: SecurityTipsPage.jsx
  * UBICACIÓN: src/pages/SecurityTipsPage.jsx
  * DESCRIPCIÓN: Página informativa dedicada a los recordatorios y consejos de seguridad digital.
- * Presenta una guía visual e interactiva sobre la protección de dispositivos, gestión 
+ * Presenta una guía visual e interactiva sobre la protección de dispositivos, gestión
  * de contraseñas, prevención de phishing, seguridad familiar y respaldos.
- * Permite la visualización de actualizaciones dinámicas enviadas por el administrador 
+ * Permite la visualización de actualizaciones dinámicas enviadas por el administrador
  * desde la base de datos (tabla core_seguridad_info).
  */
 
@@ -12,6 +12,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { Helmet } from "react-helmet-async"; // <--- AGREGAR ESTO
 
 // Importación de Iconos
 import {
@@ -92,13 +93,20 @@ function SecurityTipsPage() {
 
   return (
     <div className="bg-slate-50 min-h-screen font-sans text-slate-800 pb-12 overflow-x-hidden">
-      
+      {/* --- BLOQUE SEO INICIO --- */}
+      <Helmet>
+        <title>Seguridad Digital y Blindaje | Gestión Local</title>
+        <meta
+          name="description"
+          content="Guía de protección y seguridad digital para miembros de la congregación. Consejos sobre phishing, contraseñas y privacidad."
+        />
+      </Helmet>
+      {/* --- BLOQUE SEO FIN --- */}
       {/* ==========================================
           SECCIÓN: ENCABEZADO (HEADER)
           ========================================== */}
       <header className="bg-sky-700 text-white p-2.5 sm:p-4 sticky top-0 z-50 shadow-md border-b-2 border-sky-400">
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
-          
           {/* Botón Volver con efectos de Hover */}
           <button
             onClick={handleBack}
@@ -120,7 +128,6 @@ function SecurityTipsPage() {
       </header>
 
       <main className="max-w-4xl mx-auto p-3 sm:p-6 mt-1 sm:mt-1 space-y-5 sm:space-y-8">
-        
         {/* ==========================================
             SECCIÓN: INTRODUCCIÓN PRINCIPAL
             ========================================== */}
@@ -144,9 +151,8 @@ function SecurityTipsPage() {
           </div>
         </section>
 
-         {/* CONTENEDOR DE TARJETAS DE CONSEJOS */}
+        {/* CONTENEDOR DE TARJETAS DE CONSEJOS */}
         <div className="grid gap-5 sm:gap-8">
-          
           {/* --- TARJETA 1: DISPOSITIVOS (PERÍMETRO FÍSICO) --- */}
           <motion.section
             variants={cardVariants}
@@ -190,7 +196,7 @@ function SecurityTipsPage() {
                         d: "Asegúrate de que el cifrado esté activo para proteger tus fotos ante robos.",
                       },
                     ].map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">                        
+                      <li key={idx} className="flex items-start gap-2">
                         <span className="shrink-0 text-xl sm:text-2xl leading-none text-purple-500 mt-[-8px] font-black select-none">
                           •
                         </span>
@@ -406,7 +412,7 @@ function SecurityTipsPage() {
             </div>
           </motion.section>
 
-         {/* ==========================================
+          {/* ==========================================
               SECCIÓN: CONTENIDO EXTRA (DESDE BASE DE DATOS)
               ========================================== */}
           {info.contenido && (
