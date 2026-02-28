@@ -1,10 +1,16 @@
 /**
  * ARCHIVO: Navbar.jsx
  * UBICACIÓN: src/components/Navbar.jsx
- * DESCRIPCIÓN: Barra de navegación principal con posicionamiento fijo.
- * Maneja el menú lateral (Sidebar), el título dinámico basado en la ruta,
- * el acceso al perfil de usuario con refresco de caché de imagen
- * y un menú desplegable con información detallada de la congregación.
+ * DESCRIPCIÓN: Barra de navegación principal con posicionamiento fijo. 
+ * Maneja el menú lateral (Sidebar), el título dinámico basado en la ruta, 
+ * el acceso al perfil de usuario con refresco de caché de imagen.
+ * Ahora incluye lógica adaptable de colores y saludos según el horario local.
+ * 
+ * FUNCIONES IMPLICADAS:
+ * - closeMenus: Cierra sidebar y dropdown de perfil.
+ * - handleLogout: Gestiona el cierre de sesión y redirección.
+ * - getTitle: Determina el texto central según la ruta de React Router.
+ * - getProfileImage: Procesa la URL de imagen (Avatar local o Supabase con WebP).
  */
 
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
@@ -20,11 +26,12 @@ import {
   BookOpen,
   ChevronDown,
   ShieldCheck,
+  Globe,
 } from "lucide-react";
 
 function Navbar() {
   // --- 1. CONFIGURACIÓN Y ESTADOS ---
-  const { user, logout } = useContext(AppContext);
+  const { user, logout, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
@@ -42,7 +49,6 @@ function Navbar() {
     navigate("/login");
   };
 
-  // Define el título mostrado en la barra según la página actual
   const getTitle = () => {
     if (location.pathname === "/perfil") return "Administración de Cuenta";
     if (location.pathname === "/publicaciones") return "Módulo Publicaciones";
@@ -51,30 +57,19 @@ function Navbar() {
     return `Congregación ${user?.congregacion_nombre || ""}`;
   };
 
-  // --- 3. GESTIÓN DE IMAGEN (LÓGICA HÍBRIDA) ---
-  // Esta función centraliza la lógica para que el Navbar siempre muestre la foto correcta
+  // --- 3. GESTIÓN DE IMAGEN ---
   const getProfileImage = () => {
     if (!user?.foto_url) return null;
-
-    // Si la foto es una ilustración local o un link externo
-    if (
-      user.foto_url.startsWith("/avatars/") ||
-      user.foto_url.startsWith("http")
-    ) {
+    if (user.foto_url.startsWith("/avatars/") || user.foto_url.startsWith("http")) {
       return user.foto_url;
     }
-
-    // Si es una foto subida a Supabase
     return `https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/${user.foto_url}?width=120&quality=80&format=webp`;
   };
 
   return (
-    /**
-     * CONTENEDOR PRINCIPAL (FIXED)
-     */
     <nav
-      className="bg-jw-navy text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full"
-      style={{ transform: "translateZ(0)", WebkitTransform: "translateZ(0)" }}
+      style={{ backgroundColor: timeTheme.bg }} // Aplicación de color dinámico (Mañana/Tarde/Noche)
+      className="text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-1000"
     >
       {/* Fondo invisible para cerrar menús al hacer clic fuera */}
       {(isMenuOpen || isProfileOpen) && (
@@ -85,11 +80,8 @@ function Navbar() {
       )}
 
       <div className="w-full flex items-center justify-between">
-        {/* ==========================================
-            SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO
-            ========================================== */}
+        {/* SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO */}
         <div className="flex items-center z-50 min-w-0">
-          {/* Botón Hamburguesa Menú Lateral */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Abrir menú de navegación"
@@ -98,7 +90,6 @@ function Navbar() {
             <Menu className="w-7 h-7" />
           </button>
 
-          {/* Botón Inicio */}
           <NavLink
             to="/"
             onClick={closeMenus}
@@ -108,7 +99,6 @@ function Navbar() {
             <Home className="w-7 h-7" />
           </NavLink>
 
-          {/* Contenedor de Título */}
           <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0">
             <span className="text-sm font-light tracking-wide text-gray-300 hidden lg:block italic shrink-0">
               Sistema de Gestión
@@ -119,29 +109,25 @@ function Navbar() {
           </div>
         </div>
 
-        {/* ==========================================
-            SECCIÓN DERECHA: PERFIL Y AVATAR (ALINEADO TOTAL A LA DERECHA)
-            ========================================== */}
+        {/* SECCIÓN DERECHA: PERFIL Y AVATAR */}
         <div className="relative z-50 flex items-center justify-end">
           <button
             onClick={() => setIsProfileOpen(!isProfileOpen)}
-            aria-label="Ver opciones de mi cuenta" // <--- AGREGAR ESTO
+            aria-label="Ver opciones de mi cuenta"
             className="flex items-center gap-3 sm:gap-5 p-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
           >
-            {/* Saludo y Nombre: Empujado a la derecha */}
             <div className="hidden md:flex flex-col items-end text-right leading-none">
               <span className="text-[10px] font-medium text-jw-accent-light uppercase tracking-widest mb-1">
                 Mi Cuenta
               </span>
               <span className="text-base font-light italic">
-                Hola,{" "}
+                {timeTheme.greeting}{" "} {/* Saludo dinámico: Buenos días / Buenas tardes / Buenas noches */}
                 <span className="font-medium not-italic">
                   {user?.nombre_completo?.split(" ").reverse().join(" ")}
                 </span>
               </span>
             </div>
 
-            {/* IMAGEN DE PERFIL: Agrandada levemente y con borde institucional */}
             <div className="w-14 h-14 rounded-full border-2 border-jw-accent overflow-hidden bg-jw-body flex items-center justify-center shrink-0 shadow-md">
               {user?.foto_url ? (
                 <img
@@ -149,7 +135,7 @@ function Navbar() {
                   alt="Mi perfil"
                   className="w-full h-full object-cover"
                   key={user.foto_url}
-                  fetchPriority="high" // SEO 2026: Le dice al navegador que esta es prioridad 1
+                  fetchPriority="high"
                 />
               ) : (
                 <User className="text-gray-400 w-7 h-7" />
@@ -157,12 +143,8 @@ function Navbar() {
             </div>
           </button>
 
-          {/* ==========================================
-              VENTANA EMERGENTE (DROPDOWN) DEL PERFIL
-              ========================================== */}
           {isProfileOpen && (
             <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
-              {/* Encabezado del Dropdown */}
               <div className="p-4 bg-jw-body border-b border-jw-border text-left">
                 <p className="text-base font-bold leading-tight text-jw-navy">
                   {user?.nombre_completo}
@@ -172,33 +154,36 @@ function Navbar() {
                 </p>
               </div>
 
-              {/* Datos de Ubicación de la Congregación */}
-              <div className="p-4 space-y-3 text-xs text-gray-700 leading-relaxed italic text-left">
+              <div className="p-4 text-xs text-gray-700 leading-relaxed italic text-left">
                 <div className="px-1 border-l-4 border-jw-accent pl-3">
-                  <p className="font-bold not-italic text-jw-navy text-sm mb-1">
-                    {user?.congregacion_nombre}
-                  </p>
-                  <p className="font-medium">{user?.direccion}</p>
-                  <p>
-                    {user?.ciudad}, {user?.partido}
-                  </p>
-                  <p className="text-gray-400">
-                    {user?.provincia}, {user?.pais} ({user?.region})
-                  </p>
-                  <p className="text-jw-blue mt-1 font-normal not-italic tracking-widest uppercase text-[13px]">
-                    N° {user?.numero_congregacion}
-                  </p>
+                  <div className="mb-3">
+                    <p className="font-bold not-italic text-jw-navy text-base leading-tight">
+                      {user?.congregacion_nombre}
+                    </p>
+                    <p className="text-jw-blue font-normal not-italic tracking-widest uppercase text-[11px]">
+                      N° {user?.numero_congregacion}
+                    </p>
+                  </div>
+
+                  <div className="space-y-1 mb-3">
+                    <p className="font-medium">{user?.direccion}</p>
+                    <p>{user?.ciudad}, {user?.partido}</p>
+                    <p className="text-gray-500">{user?.provincia}, {user?.pais}</p>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-gray-400 pt-1 border-t border-gray-50 mt-2">
+                    <Globe size={13} className="shrink-0 text-jw-accent-light" />
+                    <p className="font-bold uppercase tracking-widest text-[10px] not-italic">
+                      Región {user?.region || "No definida"}
+                    </p>
+                  </div>
                 </div>
 
-                <hr className="border-jw-border my-2" />
+                <hr className="border-jw-border my-4" />
 
-                {/* Botones de Acción */}
-                <div className="space-y-0">
+                <div className="space-y-1">
                   <button
-                    onClick={() => {
-                      navigate("/perfil");
-                      closeMenus();
-                    }}
+                    onClick={() => { navigate("/perfil"); closeMenus(); }}
                     className="w-full flex items-center gap-3 p-2.5 hover:bg-blue-100 rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
                   >
                     <Settings className="w-4 h-4 text-gray-400 group-hover:text-jw-blue" />
@@ -218,13 +203,14 @@ function Navbar() {
         </div>
       </div>
 
-      {/* ==========================================
-          MENÚ LATERAL DESLIZABLE (SIDEBAR)
-          ========================================== */}
+      {/* MENÚ LATERAL (SIDEBAR) */}
       <div
         className={`fixed left-0 top-0 h-full w-72 bg-white text-gray-800 z-[110] shadow-2xl transition-transform duration-300 ease-in-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="p-5 bg-jw-navy text-white flex justify-between items-center shadow-lg border-b-4 border-jw-blue">
+        <div 
+          style={{ backgroundColor: timeTheme.bg }}
+          className="p-5 text-white flex justify-between items-center shadow-lg border-b-4 border-jw-blue transition-colors duration-1000"
+        >
           <div className="flex items-center gap-2">
             <ShieldCheck size={20} className="text-jw-accent" />
             <span className="text-sm tracking-widest font-black uppercase italic">
@@ -239,7 +225,6 @@ function Navbar() {
           </button>
         </div>
 
-        {/* Lista de Módulos */}
         <div className="p-4 space-y-2 text-left">
           <NavLink
             to="/"

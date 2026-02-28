@@ -1,14 +1,29 @@
+/**
+ * ARCHIVO: Footer.jsx
+ * UBICACIÓN: src/components/Footer.jsx
+ * DESCRIPCIÓN: Pie de página institucional. Muestra datos de la congregación,
+ * dirección postal y región con marcado semántico Schema.org para SEO.
+ * Incluye enlace a soporte técnico y copyright.
+ * Ahora sincronizado con el tema visual adaptable (Mañana/Tarde/Noche).
+ * 
+ * FUNCIONES IMPLICADAS:
+ * - Consumo de AppContext para datos de usuario y tema dinámico.
+ */
+
 import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { MapPin, Globe, ShieldCheck } from 'lucide-react'; // Añadimos Globe
+import { MapPin, Globe, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function Footer() {
-  const { user } = useContext(AppContext);
+  const { user, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
   if (!user) return null;
 
   return (
-    <footer className="w-full bg-jw-navy border-t-4 border-jw-blue text-white py-2 px-4 mt-auto overflow-hidden">
+    <footer 
+      style={{ backgroundColor: timeTheme.bg }} // Sincronización de color con el Navbar
+      className="w-full border-t-4 border-jw-blue text-white py-2 px-4 mt-auto overflow-hidden transition-colors duration-1000"
+    >
       {/* Marcado de Microdatos para SEO Local */}
       <div 
         className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-2"
@@ -17,8 +32,7 @@ function Footer() {
       >
         
         {/* LADO IZQUIERDO: Información de la Congregación */}
-        <div className="flex flex-col items-start min-w-0 w-full md:w-auto">
-          {/* mb-3 añade el espacio solicitado debajo del nombre */}
+        <div className="flex flex-col items-start min-w-0 w-full md:w-auto text-left">
           <h3 className="text-sm font-medium tracking-tight truncate w-full mb-1">
             <span itemProp="name">Congregación {user.congregacion_nombre}</span>
             <span className="text-gray-300 text-[13px] ml-2 font-light shrink-0">
@@ -26,9 +40,8 @@ function Footer() {
             </span>
           </h3>
           
-          {/* Contenedor de dirección y región con separación vertical interna (space-y-2) */}
           <div className="space-y-2">
-            {/* DIRECCIÓN */}
+            {/* DIRECCIÓN POSTAL */}
             <address 
               className="flex items-center gap-2 text-[11px] sm:text-xs text-gray-200 font-light italic w-full min-w-0 not-italic"
               itemProp="address" 
@@ -44,7 +57,7 @@ function Footer() {
               </p>
             </address>
 
-            {/* REGIÓN (Nuevo campo solicitado) */}
+            {/* REGIÓN GEOGRÁFICA */}
             <div className="flex items-center gap-2 text-[11px] sm:text-xs text-gray-200 font-light italic w-full min-w-0 not-italic">
               <Globe className="w-3.5 h-3.5 text-gray-400 shrink-0" />
               <p className="truncate w-full uppercase tracking-widest text-[10px] font-normal">
@@ -55,7 +68,6 @@ function Footer() {
         </div>
 
         {/* LADO DERECHO: Contacto y Legal */}
-        {/* gap-4 añade el espacio solicitado entre el link y el copyright */}
         <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto shrink-0 pt-3 md:pt-0 border-t border-white/5 md:border-none">
           <Link 
             to="/contacto" 
