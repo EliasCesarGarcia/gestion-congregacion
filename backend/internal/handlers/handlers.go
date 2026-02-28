@@ -14,6 +14,9 @@ import (
 
 	"gestion-congregacion/backend/internal/models"
 
+	"gestion-congregacion/backend/internal/auth" // <--- Agregado
+    "gestion-congregacion/backend/internal/ws"   // <--- Agregado
+
 	"github.com/resend/resend-go/v2"
 	"gorm.io/gorm"
 
@@ -22,6 +25,11 @@ import (
 
 func GetPublicaciones(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		// SEO 2026: Cache-Control public (Permite que CDNs y Navegadores guarden el JSON)
+		// max-age=3600 (1 hora), s-maxage=7200 (2 horas en Shared Cache/CDNs)
+		w.Header().Set("Cache-Control", "public, max-age=3600, s-maxage=7200")
+
 		var pubs []models.Publicacion
 		result := db.Table("pub_catalogo").Find(&pubs)
 		if result.Error != nil {
@@ -201,6 +209,10 @@ func VerifyPinHandler(db *gorm.DB) http.HandlerFunc {
 
 func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		// SEGURIDAD: Prohibir estrictamente cualquier tipo de caché para datos sensibles
+		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate")
+
 		var req models.LoginRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "Datos inválidos", http.StatusBadRequest)
@@ -218,6 +230,7 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
                     core_personas.estado, 
                     core_congregaciones.nombre as congregacion_nombre, 
                     core_congregaciones.numero_congregacion,
+                    core_congregaciones.zona_horaria,
                     core_congregaciones.region,
                     core_congregaciones.pais,
                     core_congregaciones.provincia_estado as provincia,
@@ -241,6 +254,7 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
                         core_personas.estado, 
                         core_congregaciones.nombre as congregacion_nombre, 
                         core_congregaciones.numero_congregacion,
+                        core_congregaciones.zona_horaria,
                         core_congregaciones.region,
                         core_congregaciones.pais,
                         core_congregaciones.provincia_estado as provincia,
@@ -272,8 +286,20 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
+		// --- NUEVO: Generación de JWT ---
+		token, err := auth.GenerarJWT(u.ID)
+		if err != nil {
+			log.Println("Error generando token:", err)
+			http.Error(w, "Error interno del servidor", http.StatusInternalServerError)
+			return
+		}
+
+		// Enviar tanto el usuario como el token en un mapa
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(u)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"user":  u,
+			"token": token,
+		})
 	}
 }
 
@@ -341,19 +367,33 @@ func ResetPasswordHandler(db *gorm.DB) http.HandlerFunc {
 
 // handlers.go
 
-// --- IDENTIFICAR USUARIO (Login Directo) ---
+// --- IDENTIFICAR USUARIO (Corregido para buscar en ambas tablas) ---
 func IdentifyUserHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
 			Username string `json:"username"`
 		}
-		json.NewDecoder(r.Body).Decode(&req)
-		var u models.Usuario
-		err := db.Table("core_usuarios").Where("username_temp = ?", req.Username).First(&u).Error
-		if err != nil {
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "Error en datos", http.StatusBadRequest)
+			return
+		}
+
+		var count int64
+		// 1. Intentar buscar en core_usuarios (Administradores)
+		db.Table("core_usuarios").Where("username_temp = ?", req.Username).Count(&count)
+
+		// 2. Si no lo encuentra, buscar en core_personas (Usuarios normales)
+		if count == 0 {
+			db.Table("core_personas").Where("username_temp = ?", req.Username).Count(&count)
+		}
+
+		// 3. Si no existe en ninguna, ahora sí devolvemos 404
+		if count == 0 {
+			log.Printf("⚠️ Usuario no encontrado: %s", req.Username)
 			w.WriteHeader(http.StatusNotFound)
 			return
 		}
+
 		w.WriteHeader(http.StatusOK)
 	}
 }
@@ -521,6 +561,10 @@ func UploadFotoHandler(db *gorm.DB) http.HandlerFunc {
 
 func GetSeguridadInfoHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
+		// SEO 2026: Cache corta pero efectiva (600 segundos = 10 min)
+		w.Header().Set("Cache-Control", "public, max-age=600")
+
 		var info struct {
 			Contenido string    `json:"contenido"`
 			UpdatedAt time.Time `json:"updated_at"`
@@ -582,7 +626,6 @@ func SuspenderCuentaHandler(db *gorm.DB) http.HandlerFunc {
 }
 
 // --- DIFUSIÓN MASIVA DE SEGURIDAD PERSONALIZADA ---
-// --- DIFUSIÓN MASIVA DE SEGURIDAD CON SALTOS DE LÍNEA Y PERSONALIZACIÓN ---
 func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -607,7 +650,6 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 		}
 
 		// 2. Procesar el texto para el Email (Convertir "Enters" en saltos de línea HTML)
-		// Esto soluciona el problema de que el texto llegue todo en un solo renglón.
 		descripcionHTML := strings.ReplaceAll(req.DescripcionLarga, "\n", "<br/>")
 
 		// 3. Obtener destinatarios activos con sus datos de congregación
@@ -631,42 +673,41 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 
 		// 5. Enviar correos personalizados
 		for _, u := range lista {
-			// Asunto dinámico para evitar filtros de SPAM
 			asunto := fmt.Sprintf("⚠️ %s [%s - %s]", req.Titulo, u.Username, u.CongregacionNombre)
 
 			htmlContent := fmt.Sprintf(`
-				<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; padding: 30px; color: #1a202c;">
-					<div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #1e3a8a;">
-						<div style="padding: 25px; background-color: #1e3a8a; text-align: center;">
-							<h1 style="color: #ffffff; margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">Aviso de Seguridad</h1>
-							<p style="color: #93c5fd; margin: 5px 0 0 0; font-style: italic; font-size: 14px;">Congregación %s</p>
-						</div>
-						<div style="padding: 40px; line-height: 1.7;">
-							<p style="font-size: 16px;">Hola, hermano/a <b>%s</b>:</p>
-							<p style="font-size: 15px; color: #4a5568;">Le informamos sobre una nueva actualización importante en los recordatorios de seguridad:</p>
-							
-							<div style="margin: 25px 0; padding: 25px; border-radius: 15px; background-color: #f8fafc; border: 1px solid #e2e8f0;">
-								<h2 style="margin: 0 0 15px 0; color: #1e3a8a; font-size: 18px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px;">%s</h2>
-								<div style="font-size: 14px; color: #2d3748;">
-									%s
-								</div>
-							</div>
+                <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f9; padding: 30px; color: #1a202c;">
+                    <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid #1e3a8a;">
+                        <div style="padding: 25px; background-color: #1e3a8a; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">Aviso de Seguridad</h1>
+                            <p style="color: #93c5fd; margin: 5px 0 0 0; font-style: italic; font-size: 14px;">Congregación %s</p>
+                        </div>
+                        <div style="padding: 40px; line-height: 1.7;">
+                            <p style="font-size: 16px;">Hola, hermano/a <b>%s</b>:</p>
+                            <p style="font-size: 15px; color: #4a5568;">Le informamos sobre una nueva actualización importante en los recordatorios de seguridad:</p>
+                            
+                            <div style="margin: 25px 0; padding: 25px; border-radius: 15px; background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                                <h2 style="margin: 0 0 15px 0; color: #1e3a8a; font-size: 18px; border-bottom: 1px solid #cbd5e1; padding-bottom: 10px;">%s</h2>
+                                <div style="font-size: 14px; color: #2d3748;">
+                                    %s
+                                </div>
+                            </div>
 
-							<p style="font-size: 14px; color: #4a5568;">Para ver más detalles, por favor ingrese al sitio y consulte la sección <b>Administración de Cuenta</b>.</p>
-							
-							<p style="margin-top: 30px; font-size: 15px; color: #1e3a8a; font-weight: bold;">Saludos afectuosos,<br><span style="font-weight: normal; color: #718096;">Gestión Local Teocrática</span></p>
-							
-							<div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #edf2f7; text-align: center;">
-								<p style="font-size: 11px; color: #a0aec0;">
-									Revisión: %s | Destinatario: %s (%s)
-								</p>
-								<p style="font-size: 12px; color: #e53e3e; font-weight: bold; margin-top: 15px;">
-									AVISO: No responda a este mensaje. Esta casilla de correo es automática y no es monitoreada.
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>`, u.CongregacionNombre, u.NombreCompleto, req.Titulo, descripcionHTML, fechaActual, u.Username, u.CongregacionNombre)
+                            <p style="font-size: 14px; color: #4a5568;">Para ver más detalles, por favor ingrese al sitio y consulte la sección <b>Administración de Cuenta</b>.</p>
+                            
+                            <p style="margin-top: 30px; font-size: 15px; color: #1e3a8a; font-weight: bold;">Saludos afectuosos,<br><span style="font-weight: normal; color: #718096;">Gestión Local Teocrática</span></p>
+                            
+                            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #edf2f7; text-align: center;">
+                                <p style="font-size: 11px; color: #a0aec0;">
+                                    Revisión: %s | Destinatario: %s (%s)
+                                </p>
+                                <p style="font-size: 12px; color: #e53e3e; font-weight: bold; margin-top: 15px;">
+                                    AVISO: No responda a este mensaje. Esta casilla de correo es automática y no es monitoreada.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>`, u.CongregacionNombre, u.NombreCompleto, req.Titulo, descripcionHTML, fechaActual, u.Username, u.CongregacionNombre)
 
 			params := &resend.SendEmailRequest{
 				From:    "Gestión Local Teocrática <onboarding@resend.dev>",
@@ -681,7 +722,29 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 			}
 		}
 
-		fmt.Println("📢 Difusión masiva completada con éxito.")
+		// --- NUEVO: DIFUSIÓN EN TIEMPO REAL VÍA WEBSOCKET ---
+		ws.Broadcast(map[string]string{
+			"tipo":   "ALERTA_SEGURIDAD",
+			"titulo": req.Titulo,
+			"msg":    "Se ha publicado una nueva actualización de seguridad.",
+		})
+
+		fmt.Println("📢 Difusión masiva y WebSocket completados con éxito.")
 		w.WriteHeader(http.StatusOK)
 	}
+}
+// 4. NUEVO: Manejo de Archivos en el Backend (Subida de fotos procesadas)
+func HandleFileUpload(w http.ResponseWriter, r *http.Request) {
+    // Aquí el backend recibe el archivo
+    r.ParseMultipartForm(10 << 20) // Límite 10MB
+    file, handler, err := r.FormFile("foto")
+    if err != nil {
+        http.Error(w, "Error al recibir archivo", 400)
+        return
+    }
+    defer file.Close()
+
+    fmt.Printf("Archivo recibido: %v, Tamaño: %v\n", handler.Filename, handler.Size)
+    // Aquí podrías procesar la imagen (redimensionar) antes de mandarla a Supabase
+    w.WriteHeader(http.StatusOK)
 }
