@@ -14,7 +14,124 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/api/login-final": {
+            "post": {
+                "description": "Autentica al usuario y entrega un Token JWT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Autenticación"
+                ],
+                "summary": "Iniciar Sesión (Login)",
+                "parameters": [
+                    {
+                        "description": "Credenciales de usuario",
+                        "name": "login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/api/publicaciones": {
+            "get": {
+                "description": "Retorna una lista de todos los libros y revistas disponibles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Publicaciones"
+                ],
+                "summary": "Obtener catálogo de publicaciones",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Publicacion"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/update-profile": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Modifica datos del usuario (Email, Teléfono, etc). Requiere Token JWT.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Usuario"
+                ],
+                "summary": "Actualizar Perfil",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.LoginRequest": {
+            "type": "object",
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Publicacion": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "nombre_publicacion": {
+                    "type": "string"
+                },
+                "siglas": {
+                    "type": "string"
+                },
+                "tipo": {
+                    "type": "string"
+                },
+                "url_portada": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

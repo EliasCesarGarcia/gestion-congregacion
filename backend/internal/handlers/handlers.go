@@ -1,3 +1,20 @@
+/**
+ * ARCHIVO: handlers.go
+ * UBICACIÓN: Backend/internal/handlers/handlers.go
+ * DESCRIPCIÓN: Controlador central de lógica de negocio para la API de Gestión Local.
+ * Contiene los manejadores de peticiones (handlers) para el catálogo de publicaciones,
+ * procesos de autenticación con JWT, seguridad por PIN, gestión de perfiles de usuario
+ * y notificaciones push en tiempo real mediante WebSockets.
+ *
+ * FUNCIONES IMPLICADAS:
+ * - GetPublicaciones: Recupera el listado optimizado de publicaciones.
+ * - LoginFinalHandler: Autenticación definitiva con emisión de pases JWT.
+ * - IdentifyUserHandler: Verificación previa de existencia de cuenta.
+ * - RequestPinHandler / VerifyPinHandler: Flujo de validación de identidad.
+ * - BroadcastSeguridadUpdateHandler: Difusión masiva (Email + WebSocket).
+ * - UpdateProfileDataHandler / UploadFotoHandler: Administración de identidad del usuario.
+ */
+
 package handlers
 
 import (
@@ -12,22 +29,26 @@ import (
 	"strings"
 	"time"
 
+	"gestion-congregacion/backend/internal/auth"
 	"gestion-congregacion/backend/internal/models"
-
-	"gestion-congregacion/backend/internal/auth" // <--- Agregado
-    "gestion-congregacion/backend/internal/ws"   // <--- Agregado
+	"gestion-congregacion/backend/internal/ws"
 
 	"github.com/resend/resend-go/v2"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-
-	"golang.org/x/crypto/bcrypt" // <--- Agregado
 )
 
+// --- SECCIÓN: MÓDULO DE PUBLICACIONES ---
+
+// @Summary Obtener catálogo de publicaciones
+// @Description Retorna una lista de todos los libros y revistas disponibles
+// @Tags Publicaciones
+// @Produce json
+// @Success 200 {array} models.Publicacion
+// @Router /api/publicaciones [get]
 func GetPublicaciones(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		// SEO 2026: Cache-Control public (Permite que CDNs y Navegadores guarden el JSON)
-		// max-age=3600 (1 hora), s-maxage=7200 (2 horas en Shared Cache/CDNs)
+		// SEO 2026: Cache-Control public para optimizar la velocidad de carga en buscadores
 		w.Header().Set("Cache-Control", "public, max-age=3600, s-maxage=7200")
 
 		var pubs []models.Publicacion
@@ -42,6 +63,9 @@ func GetPublicaciones(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// --- SECCIÓN: MÓDULO DE AUTENTICACIÓN Y SEGURIDAD ---
+
+// LoginHandler gestiona el inicio de sesión inicial (Versión de compatibilidad)
 func LoginHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req models.LoginRequest
@@ -66,6 +90,7 @@ func LoginHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// CheckUsernameAvailabilityHandler verifica la disponibilidad de un alias y ofrece sugerencias automáticas
 func CheckUsernameAvailabilityHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username := r.URL.Query().Get("username")
@@ -74,7 +99,6 @@ func CheckUsernameAvailabilityHandler(db *gorm.DB) http.HandlerFunc {
 		var countUsuarios int64
 		var countPersonas int64
 
-		// Buscar en ambas tablas para evitar duplicados globales
 		db.Table("core_usuarios").Where("username_temp = ?", username).Count(&countUsuarios)
 		db.Table("core_personas").Where("username_temp = ? AND id != ?", username, personaID).Count(&countPersonas)
 
@@ -88,7 +112,6 @@ func CheckUsernameAvailabilityHandler(db *gorm.DB) http.HandlerFunc {
 			}
 			db.Table("core_personas").Select("apellido_nombre, id").Where("id = ?", personaID).First(&persona)
 
-			// Limpieza de nombre para sugerencias
 			parts := strings.Split(strings.ToLower(persona.ApellidoNombre), " ")
 			ape := parts[0]
 			nom := ""
@@ -107,7 +130,7 @@ func CheckUsernameAvailabilityHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// NUEVO: Verificar si el username existe
+// CheckUsernameHandler realiza una verificación rápida de existencia de alias
 func CheckUsernameHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		username := r.URL.Query().Get("username")
@@ -117,23 +140,19 @@ func CheckUsernameHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// RequestPinHandler gestiona la generación y envío de códigos de identidad por email
 func RequestPinHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
 			Email        string `json:"email"`
 			Username     string `json:"username"`
-			Congregacion string `json:"congregacion"` // Aquí recibimos el NÚMERO (ej: 9738)
+			Congregacion string `json:"congregacion"`
 		}
 		json.NewDecoder(r.Body).Decode(&req)
 
-		// --- NUEVA LÓGICA: Buscar el nombre real de la congregación ---
 		var nombreReal string
-		db.Table("core_congregaciones").
-			Select("nombre").
-			Where("numero_congregacion = ?", req.Congregacion).
-			Scan(&nombreReal)
+		db.Table("core_congregaciones").Select("nombre").Where("numero_congregacion = ?", req.Congregacion).Scan(&nombreReal)
 
-		// Si no encuentra el nombre por número, intentamos buscar por el usuario
 		if nombreReal == "" {
 			db.Table("core_congregaciones").
 				Select("core_congregaciones.nombre").
@@ -141,7 +160,6 @@ func RequestPinHandler(db *gorm.DB) http.HandlerFunc {
 				Where("core_usuarios.username_temp = ?", req.Username).
 				Scan(&nombreReal)
 		}
-		// --- FIN DE BÚSQUEDA ---
 
 		rand.Seed(time.Now().UnixNano())
 		pin := fmt.Sprintf("%06d", rand.Intn(1000000))
@@ -154,26 +172,24 @@ func RequestPinHandler(db *gorm.DB) http.HandlerFunc {
 		apiKey := os.Getenv("RESEND_API_KEY")
 		client := resend.NewClient(apiKey)
 
-		// DISEÑO CORREGIDO: Usamos nombreReal y aclaramos el color del texto
 		htmlContent := fmt.Sprintf(`
-			<div style="font-family: 'Open Sans', Arial, sans-serif; background-color: #f5f5f5; padding: 20px; color: #1a1a1a;">
-				<div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border-top: 6px solid #214382; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-					<div style="padding: 25px; background-color: #1a335a; text-align: center;">
-						<h1 style="color: #ffffff; margin: 0; font-size: 18px; text-transform: uppercase; font-weight: 800;">Gestión Local Teocrática</h1>
-						<!-- COLOR ACLARADO (#cbd5e1) PARA MÁXIMA LEGIBILIDAD -->
-						<p style="color: #cbd5e1; margin: 5px 0 0 0; font-style: italic; font-size: 16px; font-weight: 400;">Congregación %s</p>
-					</div>
-					<div style="padding: 35px; line-height: 1.6;">
-						<p style="font-size: 16px;">Usted solicitó este código para comprobar la identidad de su cuenta:</p>
-						<p style="font-weight: bold; font-size: 18px; color: #1a335a;">%s</p>
-						<div style="margin: 30px 0; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; text-align: center;">
-							<p style="margin: 0 0 10px 0; color: #64748b; text-transform: uppercase; font-size: 11px; font-weight: 800;">Código de verificación</p>
-							<h2 style="margin: 0; font-size: 36px; color: #214382; letter-spacing: 8px; white-space: nowrap; font-family: monospace;">%s</h2>
-						</div>
-						<p style="font-size: 13px; color: #94a3b8; font-style: italic;">Si usted no solicitó esto, por seguridad cambie su contraseña.</p>
-					</div>
-				</div>
-			</div>`, nombreReal, req.Username, pin) // <-- Aquí pasamos nombreReal
+            <div style="font-family: 'Open Sans', Arial, sans-serif; background-color: #f5f5f5; padding: 20px; color: #1a1a1a;">
+                <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; border-top: 6px solid #214382; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <div style="padding: 25px; background-color: #1a335a; text-align: center;">
+                        <h1 style="color: #ffffff; margin: 0; font-size: 18px; text-transform: uppercase; font-weight: 800;">Gestión Local Teocrática</h1>
+                        <p style="color: #cbd5e1; margin: 5px 0 0 0; font-style: italic; font-size: 16px; font-weight: 400;">Congregación %s</p>
+                    </div>
+                    <div style="padding: 35px; line-height: 1.6;">
+                        <p style="font-size: 16px;">Usted solicitó este código para comprobar la identidad de su cuenta:</p>
+                        <p style="font-weight: bold; font-size: 18px; color: #1a335a;">%s</p>
+                        <div style="margin: 30px 0; padding: 20px; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; text-align: center;">
+                            <p style="margin: 0 0 10px 0; color: #64748b; text-transform: uppercase; font-size: 11px; font-weight: 800;">Código de verificación</p>
+                            <h2 style="margin: 0; font-size: 36px; color: #214382; letter-spacing: 8px; white-space: nowrap; font-family: monospace;">%s</h2>
+                        </div>
+                        <p style="font-size: 13px; color: #94a3b8; font-style: italic;">Si usted no solicitó esto, por seguridad cambie su contraseña.</p>
+                    </div>
+                </div>
+            </div>`, nombreReal, req.Username, pin)
 
 		params := &resend.SendEmailRequest{
 			From:    "Gestion Local <onboarding@resend.dev>",
@@ -186,7 +202,7 @@ func RequestPinHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// --- PASO 3: VERIFICAR PIN ---
+// VerifyPinHandler valida la vigencia y exactitud del código PIN ingresado
 func VerifyPinHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -207,10 +223,16 @@ func VerifyPinHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// @Summary Iniciar Sesión (Login)
+// @Description Autentica al usuario y entrega un Token JWT. CORRECCIÓN: Paso 1 (Mapeo nativo de GORM).
+// @Tags Autenticación
+// @Accept json
+// @Produce json
+// @Param login body models.LoginRequest true "Credenciales de usuario"
+// @Success 200 {object} map[string]interface{}
+// @Router /api/login-final [post]
 func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		// SEGURIDAD: Prohibir estrictamente cualquier tipo de caché para datos sensibles
 		w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate")
 
 		var req models.LoginRequest
@@ -220,7 +242,7 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 		}
 
 		var u models.Usuario
-		// 1. Intentar Admin (Traemos TODO de la congregación)
+		// Intento 1: Administradores (Mapeo optimizado eliminando alias conflictivos)
 		result := db.Table("core_usuarios").
 			Select(`core_usuarios.*, 
                     core_personas.apellido_nombre as nombre_completo, 
@@ -241,7 +263,7 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 			Joins("JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
 			Where("core_usuarios.username_temp = ? AND core_personas.estado = 'ALTA'", req.Username).First(&u)
 
-		// 2. Intentar Persona normal si no es admin
+		// Intento 2: Persona normal (Se elimina alias para permitir mapeo por struct tags)
 		if result.Error != nil {
 			result = db.Table("core_personas").
 				Select(`core_personas.id as persona_id, 
@@ -249,7 +271,7 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
                         core_personas.email, 
                         core_personas.contacto, 
                         core_personas.url_imagen as foto_url, 
-                        core_personas.username_temp as username, 
+                        core_personas.username_temp, 
                         core_personas.password_hash, 
                         core_personas.estado, 
                         core_congregaciones.nombre as congregacion_nombre, 
@@ -271,7 +293,6 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// Validación Bcrypt / Texto plano
 		isValid := false
 		if strings.HasPrefix(u.PasswordHash, "$2a$") {
 			err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(req.Password))
@@ -286,7 +307,6 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// --- NUEVO: Generación de JWT ---
 		token, err := auth.GenerarJWT(u.ID)
 		if err != nil {
 			log.Println("Error generando token:", err)
@@ -294,7 +314,6 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// Enviar tanto el usuario como el token en un mapa
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"user":  u,
@@ -303,7 +322,7 @@ func LoginFinalHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// --- RESET PASSWORD (CON VALIDACIÓN DE CLAVE ACTUAL) ---
+// ResetPasswordHandler gestiona el cambio seguro de contraseñas
 func ResetPasswordHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -317,17 +336,12 @@ func ResetPasswordHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// 1. Obtener la contraseña guardada actualmente
 		var storedHash string
-
-		// Simplemente ejecutamos la consulta sin guardarla en una variable "result"
 		db.Table("core_usuarios").Select("password_hash").Where("persona_id = ?", req.PersonaID).Scan(&storedHash)
-
 		if storedHash == "" {
 			db.Table("core_personas").Select("password_hash").Where("id = ?", req.PersonaID).Scan(&storedHash)
 		}
 
-		// 2. Verificar si la contraseña actual coincide
 		isCorrect := false
 		if strings.HasPrefix(storedHash, "$2a$") {
 			err := bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(req.CurrentPassword))
@@ -342,14 +356,12 @@ func ResetPasswordHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// 3. Si es correcta, encriptar la NUEVA
 		hashed, err := bcrypt.GenerateFromPassword([]byte(req.NewPassword), bcrypt.DefaultCost)
 		if err != nil {
 			http.Error(w, "Error interno", 500)
 			return
 		}
 
-		// 4. Actualizar en ambas tablas
 		db.Table("core_usuarios").Where("persona_id = ?", req.PersonaID).Updates(map[string]interface{}{
 			"password_hash":       string(hashed),
 			"password_changed_at": time.Now(),
@@ -363,11 +375,7 @@ func ResetPasswordHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// handlers.go
-
-// handlers.go
-
-// --- IDENTIFICAR USUARIO (Corregido para buscar en ambas tablas) ---
+// IdentifyUserHandler verifica la existencia de un usuario antes de iniciar procesos de recuperación
 func IdentifyUserHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -379,15 +387,11 @@ func IdentifyUserHandler(db *gorm.DB) http.HandlerFunc {
 		}
 
 		var count int64
-		// 1. Intentar buscar en core_usuarios (Administradores)
 		db.Table("core_usuarios").Where("username_temp = ?", req.Username).Count(&count)
-
-		// 2. Si no lo encuentra, buscar en core_personas (Usuarios normales)
 		if count == 0 {
 			db.Table("core_personas").Where("username_temp = ?", req.Username).Count(&count)
 		}
 
-		// 3. Si no existe en ninguna, ahora sí devolvemos 404
 		if count == 0 {
 			log.Printf("⚠️ Usuario no encontrado: %s", req.Username)
 			w.WriteHeader(http.StatusNotFound)
@@ -398,7 +402,7 @@ func IdentifyUserHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// Función para obtener los últimos 8 dígitos del teléfono guardado
+// formatLast8 normaliza formatos telefónicos para comparaciones de seguridad
 func formatLast8(phone string) string {
 	re := regexp.MustCompile(`\D`)
 	nums := re.ReplaceAllString(phone, "")
@@ -408,7 +412,7 @@ func formatLast8(phone string) string {
 	return nums[len(nums)-8:]
 }
 
-// --- RECUPERAR IDENTIDAD (ID+CONG o TELÉFONO) ---
+// RecoverByPersonaIDHandler recupera la cuenta utilizando identificadores personales o telefonía
 func RecoverByPersonaIDHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -455,7 +459,7 @@ func RecoverByPersonaIDHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// --- ENVIAR DATOS FINALES (USUARIO, ID, CONG) ---
+// SendUsernameRealHandler envía los datos de acceso institucionales al correo del usuario
 func SendUsernameRealHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct{ Email string }
@@ -472,18 +476,18 @@ func SendUsernameRealHandler(db *gorm.DB) http.HandlerFunc {
 		client := resend.NewClient(apiKey)
 
 		htmlContent := fmt.Sprintf(`
-			<div style="font-family: sans-serif; background-color: #f5f5f5; padding: 20px;">
-				<div style="max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; border-top: 6px solid #214382; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-					<h2 style="color: #1a335a; text-align: center;">DATOS DE ACCESO</h2>
-					<p>Aquí tienes la información solicitada para <b>%s</b>:</p>
-					<div style="background: #f0f2f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-						<p><b>Usuario:</b> %s</p>
-						<p><b>ID Usuario:</b> %d</p>
-						<p><b>Congregación:</b> %s</p>
-					</div>
-					<p style="font-size: 11px; color: #999;">Por seguridad, elimine este correo una vez memorizados los datos.</p>
-				</div>
-			</div>`, u.CongregacionNombre, u.Username, u.PersonaID, u.NumeroCongregacion)
+            <div style="font-family: sans-serif; background-color: #f5f5f5; padding: 20px;">
+                <div style="max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; border-top: 6px solid #214382; padding: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                    <h2 style="color: #1a335a; text-align: center;">DATOS DE ACCESO</h2>
+                    <p>Aquí tienes la información solicitada para <b>%s</b>:</p>
+                    <div style="background: #f0f2f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <p><b>Usuario:</b> %s</p>
+                        <p><b>ID Usuario:</b> %d</p>
+                        <p><b>Congregación:</b> %s</p>
+                    </div>
+                    <p style="font-size: 11px; color: #999;">Por seguridad, elimine este correo una vez memorizados los datos.</p>
+                </div>
+            </div>`, u.CongregacionNombre, u.Username, u.PersonaID, u.NumeroCongregacion)
 
 		params := &resend.SendEmailRequest{
 			From:    "Gestion Local <onboarding@resend.dev>",
@@ -496,7 +500,7 @@ func SendUsernameRealHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// Recuperar el nombre de usuario (después del PIN)
+// RecoverUsernameHandler obtiene el alias del usuario asociado a una cuenta de correo
 func RecoverUsernameHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		email := r.URL.Query().Get("email")
@@ -509,7 +513,16 @@ func RecoverUsernameHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// --- UPDATE PROFILE (CORREGIDO PARA EVITAR ERROR UUID VACÍO) ---
+// --- SECCIÓN: MÓDULO DE GESTIÓN DE PERFIL ---
+
+// @Summary Actualizar Perfil
+// @Description Modifica datos del usuario (Email, Teléfono, etc). Requiere Token JWT.
+// @Tags Usuario
+// @Security ApiKeyAuth
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /api/update-profile [post]
 func UpdateProfileDataHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -523,17 +536,13 @@ func UpdateProfileDataHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// Limpiar el valor si es teléfono
 		if req.Campo == "contacto" {
 			re := regexp.MustCompile(`\D`)
 			req.Valor = re.ReplaceAllString(req.Valor, "")
 		}
 
-		// USAMOS PersonaID COMO ANCLA PRINCIPAL PARA EVITAR ERRORES DE UUID
 		if req.Campo == "username" {
-			// Actualizar en core_personas
 			db.Table("core_personas").Where("id = ?", req.PersonaID).Update("username_temp", req.Valor)
-			// Actualizar en core_usuarios (si existe el registro ahí también)
 			db.Table("core_usuarios").Where("persona_id = ?", req.PersonaID).Update("username_temp", req.Valor)
 		} else if req.Campo == "email" {
 			db.Table("core_personas").Where("id = ?", req.PersonaID).Update("email", req.Valor)
@@ -546,6 +555,7 @@ func UpdateProfileDataHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// UploadFotoHandler actualiza la URL de la imagen de perfil
 func UploadFotoHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var data struct {
@@ -559,17 +569,15 @@ func UploadFotoHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// GetSeguridadInfoHandler recupera los boletines de seguridad más recientes
 func GetSeguridadInfoHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
-		// SEO 2026: Cache corta pero efectiva (600 segundos = 10 min)
 		w.Header().Set("Cache-Control", "public, max-age=600")
 
 		var info struct {
 			Contenido string    `json:"contenido"`
 			UpdatedAt time.Time `json:"updated_at"`
 		}
-		// Agregamos OrderBy para traer siempre el registro más reciente por fecha
 		result := db.Table("core_seguridad_info").Order("updated_at desc").First(&info)
 
 		if result.Error != nil {
@@ -582,6 +590,7 @@ func GetSeguridadInfoHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
+// SaveSeguridadInfoHandler registra nuevas recomendaciones de seguridad
 func SaveSeguridadInfoHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -589,7 +598,6 @@ func SaveSeguridadInfoHandler(db *gorm.DB) http.HandlerFunc {
 		}
 		json.NewDecoder(r.Body).Decode(&req)
 
-		// Insertamos un registro NUEVO (no editamos el viejo para tener historial)
 		err := db.Table("core_seguridad_info").Create(map[string]interface{}{
 			"contenido":  req.Contenido,
 			"updated_at": time.Now(),
@@ -603,7 +611,7 @@ func SaveSeguridadInfoHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// --- SUSPENDER CUENTA (CAMBIO DE ESTADO EN PERSONAS) ---
+// SuspenderCuentaHandler marca una cuenta para baja inmediata por petición del usuario
 func SuspenderCuentaHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -612,10 +620,8 @@ func SuspenderCuentaHandler(db *gorm.DB) http.HandlerFunc {
 		}
 		json.NewDecoder(r.Body).Decode(&req)
 
-		// 1. Cambiamos el estado en core_personas a BAJA (Impacto principal)
 		db.Table("core_personas").Where("id = ?", req.PersonaID).Update("estado", "BAJA")
 
-		// 2. Si tiene registro de administrador, también suspendemos la cuenta
 		if req.UsuarioID != "" {
 			db.Table("core_usuarios").Where("id = ?", req.UsuarioID).Update("estado_cuenta", "suspendida")
 		}
@@ -625,7 +631,7 @@ func SuspenderCuentaHandler(db *gorm.DB) http.HandlerFunc {
 	}
 }
 
-// --- DIFUSIÓN MASIVA DE SEGURIDAD PERSONALIZADA ---
+// BroadcastSeguridadUpdateHandler distribuye avisos críticos vía email y notificaciones push (WS)
 func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct {
@@ -637,7 +643,6 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// 1. Guardar en Base de Datos (Esto actualiza la web)
 		err := db.Table("core_seguridad_info").Create(map[string]interface{}{
 			"contenido":         req.Titulo,
 			"descripcion_larga": req.DescripcionLarga,
@@ -649,10 +654,8 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 			return
 		}
 
-		// 2. Procesar el texto para el Email (Convertir "Enters" en saltos de línea HTML)
 		descripcionHTML := strings.ReplaceAll(req.DescripcionLarga, "\n", "<br/>")
 
-		// 3. Obtener destinatarios activos con sus datos de congregación
 		type Destinatario struct {
 			Email              string
 			NombreCompleto     string
@@ -666,12 +669,10 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 			Where("core_personas.estado = 'ALTA' AND core_personas.email IS NOT NULL AND core_personas.email != ''").
 			Scan(&lista)
 
-		// 4. Configurar cliente Resend
 		apiKey := os.Getenv("RESEND_API_KEY")
 		client := resend.NewClient(apiKey)
 		fechaActual := time.Now().Format("02/01/2006")
 
-		// 5. Enviar correos personalizados
 		for _, u := range lista {
 			asunto := fmt.Sprintf("⚠️ %s [%s - %s]", req.Titulo, u.Username, u.CongregacionNombre)
 
@@ -722,7 +723,7 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 			}
 		}
 
-		// --- NUEVO: DIFUSIÓN EN TIEMPO REAL VÍA WEBSOCKET ---
+		// DIFUSIÓN EN TIEMPO REAL VÍA WEBSOCKET
 		ws.Broadcast(map[string]string{
 			"tipo":   "ALERTA_SEGURIDAD",
 			"titulo": req.Titulo,
@@ -733,18 +734,17 @@ func BroadcastSeguridadUpdateHandler(db *gorm.DB) http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 	}
 }
-// 4. NUEVO: Manejo de Archivos en el Backend (Subida de fotos procesadas)
-func HandleFileUpload(w http.ResponseWriter, r *http.Request) {
-    // Aquí el backend recibe el archivo
-    r.ParseMultipartForm(10 << 20) // Límite 10MB
-    file, handler, err := r.FormFile("foto")
-    if err != nil {
-        http.Error(w, "Error al recibir archivo", 400)
-        return
-    }
-    defer file.Close()
 
-    fmt.Printf("Archivo recibido: %v, Tamaño: %v\n", handler.Filename, handler.Size)
-    // Aquí podrías procesar la imagen (redimensionar) antes de mandarla a Supabase
-    w.WriteHeader(http.StatusOK)
+// HandleFileUpload gestiona la recepción de binarios enviados directamente al backend
+func HandleFileUpload(w http.ResponseWriter, r *http.Request) {
+	r.ParseMultipartForm(10 << 20) // Límite de 10MB
+	file, handler, err := r.FormFile("foto")
+	if err != nil {
+		http.Error(w, "Error al recibir archivo", 400)
+		return
+	}
+	defer file.Close()
+
+	fmt.Printf("Archivo recibido: %v, Tamaño: %v\n", handler.Filename, handler.Size)
+	w.WriteHeader(http.StatusOK)
 }

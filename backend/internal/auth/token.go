@@ -25,9 +25,9 @@ func GenerarJWT(usuarioID string) (string, error) {
 
 	// Definimos los "Claims" (datos que viajan dentro del token)
 	claims := jwt.MapClaims{
-		"sub": usuarioID,                                 // ID del usuario
-		"exp": time.Now().Add(time.Hour * 24).Unix(),      // Expira en 24 horas
-		"iat": time.Now().Unix(),                         // Fecha de emisión
+		"sub": usuarioID,                             // ID del usuario
+		"exp": time.Now().Add(time.Hour * 24).Unix(), // Expira en 24 horas
+		"iat": time.Now().Unix(),                     // Fecha de emisión
 	}
 
 	// Creamos el token con el algoritmo de firma HS256
@@ -40,7 +40,7 @@ func GenerarJWT(usuarioID string) (string, error) {
 // ValidarJWT verifica si un token es auténtico y no ha expirado
 func ValidarJWT(tokenString string) (*jwt.Token, error) {
 	secret := []byte(os.Getenv("JWT_SECRET"))
-	
+
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// Validamos que el método de firma sea el esperado
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {

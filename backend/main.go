@@ -17,8 +17,9 @@ import (
 	"gestion-congregacion/backend/internal/handlers"
 	"gestion-congregacion/backend/internal/ws"
 
-	"github.com/swaggo/http-swagger"
 	_ "gestion-congregacion/backend/docs" // <--- EL GUION BAJO (_) ES VITAL AQUÍ
+
+	httpSwagger "github.com/swaggo/http-swagger"
 
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
@@ -80,7 +81,7 @@ func main() {
 	mux.HandleFunc("/api/recover-user-id", handlers.RecoverByPersonaIDHandler(db))
 	mux.HandleFunc("/api/send-username-real", handlers.SendUsernameRealHandler(db))
 	mux.HandleFunc("/api/seguridad-info", handlers.GetSeguridadInfoHandler(db))
-	
+
 	// WebSocket (Público para la conexión inicial)
 	mux.HandleFunc("/ws", ws.WsHandler)
 
@@ -94,7 +95,7 @@ func main() {
 	mux.Handle("/api/upload-foto", handlers.AuthMiddleware(http.HandlerFunc(handlers.UploadFotoHandler(db))))
 	mux.Handle("/api/suspender-cuenta", handlers.AuthMiddleware(http.HandlerFunc(handlers.SuspenderCuentaHandler(db))))
 	mux.Handle("/api/save-seguridad-info", handlers.AuthMiddleware(http.HandlerFunc(handlers.SaveSeguridadInfoHandler(db))))
-	
+
 	// Ruta para pruebas de subida al backend
 	mux.HandleFunc("/api/upload-backend", handlers.HandleFileUpload)
 

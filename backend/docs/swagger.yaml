@@ -1,4 +1,79 @@
+definitions:
+  models.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Publicacion:
+    properties:
+      id:
+        type: string
+      nombre_publicacion:
+        type: string
+      siglas:
+        type: string
+      tipo:
+        type: string
+      url_portada:
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /api/login-final:
+    post:
+      consumes:
+      - application/json
+      description: Autentica al usuario y entrega un Token JWT
+      parameters:
+      - description: Credenciales de usuario
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Iniciar Sesión (Login)
+      tags:
+      - Autenticación
+  /api/publicaciones:
+    get:
+      description: Retorna una lista de todos los libros y revistas disponibles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Publicacion'
+            type: array
+      summary: Obtener catálogo de publicaciones
+      tags:
+      - Publicaciones
+  /api/update-profile:
+    post:
+      consumes:
+      - application/json
+      description: Modifica datos del usuario (Email, Teléfono, etc). Requiere Token
+        JWT.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+      security:
+      - ApiKeyAuth: []
+      summary: Actualizar Perfil
+      tags:
+      - Usuario
 swagger: "2.0"

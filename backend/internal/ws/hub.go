@@ -27,7 +27,7 @@ func WsHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
-	
+
 	mutex.Lock()
 	clients[conn] = true
 	mutex.Unlock()
