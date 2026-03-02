@@ -144,7 +144,7 @@ function Navbar() {
           </button>
 
           {isProfileOpen && (
-            <div className="absolute right-0 top-full mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute right-0 top-full mt-1 w-62 bg-white rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="p-4 bg-jw-body border-b border-jw-border text-left">
                 <p className="text-base font-bold leading-tight text-jw-navy">
                   {user?.nombre_completo}
@@ -156,7 +156,7 @@ function Navbar() {
 
               <div className="p-4 text-xs text-gray-700 leading-relaxed italic text-left">
                 <div className="px-1 border-l-4 border-jw-accent pl-3">
-                  <div className="mb-3">
+                  <div className="mb-2">
                     <p className="font-bold not-italic text-jw-navy text-base leading-tight">
                       {user?.congregacion_nombre}
                     </p>
@@ -165,15 +165,15 @@ function Navbar() {
                     </p>
                   </div>
 
-                  <div className="space-y-1 mb-3">
+                  <div className="space-y-1 mb-1">
                     <p className="font-medium">{user?.direccion}</p>
                     <p>{user?.ciudad}, {user?.partido}</p>
                     <p className="text-gray-500">{user?.provincia}, {user?.pais}</p>
                   </div>
 
-                  <div className="flex items-center gap-2 text-gray-400 pt-1 border-t border-gray-50 mt-2">
+                  <div className="flex items-center gap-2 text-gray-500 pt-1 border-t border-gray-50 mt-2">
                     <Globe size={13} className="shrink-0 text-jw-accent-light" />
-                    <p className="font-bold uppercase tracking-widest text-[10px] not-italic">
+                    <p className="font-normal uppercase tracking-widest text-[10px] not-italic">
                       Región {user?.region || "No definida"}
                     </p>
                   </div>
@@ -184,14 +184,14 @@ function Navbar() {
                 <div className="space-y-1">
                   <button
                     onClick={() => { navigate("/perfil"); closeMenus(); }}
-                    className="w-full flex items-center gap-3 p-2.5 hover:bg-blue-100 rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-1 hover:bg-blue-100 rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
                   >
                     <Settings className="w-4 h-4 text-gray-400 group-hover:text-jw-blue" />
                     <span>Administrar cuenta</span>
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 p-2.5 hover:bg-red-100 rounded-xl text-sm transition-all text-red-600 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-1 hover:bg-red-100 rounded-xl text-sm transition-all text-red-600 group text-left font-medium active:scale-95"
                   >
                     <LogOut className="w-4 h-4 text-red-400 group-hover:text-red-600" />
                     <span>Cerrar sesión</span>
