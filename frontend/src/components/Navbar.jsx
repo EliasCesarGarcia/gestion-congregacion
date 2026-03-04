@@ -1,11 +1,11 @@
 /**
  * ARCHIVO: Navbar.jsx
  * UBICACIÓN: src/components/Navbar.jsx
- * DESCRIPCIÓN: Barra de navegación principal con posicionamiento fijo. 
- * Maneja el menú lateral (Sidebar), el título dinámico basado en la ruta, 
+ * DESCRIPCIÓN: Barra de navegación principal con posicionamiento fijo.
+ * Maneja el menú lateral (Sidebar), el título dinámico basado en la ruta,
  * el acceso al perfil de usuario con refresco de caché de imagen.
  * Ahora incluye lógica adaptable de colores y saludos según el horario local.
- * 
+ *
  * FUNCIONES IMPLICADAS:
  * - closeMenus: Cierra sidebar y dropdown de perfil.
  * - handleLogout: Gestiona el cierre de sesión y redirección.
@@ -27,11 +27,15 @@ import {
   ChevronDown,
   ShieldCheck,
   Globe,
+  LayoutGrid,
 } from "lucide-react";
 
 function Navbar() {
   // --- 1. CONFIGURACIÓN Y ESTADOS ---
-  const { user, logout, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
+  const { user: session, logout, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
+  // Creamos la constante 'user' extrayendo los datos reales (session.user)
+  const user = session?.user || session;
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const navigate = useNavigate();
@@ -60,7 +64,10 @@ function Navbar() {
   // --- 3. GESTIÓN DE IMAGEN ---
   const getProfileImage = () => {
     if (!user?.foto_url) return null;
-    if (user.foto_url.startsWith("/avatars/") || user.foto_url.startsWith("http")) {
+    if (
+      user.foto_url.startsWith("/avatars/") ||
+      user.foto_url.startsWith("http")
+    ) {
       return user.foto_url;
     }
     return `https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/${user.foto_url}?width=120&quality=80&format=webp`;
@@ -71,12 +78,17 @@ function Navbar() {
       style={{ backgroundColor: timeTheme.bg }} // Aplicación de color dinámico (Mañana/Tarde/Noche)
       className="text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-1000"
     >
-      {/* Fondo invisible para cerrar menús al hacer clic fuera */}
+    
+    {/* FONDO DESENFOCADO (Backdrop) */}
       {(isMenuOpen || isProfileOpen) && (
         <div
-          className="fixed inset-0 z-[45] w-screen h-screen bg-transparent cursor-default"
+          className="fixed inset-0 z-[-1] bg-black/10 transition-opacity duration-500 w-screen h-screen"
+          style={{
+            backdropFilter: "blur(2px)",
+            WebkitBackdropFilter: "blur(2px)",
+          }}
           onClick={closeMenus}
-        ></div>
+        />
       )}
 
       <div className="w-full flex items-center justify-between">
@@ -121,7 +133,8 @@ function Navbar() {
                 Mi Cuenta
               </span>
               <span className="text-base font-light italic">
-                {timeTheme.greeting}{" "} {/* Saludo dinámico: Buenos días / Buenas tardes / Buenas noches */}
+                {timeTheme.greeting}{" "}
+                {/* Saludo dinámico: Buenos días / Buenas tardes / Buenas noches */}
                 <span className="font-medium not-italic">
                   {user?.nombre_completo?.split(" ").reverse().join(" ")}
                 </span>
@@ -144,7 +157,7 @@ function Navbar() {
           </button>
 
           {isProfileOpen && (
-            <div className="absolute right-0 top-full mt-1 w-62 bg-white rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="absolute right-0 top-full mt-1 w-62 bg-white z-[160] rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
               <div className="p-4 bg-jw-body border-b border-jw-border text-left">
                 <p className="text-base font-bold leading-tight text-jw-navy">
                   {user?.nombre_completo}
@@ -167,12 +180,19 @@ function Navbar() {
 
                   <div className="space-y-1 mb-1">
                     <p className="font-medium">{user?.direccion}</p>
-                    <p>{user?.ciudad}, {user?.partido}</p>
-                    <p className="text-gray-500">{user?.provincia}, {user?.pais}</p>
+                    <p>
+                      {user?.ciudad}, {user?.partido}
+                    </p>
+                    <p className="text-gray-500">
+                      {user?.provincia}, {user?.pais}
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-2 text-gray-500 pt-1 border-t border-gray-50 mt-2">
-                    <Globe size={13} className="shrink-0 text-jw-accent-light" />
+                    <Globe
+                      size={13}
+                      className="shrink-0 text-jw-accent-light"
+                    />
                     <p className="font-normal uppercase tracking-widest text-[10px] not-italic">
                       Región {user?.region || "No definida"}
                     </p>
@@ -183,7 +203,10 @@ function Navbar() {
 
                 <div className="space-y-1">
                   <button
-                    onClick={() => { navigate("/perfil"); closeMenus(); }}
+                    onClick={() => {
+                      navigate("/perfil");
+                      closeMenus();
+                    }}
                     className="w-full flex items-center gap-3 p-1 hover:bg-blue-100 rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
                   >
                     <Settings className="w-4 h-4 text-gray-400 group-hover:text-jw-blue" />
@@ -203,57 +226,105 @@ function Navbar() {
         </div>
       </div>
 
-      {/* MENÚ LATERAL (SIDEBAR) */}
+      
+
+      {/* 2. ESTRUCTURA DEL MENÚ LATERAL (SIDEBAR) */}
       <div
-        className={`fixed left-0 top-0 h-full w-72 bg-white text-gray-800 z-[110] shadow-2xl transition-transform duration-300 ease-in-out ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+        className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-64 md:w-56 bg-white z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-gray-500 will-change-transform ${
+          isMenuOpen ? "translate-x-0" : "-translate-x-[calc(100%+20px)]"
+        }`}
       >
-        <div 
-          style={{ backgroundColor: timeTheme.bg }}
-          className="p-5 text-white flex justify-between items-center shadow-lg border-b-4 border-jw-blue transition-colors duration-1000"
+        {/* ENCABEZADO: Compacto con color dinámico según horario */}
+        <div
+          style={{ backgroundColor: timeTheme?.bg || "#1a335a" }}
+          className="py-3 px-6 text-white flex justify-between items-center transition-colors duration-1000 shadow-md"
         >
-          <div className="flex items-center gap-2">
-            <ShieldCheck size={20} className="text-jw-accent" />
-            <span className="text-sm tracking-widest font-black uppercase italic">
-              Navegación
+          <div className="flex items-center gap-4">
+            {/* Icono de menú principal (26px) */}
+            <LayoutGrid size={28} className="text-jw-body shrink-0" />
+            <span className="text-[13px] tracking-[0.25em] font-medium uppercase leading-none">
+              Menú Principal
             </span>
           </div>
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="hover:bg-white/10 p-1 rounded-full transition-colors"
+            aria-label="Cerrar menú"
+            className="hover:bg-white/20 p-1.5 rounded-full transition-all active:scale-75"
           >
-            <X className="w-6 h-6 text-gray-300" />
+            <X className="w-5 h-5 text-white/80" />
           </button>
         </div>
 
-        <div className="p-4 space-y-2 text-left">
-          <NavLink
-            to="/"
-            onClick={closeMenus}
-            className={({ isActive }) =>
-              `flex items-center gap-4 p-4 rounded-xl text-base font-medium transition-all border active:scale-95 ${
-                isActive
-                  ? "bg-jw-blue text-white border-jw-blue shadow-lg"
-                  : "bg-white border-gray-100 text-gray-600 hover:bg-jw-body hover:border-jw-blue/20"
-              }`
-            }
-          >
-            <Home className="w-5 h-5" />
-            <span>Inicio</span>
-          </NavLink>
-          <NavLink
-            to="/publicaciones"
-            onClick={closeMenus}
-            className={({ isActive }) =>
-              `flex items-center gap-4 p-4 rounded-xl text-base font-medium transition-all border active:scale-95 ${
-                isActive
-                  ? "bg-jw-blue text-white border-jw-blue shadow-lg"
-                  : "bg-white border-gray-100 text-gray-600 hover:bg-jw-body hover:border-jw-blue/20"
-              }`
-            }
-          >
-            <BookOpen className="w-5 h-5" />
-            <span>Publicaciones</span>
-          </NavLink>
+        {/* LISTADO DE MENÚS: Minimalismo táctil */}
+        <div className="p-1 space-y-1 overflow-y-auto h-[calc(100%-60px)] custom-scrollbar text-left">
+          {[
+            { to: "/", icon: <Home size={22} />, label: "Inicio" },
+            {
+              to: "/publicaciones",
+              icon: <BookOpen size={22} />,
+              label: "Publicaciones",
+            },
+            {
+              to: "/seguridad-tips",
+              icon: <ShieldCheck size={22} />,
+              label: "Seguridad Digital",
+            },
+            {
+              to: "/contacto",
+              icon: <Globe size={22} />,
+              label: "Ayuda y Contacto",
+            },
+            { to: "/perfil", icon: <User size={22} />, label: "Mi Perfil" },
+          ].map((item) => {
+            // Verificación manual de ruta activa
+            const isAct = location.pathname === item.to;
+
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={closeMenus}
+                style={{
+                  backgroundColor: isAct ? timeTheme?.bg : "transparent",
+                  boxShadow: isAct
+                    ? `0 10px 10px -3px rgba(0,0,0,0.1)`
+                    : "none",
+                }}
+                className={`group relative flex items-center gap-5 mx-1 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-300 border border-transparent
+                  ${
+                    isAct
+                      ? "text-white translate-x-1"
+                      : "text-gray-500 hover:bg-gray-50 hover:text-jw-blue hover:translate-x-1"
+                  }`}
+              >
+                {/* Icono con escala sutil sin vibración */}
+                <span
+                  className={`shrink-0 transition-transform duration-500 ${isAct ? "scale-110" : "group-hover:scale-110"}`}
+                >
+                  {item.icon}
+                </span>
+
+                <span className="relative z-10 tracking-wide">
+                  {item.label}
+                </span>
+
+                {/* Indicador de color lateral (solo en hover) */}
+                {!isAct && (
+                  <div
+                    style={{ backgroundColor: timeTheme?.bg }}
+                    className="absolute left-0 w-1 h-4 rounded-full opacity-20 group-hover:opacity-100 transition-all duration-300"
+                  />
+                )}
+              </NavLink>
+            );
+          })}
+        </div>
+
+        {/* PIE DE MENÚ (Branding sutil) */}
+        <div className="absolute bottom-6 left-0 w-full px-8 opacity-20 border-t border-gray-100 pt-4">
+          <p className="text-[9px] font-bold tracking-[0.4em] uppercase text-center text-gray-500">
+            S.G. v2.6
+          </p>
         </div>
       </div>
     </nav>

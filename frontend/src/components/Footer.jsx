@@ -16,7 +16,11 @@ import { MapPin, Globe, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function Footer() {
-  const { user, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
+  const { user: session, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
+  // Creamos la constante 'user' extrayendo los datos reales (session.user)
+  const user = session?.user || session;
+
+
   if (!user) return null;
 
   return (

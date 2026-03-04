@@ -1104,7 +1104,12 @@ const FEMALE_PRESETS = [
 
 // --- COMPONENTE PRINCIPAL ---
 function ProfilePage() {
-  const { user, login, logout } = useContext(AppContext);
+  // Renombramos 'user' a 'session' para manejar el anidamiento
+  const { user: session, login, logout } = useContext(AppContext);
+
+  // Extraemos los datos reales del usuario (session.user) o usamos la raíz si ya vienen directos
+  const user = session?.user || session;
+
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const scrollRef = useRef(null);
@@ -1942,7 +1947,7 @@ function ProfilePage() {
     SECCIÓN: GALERÍA DE ILUSTRACIONES REALES (LOCALES)
     ========================================== */}
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden text-jw-navy">
-          <div className="p-5 bg-jw-navy text-white border-b-4 border-jw-blue flex justify-between items-center">
+          <div className="p-5 bg-jw-navy text-white border-b-3 border-jw-blue flex justify-between items-center">
             <h2 className="text-lg font-normal italic flex items-center gap-3 text-left">
               <UserRoundPlus className="w-9 h-9 text-slate-400" /> Galería de
               Avatares
