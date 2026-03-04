@@ -2044,11 +2044,14 @@ function ProfilePage() {
                       >
                         {Array.from({ length: 15 }).map((_, i) => {
                           const index = i + 1;
+                          // Definimos la carpeta y el nombre con la nueva extensión .webp
+                          const folder =
+                            avatarGender === "male" ? "hombres" : "mujeres";
                           const imgName =
                             avatarGender === "male"
-                              ? `hombre_${index}.png`
-                              : `mujer_${index}.png`;
-                          const fullPath = `/avatars/${avatarGender === "male" ? "hombres" : "mujeres"}/${imgName}`;
+                              ? `hombre_${index}.webp`
+                              : `mujer_${index}.webp`;
+                          const fullPath = `/avatars/${folder}/${imgName}`;
 
                           return (
                             <div
@@ -2073,33 +2076,43 @@ function ProfilePage() {
                                   >
                                     <img
                                       src={fullPath}
-                                      alt={`Opción de avatar ${index}`}
+                                      alt={`Ilustración de perfil opción ${index}`}
                                       className="w-full h-full object-cover"
-                                      loading="lazy" // Crucial para no saturar la conexión
-                                      width="160" // Tamaño del contenedor (w-40 = 160px)
-                                      height="160"
+                                      // --- PARÁMETROS SEO 2026 ---
+                                      loading="lazy" // Carga solo cuando el usuario hace scroll
+                                      fetchPriority="low" // No bloquea la carga del resto de la página
+                                      width="160" // Evita saltos de diseño (CLS)
+                                      height="160" // Evita saltos de diseño (CLS)
                                       onError={(e) => {
+                                        console.error(
+                                          "Error cargando WebP en:",
+                                          fullPath,
+                                        );
+                                        // Fallback por si te olvidaste de convertir alguna
                                         e.target.src =
-                                          "https://via.placeholder.com/150?text=Subir+Imagen";
+                                          "https://via.placeholder.com/150?text=Error+WebP";
                                       }}
                                     />
                                   </motion.div>
                                 </div>
+
+                                {/* Botón de selección con área táctil optimizada */}
                                 <button
                                   onClick={() => handleSelectAvatar(fullPath)}
-                                  className="absolute inset-0 bg-jw-navy/60 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                  className="absolute inset-0 bg-jw-navy/60 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 active:scale-95"
                                 >
                                   <CheckCircle2
                                     className="text-white mb-2"
                                     size={32}
                                   />
-                                  <span className="text-white text-[10px] font-black uppercase tracking-widest bg-jw-blue px-4 py-1.5 rounded-full">
-                                    Seleccionar
+                                  <span className="text-white text-[10px] font-black uppercase tracking-widest bg-jw-blue px-4 py-1.5 rounded-full shadow-lg">
+                                    Establecer
                                   </span>
                                 </button>
                               </div>
+
                               <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest italic">
-                                Perfil {index}
+                                Avatar Institucional {index}
                               </p>
                             </div>
                           );

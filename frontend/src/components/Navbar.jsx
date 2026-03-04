@@ -78,8 +78,7 @@ function Navbar() {
       style={{ backgroundColor: timeTheme.bg }} // Aplicación de color dinámico (Mañana/Tarde/Noche)
       className="text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-1000"
     >
-    
-    {/* FONDO DESENFOCADO (Backdrop) */}
+      {/* FONDO DESENFOCADO (Backdrop) */}
       {(isMenuOpen || isProfileOpen) && (
         <div
           className="fixed inset-0 z-[-1] bg-black/10 transition-opacity duration-500 w-screen h-screen"
@@ -93,9 +92,15 @@ function Navbar() {
 
       <div className="w-full flex items-center justify-between">
         {/* SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO */}
-        <div className="flex items-center z-50 min-w-0">
+        <div
+          className={`flex items-center z-50 min-w-0 transition-all duration-100 
+    ${isMenuOpen || isProfileOpen ? "blur-[2px] opacity-100 pointer-events-none" : "blur-0 opacity-100"}`}
+        >
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={() => {
+              setIsMenuOpen((prev) => !prev);
+              setIsProfileOpen(false);
+            }}
             aria-label="Abrir menú de navegación"
             className="p-1.5 sm:p-2 hover:bg-white/20 hover:text-white hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-1 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
           >
@@ -124,9 +129,12 @@ function Navbar() {
         {/* SECCIÓN DERECHA: PERFIL Y AVATAR */}
         <div className="relative z-50 flex items-center justify-end">
           <button
-            onClick={() => setIsProfileOpen(!isProfileOpen)}
+            onClick={() => {
+              setIsProfileOpen((prev) => !prev);
+              setIsMenuOpen(false);
+            }}
             aria-label="Ver opciones de mi cuenta"
-            className="flex items-center gap-3 sm:gap-5 p-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
+            className="flex items-center gap-3 sm:gap-5 p-0 px-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
           >
             <div className="hidden md:flex flex-col items-end text-right leading-none">
               <span className="text-[10px] font-medium text-jw-accent-light uppercase tracking-widest mb-1">
@@ -226,8 +234,6 @@ function Navbar() {
         </div>
       </div>
 
-      
-
       {/* 2. ESTRUCTURA DEL MENÚ LATERAL (SIDEBAR) */}
       <div
         className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-64 md:w-56 bg-white z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-gray-500 will-change-transform ${
@@ -247,9 +253,12 @@ function Navbar() {
             </span>
           </div>
           <button
-            onClick={() => setIsMenuOpen(false)}
+            onClick={() => {
+              setIsMenuOpen((prev) => !prev);
+              setIsProfileOpen(false);
+            }}
             aria-label="Cerrar menú"
-            className="hover:bg-white/20 p-1.5 rounded-full transition-all active:scale-75"
+            className="hover:bg-white/30 p-1.5 rounded-full transition-all active:scale-75"
           >
             <X className="w-5 h-5 text-white/80" />
           </button>
@@ -290,7 +299,7 @@ function Navbar() {
                     ? `0 10px 10px -3px rgba(0,0,0,0.1)`
                     : "none",
                 }}
-                className={`group relative flex items-center gap-5 mx-1 px-5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-300 border border-transparent
+                className={`group relative flex items-center gap-3 mx-1 px-5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-300 border border-transparent
                   ${
                     isAct
                       ? "text-white translate-x-1"
@@ -321,8 +330,8 @@ function Navbar() {
         </div>
 
         {/* PIE DE MENÚ (Branding sutil) */}
-        <div className="absolute bottom-6 left-0 w-full px-8 opacity-20 border-t border-gray-100 pt-4">
-          <p className="text-[9px] font-bold tracking-[0.4em] uppercase text-center text-gray-500">
+        <div className="absolute bottom-1 left-0 w-full px-2 opacity-80 border-t border-gray-100 pt-2">
+          <p className="text-[9px] font-medium tracking-[0.4em] uppercase text-center text-gray-800">
             S.G. v2.6
           </p>
         </div>
