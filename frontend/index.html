@@ -59,6 +59,16 @@
         }
       }
     </style>
+
+    <script>
+      /* Bloqueo de parpadeo de fuente - CEO 2026 */
+      (function () {
+        try {
+          const savedSize = localStorage.getItem("app_font_size") || "normal";
+          document.documentElement.setAttribute("data-font-size", savedSize);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root">

@@ -195,8 +195,8 @@ function LoginPage() {
 
       <div className="bg-white w-full max-w-[340px] rounded-[2rem] shadow-2xl overflow-hidden relative z-10 border border-white/40 animate-in zoom-in duration-300">
         <div className="p-4 bg-jw-navy text-white text-center border-b-4 border-jw-blue">
-          <Lock className="mx-auto mb-1 w-5 h-5 text-jw-accent" />
-          <h2 className="text-xs font-black tracking-widest uppercase italic leading-tight">
+          <Lock className="mx-auto mb-2 w-5 h-5 text-jw-accent" />
+          <h2 className="text-normal font-medium tracking-widest uppercase leading-tight">
             Sistema de Gestión
           </h2>
         </div>
@@ -206,7 +206,7 @@ function LoginPage() {
           {step === "login" && (
             <div className="space-y-4 animate-in fade-in">
               <input
-                className="w-full p-4 bg-jw-body rounded-2xl outline-none focus:ring-2 focus:ring-jw-blue text-sm text-center italic"
+                className="w-full p-4 bg-jw-body rounded-2xl outline-none focus:ring-2 focus:ring-jw-blue text-normal text-center italic"
                 placeholder="Usuario"
                 value={inputs.username}
                 onChange={(e) =>
@@ -216,7 +216,7 @@ function LoginPage() {
               <div className="relative">
                 <input
                   type={showPass ? "text" : "password"}
-                  className="w-full p-4 bg-jw-body rounded-2xl outline-none focus:ring-2 focus:ring-jw-blue text-sm text-center italic"
+                  className="w-full p-4 bg-jw-body rounded-2xl outline-none focus:ring-2 focus:ring-jw-blue text-normal text-center italic"
                   placeholder="Contraseña"
                   value={inputs.password}
                   onChange={(e) =>
@@ -242,7 +242,7 @@ function LoginPage() {
               >
                 Entrar
               </button>
-              <div className="text-center pt-1 space-y-2 text-[10px] text-gray-400 font-bold uppercase tracking-tighter cursor-pointer italic">
+              <div className="text-center pt-1 space-y-2 text-[11px] text-gray-500 font-bold uppercase tracking-tighter cursor-pointer italic">
                 <p
                   onClick={() => {
                     setRecoveryType("user");

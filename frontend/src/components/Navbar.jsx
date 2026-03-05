@@ -58,7 +58,25 @@ function Navbar() {
     if (location.pathname === "/publicaciones") return "Módulo Publicaciones";
     if (location.pathname === "/seguridad-tips") return "Seguridad Digital";
     if (location.pathname === "/contacto") return "Centro de Ayuda y Contacto";
+    if (location.pathname === "/configuracion") return "Configuración";
     return `Congregación ${user?.congregacion_nombre || ""}`;
+  };
+
+  const getPageIcon = () => {
+    // Definimos el tamaño (puedes cambiar w-6 h-6 por el que prefieras)
+    const size = "w-6 h-6"; 
+
+    // --- LOGICA DE EXCLUSIÓN PARA HOME ---
+    if (location.pathname === "/") return null;
+
+    // --- ICONOS PARA EL RESTO DE LAS PÁGINAS ---
+    if (location.pathname === "/perfil") return <User className={size} />;
+    if (location.pathname === "/publicaciones") return <BookOpen className={size} />;
+    if (location.pathname === "/seguridad-tips") return <ShieldCheck className={size} />;
+    if (location.pathname === "/contacto") return <Globe className={size} />;
+    if (location.pathname === "/configuracion") return <Settings className={size} />;
+    
+    return null; // Por seguridad, si no coincide ninguna, no muestra nada
   };
 
   // --- 3. GESTIÓN DE IMAGEN ---
@@ -117,12 +135,18 @@ function Navbar() {
           </NavLink>
 
           <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0">
-            <span className="text-sm font-light tracking-wide text-gray-300 hidden lg:block italic shrink-0">
+            <span className="text-sm font-light tracking-wide text-gray-100 hidden lg:block italic shrink-0">
               Sistema de Gestión
             </span>
-            <span className="text-sm sm:text-lg font-medium tracking-tight text-white truncate">
-              {getTitle()}
-            </span>
+            <div className="flex items-center gap-3">
+  <span className="text-sm sm:text-lg font-medium tracking-tight text-white truncate">
+    {getTitle()}
+  </span>
+  {/* Icono dinámico con giro en eje Y */}
+  <div className="text-jw-accent-light animate-spin-y shrink-0">
+    {getPageIcon()}
+  </div>
+</div>
           </div>
         </div>
 
@@ -236,7 +260,7 @@ function Navbar() {
 
       {/* 2. ESTRUCTURA DEL MENÚ LATERAL (SIDEBAR) */}
       <div
-        className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-64 md:w-56 bg-white z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-gray-500 will-change-transform ${
+        className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-72 md:w-70 bg-white z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-gray-500 will-change-transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-[calc(100%+20px)]"
         }`}
       >
@@ -248,7 +272,7 @@ function Navbar() {
           <div className="flex items-center gap-4">
             {/* Icono de menú principal (26px) */}
             <LayoutGrid size={28} className="text-jw-body shrink-0" />
-            <span className="text-[13px] tracking-[0.25em] font-medium uppercase leading-none">
+            <span className="text-xs tracking-[0.25em] font-medium uppercase leading-none">
               Menú Principal
             </span>
           </div>
@@ -284,6 +308,8 @@ function Navbar() {
               label: "Ayuda y Contacto",
             },
             { to: "/perfil", icon: <User size={22} />, label: "Mi Perfil" },
+            // NUEVA OPCIÓN:
+  { to: "/configuracion", icon: <Settings size={22} />, label: "Configuración" },
           ].map((item) => {
             // Verificación manual de ruta activa
             const isAct = location.pathname === item.to;
@@ -299,7 +325,7 @@ function Navbar() {
                     ? `0 10px 10px -3px rgba(0,0,0,0.1)`
                     : "none",
                 }}
-                className={`group relative flex items-center gap-3 mx-1 px-5 py-2 rounded-xl text-[13px] font-semibold transition-all duration-300 border border-transparent
+                className={`group relative flex items-center gap-3 mx-1 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 border border-transparent
                   ${
                     isAct
                       ? "text-white translate-x-1"
@@ -331,7 +357,7 @@ function Navbar() {
 
         {/* PIE DE MENÚ (Branding sutil) */}
         <div className="absolute bottom-1 left-0 w-full px-2 opacity-80 border-t border-gray-100 pt-2">
-          <p className="text-[9px] font-medium tracking-[0.4em] uppercase text-center text-gray-800">
+          <p className="text-[0.65rem] font-medium tracking-[0.4em] uppercase text-center text-gray-800">
             S.G. v2.6
           </p>
         </div>

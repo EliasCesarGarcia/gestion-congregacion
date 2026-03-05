@@ -5,28 +5,43 @@
  * Maneja la sesión del usuario, el cierre automático por inactividad
  * y la lógica de "Adaptive UI" (clima visual y saludos) según la zona horaria.
  */
+/**
+ * ARCHIVO: AppContext.jsx
+ * UBICACIÓN: src/context/AppContext.jsx
+ */
 
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useLayoutEffect } from 'react';
 
 export const AppContext = createContext();
 
 export function AppProvider({ children }) {
+  // --- 1. ESTADOS (Aquí inyectamos el estado de la fuente junto al del usuario) ---
   const [user, setUser] = useState(() => {
     const saved = sessionStorage.getItem('user_session');
     return saved ? JSON.parse(saved) : null;
   });
 
-  // --- LÓGICA DE TIEMPO DINÁMICO (TEMA ADAPTATIVO) ---
-  // Iniciamos con un valor por defecto para evitar que la app falle si no hay usuario
+  // NUEVO: Estado para el tamaño de la fuente
+  const [fontSize, setFontSize] = useState(() => {
+    return localStorage.getItem('app_font_size') || 'normal';
+  });
+
   const [timeTheme, setTimeTheme] = useState({
-    bg: '#1a335a', // Azul Navy original (Noche)
+    bg: '#1a335a', 
     greeting: 'Hola,'
   });
 
+  // --- 2. LÓGICA Y EFECTOS ---
+
+  // NUEVO: Efecto para aplicar el tamaño de fuente al sistema
+  useEffect(() => {
+    localStorage.setItem('app_font_size', fontSize);
+    // Aplicamos el atributo al HTML para que el CSS (index.css) lo detecte
+    document.documentElement.setAttribute('data-font-size', fontSize);
+  }, [fontSize]);
+
   const updateTimeTheme = useCallback(() => {
-    // Si no hay usuario, usamos la hora local del navegador como respaldo
     const tz = user?.zona_horaria || Intl.DateTimeFormat().resolvedOptions().timeZone;
-    
     try {
       const hour = parseInt(new Intl.DateTimeFormat('en-US', {
         hour: 'numeric',
@@ -35,25 +50,23 @@ export function AppProvider({ children }) {
       }).format(new Date()));
 
       if (hour >= 6 && hour < 12) {
-        setTimeTheme({ bg: '#33558b', greeting: 'Buenos días,' }); // Mañana
+        setTimeTheme({ bg: '#33558b', greeting: 'Buenos días,' });
       } else if (hour >= 12 && hour < 19) {
-        setTimeTheme({ bg: '#3e4a59', greeting: 'Buenas tardes,' }); // Tarde
+        setTimeTheme({ bg: '#3e4a59', greeting: 'Buenas tardes,' });
       } else {
-        setTimeTheme({ bg: '#1a335a', greeting: 'Buenas noches,' }); // Noche
+        setTimeTheme({ bg: '#1a335a', greeting: 'Buenas noches,' });
       }
     } catch (e) {
       console.error("Error calculando zona horaria:", e);
     }
   }, [user]);
 
-  // Actualizar el tema cuando el usuario loguea o cada minuto
   useEffect(() => {
     updateTimeTheme();
     const interval = setInterval(updateTimeTheme, 60000);
     return () => clearInterval(interval);
   }, [updateTimeTheme]);
 
-  // --- GESTIÓN DE SESIÓN ---
   const logout = useCallback(() => {
     setUser(null);
     sessionStorage.removeItem('user_session');
@@ -62,7 +75,7 @@ export function AppProvider({ children }) {
 
   useEffect(() => {
     if (!user) return;
-    let timer = setTimeout(logout, 10 * 60 * 1000); // 10 min inactividad
+    let timer = setTimeout(logout, 10 * 60 * 1000); 
     const reset = () => { 
       clearTimeout(timer); 
       timer = setTimeout(logout, 10 * 60 * 1000); 
@@ -81,8 +94,22 @@ export function AppProvider({ children }) {
     sessionStorage.setItem('user_session', JSON.stringify(userData));
   };
 
+  useLayoutEffect(() => {
+  // Aplicamos el atributo inmediatamente antes de que el usuario vea la pantalla
+  document.documentElement.setAttribute('data-font-size', fontSize);
+  localStorage.setItem('app_font_size', fontSize);
+}, [fontSize]);
+
+  // --- 3. RENDERIZADO DEL PROVIDER (Aquí agregamos los nuevos valores al value) ---
   return (
-    <AppContext.Provider value={{ user, login, logout, timeTheme }}>
+    <AppContext.Provider value={{ 
+      user, 
+      login, 
+      logout, 
+      timeTheme, 
+      fontSize,    // <--- Agregado
+      setFontSize  // <--- Agregado
+    }}>
       {children}
     </AppContext.Provider>
   );
