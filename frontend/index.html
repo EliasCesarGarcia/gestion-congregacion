@@ -1,29 +1,51 @@
+<!-- 
+  ARCHIVO: index.html
+  UBICACIÓN: /frontend/index.html
+  DESCRIPCIÓN: Punto de entrada principal y contenedor del DOM para la aplicación React.
+  Gestiona los metadatos críticos de indexación, el pre-renderizado visual (Skeleton/Loader)
+  y la inyección preventiva de preferencias de usuario antes del montaje de JavaScript.
+-->
+
 <!doctype html>
-<html lang="es">
-  <!-- 1. Corregido a español -->
+<html lang="es"> <!-- Definición del idioma para motores de búsqueda y lectores de pantalla -->
+  
   <head>
     <meta charset="UTF-8" />
+    <!-- Favicon: Identidad visual en la pestaña del navegador -->
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    
+    <!-- Viewport: Optimización vital para SEO móvil y escalado táctil -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- 2. Metadatos de SEO básico para 2026 -->
+    <!-- 
+       ==========================================================
+       --- METADATOS DE SEO AVANZADO (ESTÁNDAR 2026) --- 
+       ==========================================================
+    -->
     <title>Gestión Local Teocrática</title>
     <meta
       name="description"
       content="Sistema integral de gestión congregacional para la administración de publicaciones, informes y seguridad digital."
     />
     <meta name="robots" content="index, follow" />
+    <!-- Sincronización del color de la barra del navegador en dispositivos móviles -->
     <meta name="theme-color" content="#1a335a" />
 
-    <!-- 3. Pre-renderizado visual para evitar el "salto" de carga -->
+    <!-- 
+       ==========================================================
+       --- ESTILOS CRÍTICOS (PRE-RENDERIZADO) --- 
+       ==========================================================
+       Estos estilos se cargan instantáneamente sin esperar a los archivos CSS externos.
+       Evitan el "Flash de colores" (FOUC) y mejoran la métrica LCP (Largest Contentful Paint).
+    -->
     <style>
-      /* 1. Fondo consistente con tu app para que no haya flash de colores */
+      /* Normalización básica y fondo institucional inmediato */
       body {
         margin: 0;
-        background-color: #f5f5f5; /* bg-jw-body */
+        background-color: #f5f5f5; /* Variable: bg-jw-body */
       }
 
-      /* 2. Contenedor de carga centrado y fijo */
+      /* Contenedor de carga: Proporciona feedback visual mientras carga el bundle de React */
       .initial-loader {
         display: flex;
         flex-direction: column;
@@ -32,11 +54,11 @@
         height: 100vh;
         width: 100vw;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        color: #1a335a; /* jw-navy */
+        color: #1a335a; /* Variable: jw-navy */
         transition: opacity 0.3s ease;
       }
 
-      /* 3. Animación sutil para que el usuario sepa que la app no está trabada */
+      /* Animación de pulso: Indica actividad del sistema de forma sutil y Premium */
       .loader-text {
         font-size: 14px;
         font-weight: 800;
@@ -48,8 +70,7 @@
       }
 
       @keyframes pulse {
-        0%,
-        100% {
+        0%, 100% {
           opacity: 0.4;
           transform: scale(0.98);
         }
@@ -60,24 +81,44 @@
       }
     </style>
 
+    <!-- 
+       ==========================================================
+       --- BLOCKING SCRIPT (PREVENCIÓN DE PARPADEO) --- 
+       ==========================================================
+       Este script se ejecuta antes de dibujar cualquier elemento en pantalla.
+       Lee la preferencia de accesibilidad (tamaño de fuente) del usuario
+       para aplicarla al HTML y evitar el efecto de "salto" visual (CLS Zero).
+    -->
     <script>
-      /* Bloqueo de parpadeo de fuente - CEO 2026 */
       (function () {
         try {
           const savedSize = localStorage.getItem("app_font_size") || "normal";
           document.documentElement.setAttribute("data-font-size", savedSize);
-        } catch (e) {}
+        } catch (e) {
+          // En caso de error en modo incógnito, el sistema continúa con el valor por defecto
+        }
       })();
     </script>
   </head>
+
   <body>
+    <!-- 
+        CONTENEDOR RAÍZ:
+        Aquí es donde React inyectará toda la lógica de la aplicación.
+    -->
     <div id="root">
-      <!-- Esto es lo que verá el BOT de Google y la IA.
-         Es HTML real, no CSS, por lo que es mucho mejor para SEO. -->
+      <!-- 
+          CONTENIDO ESTRUCTURAL PARA SEO:
+          Los bots de indexación (Google, IA) priorizan el HTML real sobre el renderizado por JS.
+          Este div desaparece automáticamente cuando React toma el control del DOM.
+      -->
       <div class="initial-loader">
         <div class="loader-text">Gestión Local Teocrática</div>
       </div>
     </div>
+
+    <!-- Carga del módulo principal de la aplicación -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
+
 </html>

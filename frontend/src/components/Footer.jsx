@@ -1,23 +1,36 @@
 /**
  * ARCHIVO: Footer.jsx
- * UBICACIÓN: src/components/Footer.jsx
+ * UBICACIÓN: frontend/src/components/Footer.jsx
  * DESCRIPCIÓN: Pie de página institucional optimizado para estabilidad visual.
  * Se eliminaron los contenedores de ancho máximo relativo para evitar 
  * desplazamientos al cambiar el tamaño de fuente (SEO 2026).
+ * Incluye marcado semántico Schema.org para mejorar el posicionamiento local.
  */
 
+// --- IMPORTACIONES DE LIBRERÍAS Y COMPONENTES ---
 import React, { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import { MapPin, Globe, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 function Footer() {
+  // --- 1. CONFIGURACIÓN Y ESTADOS DEL CONTEXTO ---
+  
+  // Consumimos el estado de sesión y el tema dinámico horario
   const { user: session, timeTheme } = useContext(AppContext); 
+  // Lógica de "Nesting Fix": Extrae los datos reales del usuario si vienen anidados en session.user
   const user = session?.user || session;
 
+  // Renderizado condicional: El footer solo es visible si hay un usuario autenticado
   if (!user) return null;
 
   return (
+    /**
+     * --- CONTENEDOR PRINCIPAL DEL PIE DE PÁGINA ---
+     * style: Sincroniza el color de fondo con el horario (Mañana/Tarde/Noche).
+     * border-t-4: Línea superior decorativa institucional.
+     * px-2 sm:px-6: Alineación horizontal idéntica a la del Navbar para coherencia visual.
+     */
     <footer 
       style={{ backgroundColor: timeTheme.bg }} 
       /* 
@@ -26,20 +39,24 @@ function Footer() {
       */
       className="w-full border-t-4 border-jw-blue text-white py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000"
     >
-      {/* Marcado de Microdatos para SEO Local */}
+      {/* 
+          --- ESTRUCTURA DE MICRODATOS (SEO 2026) --- 
+          itemScope/itemType: Indica a los motores de búsqueda (Google, IAs) que este bloque
+          contiene información estructurada sobre una Organización.
+      */}
       <div 
-        /* 
-           CAMBIO CLAVE: Eliminamos 'max-w-7xl mx-auto'. 
-           Ahora usamos 'w-full' para que el contenido siempre ocupe todo el ancho disponible
-           y los márgenes laterales dependan solo del padding del footer, no del tamaño de letra.
+         /* 
+           ESTABILIDAD VISUAL: Se usa 'w-full' en lugar de 'max-w-7xl' para evitar que 
+           el contenido se desplace al centro cuando el usuario achica la fuente.
         */
         className="w-full flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-2"
         itemScope 
         itemType="https://schema.org/Organization"
       >
         
-        {/* LADO IZQUIERDA: Información de la Congregación */}
+        {/* --- SECCIÓN IZQUIERDA: IDENTIDAD Y LOCALIZACIÓN --- */}
         <div className="flex flex-col items-start min-w-0 w-full md:w-auto text-left">
+          {/* Nombre de la Congregación y Número identificador */}
           <h3 className="text-sm font-medium tracking-tight truncate w-full mb-1">
             <span itemProp="name">Congregación {user.congregacion_nombre}</span>
             {/* Usamos text-xs para que sea relativo y no fijo en 13px */}
@@ -49,7 +66,7 @@ function Footer() {
           </h3>
           
           <div className="space-y-2">
-            {/* DIRECCIÓN POSTAL */}
+            {/* DIRECCIÓN POSTAL SEMÁNTICA (Schema.org) */}
             <address 
               className="flex items-center gap-2 text-xs text-gray-200 font-light italic w-full min-w-0 not-italic"
               itemProp="address" 
@@ -65,7 +82,7 @@ function Footer() {
               </p>
             </address>
 
-            {/* REGIÓN GEOGRÁFICA */}
+            {/* REGIÓN GEOGRÁFICA INTERNA */}
             <div className="flex items-center gap-2 text-xs text-gray-200 font-light italic w-full min-w-0 not-italic">
               <Globe className="w-3.5 h-3.5 text-gray-400 shrink-0" />
               <p className="truncate w-full uppercase tracking-widest text-[0.65rem] font-normal">
@@ -75,8 +92,9 @@ function Footer() {
           </div>
         </div>
 
-        {/* LADO DERECHO: Contacto y Legal */}
+        {/* --- SECCIÓN DERECHA: ENLACES DE SOPORTE Y LEGAL --- */}
         <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto shrink-0 pt-3 md:pt-0 border-t border-white/5 md:border-none">
+          {/* Enlace al Centro de Ayuda (Accesibilidad técnica) */}
           <Link 
             to="/contacto" 
             className="text-xs text-gray-200 hover:text-white transition-colors font-light flex items-center gap-1.5"
@@ -85,6 +103,7 @@ function Footer() {
             Centro de Ayuda y Contacto
           </Link>
           
+          {/* Copyright y Atribución Institucional */}
           <p className="text-[0.6rem] text-gray-300 tracking-[0.2em] uppercase font-light">
             © 2026 GESTIÓN LOCAL TEOCRÁTICA • <span itemProp="areaServed">Uso Institucional</span>
           </p>

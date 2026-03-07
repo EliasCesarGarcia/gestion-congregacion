@@ -1,3 +1,17 @@
+/**
+ * ARCHIVO: LoginPage.jsx
+ * UBICACIÓN: frontend/src/pages/LoginPage.jsx
+ * DESCRIPCIÓN: Centro de autenticación y recuperación de cuenta.
+ * Gestiona el acceso principal, la identificación de usuarios mediante ID/Congregación
+ * o Teléfono, y el flujo de seguridad para restablecimiento de claves mediante PIN.
+ *
+ * FUNCIONALIDADES CLAVE:
+ * - Autenticación unimodal (Login directo).
+ * - Recuperación de Usuario y Contraseña con verificación de identidad.
+ * - Validación de fortaleza de claves en tiempo real.
+ * - Captura proactiva de autocompletado del navegador para mejorar UX.
+ */
+
 import React, { useState, useContext, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import {
@@ -15,20 +29,24 @@ import {
 import axios from "axios";
 
 function LoginPage() {
+  // --- 1. CONTEXTO Y REDIRECCIÓN ---
   const { login, user } = useContext(AppContext);
 
-  // Estados de navegación
+  // --- 2. ESTADOS DE CONTROL DE FLUJO ---
+
+  // step: Controla la vista actual (login, identify, verify_pin, new_pass, success)
   const [step, setStep] = useState("login");
+  // recoveryType: Define si el usuario está recuperando su alias ('user') o su clave ('pass')
   const [recoveryType, setRecoveryType] = useState("");
 
-  // Estados de control
+  // Estados de interfaz y feedback
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [tempEmail, setTempEmail] = useState("");
+  const [tempEmail, setTempEmail] = useState(""); // Email enmascarado para confirmación visual
 
-  // Datos de entrada
+  // --- 3. GESTIÓN DE ENTRADAS DE DATOS ---
   const [inputs, setInputs] = useState({
     username: "",
     password: "",
@@ -39,11 +57,16 @@ function LoginPage() {
     confirmPass: "",
   });
 
+  // Efecto de seguridad: Si ya hay sesión activa, redirigir al Dashboard de inmediato
   useEffect(() => {
     if (user) window.location.href = "/";
   }, [user]);
 
-  // Añade este useEffect después de los otros que ya tienes
+  /**
+   * Captura de Autocompletado:
+   * Detecta si el navegador inyecta credenciales guardadas para evitar que el usuario
+   * tenga que escribir dos veces, optimizando la métrica de conversión (SEO 2026).
+   */
   useEffect(() => {
     // Intentar capturar datos si el navegador autocompleta al cargar
     const timer = setTimeout(() => {
@@ -63,26 +86,37 @@ function LoginPage() {
     return () => clearTimeout(timer);
   }, [step]);
 
-  // --- VARIABLES DE VALIDACIÓN (DEFINIDAS AL INICIO PARA EVITAR PANTALLA EN BLANCO) ---
+  // --- 4. LÓGICA DE VALIDACIÓN (REQUISITOS DE SEGURIDAD) ---
   const hasUpper = /[A-Z]/.test(inputs.password);
   const hasNumber = /\d/.test(inputs.password);
   const hasSymbol = /[!@#$%^&*]/.test(inputs.password);
   const hasMin = inputs.password.length >= 8;
   const passwordsMatch =
     inputs.password === inputs.confirmPass && inputs.confirmPass !== "";
+
+  // canSavePassword: Solo permite guardar si cumple todos los criterios de seguridad institucional
   const canSavePassword =
     hasUpper && hasNumber && hasSymbol && hasMin && passwordsMatch;
+  // canSendPin: Verifica que los campos de identidad tengan el formato mínimo correcto
   const canSendPin =
     (inputs.persona_id && inputs.numero_cong.length >= 4) ||
     inputs.telefono.length === 8;
 
-  // --- FUNCIONES DE APOYO ---
+  // --- 5. FUNCIONES AUXILIARES ---
+
+  /**
+   * maskEmail: Protege la privacidad del usuario al mostrar el destino del PIN.
+   * @example "j****n@dominio.com"
+   */
   const maskEmail = (email) => {
     if (!email) return "";
     const [name, domain] = email.split("@");
     return `${name[0]}${"*".repeat(name.length - 2)}${name.slice(-1)}@${domain}`;
   };
 
+  /**
+   * resetAll: Limpia el estado completo para reiniciar cualquier flujo de acceso.
+   */
   const resetAll = () => {
     setStep("login");
     setErrorMsg("");
@@ -99,25 +133,33 @@ function LoginPage() {
     });
   };
 
+  /**
+   * handleNumericInput: Sanitiza las entradas para permitir solo números (IDs, Teléfonos, PIN).
+   */
   const handleNumericInput = (e, field, max) => {
     const val = e.target.value.replace(/\D/g, "");
     setInputs({ ...inputs, [field]: val.slice(0, max) });
     setErrorMsg("");
   };
 
-  // --- MANEJADORES DE ACCIONES ---
+  // --- 6. MANEJADORES DE ACCIONES (API CALLS) ---
 
+  /**
+   * handleLoginDirect: Proceso estándar de entrada con validación dual.
+   */
   const handleLoginDirect = async () => {
     setLoading(true);
     setErrorMsg("");
     try {
+      // Paso 1: Identificación proactiva
       await axios.post("/api/identify-user", { username: inputs.username });
+      // Paso 2: Autenticación final y recepción de Token
       const res = await axios.post("/api/login-final", {
         username: inputs.username,
         password: inputs.password,
       });
 
-      login(res.data);
+      login(res.data); // Inyecta sesión en AppContext
     } catch (err) {
       setErrorMsg("El usuario y/o contraseña no es correcto.");
     } finally {
@@ -125,6 +167,9 @@ function LoginPage() {
     }
   };
 
+  /**
+   * startRecovery: Inicia el protocolo de recuperación enviando un PIN al correo.
+   */
   const startRecovery = async (type) => {
     setLoading(true);
     setErrorMsg("");
@@ -156,15 +201,20 @@ function LoginPage() {
     }
   };
 
+  /**
+   * handleVerifyCode: Valida que el PIN ingresado por el usuario coincida con el generado.
+   */
   const handleVerifyCode = async () => {
     setLoading(true);
     setErrorMsg("");
     try {
       await axios.post("/api/verify-pin", { pin: inputs.pin });
       if (recoveryType === "user") {
+        // Si recupera usuario, se envía el alias por correo
         await axios.post("/api/send-username-real", { email: tempEmail });
         setStep("success");
       } else {
+        // Si recupera contraseña, habilita la vista de cambio de clave
         setStep("new_pass");
       }
     } catch {
@@ -174,6 +224,9 @@ function LoginPage() {
     }
   };
 
+  /**
+   * handleFinalReset: Guarda la nueva contraseña tras la verificación de identidad.
+   */
   const handleFinalReset = async () => {
     setLoading(true);
     try {
@@ -190,10 +243,16 @@ function LoginPage() {
   };
 
   return (
+    /**
+     * MAQUETACIÓN VISUAL (MODAL SYSTEM):
+     * fixed inset-0: Cubre toda la pantalla con un fondo cristalizado (Backdrop blur).
+     */
     <div className="fixed inset-0 flex items-center justify-center z-[200]">
       <div className="absolute inset-0 bg-jw-navy/40 backdrop-blur-3xl"></div>
 
       <div className="bg-white w-full max-w-[340px] rounded-[2rem] shadow-2xl overflow-hidden relative z-10 border border-white/40 animate-in zoom-in duration-300">
+        
+        {/* Cabecera institucional de seguridad */}
         <div className="p-4 bg-jw-navy text-white text-center border-b-4 border-jw-blue">
           <Lock className="mx-auto mb-2 w-5 h-5 text-jw-accent" />
           <h2 className="text-normal font-medium tracking-widest uppercase leading-tight">
@@ -202,7 +261,8 @@ function LoginPage() {
         </div>
 
         <div className="p-6">
-          {/* 1. LOGIN */}
+          
+          {/* --- VISTA 1: LOGIN (ACCESO ESTÁNDAR) --- */}
           {step === "login" && (
             <div className="space-y-4 animate-in fade-in">
               <input
@@ -242,6 +302,8 @@ function LoginPage() {
               >
                 Entrar
               </button>
+              
+              {/* Enlaces de recuperación */}
               <div className="text-center pt-1 space-y-2 text-[11px] text-gray-500 font-bold uppercase tracking-tighter cursor-pointer italic">
                 <p
                   onClick={() => {
@@ -265,7 +327,7 @@ function LoginPage() {
             </div>
           )}
 
-          {/* 2. IDENTIFICACIÓN */}
+          {/* --- VISTA 2: IDENTIFICACIÓN (VALIDACIÓN DE PERFIL) --- */}
           {step === "identify" && (
             <div className="space-y-3 animate-in slide-in-from-right-4 text-left">
               <h3 className="text-xs font-bold text-jw-navy text-center uppercase italic border-b border-gray-100 pb-2">
@@ -310,6 +372,7 @@ function LoginPage() {
                 </div>
               </div>
 
+              {/* Bloque de ayuda institucional */}
               <div className="bg-blue-50 p-3 rounded-xl flex gap-2 border border-blue-100">
                 <HelpCircle
                   size={14}
@@ -359,7 +422,7 @@ function LoginPage() {
             </div>
           )}
 
-          {/* 3. VERIFICAR PIN */}
+          {/* --- VISTA 3: VERIFICACIÓN DE PIN (MFA LITE) --- */}
           {step === "verify_pin" && (
             <div className="text-center space-y-4 animate-in zoom-in">
               <p className="text-xs text-gray-500 italic">
@@ -402,7 +465,7 @@ function LoginPage() {
             </div>
           )}
 
-          {/* 4. NUEVA CLAVE */}
+          {/* --- VISTA 4: ACTUALIZACIÓN DE SEGURIDAD (NUEVA CLAVE) --- */}
           {step === "new_pass" && (
             <div className="space-y-4 animate-in slide-in-from-right-4 text-left">
               <div className="flex items-center gap-2 mb-1 text-green-600 font-bold text-[10px] uppercase tracking-widest italic">
@@ -412,6 +475,7 @@ function LoginPage() {
                 Nueva Seguridad
               </h3>
 
+              {/* Inputs con feedback visual de fortaleza */}
               <div className="relative">
                 <input
                   type={showPass ? "text" : "password"}
@@ -446,6 +510,7 @@ function LoginPage() {
                 </button>
               </div>
 
+              {/* Panel de requisitos de seguridad CEO 2026 */}
               <div className="text-[9px] space-y-1 bg-jw-body p-3 rounded-xl italic">
                 <p
                   className={
@@ -495,7 +560,7 @@ function LoginPage() {
             </div>
           )}
 
-          {/* 5. ÉXITO (Redirección 4 seg) */}
+          {/* --- VISTA 5: ÉXITO Y REDIRECCIÓN --- */}
           {step === "success" && (
             <SuccessView onFinish={resetAll} action={recoveryType} />
           )}
@@ -505,6 +570,10 @@ function LoginPage() {
   );
 }
 
+/**
+ * SuccessView: Sub-componente de finalización.
+ * Implementa una cuenta regresiva visual para el redireccionamiento automático.
+ */
 function SuccessView({ onFinish, action }) {
   const [count, setCount] = useState(4);
   useEffect(() => {

@@ -1,13 +1,18 @@
 /**
  * ARCHIVO: ProfilePage.jsx
- * UBICACIÓN: src/pages/ProfilePage.jsx
- * DESCRIPCIÓN: Panel de administración completo.
- * Incluye: Gestión de credenciales, Difusión masiva (Admin),
- * Galería de Avatares Institucionales (React Nice Avatar), y Baja de cuenta.
+ * UBICACIÓN: frontend/src/pages/ProfilePage.jsx
+ * DESCRIPCIÓN: Panel de administración centralizado del usuario.
+ * Gestiona la identidad digital, seguridad, preferencias de avatar institucional
+ * y la integridad de la cuenta. 
+ * Implementa optimizaciones de imagen (compresión y formato WebP) y 
+ * flujos de verificación de identidad de doble factor (PIN por correo).
  */
+
 
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
+
+// Iconografía institucional
 import {
   User,
   Shield,
@@ -45,15 +50,20 @@ import {
   UserRoundPlus,
   Glasses,
 } from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion";
 import imageCompression from "browser-image-compression";
 import axios from "axios";
 import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
-import Avatar, { genConfig } from "react-nice-avatar";
 
-// --- COMPONENTES AUXILIARES ---
+
+// --- COMPONENTES AUXILIARES DE INTERFAZ ---
+
+/**
+ * ReqItem: Muestra los requisitos de validación de contraseña.
+ */
 function ReqItem({ met, text }) {
   return (
     <div
@@ -67,6 +77,9 @@ function ReqItem({ met, text }) {
   );
 }
 
+/**
+ * PassInput: Campo de entrada especializado para contraseñas con visibilidad conmutable.
+ */
 function PassInput({
   placeholder,
   show,
@@ -98,6 +111,9 @@ function PassInput({
   );
 }
 
+/**
+ * EditableRow: Fila de datos que permite disparar el flujo de edición.
+ */
 function EditableRow({ label, value, icon, onEdit }) {
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b border-gray-200 pb-4 gap-3">
@@ -124,987 +140,13 @@ function EditableRow({ label, value, icon, onEdit }) {
   );
 }
 
-// --- CONFIGURACIONES MANUALES ÚNICAS: DIVERSIDAD TOTAL ---
 
-const MALE_DIVERSITY = [
-  {
-    sex: "man",
-    faceColor: "#F9C9B6",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    eyeStyle: "circle",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    shape: "circle",
-    angle: 0,
-    earSize: "small",
-  }, // Niño
-  {
-    sex: "man",
-    faceColor: "#FFDBB4",
-    hairStyle: "thick",
-    hairColor: "#4B2C20",
-    eyeStyle: "smile",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: 15,
-    earSize: "big",
-  }, // Fino Ladeado
-  {
-    sex: "man",
-    faceColor: "#D08B5B",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    eyeStyle: "circle",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#374151",
-    shape: "circle",
-    angle: -15,
-    earSize: "big",
-  }, // Redondo Izq
-  {
-    sex: "man",
-    faceColor: "#AE5D29",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    eyeStyle: "oval",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    shape: "rounded",
-    angle: 0,
-    earSize: "small",
-  }, // Profesional
-  {
-    sex: "man",
-    faceColor: "#614335",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    eyeStyle: "circle",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "circle",
-    angle: 10,
-    earSize: "small",
-  }, // Moreno
-  {
-    sex: "man",
-    faceColor: "#FFDBB4",
-    hairStyle: "normal",
-    hairColor: "#FFFFFF",
-    eyeStyle: "smile",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#111827",
-    shape: "rounded",
-    angle: -10,
-    earSize: "big",
-  }, // Abuelo
-  {
-    sex: "man",
-    faceColor: "#EDB98A",
-    hairStyle: "thick",
-    hairColor: "#724130",
-    eyeStyle: "circle",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    shape: "circle",
-    angle: 5,
-    earSize: "small",
-  }, // Joven
-  {
-    sex: "man",
-    faceColor: "#F9C9B6",
-    hairStyle: "normal",
-    hairColor: "#D2B48C",
-    eyeStyle: "oval",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#475569",
-    shape: "rounded",
-    angle: -5,
-    earSize: "big",
-  }, // Rubio Fino
-  {
-    sex: "man",
-    faceColor: "#AE5D29",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    eyeStyle: "circle",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "circle",
-    angle: 20,
-    earSize: "small",
-  }, // Asiático/Fino
-  {
-    sex: "man",
-    faceColor: "#D08B5B",
-    hairStyle: "normal",
-    hairColor: "#4B2C20",
-    eyeStyle: "smile",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#0f172a",
-    shape: "rounded",
-    angle: -20,
-    earSize: "small",
-  }, // Serio Alegre
-  {
-    sex: "man",
-    faceColor: "#FFDBB4",
-    hairStyle: "normal",
-    hairColor: "#FFFFFF",
-    eyeStyle: "circle",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#545454",
-    shape: "circle",
-    angle: 0,
-    earSize: "big",
-  }, // Anciano 2
-  {
-    sex: "man",
-    faceColor: "#AE5D29",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    eyeStyle: "oval",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: 12,
-    earSize: "small",
-  }, // Moreno Fino
-  {
-    sex: "man",
-    faceColor: "#F9C9B6",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    eyeStyle: "circle",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    shape: "circle",
-    angle: -12,
-    earSize: "small",
-  }, // Niño 2
-  {
-    sex: "man",
-    faceColor: "#614335",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    eyeStyle: "smile",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: 0,
-    earSize: "big",
-  }, // Afro
-  {
-    sex: "man",
-    faceColor: "#EDB98A",
-    hairStyle: "normal",
-    hairColor: "#4B2C20",
-    eyeStyle: "circle",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    shape: "circle",
-    angle: 15,
-    earSize: "small",
-  }, // Ejecutivo
-];
+// ==========================================================
+// --- COMPONENTE PRINCIPAL: ProfilePage ---
+// ==========================================================
 
-const FEMALE_DIVERSITY = [
-  {
-    sex: "woman",
-    faceColor: "#F9C9B6",
-    hairStyle: "long",
-    hairColor: "#D2B48C",
-    eyeStyle: "circle",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    shape: "circle",
-    angle: 0,
-    earSize: "small",
-  }, // Niña
-  {
-    sex: "woman",
-    faceColor: "#FFDBB4",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    eyeStyle: "smile",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: 15,
-    earSize: "small",
-  }, // Fina Ladeada
-  {
-    sex: "woman",
-    faceColor: "#D08B5B",
-    hairStyle: "womanShort",
-    hairColor: "#4B2C20",
-    eyeStyle: "circle",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#475569",
-    shape: "circle",
-    angle: -15,
-    earSize: "big",
-  }, // Redonda
-  {
-    sex: "woman",
-    faceColor: "#AE5D29",
-    hairStyle: "curvy",
-    hairColor: "#000000",
-    eyeStyle: "oval",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    shape: "rounded",
-    angle: 0,
-    earSize: "small",
-  }, // Profesional
-  {
-    sex: "woman",
-    faceColor: "#614335",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    eyeStyle: "circle",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "circle",
-    angle: 10,
-    earSize: "small",
-  }, // Elegante
-  {
-    sex: "woman",
-    faceColor: "#FFDBB4",
-    hairStyle: "womanShort",
-    hairColor: "#FFFFFF",
-    eyeStyle: "smile",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#111827",
-    shape: "rounded",
-    angle: -10,
-    earSize: "big",
-  }, // Abuela
-  {
-    sex: "woman",
-    faceColor: "#EDB98A",
-    hairStyle: "long",
-    hairColor: "#724130",
-    eyeStyle: "circle",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    shape: "circle",
-    angle: 5,
-    earSize: "small",
-  }, // Joven
-  {
-    sex: "woman",
-    faceColor: "#F9C9B6",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    eyeStyle: "oval",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: -5,
-    earSize: "big",
-  }, // Fina 2
-  {
-    sex: "woman",
-    faceColor: "#AE5D29",
-    hairStyle: "curvy",
-    hairColor: "#000000",
-    eyeStyle: "circle",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#0f172a",
-    shape: "circle",
-    angle: 20,
-    earSize: "small",
-  }, // Profesional 2
-  {
-    sex: "woman",
-    faceColor: "#D08B5B",
-    hairStyle: "womanShort",
-    hairColor: "#4B2C20",
-    eyeStyle: "smile",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: -20,
-    earSize: "small",
-  }, // Alegre
-  {
-    sex: "woman",
-    faceColor: "#FFDBB4",
-    hairStyle: "long",
-    hairColor: "#FFFFFF",
-    eyeStyle: "circle",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#545454",
-    shape: "circle",
-    angle: 0,
-    earSize: "big",
-  }, // Abuela 2
-  {
-    sex: "woman",
-    faceColor: "#AE5D29",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    eyeStyle: "oval",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: 12,
-    earSize: "small",
-  }, // Latina
-  {
-    sex: "woman",
-    faceColor: "#F9C9B6",
-    hairStyle: "long",
-    hairColor: "#D2B48C",
-    eyeStyle: "circle",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    shape: "circle",
-    angle: -12,
-    earSize: "small",
-  }, // Niña 2
-  {
-    sex: "woman",
-    faceColor: "#614335",
-    hairStyle: "womanShort",
-    hairColor: "#000000",
-    eyeStyle: "smile",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    shape: "rounded",
-    angle: 0,
-    earSize: "big",
-  }, // Afro Femenina
-  {
-    sex: "woman",
-    faceColor: "#EDB98A",
-    hairStyle: "womanLong",
-    hairColor: "#4B2C20",
-    eyeStyle: "circle",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    shape: "circle",
-    angle: 15,
-    earSize: "small",
-  }, // Formal
-];
-
-// --- AGREGAR ESTE COMPONENTE PARA EL PARPADEO Y MOVIMIENTO ---
-const AnimatedAvatarItem = ({ config, index, onSelect }) => {
-  const [blink, setBlink] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(
-      () => {
-        setBlink(true);
-        setTimeout(() => setBlink(false), 150);
-      },
-      3000 + Math.random() * 3000,
-    );
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="flex-shrink-0 flex flex-col items-center gap-4">
-      <div className="relative group">
-        <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full bg-white border-[6px] border-white shadow-2xl overflow-hidden cursor-pointer flex items-center justify-center">
-          <motion.div
-            className="w-full h-full flex items-center justify-center"
-            style={{
-              transformOrigin: "center bottom",
-              perspective: "1000px",
-            }}
-            animate={{
-              rotateY: config.angle, // APLICAMOS EL ÁNGULO DE VISIÓN
-              rotateZ: [0, 1, -1, 0],
-              y: [0, -5, 0],
-              scaleY: [1, 1.04, 1],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: index * 0.1,
-            }}
-          >
-            <Avatar
-              className="w-full h-full"
-              {...config}
-              eyeStyle={blink ? "smile" : config.eyeStyle}
-            />
-          </motion.div>
-        </div>
-        <button
-          onClick={() => onSelect(JSON.stringify(config))}
-          className="absolute inset-0 bg-jw-navy/60 rounded-full flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300"
-        >
-          <CheckCircle2 className="text-white mb-2" size={32} />
-          <span className="text-white text-[10px] font-black uppercase tracking-widest bg-jw-blue px-4 py-1.5 rounded-full shadow-lg">
-            Elegir
-          </span>
-        </button>
-      </div>
-      <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest italic text-center">
-        {config.shape === "circle" ? "Silueta Redonda" : "Silueta Fina"}
-      </p>
-    </div>
-  );
-};
-
-// --- CONFIGURACIONES MANUALES ÚNICAS PARA HOMBRES ---
-const MALE_PRESETS = [
-  {
-    sex: "man",
-    faceColor: "#F9C9B6",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Niño 1
-  {
-    sex: "man",
-    faceColor: "#FFDBB4",
-    hairStyle: "thick",
-    hairColor: "#4B2C20",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "round",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "big",
-  }, // Adulto Fino
-  {
-    sex: "man",
-    faceColor: "#D08B5B",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#374151",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "big",
-  }, // Adulto Redondo
-  {
-    sex: "man",
-    faceColor: "#AE5D29",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "oval",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "small",
-  }, // Profesional
-  {
-    sex: "man",
-    faceColor: "#614335",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Maduro
-  {
-    sex: "man",
-    faceColor: "#FFDBB4",
-    hairStyle: "normal",
-    hairColor: "#FFFFFF",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "round",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#111827",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "big",
-  }, // Abuelo 1
-  {
-    sex: "man",
-    faceColor: "#EDB98A",
-    hairStyle: "thick",
-    hairColor: "#724130",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Joven
-  {
-    sex: "man",
-    faceColor: "#F9C9B6",
-    hairStyle: "normal",
-    hairColor: "#D2B48C",
-    hatStyle: "none",
-    eyeStyle: "oval",
-    glassesStyle: "none",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#475569",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "big",
-  }, // Rubio Fino
-  {
-    sex: "man",
-    faceColor: "#AE5D29",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "round",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Intelectual
-  {
-    sex: "man",
-    faceColor: "#D08B5B",
-    hairStyle: "normal",
-    hairColor: "#4B2C20",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#0f172a",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "small",
-  }, // Serio Alegre
-  {
-    sex: "man",
-    faceColor: "#FFDBB4",
-    hairStyle: "normal",
-    hairColor: "#FFFFFF",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#545454",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "big",
-  }, // Abuelo 2
-  {
-    sex: "man",
-    faceColor: "#AE5D29",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "oval",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "small",
-  }, // Mestizo
-  {
-    sex: "man",
-    faceColor: "#F9C9B6",
-    hairStyle: "normal",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Niño 2
-  {
-    sex: "man",
-    faceColor: "#614335",
-    hairStyle: "thick",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "round",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "big",
-  }, // Adulto Mayor
-  {
-    sex: "man",
-    faceColor: "#EDB98A",
-    hairStyle: "normal",
-    hairColor: "#4B2C20",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Ejecutivo
-];
-
-// --- CONFIGURACIONES MANUALES ÚNICAS PARA MUJERES ---
-const FEMALE_PRESETS = [
-  {
-    sex: "woman",
-    faceColor: "#F9C9B6",
-    hairStyle: "long",
-    hairColor: "#D2B48C",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Niña Rubia
-  {
-    sex: "woman",
-    faceColor: "#FFDBB4",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "none",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "small",
-  }, // Adulta Fina
-  {
-    sex: "woman",
-    faceColor: "#D08B5B",
-    hairStyle: "womanShort",
-    hairColor: "#4B2C20",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "round",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#475569",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "big",
-  }, // Intelectual
-  {
-    sex: "woman",
-    faceColor: "#AE5D29",
-    hairStyle: "curvy",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "oval",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "small",
-  }, // Profesional
-  {
-    sex: "woman",
-    faceColor: "#614335",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Elegante
-  {
-    sex: "woman",
-    faceColor: "#FFDBB4",
-    hairStyle: "womanShort",
-    hairColor: "#FFFFFF",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "round",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#111827",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "big",
-  }, // Abuela
-  {
-    sex: "woman",
-    faceColor: "#EDB98A",
-    hairStyle: "long",
-    hairColor: "#724130",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Joven
-  {
-    sex: "woman",
-    faceColor: "#F9C9B6",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "oval",
-    glassesStyle: "none",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "big",
-  }, // Morena Fina
-  {
-    sex: "woman",
-    faceColor: "#AE5D29",
-    hairStyle: "curvy",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "round",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#0f172a",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Ejecutiva
-  {
-    sex: "woman",
-    faceColor: "#D08B5B",
-    hairStyle: "womanShort",
-    hairColor: "#4B2C20",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "small",
-  }, // Seria Alegre
-  {
-    sex: "woman",
-    faceColor: "#FFDBB4",
-    hairStyle: "long",
-    hairColor: "#FFFFFF",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#545454",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "big",
-  }, // Abuela 2
-  {
-    sex: "woman",
-    faceColor: "#AE5D29",
-    hairStyle: "womanLong",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "oval",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "small",
-  }, // Mestiza
-  {
-    sex: "woman",
-    faceColor: "#F9C9B6",
-    hairStyle: "long",
-    hairColor: "#D2B48C",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "long",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#1e3a8a",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Niña 2
-  {
-    sex: "woman",
-    faceColor: "#614335",
-    hairStyle: "womanShort",
-    hairColor: "#000000",
-    hatStyle: "none",
-    eyeStyle: "smile",
-    glassesStyle: "round",
-    noseStyle: "round",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#ffffff",
-    bgColor: "#b6e3f4",
-    shape: "rounded",
-    earSize: "big",
-  }, // Adulta Mayor
-  {
-    sex: "woman",
-    faceColor: "#EDB98A",
-    hairStyle: "womanLong",
-    hairColor: "#4B2C20",
-    hatStyle: "none",
-    eyeStyle: "circle",
-    glassesStyle: "none",
-    noseStyle: "short",
-    mouthStyle: "smile",
-    shirtStyle: "shirt",
-    shirtColor: "#214382",
-    bgColor: "#b6e3f4",
-    shape: "circle",
-    earSize: "small",
-  }, // Formal
-];
-
-// --- COMPONENTE PRINCIPAL ---
 function ProfilePage() {
-  // Renombramos 'user' a 'session' para manejar el anidamiento
+  // --- 1. GESTIÓN DE SESIÓN Y DATOS (Nesting Fix aplicado) ---
   const { user: session, login, logout } = useContext(AppContext);
 
   // Extraemos los datos reales del usuario (session.user) o usamos la raíz si ya vienen directos
@@ -1113,14 +155,16 @@ function ProfilePage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const scrollRef = useRef(null);
+  
+  // URL Base para imágenes almacenadas en Supabase Storage
   const urlBase =
     "https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/";
 
-  // ESTADOS GENERALES
+  // --- 2. ESTADOS DINÁMICOS ---
   const [loading, setLoading] = useState(false);
-  const [editingField, setEditingField] = useState(null);
-  const [verificationStep, setVerificationStep] = useState(0);
-  const [pin, setPin] = useState("");
+  const [editingField, setEditingField] = useState(null); // Campo que se está modificando
+  const [verificationStep, setVerificationStep] = useState(0); // Control del flujo de PIN
+  const [pin, setPin] = useState(""); // Almacena el código ingresado por el usuario
   const [modal, setModal] = useState({
     show: false,
     type: "confirm",
@@ -1129,11 +173,15 @@ function ProfilePage() {
     onConfirm: null,
   });
   const [seguridadDate, setSeguridadDate] = useState("");
-  const [imgTimestamp, setImgTimestamp] = useState(Date.now());
-  const [toast, setToast] = useState(false);
+  const [imgTimestamp, setImgTimestamp] = useState(Date.now()); // Para forzar refresco de caché de imagen
+  const [toast, setToast] = useState(false); // Feedback visual rápido
+
+  // Estados para visibilidad de contraseñas
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  
+  // Valores de los formularios de edición
   const [formValues, setFormValues] = useState({
     newValue: "",
     currentPass: "",
@@ -1151,11 +199,13 @@ function ProfilePage() {
   });
   const [showAdminBroadcast, setShowAdminBroadcast] = useState(false);
 
-  // ESTADOS AVATARES
+  // Estados de la Galería de Avatares locales
   const [avatarGender, setAvatarGender] = useState(null);
   const [showGallery, setShowGallery] = useState(true);
 
+  // --- 3. LÓGICA DE CARGA INICIAL ---
   useEffect(() => {
+    // Obtiene la fecha de la última actualización de seguridad del sistema
     axios
       .get("/api/seguridad-info")
       .then((res) => {
@@ -1170,7 +220,8 @@ function ProfilePage() {
       })
       .catch(() => setSeguridadDate("No disponible"));
 
-    if (window.location.hash === "#seguridad") {
+    // Manejo de anclaje directo a la sección de seguridad    
+      if (window.location.hash === "#seguridad") {
       const element = document.getElementById("seguridad");
       if (element) {
         setTimeout(() => {
@@ -1180,6 +231,11 @@ function ProfilePage() {
     }
   }, []);
 
+  // --- 4. VALIDACIONES Y UTILIDADES ---
+
+  /**
+   * Valida disponibilidad de nombre de usuario en tiempo real (Debounce manual).
+   */
   useEffect(() => {
     if (editingField === "username" && formValues.newValue.length > 2) {
       const delay = setTimeout(async () => {
@@ -1222,6 +278,8 @@ function ProfilePage() {
     return hasLen && hasUpper && hasNum && hasSym;
   };
 
+  // --- 5. MANEJADORES DE ACCIONES (API CALLS) ---
+
   const handleEditClick = (field) => {
     setEditingField(field);
     setVerificationStep(field === "eliminar_cuenta" ? 1 : 2);
@@ -1239,6 +297,9 @@ function ProfilePage() {
     });
   };
 
+  /**
+   * handleSendCode: Solicita el envío de un PIN de seguridad al correo del usuario.
+   */
   const handleSendCode = async () => {
     setLoading(true);
     try {
@@ -1262,6 +323,9 @@ function ProfilePage() {
     }
   };
 
+  /**
+   * handleVerifyCode: Valida el PIN para desbloquear el formulario de edición.
+   */
   const handleVerifyCode = async () => {
     setLoading(true);
     try {
@@ -1279,6 +343,9 @@ function ProfilePage() {
     }
   };
 
+  /**
+   * handleUpdateImage: Gestiona la carga de fotos reales con compresión en el cliente.
+   */
   const handleUpdateImage = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -1291,10 +358,14 @@ function ProfilePage() {
       };
       const compressed = await imageCompression(file, options);
       const fileName = `perfil_${user.persona_id}.jpg`;
+      
+      // Carga física a Supabase
       await supabase.storage
         .from("People_profile")
         .upload(fileName, compressed, { upsert: true });
-      await axios.post("/api/upload-foto", {
+      
+      // Actualización de referencia en DB Backend
+        await axios.post("/api/upload-foto", {
         persona_id: String(user.persona_id),
         foto_url: fileName,
       });
@@ -1318,6 +389,9 @@ function ProfilePage() {
     }
   };
 
+  /**
+   * handleSelectAvatar: Establece una imagen WebP de la carpeta local como foto de perfil.
+   */
   const handleSelectAvatar = (imagePath) => {
     setModal({
       show: true,
@@ -1353,6 +427,10 @@ function ProfilePage() {
       },
     });
   };
+  
+  /**
+   * processUpdate: Ejecuta el cambio final de datos (email, usuario, contacto o clave).
+   */
   const processUpdate = async () => {
     setModal({ ...modal, show: false });
     setLoading(true);
@@ -1420,6 +498,9 @@ function ProfilePage() {
     processUpdate();
   };
 
+  /**
+   * handlePublicarUpdate: Difusión de correos masivos (Solo para Administradores Locales).
+   */
   const handlePublicarUpdate = async () => {
     setModal({ ...modal, show: false });
     setLoading(true);
@@ -1467,6 +548,9 @@ function ProfilePage() {
     });
   };
 
+  /**
+   * processDeleteAccountFinal: Ejecuta la baja lógica de la cuenta.
+   */
   const processDeleteAccountFinal = async () => {
     setLoading(true);
     try {
@@ -1488,6 +572,11 @@ function ProfilePage() {
     }
   };
 
+  // --- 6. RENDERIZADO DE COMPONENTES DE VISTA ---
+
+  /**
+   * renderEditForm: Dibuja el formulario de edición una vez verificada la identidad.
+   */
   const renderEditForm = () => {
     const passwordsMatch =
       formValues.newValue === formValues.confirmPass &&
@@ -1632,6 +721,8 @@ function ProfilePage() {
           ✅ CÓDIGO ENVIADO
         </div>
       )}
+      
+      {/* --- MODAL DE SISTEMA --- */}
       <Modal
         isOpen={modal.show}
         type={modal.type}
@@ -1641,7 +732,7 @@ function ProfilePage() {
         onClose={() => setModal({ ...modal, show: false })}
       />
 
-      {/* POPUP DE VERIFICACIÓN ESTILIZADO CON FUENTES RESPONSIVAS */}
+      {/* --- POPUP DE VERIFICACIÓN DE SEGURIDAD (MFA) --- */}
       {editingField && verificationStep < 4 && (
         <div className="fixed inset-0 z-[150] flex items-center justify-center bg-jw-navy/40 backdrop-blur-md p-4 animate-in fade-in duration-300">
           <div className="bg-white rounded-[2.5rem] shadow-2xl max-w-[360px] w-full overflow-hidden border border-jw-border/50 animate-in zoom-in-95 duration-300">
@@ -1658,6 +749,7 @@ function ProfilePage() {
 
             <div className="px-8 sm:px-10 pb-10 text-center">
               {verificationStep === 1 ? (
+                /* Advertencia de Baja de Cuenta */
                 <div className="space-y-5">
                   <div className="p-4 bg-red-50 rounded-2xl border border-red-100">
                     {/* FUENTE: text-xs en móvil, text-[11px] en PC */}
@@ -1715,6 +807,7 @@ function ProfilePage() {
                   </button>
                 </div>
               ) : (
+                /* Ingreso de PIN */
                 <div className="space-y-8">
                   <div>
                     {/* FUENTE: text-xs en móvil, text-[10px] en PC */}
@@ -1755,8 +848,10 @@ function ProfilePage() {
         </div>
       )}
 
+      {/* --- DISEÑO DEL PANEL PRINCIPAL --- */}
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* SECCIÓN 1: ADMINISTRACIÓN */}
+        
+        {/* SECCIÓN 1: ADMINISTRACIÓN DE CREDENCIALES */}
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden">
           <div className="p-5 bg-jw-navy text-white border-b-4 border-jw-blue">
             <h2 className="text-lg font-light italic flex items-center gap-3">
@@ -1842,7 +937,7 @@ function ProfilePage() {
           </div>
         </section>
 
-        {/* SECCIÓN 2: CONSEJOS Y PANEL ADMIN */}
+        {/* SECCIÓN 2: RECORDATORIOS Y DIFUSIÓN (SOLO ADMINS) */}
         <section
           id="seguridad"
           className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden scroll-mt-20"
@@ -1876,6 +971,7 @@ function ProfilePage() {
                 )}
               </div>
             </div>
+            {/* Panel de Difusión para Administradores Locales */}
             {user?.es_admin_local && showAdminBroadcast && (
               <div className="mt-8 p-8 bg-amber-50 border-2 border-dashed border-amber-200 rounded-[2rem] animate-in slide-in-from-top-4 duration-500 text-left">
                 <div className="flex items-center gap-3 mb-6">
@@ -1943,9 +1039,7 @@ function ProfilePage() {
           </div>
         </section>
 
-        {/* ==========================================
-    SECCIÓN: GALERÍA DE ILUSTRACIONES REALES (LOCALES)
-    ========================================== */}
+        {/* SECCIÓN 3: GALERÍA DE AVATARES INSTITUCIONALES (WEBP LOCAL) */}
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden text-jw-navy">
           <div className="p-5 bg-jw-navy text-white border-b-3 border-jw-blue flex justify-between items-center">
             <h2 className="text-lg font-normal italic flex items-center gap-3 text-left">
@@ -2015,6 +1109,7 @@ function ProfilePage() {
 
                   {avatarGender && (
                     <div className="relative group/gallery">
+                      {/* Controles de Navegación Horizontal */}
                       <button
                         onClick={() =>
                           scrollRef.current?.scrollBy({
@@ -2126,7 +1221,7 @@ function ProfilePage() {
           </AnimatePresence>
         </section>
 
-        {/* SECCIÓN 3: ZONA DE PELIGRO */}
+        {/* SECCIÓN 4: ZONA DE PELIGRO (SUSPENSIÓN DE CUENTA) */}
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden">
           <div className="p-5 bg-red-600 text-white border-b-4 border-red-800 text-left">
             <h2 className="text-lg font-bold italic flex items-center gap-3">
@@ -2182,7 +1277,7 @@ function ProfilePage() {
           </div>
         </section>
 
-        {/* SECCIÓN 4: PERFIL PÚBLICO */}
+        {/* SECCIÓN 5: PERFIL PÚBLICO E INFORMACIÓN GEOGRÁFICA */}
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden text-jw-navy">
           <div className="p-5 bg-jw-navy text-white border-b-4 border-jw-blue text-left">
             <h2 className="text-lg font-light italic flex items-center gap-3">
@@ -2245,6 +1340,7 @@ function ProfilePage() {
                     ({user?.numero_congregacion})
                   </span>
                 </p>
+                {/* Desglose de dirección postal detallada */}
                 <div className="space-y-3 mt-4 border-l-4 border-jw-blue/10 pl-5 text-left">
                   <AddressLine
                     icon={<MapPin />}
@@ -2278,6 +1374,7 @@ function ProfilePage() {
                   />
                 </div>
               </div>
+              {/* Bloque Informativo de Ayuda */}
               <div className="bg-jw-body p-6 rounded-2xl border flex items-start gap-4">
                 <HelpCircle className="w-6 h-6 text-jw-blue mt-1" />
                 <div className="text-[13px] text-gray-600 leading-relaxed italic">
@@ -2307,6 +1404,9 @@ function ProfilePage() {
   );
 }
 
+/**
+ * AddressLine: Componente minimalista para renderizar líneas de dirección con etiqueta.
+ */
 function AddressLine({ icon, value, label }) {
   if (!value) return null;
   return (

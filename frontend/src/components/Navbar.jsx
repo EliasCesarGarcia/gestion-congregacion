@@ -1,6 +1,6 @@
 /**
  * ARCHIVO: Navbar.jsx
- * UBICACIÓN: src/components/Navbar.jsx
+ * UBICACIÓN: frontend/src/components/Navbar.jsx
  * DESCRIPCIÓN: Barra de navegación principal con posicionamiento fijo.
  * Maneja el menú lateral (Sidebar), el título dinámico basado en la ruta,
  * el acceso al perfil de usuario con refresco de caché de imagen.
@@ -13,9 +13,12 @@
  * - getProfileImage: Procesa la URL de imagen (Avatar local o Supabase con WebP).
  */
 
+// --- IMPORTACIONES DE LIBRERÍAS ---
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
+
+// --- IMPORTACIÓN DE ICONOS (LUCIDE-REACT) ---
 import {
   Menu,
   Home,
@@ -31,28 +34,46 @@ import {
 } from "lucide-react";
 
 function Navbar() {
-  // --- 1. CONFIGURACIÓN Y ESTADOS ---
+  // --- 1. CONFIGURACIÓN, ESTADOS Y CONTEXTO ---
+
+  // Consumo del estado global: sesión de usuario y tema dinámico horario
   const { user: session, logout, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
+
+  // Lógica de "Nesting Fix": Extrae datos si vienen anidados en .user o usa la raíz
   // Creamos la constante 'user' extrayendo los datos reales (session.user)
   const user = session?.user || session;
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  // Estados locales para el control de apertura de menús
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Menú lateral izquierdo
+  const [isProfileOpen, setIsProfileOpen] = useState(false); // Dropdown de perfil derecho
+
+  // Hooks de navegación y ubicación de React Router
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- 2. FUNCIONES DE NAVEGACIÓN ---
+  // --- 2. FUNCIONES DE INTERACCIÓN (LÓGICA) ---
+
+  /**
+   * Cierra todos los componentes flotantes (Sidebar y Perfil)
+   */
   const closeMenus = () => {
     setIsMenuOpen(false);
     setIsProfileOpen(false);
   };
 
+  /**
+   * Gestiona el proceso de salida segura y redirección al Login
+   */
   const handleLogout = () => {
     logout();
     closeMenus();
     navigate("/login");
   };
 
+  /**
+   * Determina el título de la barra superior basado en la ruta actual
+   * @returns {string} Texto identificador de la página
+   */
   const getTitle = () => {
     if (location.pathname === "/perfil") return "Administración de Cuenta";
     if (location.pathname === "/publicaciones") return "Módulo Publicaciones";
@@ -62,41 +83,56 @@ function Navbar() {
     return `Congregación ${user?.congregacion_nombre || ""}`;
   };
 
+  /**
+   * Define qué icono mostrar al lado del título y su comportamiento
+   * @returns {JSX.Element|null} Icono correspondiente o null para Home
+   */
   const getPageIcon = () => {
-    // Definimos el tamaño (puedes cambiar w-6 h-6 por el que prefieras)
-    const size = "w-6 h-6"; 
+    const size = "w-6 h-6"; // Tamaño base para iconos del Navbar
 
-    // --- LOGICA DE EXCLUSIÓN PARA HOME ---
+    // Exclusión de icono en Home para reducir redundancia visual
     if (location.pathname === "/") return null;
 
-    // --- ICONOS PARA EL RESTO DE LAS PÁGINAS ---
+    // Mapeo de iconos por ruta
     if (location.pathname === "/perfil") return <User className={size} />;
-    if (location.pathname === "/publicaciones") return <BookOpen className={size} />;
-    if (location.pathname === "/seguridad-tips") return <ShieldCheck className={size} />;
+    if (location.pathname === "/publicaciones")
+      return <BookOpen className={size} />;
+    if (location.pathname === "/seguridad-tips")
+      return <ShieldCheck className={size} />;
     if (location.pathname === "/contacto") return <Globe className={size} />;
-    if (location.pathname === "/configuracion") return <Settings className={size} />;
-    
+    if (location.pathname === "/configuracion")
+      return <Settings className={size} />;
+
     return null; // Por seguridad, si no coincide ninguna, no muestra nada
   };
 
-  // --- 3. GESTIÓN DE IMAGEN ---
+  /**
+   * Procesa la fuente de la imagen de perfil (Local o Supabase)
+   * @returns {string|null} URL final de la imagen
+   */
   const getProfileImage = () => {
     if (!user?.foto_url) return null;
+    // Si es un avatar institucional local o una URL absoluta externa
     if (
       user.foto_url.startsWith("/avatars/") ||
       user.foto_url.startsWith("http")
     ) {
       return user.foto_url;
     }
+    // Si es una imagen subida a Supabase (aplica transformación WebP)
     return `https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/${user.foto_url}?width=120&quality=80&format=webp`;
   };
 
   return (
     <nav
-      style={{ backgroundColor: timeTheme.bg }} // Aplicación de color dinámico (Mañana/Tarde/Noche)
+      style={{ backgroundColor: timeTheme.bg }} // Aplicación de color dinámico (Mañana/Tarde/Noche) desde AppContext
       className="text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-1000"
     >
-      {/* FONDO DESENFOCADO (Backdrop) */}
+      {/* 
+          --- CAPA DE DESENFOQUE (BACKDROP) --- 
+          Se activa cuando cualquier menú está abierto. 
+          z-[-1] permite que el fondo se desenfoque bajo el Navbar pero sobre el contenido del body.
+      */}
       {(isMenuOpen || isProfileOpen) && (
         <div
           className="fixed inset-0 z-[-1] bg-black/10 transition-opacity duration-500 w-screen h-screen"
@@ -109,15 +145,19 @@ function Navbar() {
       )}
 
       <div className="w-full flex items-center justify-between">
-        {/* SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO */}
+        {/* 
+            --- SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO DINÁMICO --- 
+            Aplica desenfoque selectivo y bloquea clics si hay menús abiertos para mejorar UX.
+        */}
         <div
           className={`flex items-center z-50 min-w-0 transition-all duration-100 
     ${isMenuOpen || isProfileOpen ? "blur-[2px] opacity-100 pointer-events-none" : "blur-0 opacity-100"}`}
         >
+          {/* Disparador del Menú Lateral (Sidebar) */}
           <button
             onClick={() => {
               setIsMenuOpen((prev) => !prev);
-              setIsProfileOpen(false);
+              setIsProfileOpen(false); // Cierre de exclusión mutua
             }}
             aria-label="Abrir menú de navegación"
             className="p-1.5 sm:p-2 hover:bg-white/20 hover:text-white hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-1 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
@@ -125,6 +165,7 @@ function Navbar() {
             <Menu className="w-7 h-7" />
           </button>
 
+          {/* Enlace rápido a Inicio */}
           <NavLink
             to="/"
             onClick={closeMenus}
@@ -134,32 +175,35 @@ function Navbar() {
             <Home className="w-7 h-7" />
           </NavLink>
 
+          {/* Información de la Aplicación y Título de Ruta */}
           <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0">
             <span className="text-sm font-light tracking-wide text-gray-100 hidden lg:block italic shrink-0">
               Sistema de Gestión
             </span>
             <div className="flex items-center gap-3">
-  <span className="text-sm sm:text-lg font-medium tracking-tight text-white truncate">
-    {getTitle()}
-  </span>
-  {/* Icono dinámico con giro en eje Y */}
-  <div className="text-jw-accent-light animate-spin-y shrink-0">
-    {getPageIcon()}
-  </div>
-</div>
+              <span className="text-sm sm:text-lg font-medium tracking-tight text-white truncate">
+                {getTitle()}
+              </span>
+              {/* Icono dinámico con animación de giro 3D en el eje Y */}
+              <div className="text-jw-accent-light animate-spin-y shrink-0">
+                {getPageIcon()}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* SECCIÓN DERECHA: PERFIL Y AVATAR */}
+        {/* --- SECCIÓN DERECHA: IDENTIFICACIÓN Y PERFIL --- */}
         <div className="relative z-50 flex items-center justify-end">
+          {/* Botón disparador del Dropdown de Perfil */}
           <button
             onClick={() => {
               setIsProfileOpen((prev) => !prev);
-              setIsMenuOpen(false);
+              setIsMenuOpen(false); // Cierre de exclusión mutua
             }}
             aria-label="Ver opciones de mi cuenta"
             className="flex items-center gap-3 sm:gap-5 p-0 px-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
           >
+            {/* Saludo y nombre de usuario (Solo visible en tablets y escritorio) */}
             <div className="hidden md:flex flex-col items-end text-right leading-none">
               <span className="text-[10px] font-medium text-jw-accent-light uppercase tracking-widest mb-1">
                 Mi Cuenta
@@ -173,6 +217,7 @@ function Navbar() {
               </span>
             </div>
 
+            {/* Contenedor circular del Avatar con borde de color institucional */}
             <div className="w-14 h-14 rounded-full border-2 border-jw-accent overflow-hidden bg-jw-body flex items-center justify-center shrink-0 shadow-md">
               {user?.foto_url ? (
                 <img
@@ -183,13 +228,18 @@ function Navbar() {
                   fetchPriority="high"
                 />
               ) : (
-                <User className="text-gray-400 w-7 h-7" />
+                <User className="text-gray-400 w-7 h-7" /> // Icono por defecto si no hay imagen
               )}
             </div>
           </button>
 
+          {/* 
+              --- DROPDOWN DE PERFIL (VENTANA DERECHA) --- 
+              Incluye datos de congregación, dirección y botones de acción.
+          */}
           {isProfileOpen && (
             <div className="absolute right-0 top-full mt-1 w-62 bg-white z-[160] rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
+              {/* Cabecera del Dropdown */}
               <div className="p-4 bg-jw-body border-b border-jw-border text-left">
                 <p className="text-base font-bold leading-tight text-jw-navy">
                   {user?.nombre_completo}
@@ -199,6 +249,7 @@ function Navbar() {
                 </p>
               </div>
 
+              {/* Cuerpo de información institucional */}
               <div className="p-4 text-xs text-gray-700 leading-relaxed italic text-left">
                 <div className="px-1 border-l-4 border-jw-accent pl-3">
                   <div className="mb-2">
@@ -233,6 +284,7 @@ function Navbar() {
 
                 <hr className="border-jw-border my-4" />
 
+                {/* Botones de acción rápida */}
                 <div className="space-y-1">
                   <button
                     onClick={() => {
@@ -258,13 +310,16 @@ function Navbar() {
         </div>
       </div>
 
-      {/* 2. ESTRUCTURA DEL MENÚ LATERAL (SIDEBAR) */}
+      {/* 
+          --- MENÚ LATERAL IZQUIERDO (SIDEBAR) --- 
+          Diseño flotante con bordes redondeados y efectos minimalistas.
+      */}
       <div
         className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-72 md:w-70 bg-white z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-gray-500 will-change-transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-[calc(100%+20px)]"
         }`}
       >
-        {/* ENCABEZADO: Compacto con color dinámico según horario */}
+        {/* Cabecera del Menú Principal con color dinámico horario */}
         <div
           style={{ backgroundColor: timeTheme?.bg || "#1a335a" }}
           className="py-3 px-6 text-white flex justify-between items-center transition-colors duration-1000 shadow-md"
@@ -288,7 +343,7 @@ function Navbar() {
           </button>
         </div>
 
-        {/* LISTADO DE MENÚS: Minimalismo táctil */}
+        {/* Listado de navegación dinámica mediante .map para escalabilidad */}
         <div className="p-1 space-y-1 overflow-y-auto h-[calc(100%-60px)] custom-scrollbar text-left">
           {[
             { to: "/", icon: <Home size={22} />, label: "Inicio" },
@@ -308,10 +363,13 @@ function Navbar() {
               label: "Ayuda y Contacto",
             },
             { to: "/perfil", icon: <User size={22} />, label: "Mi Perfil" },
-            // NUEVA OPCIÓN:
-  { to: "/configuracion", icon: <Settings size={22} />, label: "Configuración" },
+            {
+              to: "/configuracion",
+              icon: <Settings size={22} />,
+              label: "Configuración",
+            },
           ].map((item) => {
-            // Verificación manual de ruta activa
+            // Lógica para detectar si el enlace está activo
             const isAct = location.pathname === item.to;
 
             return (
@@ -332,7 +390,7 @@ function Navbar() {
                       : "text-gray-500 hover:bg-gray-50 hover:text-jw-blue hover:translate-x-1"
                   }`}
               >
-                {/* Icono con escala sutil sin vibración */}
+                {/* Animación sutil de escala en iconos al estar activo o sobrevolar */}
                 <span
                   className={`shrink-0 transition-transform duration-500 ${isAct ? "scale-110" : "group-hover:scale-110"}`}
                 >
@@ -343,7 +401,7 @@ function Navbar() {
                   {item.label}
                 </span>
 
-                {/* Indicador de color lateral (solo en hover) */}
+                {/* Indicador visual lateral (luz suave) solo visible en Hover */}
                 {!isAct && (
                   <div
                     style={{ backgroundColor: timeTheme?.bg }}
@@ -355,7 +413,7 @@ function Navbar() {
           })}
         </div>
 
-        {/* PIE DE MENÚ (Branding sutil) */}
+        {/* Pie de Menú con branding sutil y versión del sistema */}
         <div className="absolute bottom-1 left-0 w-full px-2 opacity-80 border-t border-gray-100 pt-2">
           <p className="text-[0.65rem] font-medium tracking-[0.4em] uppercase text-center text-gray-800">
             S.G. v2.6

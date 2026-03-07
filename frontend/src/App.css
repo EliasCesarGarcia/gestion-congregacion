@@ -1,23 +1,57 @@
+/**
+ * ARCHIVO: App.css
+ * UBICACIÓN: src/App.css
+ * DESCRIPCIÓN: Estilos específicos para el componente raíz y utilidades generales.
+ * Define la estructura del contenedor principal, animaciones de identidad visual
+ * y ajustes de visualización para componentes de marca (Logos).
+ * 
+ * FUNCIONALIDADES CLAVE:
+ * - Centrado y limitación de ancho del nodo raíz.
+ * - Gestión de micro-interacciones visuales (Filtros y Sombras).
+ * - Animaciones condicionales basadas en preferencias de accesibilidad.
+ */
+
+/* 
+   ==========================================================
+   --- CONTENEDOR RAÍZ (ROOT) --- 
+   ==========================================================
+*/
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  max-width: 1280px; /* Límite de ancho para mantener legibilidad en monitores Ultra-Wide */
+  margin: 0 auto; /* Centrado horizontal automático */
+  padding: 2rem; /* Espaciado interno de seguridad */
+  text-align: center; /* Alineación base para componentes hijos */
 }
 
+/* 
+   ==========================================================
+   --- IDENTIDAD VISUAL (LOGOTIPOS) --- 
+   ==========================================================
+*/
 .logo {
   height: 6em;
   padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  will-change: filter;  /* Optimización de rendimiento: Prepara a la GPU para cambios de filtro */
+  transition: filter 300ms; /* Transición suave para el efecto de iluminación (Glow) */
 }
 
+/* Efectos de resaltado (Hover) específicos por tecnología */
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa); /* Resplandor color índigo */
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa); /* Resplandor color cian (React) */
+}
+
+/* 
+   ==========================================================
+   --- SISTEMA DE ANIMACIONES --- 
+   ==========================================================
+*/
+
+/**
+ * logo-spin: Define una rotación continua de 360 grados.
+ */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -27,16 +61,34 @@
   }
 }
 
+/**
+ * ACCESIBILIDAD (SEO 2026):
+ * La animación solo se activa si el usuario NO ha configurado "Reducir movimiento" 
+ * en su sistema operativo. Esto mejora la experiencia para personas con 
+ * trastornos vestibulares o sensibilidad al movimiento.
+ */
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
   }
 }
 
+/* 
+   ==========================================================
+   --- COMPONENTES DE CONTENIDO (UTILITIES) --- 
+   ==========================================================
+*/
+
+/**
+ * .card: Contenedor genérico para secciones de información.
+ */
 .card {
   padding: 2em;
 }
 
+/**
+ * .read-the-docs: Estilo para notas al pie o documentación técnica.
+ */
 .read-the-docs {
-  color: #888;
+  color: #888; /* Gris tenue para jerarquía visual secundaria */
 }

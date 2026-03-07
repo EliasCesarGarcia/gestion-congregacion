@@ -1,6 +1,6 @@
 /**
  * ARCHIVO: SecurityTipsPage.jsx
- * UBICACIÓN: src/pages/SecurityTipsPage.jsx
+ * UBICACIÓN: frontend/src/pages/SecurityTipsPage.jsx
  * DESCRIPCIÓN: Página informativa dedicada a los recordatorios y consejos de seguridad digital.
  * Presenta una guía visual e interactiva sobre la protección de dispositivos, gestión
  * de contraseñas, prevención de phishing, seguridad familiar y respaldos.
