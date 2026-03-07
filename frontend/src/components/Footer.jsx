@@ -49,13 +49,18 @@ function Footer() {
            ESTABILIDAD VISUAL: Se usa 'w-full' en lugar de 'max-w-7xl' para evitar que 
            el contenido se desplace al centro cuando el usuario achica la fuente.
         */
-        className="w-full flex flex-col md:flex-row justify-between items-start md:items-end gap-6 md:gap-2"
+        /* 
+          CAMBIO: Subimos el cambio de columna a 'lg' (en lugar de 'md'). 
+          Esto hace que en tablets el footer siga siendo una lista vertical, 
+          evitando que el texto se salga por la derecha.
+        */
+        className="w-full flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 lg:gap-4 min-w-0"
         itemScope 
         itemType="https://schema.org/Organization"
       >
         
         {/* --- SECCIÓN IZQUIERDA: IDENTIDAD Y LOCALIZACIÓN --- */}
-        <div className="flex flex-col items-start min-w-0 w-full md:w-auto text-left">
+        <div className="flex flex-col items-start min-w-0 w-full lg:w-3/4 text-left">
           {/* Nombre de la Congregación y Número identificador */}
           <h3 className="text-sm font-medium tracking-tight truncate w-full mb-1">
             <span itemProp="name">Congregación {user.congregacion_nombre}</span>
@@ -93,7 +98,7 @@ function Footer() {
         </div>
 
         {/* --- SECCIÓN DERECHA: ENLACES DE SOPORTE Y LEGAL --- */}
-        <div className="flex flex-col items-start md:items-end gap-2 w-full md:w-auto shrink-0 pt-3 md:pt-0 border-t border-white/5 md:border-none">
+        <div className="flex flex-col items-start lg:items-end gap-2 w-full lg:w-auto shrink-0 pt-3 md:pt-0 border-t border-white/5 md:border-none">
           {/* Enlace al Centro de Ayuda (Accesibilidad técnica) */}
           <Link 
             to="/contacto" 

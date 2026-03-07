@@ -176,7 +176,11 @@ function Navbar() {
           </NavLink>
 
           {/* Información de la Aplicación y Título de Ruta */}
-          <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0">
+          {/* 
+            Añadimos max-w-[45vw] en móvil y max-w-[60vw] en tablets. 
+            Esto obliga al texto a cortarse (truncate) antes de tocar el perfil. 
+          */}
+          <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0 max-w-[45vw] sm:max-w-[60vw]">
             <span className="text-sm font-light tracking-wide text-gray-100 hidden lg:block italic shrink-0">
               Sistema de Gestión
             </span>
@@ -204,7 +208,8 @@ function Navbar() {
             className="flex items-center gap-3 sm:gap-5 p-0 px-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
           >
             {/* Saludo y nombre de usuario (Solo visible en tablets y escritorio) */}
-            <div className="hidden md:flex flex-col items-end text-right leading-none">
+            {/* shrink permite que esta sección se achique si el título de la izquierda crece mucho */}
+            <div className="hidden md:flex flex-col items-end text-right leading-none shrink">
               <span className="text-[10px] font-medium text-jw-accent-light uppercase tracking-widest mb-1">
                 Mi Cuenta
               </span>
