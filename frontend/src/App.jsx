@@ -41,11 +41,11 @@ function App() {
       {/* BARRA DE NAVEGACIÓN: Posicionamiento fijo gestionado internamente */}
       <Navbar />
 
-      /**
-       * ÁREA DE CONTENIDO DINÁMICO:
-       * pt-16: Compensación de altura por el Navbar fijo (h-16).
-       * flex-grow: Fuerza a este contenedor a ocupar todo el espacio entre Navbar y Footer.
-       */
+    {/*
+    //ÁREA DE CONTENIDO DINÁMICO:
+    //pt-16: Compensación de altura por el Navbar fijo (h-16).
+    //flex-grow: Fuerza a este contenedor a ocupar todo el espacio entre Navbar y Footer.
+    */}
       <main className="flex-grow w-full pt-16 overflow-x-hidden">
         <Routes>
           

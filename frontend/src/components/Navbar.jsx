@@ -37,7 +37,7 @@ function Navbar() {
   // --- 1. CONFIGURACIÓN, ESTADOS Y CONTEXTO ---
 
   // Consumo del estado global: sesión de usuario y tema dinámico horario
-  const { user: session, logout, timeTheme } = useContext(AppContext); // Consumimos el tema dinámico
+  const { user: session, logout, timeTheme } = useContext(AppContext); //Consumimos el tema dinámico
 
   // Lógica de "Nesting Fix": Extrae datos si vienen anidados en .user o usa la raíz
   // Creamos la constante 'user' extrayendo los datos reales (session.user)
@@ -144,13 +144,13 @@ function Navbar() {
         />
       )}
 
-      <div className="w-full flex items-center justify-between">
+      <div className="w-full flex items-center justify-between gap-2">
         {/* 
             --- SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO DINÁMICO --- 
             Aplica desenfoque selectivo y bloquea clics si hay menús abiertos para mejorar UX.
         */}
         <div
-          className={`flex items-center z-50 min-w-0 transition-all duration-100 
+          className={`flex items-center z-50 min-w-0 flex-1 transition-all duration-100 
     ${isMenuOpen || isProfileOpen ? "blur-[2px] opacity-100 pointer-events-none" : "blur-0 opacity-100"}`}
         >
           {/* Disparador del Menú Lateral (Sidebar) */}
@@ -180,12 +180,12 @@ function Navbar() {
             Añadimos max-w-[45vw] en móvil y max-w-[60vw] en tablets. 
             Esto obliga al texto a cortarse (truncate) antes de tocar el perfil. 
           */}
-          <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0 max-w-[45vw] sm:max-w-[60vw]">
+          <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0 flex-grow overflow-hidden">
             <span className="text-sm font-light tracking-wide text-gray-100 hidden lg:block italic shrink-0">
               Sistema de Gestión
             </span>
-            <div className="flex items-center gap-3">
-              <span className="text-sm sm:text-lg font-medium tracking-tight text-white truncate">
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="text-sm sm:text-lg font-medium tracking-tight text-white truncate block min-w-0 flex-grow">
                 {getTitle()}
               </span>
               {/* Icono dinámico con animación de giro 3D en el eje Y */}
@@ -209,14 +209,14 @@ function Navbar() {
           >
             {/* Saludo y nombre de usuario (Solo visible en tablets y escritorio) */}
             {/* shrink permite que esta sección se achique si el título de la izquierda crece mucho */}
-            <div className="hidden md:flex flex-col items-end text-right leading-none shrink">
+            <div className="hidden md:flex flex-col items-end text-right leading-none shrink min-w-0 overflow-hidden">
               <span className="text-[10px] font-medium text-jw-accent-light uppercase tracking-widest mb-1">
                 Mi Cuenta
               </span>
               <span className="text-base font-light italic">
                 {timeTheme.greeting}{" "}
                 {/* Saludo dinámico: Buenos días / Buenas tardes / Buenas noches */}
-                <span className="font-medium not-italic">
+                <span className="font-medium not-italic truncate">
                   {user?.nombre_completo?.split(" ").reverse().join(" ")}
                 </span>
               </span>
