@@ -37,7 +37,8 @@ function Navbar() {
   // --- 1. CONFIGURACIÓN, ESTADOS Y CONTEXTO ---
 
   // Consumo del estado global: sesión de usuario y tema dinámico horario
-  const { user: session, logout, timeTheme } = useContext(AppContext); //Consumimos el tema dinámico
+  // CAMBIO: Desestructuramos activeTheme en lugar de timeTheme
+  const { user: session, logout, activeTheme } = useContext(AppContext);
 
   // Lógica de "Nesting Fix": Extrae datos si vienen anidados en .user o usa la raíz
   // Creamos la constante 'user' extrayendo los datos reales (session.user)
@@ -124,10 +125,11 @@ function Navbar() {
   };
 
   return (
-    <nav
-      style={{ backgroundColor: timeTheme.bg }} // Aplicación de color dinámico (Mañana/Tarde/Noche) desde AppContext
-      className="text-white fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-1000"
-    >
+    <nav className="bg-jw-navy text-jw-text-light fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-700">
+      
+      {/* NUEVO: Contenedor único que lee la imagen estática desde el CSS */}
+      <div className="theme-bg-navbar"></div>
+
       {/* 
           --- CAPA DE DESENFOQUE (BACKDROP) --- 
           Se activa cuando cualquier menú está abierto. 
@@ -144,11 +146,8 @@ function Navbar() {
         />
       )}
 
-      <div className="w-full flex items-center justify-between gap-2">
-        {/* 
-            --- SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO DINÁMICO --- 
-            Aplica desenfoque selectivo y bloquea clics si hay menús abiertos para mejorar UX.
-        */}
+      <div className="w-full flex items-center justify-between gap-2 relative z-10">
+        {/* --- SECCIÓN IZQUIERDA: MENÚ, HOME Y TÍTULO DINÁMICO --- */}
         <div
           className={`flex items-center z-50 min-w-0 flex-1 transition-all duration-100 
     ${isMenuOpen || isProfileOpen ? "blur-[2px] opacity-100 pointer-events-none" : "blur-0 opacity-100"}`}
@@ -157,10 +156,11 @@ function Navbar() {
           <button
             onClick={() => {
               setIsMenuOpen((prev) => !prev);
-              setIsProfileOpen(false); // Cierre de exclusión mutua
+              setIsProfileOpen(false);
             }}
             aria-label="Abrir menú de navegación"
-            className="p-1.5 sm:p-2 hover:bg-white/20 hover:text-white hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-1 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+            /* CAMBIO: text-jw-text-light para que use el color de texto claro del tema */
+            className="p-1.5 sm:p-2 hover:bg-white/20 text-jw-text-light hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-1 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
           >
             <Menu className="w-7 h-7" />
           </button>
@@ -170,26 +170,23 @@ function Navbar() {
             to="/"
             onClick={closeMenus}
             aria-label="Ir al inicio"
-            className="p-1.5 sm:p-2 hover:bg-white/20 hover:text-white hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-2 sm:mr-3 text-jw-accent-light shrink-0 hover:shadow-[0_0_15px_rgba(74,109,167,0.3)]"
+            /* CAMBIO: text-jw-text-light en lugar de text-jw-accent-light */
+            className="p-1.5 sm:p-2 hover:bg-white/20 text-jw-text-light hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 mr-2 sm:mr-3 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]"
           >
             <Home className="w-7 h-7" />
           </NavLink>
 
-          {/* Información de la Aplicación y Título de Ruta */}
-          {/* 
-            Añadimos max-w-[45vw] en móvil y max-w-[60vw] en tablets. 
-            Esto obliga al texto a cortarse (truncate) antes de tocar el perfil. 
-          */}
           <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0 flex-grow overflow-hidden">
-            <span className="text-sm font-light tracking-wide text-gray-100 hidden lg:block italic shrink-0">
-              Sistema de Gestión
-            </span>
+            {/* CAMBIO: text-jw-text-light/80 para que "Sistema de Gestión" sea dinámico pero un poco más sutil */}
+            <span className="text-sm font-light tracking-wide text-jw-text-light opacity-80 hidden lg:block italic shrink-0">
+  Sistema de Gestión
+</span>
             <div className="flex items-center gap-3 min-w-0">
-              <span className="text-sm sm:text-lg font-medium tracking-tight text-white truncate block min-w-0 flex-grow">
+              <span className="text-sm sm:text-lg font-medium tracking-tight text-jw-text-light truncate block min-w-0 flex-grow">
                 {getTitle()}
               </span>
-              {/* Icono dinámico con animación de giro 3D en el eje Y */}
-              <div className="text-jw-accent-light animate-spin-y shrink-0">
+              {/* CAMBIO: text-jw-text-light para el icono de la página */}
+              <div className="text-jw-text-light animate-spin-y shrink-0">
                 {getPageIcon()}
               </div>
             </div>
@@ -209,13 +206,15 @@ function Navbar() {
           >
             {/* Saludo y nombre de usuario (Solo visible en tablets y escritorio) */}
             {/* shrink permite que esta sección se achique si el título de la izquierda crece mucho */}
+            {/* Saludo y nombre de usuario */}
             <div className="hidden md:flex flex-col items-end text-right leading-none shrink min-w-0 overflow-hidden">
-              <span className="text-[10px] font-medium text-jw-accent-light uppercase tracking-widest mb-1">
-                Mi Cuenta
-              </span>
-              <span className="text-base font-light italic">
-                {timeTheme.greeting}{" "}
-                {/* Saludo dinámico: Buenos días / Buenas tardes / Buenas noches */}
+              {/* CAMBIO: text-jw-text-light/80 en lugar de text-jw-accent-light para "Mi Cuenta" */}
+              <span className="text-[10px] font-medium text-jw-text-light opacity-80 uppercase tracking-widest mb-1">
+  Mi Cuenta
+</span>
+              {/* CAMBIO: Aseguramos que el saludo use text-jw-text-light */}
+              <span className="text-base font-light italic text-jw-text-light">
+                {activeTheme.greeting}{" "}
                 <span className="font-medium not-italic truncate">
                   {user?.nombre_completo?.split(" ").reverse().join(" ")}
                 </span>
@@ -243,10 +242,11 @@ function Navbar() {
               Incluye datos de congregación, dirección y botones de acción.
           */}
           {isProfileOpen && (
-            <div className="absolute right-0 top-full mt-1 w-62 bg-white z-[160] rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-gray-800 animate-in fade-in slide-in-from-top-2 duration-200">
-              {/* Cabecera del Dropdown */}
-              <div className="p-4 bg-jw-body border-b border-jw-border text-left">
-                <p className="text-base font-bold leading-tight text-jw-navy">
+            <div className="absolute right-0 top-full mt-1 w-62 bg-jw-card z-[160] rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-jw-text-main animate-in fade-in slide-in-from-top-2 duration-200 transition-colors">
+              
+              {/* Cabecera del Dropdown adaptada al tema */}
+              <div className="p-4 bg-jw-body border-b border-jw-border text-left transition-colors">
+                <p className="text-base font-bold leading-tight text-jw-text-main">
                   {user?.nombre_completo}
                 </p>
                 <p className="text-xs text-jw-blue italic mt-0.5 font-light">
@@ -255,14 +255,11 @@ function Navbar() {
               </div>
 
               {/* Cuerpo de información institucional */}
-              <div className="p-4 text-xs text-gray-700 leading-relaxed italic text-left">
+              <div className="p-4 text-xs text-jw-text-main leading-relaxed italic text-left">
                 <div className="px-1 border-l-4 border-jw-accent pl-3">
                   <div className="mb-2">
-                    <p className="font-bold not-italic text-jw-navy text-base leading-tight">
+                    <p className="font-bold not-italic text-jw-text-main text-base leading-tight">
                       {user?.congregacion_nombre}
-                    </p>
-                    <p className="text-jw-blue font-normal not-italic tracking-widest uppercase text-[11px]">
-                      N° {user?.numero_congregacion}
                     </p>
                   </div>
 
@@ -271,12 +268,12 @@ function Navbar() {
                     <p>
                       {user?.ciudad}, {user?.partido}
                     </p>
-                    <p className="text-gray-500">
+                    <p className="opacity-70">
                       {user?.provincia}, {user?.pais}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 text-gray-500 pt-1 border-t border-gray-50 mt-2">
+                  <div className="flex items-center gap-2 pt-1 border-t border-gray-50 mt-2">
                     <Globe
                       size={13}
                       className="shrink-0 text-jw-accent-light"
@@ -290,22 +287,22 @@ function Navbar() {
                 <hr className="border-jw-border my-4" />
 
                 {/* Botones de acción rápida */}
-                <div className="space-y-1">
+                <div className="space-y-1 mt-4">
                   <button
                     onClick={() => {
                       navigate("/perfil");
                       closeMenus();
                     }}
-                    className="w-full flex items-center gap-3 p-1 hover:bg-blue-100 rounded-xl text-sm transition-all text-gray-600 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-2 hover:bg-jw-body rounded-xl text-sm transition-all text-jw-text-main group text-left font-medium active:scale-95"
                   >
-                    <Settings className="w-4 h-4 text-gray-400 group-hover:text-jw-blue" />
+                    <Settings className="w-4 h-4 text-jw-blue" />
                     <span>Administrar cuenta</span>
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 p-1 hover:bg-red-100 rounded-xl text-sm transition-all text-red-600 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-2 hover:bg-red-500/10 rounded-xl text-sm transition-all text-red-500 group text-left font-medium active:scale-95"
                   >
-                    <LogOut className="w-4 h-4 text-red-400 group-hover:text-red-600" />
+                    <LogOut className="w-4 h-4 text-red-500 group-hover:text-red-600" />
                     <span>Cerrar sesión</span>
                   </button>
                 </div>
@@ -320,19 +317,17 @@ function Navbar() {
           Diseño flotante con bordes redondeados y efectos minimalistas.
       */}
       <div
-        className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-72 md:w-70 bg-white z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-gray-500 will-change-transform ${
+         className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-72 md:w-70 bg-jw-card z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-jw-border will-change-transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-[calc(100%+20px)]"
         }`}
       >
-        {/* Cabecera del Menú Principal con color dinámico horario */}
         <div
-          style={{ backgroundColor: timeTheme?.bg || "#1a335a" }}
-          className="py-3 px-6 text-white flex justify-between items-center transition-colors duration-1000 shadow-md"
+          className="bg-jw-navy py-3 px-6 text-jw-text-light flex justify-between items-center transition-colors duration-1000 shadow-md"
         >
           <div className="flex items-center gap-4">
             {/* Icono de menú principal (26px) */}
-            <LayoutGrid size={28} className="text-jw-body shrink-0" />
-            <span className="text-xs tracking-[0.25em] font-medium uppercase leading-none">
+           <LayoutGrid size={28} className="shrink-0 text-jw-text-light opacity-80" />
+            <span className="text-xs tracking-[0.25em] font-medium uppercase leading-none text-jw-text-light">
               Menú Principal
             </span>
           </div>
@@ -342,14 +337,14 @@ function Navbar() {
               setIsProfileOpen(false);
             }}
             aria-label="Cerrar menú"
-            className="hover:bg-white/30 p-1.5 rounded-full transition-all active:scale-75"
+            className="hover:bg-white/20 p-1.5 rounded-full transition-all active:scale-75 text-jw-text-light"
           >
-            <X className="w-5 h-5 text-white/80" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Listado de navegación dinámica mediante .map para escalabilidad */}
-        <div className="p-1 space-y-1 overflow-y-auto h-[calc(100%-60px)] custom-scrollbar text-left">
+        <div className="p-1 space-y-1 overflow-y-auto h-[calc(100%-60px)] custom-scrollbar text-left mt-2">
           {[
             { to: "/", icon: <Home size={22} />, label: "Inicio" },
             {
@@ -383,7 +378,7 @@ function Navbar() {
                 to={item.to}
                 onClick={closeMenus}
                 style={{
-                  backgroundColor: isAct ? timeTheme?.bg : "transparent",
+                  backgroundColor: isAct ? "var(--color-jw-navy)" : "transparent",
                   boxShadow: isAct
                     ? `0 10px 10px -3px rgba(0,0,0,0.1)`
                     : "none",
@@ -391,8 +386,10 @@ function Navbar() {
                 className={`group relative flex items-center gap-3 mx-1 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 border border-transparent
                   ${
                     isAct
-                      ? "text-white translate-x-1"
-                      : "text-gray-500 hover:bg-gray-50 hover:text-jw-blue hover:translate-x-1"
+                      /* CAMBIO: text-jw-text-light cuando está activo (sobre fondo navy) */
+                      ? "text-jw-text-light translate-x-1"
+                      /* CAMBIO: text-jw-text-main cuando está inactivo (sobre fondo card) */
+                      : "text-jw-text-main opacity-80 hover:bg-jw-body hover:opacity-100 hover:translate-x-1"
                   }`}
               >
                 {/* Animación sutil de escala en iconos al estar activo o sobrevolar */}
@@ -408,10 +405,7 @@ function Navbar() {
 
                 {/* Indicador visual lateral (luz suave) solo visible en Hover */}
                 {!isAct && (
-                  <div
-                    style={{ backgroundColor: timeTheme?.bg }}
-                    className="absolute left-0 w-1 h-4 rounded-full opacity-20 group-hover:opacity-100 transition-all duration-300"
-                  />
+                  <div className="bg-jw-navy absolute left-0 w-1 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300" />
                 )}
               </NavLink>
             );
@@ -419,8 +413,9 @@ function Navbar() {
         </div>
 
         {/* Pie de Menú con branding sutil y versión del sistema */}
-        <div className="absolute bottom-1 left-0 w-full px-2 opacity-80 border-t border-gray-100 pt-2">
-          <p className="text-[0.65rem] font-medium tracking-[0.4em] uppercase text-center text-gray-800">
+        <div className="absolute bottom-1 left-0 w-full px-2 opacity-80 border-t border-jw-border pt-2">
+          {/* CAMBIO: text-jw-text-main en lugar de text-jw-text-main/70 para asegurar contraste */}
+          <p className="text-[0.65rem] font-medium tracking-[0.4em] uppercase text-center text-jw-text-main">
             S.G. v2.6
           </p>
         </div>

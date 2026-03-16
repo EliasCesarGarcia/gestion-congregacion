@@ -92,7 +92,7 @@ function SecurityTipsPage() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen font-sans text-slate-800 pb-12 overflow-x-hidden">
+    <div className="bg-transparent min-h-screen font-sans text-slate-800 pb-12 overflow-x-hidden transition-colors duration-700">
       {/* --- BLOQUE SEO INICIO --- */}
       <Helmet>
         <title>Seguridad Digital y Blindaje | Gestión Local</title>

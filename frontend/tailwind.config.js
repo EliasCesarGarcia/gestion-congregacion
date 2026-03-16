@@ -33,14 +33,15 @@ export default {
        */
       colors: {
         jw: {
-          navy: '#1a335a',      // Fondo Navbar/Footer (Azul profundo)
-          blue: '#214382',      // Botones de acción, enlaces y estados activos
-          accent: '#4a6da7',    // Azul claro para detalles, iconos y bordes
-          body: '#f5f5f5',      // Color de fondo de página (Evita fatiga visual)
-          card: '#ffffff',      // Fondo de tarjetas, menús y contenedores
-          text_main: '#1a1a1a', // Tipografía principal de alto contraste
-          text_light: '#ffffff',// Texto para lectura sobre fondos oscuros
-          border: '#d1d1d1',    // Separadores y bordes de baja intensidad
+          /* AHORA LEEN VARIABLES CSS DINÁMICAS INYECTADAS POR EL TEMA */
+          navy: 'var(--color-jw-navy)',      
+          blue: 'var(--color-jw-blue)',      
+          accent: 'var(--color-jw-accent)',    
+          body: 'var(--color-jw-body)',      
+          card: 'var(--color-jw-card)',      
+          'text-main': 'var(--color-jw-text-main)', 
+          'text-light': 'var(--color-jw-text-light)',
+          border: 'var(--color-jw-border)',    
         }
       },
       

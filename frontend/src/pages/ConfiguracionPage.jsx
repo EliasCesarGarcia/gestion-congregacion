@@ -15,124 +15,160 @@
 
 import React, { useContext } from "react";
 import { AppContext } from "../context/AppContext";
-import { Settings, Type, ChevronLeft, CheckCircle2 } from "lucide-react";
+import { Type, ChevronLeft, Palette } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function ConfiguracionPage() {
-  /**
-   * Consumimos fontSize y setFontSize para aplicar cambios que afectan a toda la aplicación
-   * a través del atributo 'data-font-size' inyectado en el AppContext.
-   */
-  const { timeTheme, fontSize, setFontSize } = useContext(AppContext);
+  const { activeTheme, userTheme, setUserTheme, fontSize, setFontSize } = useContext(AppContext);
   const navigate = useNavigate();
 
-  // --- 2. CONFIGURACIÓN DE OPCIONES (DATA) ---
-
-  /**
-   * Arreglo de opciones de accesibilidad.
-   * El 'id' coincide con los selectores CSS definidos en index.css para escalar el HTML.
-   */
-  const options = [
-    { id: "small", name: "Pequeño", desc: "Vista compacta" },
-    { id: "normal", name: "Normal (Recomendado)", desc: "Equilibrio visual" },
-    { id: "large", name: "Grande", desc: "Mejor legibilidad" },
-    { id: "extra", name: "Extra Grande", desc: "Máxima visibilidad" },
+  // Lista de temas disponibles
+  const themes = [
+    { id: "default", name: "Automático", img: "⏱️" },
+    { id: "oceano", name: "Océano Profundo", img: "🌊" },
+    { id: "otono", name: "Cálido Otoño", img: "🍂" },
+    { id: "oscuro", name: "Modo Oscuro", img: "🌙" },
+    { id: "solar", name: "Claro Solar", img: "☀️" },
+    { id: "retro", name: "Retro Digital", img: "👾" },
+    { id: "primavera", name: "Primavera", img: "🌸" },
   ];
 
+  // Configuración del Slider
+  const fontSizes = ["small", "normal", "large", "extra"];
+  const sliderValue = fontSizes.indexOf(fontSize);
+
+  const handleSliderChange = (e) => {
+    const val = parseInt(e.target.value);
+    setFontSize(fontSizes[val]);
+  };
+
   return (
-    /**
-     * CONTENEDOR RAÍZ:
-     * font-sans transition-all: Asegura que el cambio de fuente sea fluido y use la tipografía base.
-     */
-    <div className="min-h-screen bg-jw-body pb-10 font-sans transition-all">
-      {/* 
-          --- ENCABEZADO DINÁMICO --- 
-          style: Sincronizado con el color de fondo horario (Mañana/Tarde/Noche).
-          sticky: Se mantiene visible al hacer scroll para facilitar la salida.
-      */}
-      <header
-        style={{ backgroundColor: timeTheme.bg }}
-        className="h-16 flex items-center px-4 text-white shadow-lg sticky top-0 z-40 transition-colors duration-1000"
-      >
-        {/* Botón de retorno con área táctil optimizada */}
+    <div className="min-h-screen bg-transparent pb-10 font-sans transition-colors duration-700 relative">
+      
+      {/* FONDO CREATIVO DE LA PÁGINA BASADO EN EL TEMA (Diferente al Navbar) */}
+      <div 
+        className="absolute top-0 left-0 w-full h-96 opacity-30 pointer-events-none transition-all duration-1000"
+        style={{ 
+          background: `radial-gradient(circle at top, ${activeTheme.accent} 0%, transparent 70%)` 
+        }}
+      />
+
+      {/* ENCABEZADO: Sólo el botón volver */}
+      <div className="pt-6 px-4 max-w-2xl mx-auto relative z-10 flex items-center">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-white/20 rounded-full mr-2 active:scale-90 transition-all"
+          className="flex items-center gap-2 text-jw-navy font-bold px-4 py-2 bg-jw-card rounded-full shadow-md hover:bg-jw-border transition-colors border border-jw-border"
         >
-          <ChevronLeft size={28} />
+          <ChevronLeft size={20} />
+          VOLVER
         </button>
-        <h1 className="text-lg font-light italic flex items-center gap-3">
-          <Settings className="w-6 h-6 animate-spin-slow" />
-          Configuración
-        </h1>
-      </header>
+      </div>
 
-      {/* --- CUERPO DE AJUSTES --- */}
-      <main className="max-w-2xl mx-auto p-4 mt-6 space-y-6">
-        {/* SECCIÓN: ACCESIBILIDAD VISUAL */}
-        <section className="bg-white rounded-3xl shadow-sm border border-jw-border overflow-hidden">
-          {/* Cabecera de Sección */}
-          <div className="p-6 border-b border-gray-50 flex items-center gap-4 bg-gray-50/50">
-            <div className="p-3 bg-jw-blue/10 rounded-2xl text-jw-blue">
-              <Type size={24} />
+      <main className="max-w-2xl mx-auto p-4 mt-4 space-y-8 relative z-10">
+        
+        {/* SECCIÓN 1: PERSONALIZACIÓN VISUAL (TEMAS) */}
+        <section className="bg-jw-card rounded-[2.5rem] shadow-xl border border-jw-border p-6 overflow-hidden relative">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-3 bg-jw-navy text-jw-text-light rounded-2xl shadow-lg">
+              <Palette size={24} />
             </div>
-            <div className="text-left">
-              <h2 className="text-base font-black uppercase tracking-widest text-jw-navy">
-                Tamaño de Fuente
-              </h2>
-              <p className="text-xs text-gray-400 italic">
-                Accesibilidad Visual
-              </p>
+            <div>
+              <h2 className="text-xl font-black tracking-tight text-jw-text-main">Temas Visuales</h2>
+              <p className="text-xs text-jw-blue font-semibold italic">Personaliza tu entorno de trabajo</p>
             </div>
           </div>
 
-          {/* Listado de Botones de Selección */}
-          <div className="p-6 grid gap-4">
-            {options.map((opt) => (
+          {/* Carrusel horizontal de temas */}
+          <div className="flex overflow-x-auto gap-4 pb-4 custom-scrollbar snap-x">
+            {themes.map((t) => (
               <button
-                key={opt.id}
-                onClick={() => setFontSize(opt.id)}
-                /**
-                 * DISEÑO TÁCTIL (SEO 2026):
-                 * active:scale-95: feedback de pulsación para móviles.
-                 * border-2: Claridad visual sobre el estado seleccionado.
-                 */
-                className={`flex items-center justify-between p-5 rounded-2xl border-2 transition-all active:scale-95 ${
-                  fontSize === opt.id
-                    ? "border-jw-blue bg-blue-50"
-                    : "border-gray-100 hover:border-jw-blue/20 bg-white"
+                key={t.id}
+                onClick={() => setUserTheme(t.id)}
+                className={`flex flex-col items-center gap-2 min-w-[80px] snap-center transition-transform active:scale-90 ${
+                  userTheme === t.id ? "opacity-100 scale-105" : "opacity-60 hover:opacity-100"
                 }`}
               >
-                <div className="text-left">
-                  {/* El nombre de la opción escala según su propio ID para previsualización */}
-                  <span
-                    className={`block font-bold text-jw-navy ${opt.id === "extra" ? "text-xl" : opt.id === "large" ? "text-lg" : "text-base"}`}
-                  >
-                    {opt.name}
-                  </span>
-                  <span className="text-xs text-gray-400 font-light italic">
-                    {opt.desc}
-                  </span>
+                <div className={`w-16 h-16 rounded-full flex items-center justify-center text-2xl shadow-md border-[3px] transition-colors ${
+                  userTheme === t.id ? "border-jw-accent bg-jw-body" : "border-transparent bg-gray-100"
+                }`}>
+                  {t.img}
                 </div>
-
-                {/* Indicador visual de selección activa */}
-                {fontSize === opt.id && (
-                  <CheckCircle2 className="text-jw-blue" size={24} />
-                )}
+                <span className={`text-[11px] font-bold text-center leading-tight ${
+                  userTheme === t.id ? "text-jw-navy" : "text-gray-500"
+                }`}>
+                  {t.name}
+                </span>
               </button>
             ))}
           </div>
+
+          {/* Miniatura en vivo (Preview Home) */}
+          <div className="mt-6 border-t border-jw-border pt-6">
+            <p className="text-[10px] uppercase tracking-widest text-jw-blue font-bold mb-3">Previsualización en vivo</p>
+            <div className="w-full h-40 rounded-2xl border-4 border-jw-navy overflow-hidden bg-jw-body shadow-inner flex flex-col">
+              {/* Fake Navbar Mini */}
+              <div className="h-8 bg-jw-navy relative flex items-center px-3 justify-between overflow-hidden">
+                {activeTheme.effect === 'wave' && <div className="theme-wave" style={{height: '10px'}} />}
+                {activeTheme.effect === 'neon' && <div className="theme-neon" />}
+                <div className="w-4 h-4 rounded-full bg-jw-text-light/50" />
+                <div className="w-16 h-2 rounded bg-jw-text-light/50" />
+                <div className="w-4 h-4 rounded-full bg-jw-accent" />
+              </div>
+              {/* Fake Content */}
+              <div className="flex-1 p-3 flex flex-col gap-2">
+                <div className="w-1/2 h-4 rounded bg-jw-navy/20" />
+                <div className="w-full h-16 rounded-xl bg-jw-card border border-jw-border flex items-center px-3">
+                   <div className="w-8 h-8 rounded-full bg-jw-accent/30 mr-2" />
+                   <div className="w-3/4 h-3 rounded bg-jw-text-main/20" />
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
-        {/* 
-            --- ÁREA DE FUTURAS IMPLEMENTACIONES --- 
-            Mantiene el equilibrio visual y anticipa las opciones de Audio e Idiomas.
-        */}
-        <section className="p-8 border-2 border-dashed border-gray-200 rounded-3xl opacity-50">
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-[0.3em] text-center">
-            Nuevas opciones de accesibilidad en desarrollo
-          </p>
+        {/* SECCIÓN 2: ESCALADO DE TEXTO (ACCESIBILIDAD) */}
+        <section className="bg-jw-card rounded-[2.5rem] shadow-xl border border-jw-border p-6">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-3 bg-jw-navy text-jw-text-light rounded-2xl shadow-lg">
+              <Type size={24} />
+            </div>
+            <div>
+              <h2 className="text-xl font-black tracking-tight text-jw-text-main">Tamaño de Texto</h2>
+              <p className="text-xs text-jw-blue font-semibold italic">Ajuste horizontal dinámico</p>
+            </div>
+          </div>
+
+          {/* Slider Horizontal */}
+          <div className="px-2 mb-8 relative">
+            <input 
+              type="range" 
+              min="0" 
+              max="3" 
+              step="1" 
+              value={sliderValue} 
+              onChange={handleSliderChange}
+              className="custom-slider"
+            />
+            {/* Etiquetas bajo el slider */}
+            <div className="flex justify-between text-[10px] font-bold text-jw-navy mt-4 uppercase tracking-widest px-1">
+              <span className={sliderValue === 0 ? "text-jw-accent" : "opacity-50"}>Peq</span>
+              <span className={sliderValue === 1 ? "text-jw-accent" : "opacity-50"}>Nor</span>
+              <span className={sliderValue === 2 ? "text-jw-accent" : "opacity-50"}>Gde</span>
+              <span className={sliderValue === 3 ? "text-jw-accent" : "opacity-50"}>Max</span>
+            </div>
+          </div>
+
+          {/* Muestra de texto */}
+          <div className="p-5 bg-jw-body rounded-2xl border border-jw-border text-center transition-all">
+            <p className="text-jw-text-main font-medium italic mb-2">
+              "El texto se verá de este tamaño en toda la plataforma."
+            </p>
+            <button className="bg-jw-blue text-jw-text-light px-6 py-2 rounded-lg font-bold shadow-md hover:opacity-80 transition-opacity">
+              Botón de Ejemplo
+            </button>
+          </div>
         </section>
+
       </main>
     </div>
   );

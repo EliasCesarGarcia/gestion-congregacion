@@ -35,7 +35,7 @@ function HomePage() {
   ];
 
   return (
-    <div className="bg-jw-body min-h-screen">
+    <div className="bg-transparent min-h-screen transition-colors duration-700">
       {/* --- BLOQUE SEO INICIO --- */}
 
       {/* 

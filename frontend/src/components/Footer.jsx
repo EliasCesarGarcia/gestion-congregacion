@@ -16,8 +16,8 @@ import { Link } from "react-router-dom";
 function Footer() {
   // --- 1. CONFIGURACIÓN Y ESTADOS DEL CONTEXTO ---
 
-  // Consumimos el estado de sesión y el tema dinámico horario
-  const { user: session, timeTheme } = useContext(AppContext);
+  // Consumimos el estado de sesión
+  const { user: session } = useContext(AppContext);
   // Lógica de "Nesting Fix": Extrae los datos reales del usuario si vienen anidados en session.user
   const user = session?.user || session;
 
@@ -32,13 +32,16 @@ function Footer() {
      * px-2 sm:px-6: Alineación horizontal idéntica a la del Navbar para coherencia visual.
      */
     <footer
-      style={{ backgroundColor: timeTheme.bg }}
       /* 
          MODIFICACIÓN: Ajustamos px-2 sm:px-6 para que coincida exactamente 
          con los márgenes que definimos en el Navbar.
       */
-      className="w-full border-t-4 border-jw-blue text-white py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000"
+      className="bg-jw-navy w-full border-t-4 border-jw-blue text-white py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000 relative"
     >
+
+ {/* NUEVO: Capa de imagen estática para el Footer */}
+      <div className="theme-bg-footer"></div>
+
       {/* 
           --- ESTRUCTURA DE MICRODATOS (SEO 2026) --- 
           itemScope/itemType: Indica a los motores de búsqueda (Google, IAs) que este bloque
@@ -54,7 +57,7 @@ function Footer() {
           Esto hace que en tablets el footer siga siendo una lista vertical, 
           evitando que el texto se salga por la derecha.
         */
-        className="w-full flex flex-col sm:flex-row flex-wrap justify-start items-start gap-4 sm:gap-6 min-w-0"
+        className="w-full flex flex-col sm:flex-row flex-wrap justify-start items-start gap-4 sm:gap-6 min-w-0 relative z-10"
         itemScope
         itemType="https://schema.org/Organization"
       >

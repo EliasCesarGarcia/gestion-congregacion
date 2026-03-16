@@ -715,7 +715,7 @@ function ProfilePage() {
   };
 
   return (
-    <div className="bg-jw-body min-h-screen py-10 px-4 relative font-sans text-left text-jw-navy">
+    <div className="bg-transparent min-h-screen py-10 px-4 relative font-sans text-left text-jw-navy transition-colors duration-700">
       {toast && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[200] bg-jw-blue text-white px-6 sm:px-8 py-3 rounded-full shadow-2xl animate-bounce text-[12px] sm:text-sm font-bold uppercase whitespace-nowrap">
           ✅ CÓDIGO ENVIADO

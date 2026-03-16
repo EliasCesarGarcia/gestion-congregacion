@@ -36,7 +36,7 @@ function App() {
      * bg-jw-body: Aplica el color de fondo institucional definido en Tailwind.
      * flex-col: Permite que el 'main' crezca y ocupe el espacio sobrante.
      */
-    <div className="min-h-screen bg-jw-body text-gray-900 flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-transparent text-gray-900 flex flex-col overflow-x-hidden">
       
       {/* BARRA DE NAVEGACIÓN: Posicionamiento fijo gestionado internamente */}
       <Navbar />
