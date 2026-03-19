@@ -29,7 +29,7 @@ export const themePalettes = {
   oceano: {
     effect: "wave",
     manana: {
-      navy: "#006064",
+      navy: "#004d50",
       blue: "#00838f",
       accent: "#00bcd4",
       body: "#e0f7fa",

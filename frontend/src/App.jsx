@@ -11,7 +11,7 @@
  * - Maquetación adaptativa y control de desbordamiento (Overflow).
  */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // --- IMPORTACIÓN DE COMPONENTES DE ESTRUCTURA (LAYOUT) ---
@@ -29,6 +29,7 @@ import ContactoPage from "./pages/ContactoPage";     // Ayuda y soporte instituc
 import ConfiguracionPage from "./pages/ConfiguracionPage"; // Preferencias y accesibilidad (CEO 2026)
 
 function App() {
+  
   return (
     /**
      * CONTENEDOR PRINCIPAL:
@@ -36,7 +37,7 @@ function App() {
      * bg-jw-body: Aplica el color de fondo institucional definido en Tailwind.
      * flex-col: Permite que el 'main' crezca y ocupe el espacio sobrante.
      */
-    <div className="min-h-screen bg-transparent text-gray-900 flex flex-col overflow-x-hidden">
+    <div className="min-h-screen bg-transparent text-jw-text-main flex flex-col overflow-x-hidden transition-colors duration-700">
       
       {/* BARRA DE NAVEGACIÓN: Posicionamiento fijo gestionado internamente */}
       <Navbar />

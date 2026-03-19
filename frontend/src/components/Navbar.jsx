@@ -125,7 +125,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-jw-navy text-jw-text-light fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-700">
+    <nav className="bg-jw-navy/65 backdrop-blur-md text-jw-text-light fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-700">
       
       {/* NUEVO: Contenedor único que lee la imagen estática desde el CSS */}
       <div className="theme-bg-navbar"></div>
@@ -245,11 +245,11 @@ function Navbar() {
             <div className="absolute right-0 top-full mt-1 w-62 bg-jw-card z-[160] rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-jw-text-main animate-in fade-in slide-in-from-top-2 duration-200 transition-colors">
               
               {/* Cabecera del Dropdown adaptada al tema */}
-              <div className="p-4 bg-jw-body border-b border-jw-border text-left transition-colors">
-                <p className="text-base font-bold leading-tight text-jw-text-main">
+              <div className="p-4 bg-jw-navy text-left transition-colors shadow-md">
+                <p className="text-base font-bold leading-tight text-jw-text-light">
                   {user?.nombre_completo}
                 </p>
-                <p className="text-xs text-jw-blue italic mt-0.5 font-light">
+                <p className="text-base text-jw-text-light opacity-80 italic mt-0.5 font-light">
                   @{user?.username}
                 </p>
               </div>
@@ -300,7 +300,7 @@ function Navbar() {
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 p-2 hover:bg-red-500/10 rounded-xl text-sm transition-all text-red-500 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-2 hover:bg-red-800/10 rounded-xl text-sm transition-all text-red-500 group text-left font-medium active:scale-95"
                   >
                     <LogOut className="w-4 h-4 text-red-500 group-hover:text-red-600" />
                     <span>Cerrar sesión</span>

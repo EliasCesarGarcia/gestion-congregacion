@@ -36,7 +36,7 @@ function Footer() {
          MODIFICACIÓN: Ajustamos px-2 sm:px-6 para que coincida exactamente 
          con los márgenes que definimos en el Navbar.
       */
-      className="bg-jw-navy w-full border-t-4 border-jw-blue text-white py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000 relative"
+      className="bg-jw-navy/45 backdrop-blur-md w-full border-t-1 border-jw-blue text-white py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000 relative"
     >
 
  {/* NUEVO: Capa de imagen estática para el Footer */}
