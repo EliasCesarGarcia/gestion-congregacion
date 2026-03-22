@@ -36,7 +36,7 @@ function Footer() {
          MODIFICACIÓN: Ajustamos px-2 sm:px-6 para que coincida exactamente 
          con los márgenes que definimos en el Navbar.
       */
-      className="bg-jw-navy/45 backdrop-blur-md w-full border-t-1 border-jw-blue text-white py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000 relative"
+      className="bg-jw-navy/65 backdrop-blur-sm w-full border-t border-jw-blue/30 text-jw-text-light py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000 relative"
     >
 
  {/* NUEVO: Capa de imagen estática para el Footer */}
@@ -67,7 +67,7 @@ function Footer() {
           <h3 className="text-sm font-medium tracking-tight truncate w-full mb-1">
             <span itemProp="name">Congregación {user.congregacion_nombre}</span>
             {/* Usamos text-xs para que sea relativo y no fijo en 13px */}
-            <span className="text-gray-300 text-xs ml-2 font-light shrink-0">
+            <span className="opacity-70 text-xs ml-2 font-light shrink-0">
               ({user.numero_congregacion})
             </span>
           </h3>
@@ -75,12 +75,12 @@ function Footer() {
           <div className="space-y-2">
             {/* DIRECCIÓN POSTAL SEMÁNTICA (Schema.org) */}
             <address
-              className="flex items-center gap-2 text-xs text-gray-200 font-light italic w-full min-w-0 not-italic"
+              className="flex items-center gap-2 text-xs opacity-80 font-light italic w-full min-w-0 not-italic"
               itemProp="address"
               itemScope
               itemType="https://schema.org/PostalAddress"
             >
-              <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+              <MapPin className="w-3.5 h-3.5 opacity-60 shrink-0" />
               <p className="flex flex-wrap items-baseline w-full min-w-0">
                 {/* Calle: Texto + Coma y Espacio (condicional) */}
                 {user.direccion && (
@@ -134,7 +134,7 @@ function Footer() {
 
             {/* REGIÓN GEOGRÁFICA INTERNA */}
             <div className="flex items-center gap-2 text-xs text-gray-200 font-light italic w-full min-w-0 not-italic">
-              <Globe className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+              <Globe className="w-3.5 h-3.5 opacity-60 shrink-0" />
               <p className="truncate w-full uppercase tracking-widest text-[0.65rem] font-normal">
                 Región {user.region || "No asignada"}
               </p>
@@ -147,14 +147,14 @@ function Footer() {
           {/* Enlace al Centro de Ayuda (Accesibilidad técnica) */}
           <Link
             to="/contacto"
-            className="text-xs text-gray-200 hover:text-white transition-colors font-light flex items-center gap-1.5"
+            className="text-xs opacity-80 hover:opacity-100 transition-opacity font-light flex items-center gap-1.5"
           >
             <ShieldCheck size={14} className="text-jw-body" />
             Centro de Ayuda y Contacto
           </Link>
 
           {/* Copyright y Atribución Institucional */}
-          <p className="text-[0.6rem] text-gray-300 tracking-[0.2em] uppercase font-light">
+          <p className="text-[0.6rem] opacity-60 tracking-[0.2em] uppercase font-light">
             © 2026 GESTIÓN LOCAL TEOCRÁTICA •{" "}
             <span itemProp="areaServed">Uso Institucional</span>
           </p>

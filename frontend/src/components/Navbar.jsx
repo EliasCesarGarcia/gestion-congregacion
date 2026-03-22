@@ -125,8 +125,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-jw-navy/65 backdrop-blur-md text-jw-text-light fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-700">
-      
+    <nav className="bg-jw-navy/70 backdrop-blur-md text-jw-text-light fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-700">
       {/* NUEVO: Contenedor único que lee la imagen estática desde el CSS */}
       <div className="theme-bg-navbar"></div>
 
@@ -178,9 +177,9 @@ function Navbar() {
 
           <div className="flex flex-row items-baseline gap-2 sm:gap-3 border-l border-white/20 pl-3 sm:pl-4 min-w-0 flex-grow overflow-hidden">
             {/* CAMBIO: text-jw-text-light/80 para que "Sistema de Gestión" sea dinámico pero un poco más sutil */}
-            <span className="text-sm font-light tracking-wide text-jw-text-light opacity-80 hidden lg:block italic shrink-0">
-  Sistema de Gestión
-</span>
+            <span className="text-base font-normal tracking-wide text-jw-text-light opacity-80 hidden lg:block italic shrink-0">
+              Sistema de Gestión
+            </span>
             <div className="flex items-center gap-3 min-w-0">
               <span className="text-sm sm:text-lg font-medium tracking-tight text-jw-text-light truncate block min-w-0 flex-grow">
                 {getTitle()}
@@ -202,7 +201,7 @@ function Navbar() {
               setIsMenuOpen(false); // Cierre de exclusión mutua
             }}
             aria-label="Ver opciones de mi cuenta"
-            className="flex items-center gap-3 sm:gap-5 p-0 px-1 hover:bg-white/10 rounded-full transition-all active:scale-95 border border-transparent"
+            className="flex items-center gap-3 sm:gap-5 p-0 px-1 hover:bg-white/20 rounded-full transition-all active:scale-95 border border-transparent"
           >
             {/* Saludo y nombre de usuario (Solo visible en tablets y escritorio) */}
             {/* shrink permite que esta sección se achique si el título de la izquierda crece mucho */}
@@ -210,8 +209,8 @@ function Navbar() {
             <div className="hidden md:flex flex-col items-end text-right leading-none shrink min-w-0 overflow-hidden">
               {/* CAMBIO: text-jw-text-light/80 en lugar de text-jw-accent-light para "Mi Cuenta" */}
               <span className="text-[10px] font-medium text-jw-text-light opacity-80 uppercase tracking-widest mb-1">
-  Mi Cuenta
-</span>
+                Mi Cuenta
+              </span>
               {/* CAMBIO: Aseguramos que el saludo use text-jw-text-light */}
               <span className="text-base font-light italic text-jw-text-light">
                 {activeTheme.greeting}{" "}
@@ -243,9 +242,8 @@ function Navbar() {
           */}
           {isProfileOpen && (
             <div className="absolute right-0 top-full mt-1 w-62 bg-jw-card z-[160] rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-jw-text-main animate-in fade-in slide-in-from-top-2 duration-200 transition-colors">
-              
               {/* Cabecera del Dropdown adaptada al tema */}
-              <div className="p-4 bg-jw-navy text-left transition-colors shadow-md">
+              <div className="p-4 bg-jw-blue text-left transition-colors shadow-md">
                 <p className="text-base font-bold leading-tight text-jw-text-light">
                   {user?.nombre_completo}
                 </p>
@@ -286,21 +284,21 @@ function Navbar() {
 
                 <hr className="border-jw-border my-4" />
 
-                {/* Botones de acción rápida */}
+                {/* Botones de acción rápida - AHORA SE ILUMINAN */}
                 <div className="space-y-1 mt-4">
                   <button
                     onClick={() => {
                       navigate("/perfil");
                       closeMenus();
                     }}
-                    className="w-full flex items-center gap-3 p-2 hover:bg-jw-body rounded-xl text-sm transition-all text-jw-text-main group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-2 hover:bg-jw-accent/20 rounded-xl text-sm transition-all text-jw-text-main group text-left font-medium active:scale-95"
                   >
                     <Settings className="w-4 h-4 text-jw-blue" />
                     <span>Administrar cuenta</span>
                   </button>
                   <button
                     onClick={handleLogout}
-                    className="w-full flex items-center gap-3 p-2 hover:bg-red-800/10 rounded-xl text-sm transition-all text-red-500 group text-left font-medium active:scale-95"
+                    className="w-full flex items-center gap-3 p-2 hover:bg-red-500/20 rounded-xl text-sm transition-all text-red-500 group text-left font-medium active:scale-95"
                   >
                     <LogOut className="w-4 h-4 text-red-500 group-hover:text-red-600" />
                     <span>Cerrar sesión</span>
@@ -317,16 +315,17 @@ function Navbar() {
           Diseño flotante con bordes redondeados y efectos minimalistas.
       */}
       <div
-         className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-72 md:w-70 bg-jw-card z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-jw-border will-change-transform ${
+        className={`fixed left-1 top-1.5 h-[calc(100vh-16px)] rounded-2xl w-72 md:w-70 bg-jw-card z-[150] shadow-[20px_0_50px_rgba(0,0,0,0.1)] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-jw-border will-change-transform ${
           isMenuOpen ? "translate-x-0" : "-translate-x-[calc(100%+20px)]"
         }`}
       >
-        <div
-          className="bg-jw-navy py-3 px-6 text-jw-text-light flex justify-between items-center transition-colors duration-1000 shadow-md"
-        >
+        <div className="bg-jw-blue py-3 px-6 text-jw-text-light flex justify-between items-center transition-colors duration-1000 shadow-md">
           <div className="flex items-center gap-4">
             {/* Icono de menú principal (26px) */}
-           <LayoutGrid size={28} className="shrink-0 text-jw-text-light opacity-80" />
+            <LayoutGrid
+              size={28}
+              className="shrink-0 text-jw-text-light opacity-80"
+            />
             <span className="text-xs tracking-[0.25em] font-medium uppercase leading-none text-jw-text-light">
               Menú Principal
             </span>
@@ -377,36 +376,23 @@ function Navbar() {
                 key={item.to}
                 to={item.to}
                 onClick={closeMenus}
-                style={{
-                  backgroundColor: isAct ? "var(--color-jw-navy)" : "transparent",
-                  boxShadow: isAct
-                    ? `0 10px 10px -3px rgba(0,0,0,0.1)`
-                    : "none",
-                }}
-                className={`group relative flex items-center gap-3 mx-1 px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 border border-transparent
+                // CAMBIO CLAVE: Movimos TODO a className para que Tailwind no pelee con el atributo style
+                className={({ isActive }) => `
+                  group relative flex items-center gap-3 mx-1 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 border border-transparent
                   ${
-                    isAct
-                      /* CAMBIO: text-jw-text-light cuando está activo (sobre fondo navy) */
-                      ? "text-jw-text-light translate-x-1"
-                      /* CAMBIO: text-jw-text-main cuando está inactivo (sobre fondo card) */
-                      : "text-jw-text-main opacity-80 hover:bg-jw-body hover:opacity-100 hover:translate-x-1"
-                  }`}
+                    isActive
+                      ? "bg-jw-blue text-jw-text-light shadow-[0_10px_10px_-3px_rgba(0,0,0,0.1)] translate-x-1"
+                      : "bg-transparent text-jw-text-main opacity-80 hover:bg-jw-accent/20 hover:text-jw-accent hover:opacity-100 hover:translate-x-1"
+                  }
+                `}
               >
-                {/* Animación sutil de escala en iconos al estar activo o sobrevolar */}
-                <span
-                  className={`shrink-0 transition-transform duration-500 ${isAct ? "scale-110" : "group-hover:scale-110"}`}
-                >
+                <span className="shrink-0 transition-transform duration-500 group-hover:scale-110">
                   {item.icon}
                 </span>
 
                 <span className="relative z-10 tracking-wide">
                   {item.label}
                 </span>
-
-                {/* Indicador visual lateral (luz suave) solo visible en Hover */}
-                {!isAct && (
-                  <div className="bg-jw-navy absolute left-0 w-1 h-4 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                )}
               </NavLink>
             );
           })}

@@ -35,7 +35,7 @@
 html,
 body {
   overscroll-behavior-y: none;
-  height: 100%;
+  min-height: 100vh;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -47,12 +47,12 @@ body {
   max-width: 100vw;
   overflow-x: hidden;
   position: relative;
-  z-index: 0; /* NUEVO: Define la base de la pantalla */
+  z-index: 0;
 }
 
 /* Contenedor raíz de React */
 #root {
-  height: 100%;
+  min-height: 100vh;
   position: relative;
   z-index: 10; /* IMPORTANTE: Mantiene la página sobre el fondo */
 }
@@ -157,7 +157,7 @@ body {
   z-index: -1; 
   pointer-events: none;
   /* Deja el 30% superior 100% transparente para que se vea bien la imagen */
-  background: linear-gradient(to bottom, transparent 30%, var(--color-jw-navy) 120%);
+  background: linear-gradient(to bottom, transparent 50%, var(--color-jw-navy) 100%);
   
   /* Arranca en opacidad 0 (invisible) y se oscurece al bajar */
   opacity: var(--depth-op, 0); 

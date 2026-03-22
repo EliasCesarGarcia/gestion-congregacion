@@ -29,23 +29,23 @@ export const themePalettes = {
   oceano: {
     effect: "wave",
     manana: {
-      navy: "#004d50",
-      blue: "#00838f",
-      accent: "#00bcd4",
-      body: "#e0f7fa",
-      card: "#ffffff",
-      text_main: "#004d40",
-      text_light: "#ffffff",
-      border: "#b2ebf2",
+      navy: "#1caab8",    // <--- ESTE ES EL COLOR DEL NAVBAR Y DEL FOOTER
+      blue: "#00838f",    // <--- Color de los botones principales y enlaces
+      accent: "#00bcd4",  // <--- Color de detalles, iconos, bordes activos, encabezado de menús (ej. inputs)
+      body: "#e0f7fa",    // <--- Color de fondo general de la página
+      card: "#ffffff",    // <--- Color de fondo de las tarjetas blancas
+      text_main: "#000512", // <--- Color del texto principal (ej. "Bienvenido")
+      text_light: "#000512",// <--- Color del texto que va SOBRE el Navbar/Footer
+      border: "#b2ebf2",  // <--- Color de las líneas divisorias
     },
     tarde: {
-      navy: "#0f2027",
-      blue: "#203a43",
-      accent: "#2c5364",
+      navy: "#10597d",
+      blue: "#10597d",
+      accent: "#10597d",
       body: "#e0f2f1",
-      card: "#ffffff",
+      card: "#f0fbfc",
       text_main: "#1a1a1a",
-      text_light: "#ffffff",
+      text_light: "#f0f2f5",
       border: "#b2dfdb",
     },
     noche: {
