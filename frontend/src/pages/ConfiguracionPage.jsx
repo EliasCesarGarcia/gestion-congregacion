@@ -47,7 +47,7 @@ function ConfiguracionPage() {
       
       {/* FONDO CREATIVO DE LA PÁGINA BASADO EN EL TEMA (Diferente al Navbar) */}
       <div 
-        className="absolute top-0 left-0 w-full h-96 opacity-30 pointer-events-none transition-all duration-1000"
+        className="absolute top-0 left-0 w-full h-96 opacity-10 pointer-events-none transition-all duration-1000"
         style={{ 
           background: `radial-gradient(circle at top, ${activeTheme.accent} 0%, transparent 70%)` 
         }}

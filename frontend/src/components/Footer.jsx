@@ -149,7 +149,7 @@ function Footer() {
             to="/contacto"
             className="text-xs opacity-80 hover:opacity-100 transition-opacity font-light flex items-center gap-1.5"
           >
-            <ShieldCheck size={14} className="text-jw-body" />
+            <ShieldCheck size={14} className="text-jw-text-light" />
             Centro de Ayuda y Contacto
           </Link>
 

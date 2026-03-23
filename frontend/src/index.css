@@ -139,34 +139,70 @@ body {
   background-repeat: no-repeat;
   background-size: cover; 
   
-  /* Subimos la opacidad a 0.35 para que se luzca el océano */
-  opacity: 0.35; 
-  filter: brightness(1.2) grayscale(10%); 
+  /* Controles para manipular la imagen de fondo */
+  opacity: 0.7; 
+  filter: contrast(1.1) brightness(1); 
   
   /* Motor Parallax inyectado desde React */
   transform: translateY(var(--parallax-y, 0vh));
   will-change: transform; 
-  transition: background-image 1s ease-in-out;
+  transition: background-image 1s ease-in-out, opacity 0.5s;
+}
+
+/* Ajuste específico para el tema Océano (Wave) */
+html[data-theme="wave"] #root {
+  /* Ponemos un fondo negro de base SOLO para este tema, 
+     así la transparencia de la imagen no se ve blanca/clara */
+  background-color: #000512 !important; 
+}
+
+html[data-theme="wave"] #root::before { 
+  background-image: url('/images/themes/oceano-vertical-body.webp'); 
+  /* Nitidez extrema para la imagen */
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* Versión Celular */
+@media (max-width: 768px) {
+  html[data-theme="wave"] #root::before { 
+    background-image: url('/images/themes/oceano-movil-body.webp');
+    opacity: 0.9; /* En celular solemos necesitar un poco más de fuerza */
+    background-size: cover;
+  }
 }
 
 /* 3. EL EFECTO DE PROFUNDIDAD (Inmersión al hacer scroll) */
+/* En index.css, busca #root::after y ajusta el background */
 #root::after {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -1; 
   pointer-events: none;
-  /* Deja el 30% superior 100% transparente para que se vea bien la imagen */
-  background: linear-gradient(to bottom, transparent 50%, var(--color-jw-navy) 100%);
+  /* El gradiente ahora empieza más abajo (70%) para dejar el tercio superior limpio */
+  background: linear-gradient(to bottom, 
+    transparent 40%, 
+    rgba(0, 5, 18, 0.4) 70%, 
+    var(--color-jw-navy) 100%);
   
-  /* Arranca en opacidad 0 (invisible) y se oscurece al bajar */
   opacity: var(--depth-op, 0); 
   will-change: opacity;
 }
 
 /* LECTURA DEL TEMA (¡CORREGIDO AL NOMBRE "VERTICAL"!) */
 html[data-theme="wave"] #root::before { 
-  background-image: url('/images/themes/oceano-vertical-body.webp'); 
+  background-image: url('/images/themes/oceano-vertical-body.webp');
+  
+  /* --- TAMAÑO Y POSICIÓN (ESCRITORIO) --- */
+  background-size: cover; /* 'cover' asegura que llene la pantalla. Cámbialo a un % (ej: 110%) para hacer zoom */
+  background-position: center top;
+
+  /* --- BRILLO Y NITIDEZ (ESCRITORIO) --- */
+  /* brightness: >1 sube brillo. contrast: >1 da sensación de nitidez/fuerza */
+  filter: brightness(0.9) contrast(1.1) saturate(1.1); 
+  
+  /* Mejora de renderizado para mayor nitidez visual */
+  image-rendering: -webkit-optimize-contrast;
 }
 
 /* Optimización para Dispositivos Móviles */
@@ -174,8 +210,54 @@ html[data-theme="wave"] #root::before {
   html[data-theme="wave"] #root::before { 
     /* Imagen específica para Celular */
     background-image: url('/images/themes/oceano-movil-body.webp'); 
+
+    /* --- TAMAÑO Y ZOOM (CELULAR) --- */
+    /* Si quieres que la imagen se vea más grande o enfocada en un punto: */
+    background-size: 100% 100%; /* O prueba '120%' para hacer un zoom manual */
+    background-position: center center;
+
+    /* --- BRILLO Y NITIDEZ (CELULAR) --- */
+    /* Los celulares suelen tener pantallas más saturadas, ajustamos independiente */
+    filter: brightness(1.1) contrast(1.2) saturate(1.0);
+    
+    /* Forzamos nitidez en bordes */
+    image-rendering: auto; 
+  }
+
+}
+
+/* ==========================================================
+   --- CONFIGURACIÓN TEMA OTOÑO (Leaves) --- 
+   ========================================================== */
+
+/* 1. Versión Escritorio (PC) */
+html[data-theme="leaves"] #root::before { 
+  background-image: url('/images/themes/otono-vertical-body.webp'); 
+  
+  /* Ajustes de Nitidez y Color para Otoño */
+  /* Subimos un poco la saturación para resaltar los naranjas/cafés */
+  filter: contrast(1.1) brightness(1) saturate(1.2); 
+  opacity: 0.8; /* Mantenemos la opacidad alta para evitar el efecto de "capa clara" */
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* 2. Versión Celular (Móvil) */
+@media (max-width: 768px) {
+  html[data-theme="leaves"] #root::before { 
+    background-image: url('/images/themes/otono-movil-body.webp');
+    
+    /* Zoom y Opacidad para celular */
+    background-size: cover;
+    opacity: 0.85; 
+    filter: contrast(1.15) brightness(1) saturate(1.3);
   }
 }
+
+/* Color de fondo base para que la transparencia no se vea blanca (lavada) */
+html[data-theme="leaves"] #root {
+  background-color: #1a1110 !important; /* Un tono café muy oscuro para dar profundidad */
+}
+
 /* 
    ==========================================================
    --- SLIDER PERSONALIZADO PARA TAMAÑO DE TEXTO ---
