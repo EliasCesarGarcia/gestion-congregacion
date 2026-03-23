@@ -258,6 +258,36 @@ html[data-theme="leaves"] #root {
   background-color: #1a1110 !important; /* Un tono café muy oscuro para dar profundidad */
 }
 
+/* ==========================================================
+   --- CONFIGURACIÓN TEMA MODO NOCHE (Neon) --- 
+   ========================================================== */
+
+/* 1. Versión Escritorio (PC) */
+html[data-theme="neon"] #root::before { 
+  background-image: url('/images/themes/noche-vertical-body.webp'); 
+  
+  /* Ajustes para máxima nitidez nocturna */
+  opacity: 0.85; 
+  filter: contrast(1.2) brightness(0.9); /* Más contraste y un poco menos de brillo para realzar luces */
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* 2. Versión Celular (Móvil) */
+@media (max-width: 768px) {
+  html[data-theme="neon"] #root::before { 
+    background-image: url('/images/themes/noche-movil-body.webp');
+    
+    background-size: cover;
+    opacity: 0.9; 
+    filter: contrast(1.25) brightness(0.95);
+  }
+}
+
+/* Color de fondo base NEGRO para que los negros de la imagen sean puros */
+html[data-theme="neon"] #root {
+  background-color: #000000 !important; 
+}
+
 /* 
    ==========================================================
    --- SLIDER PERSONALIZADO PARA TAMAÑO DE TEXTO ---

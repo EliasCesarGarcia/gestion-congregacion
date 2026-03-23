@@ -27,7 +27,7 @@ function ConfiguracionPage() {
     { id: "default", name: "Automático", img: "⏱️" },
     { id: "oceano", name: "Océano Profundo", img: "🌊" },
     { id: "otono", name: "Cálido Otoño", img: "🍂" },
-    { id: "oscuro", name: "Modo Oscuro", img: "🌙" },
+    { id: "oscuro", name: "Modo Noche", img: "🌙" },
     { id: "solar", name: "Claro Solar", img: "☀️" },
     { id: "retro", name: "Retro Digital", img: "👾" },
     { id: "primavera", name: "Primavera", img: "🌸" },

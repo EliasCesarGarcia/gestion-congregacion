@@ -107,7 +107,7 @@ export const themePalettes = {
     tarde: {
       navy: "#121212",
       blue: "#1f1f1f",
-      accent: "#00e676",
+      accent: "#2d9ffc",
       body: "#000000",
       card: "#1e1e1e",
       text_main: "#f5f5f5",
