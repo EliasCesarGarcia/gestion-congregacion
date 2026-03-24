@@ -15,7 +15,7 @@
 
 // --- IMPORTACIONES DE LIBRERÍAS ---
 import { useLocation, NavLink, useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 
 // --- IMPORTACIÓN DE ICONOS (LUCIDE-REACT) ---
@@ -123,6 +123,18 @@ function Navbar() {
     // Si es una imagen subida a Supabase (aplica transformación WebP)
     return `https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/${user.foto_url}?width=120&quality=80&format=webp`;
   };
+
+  useEffect(() => {
+    // Si cualquiera de los dos menús está abierto, añadimos la clase 'menu-open' al body
+    if (isMenuOpen || isProfileOpen) {
+      document.body.classList.add("body-freeze");
+    } else {
+      document.body.classList.remove("body-freeze");
+    }
+
+    // Limpieza al desmontar el componente
+    return () => document.body.classList.remove("body-freeze");
+  }, [isMenuOpen, isProfileOpen]);
 
   return (
     <nav className="bg-jw-navy/70 backdrop-blur-md text-jw-text-light fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-700">
@@ -243,7 +255,7 @@ function Navbar() {
           {isProfileOpen && (
             <div className="absolute right-0 top-full mt-1 w-62 bg-jw-card z-[160] rounded-2xl shadow-2xl border border-jw-border overflow-hidden text-jw-text-main animate-in fade-in slide-in-from-top-2 duration-200 transition-colors">
               {/* Cabecera del Dropdown adaptada al tema */}
-              <div className="p-4 bg-jw-blue text-left transition-colors shadow-md">
+              <div className="p-4 bg-transparent border-b border-jw-border/10 text-left relative z-20">
                 <p className="text-base font-bold leading-tight text-jw-text-light">
                   {user?.nombre_completo}
                 </p>
@@ -319,7 +331,7 @@ function Navbar() {
           isMenuOpen ? "translate-x-0" : "-translate-x-[calc(100%+20px)]"
         }`}
       >
-        <div className="bg-jw-blue py-3 px-6 text-jw-text-light flex justify-between items-center transition-colors duration-1000 shadow-md">
+        <div className="bg-transparent border-b border-jw-border/10 py-4 px-6 text-jw-text-light flex justify-between items-center relative z-20">
           <div className="flex items-center gap-4">
             {/* Icono de menú principal (26px) */}
             <LayoutGrid
@@ -368,7 +380,7 @@ function Navbar() {
               label: "Configuración",
             },
           ].map((item) => {
-            // Lógica para detectar si el enlace está activo
+            // Esta es la variable que debes usar
             const isAct = location.pathname === item.to;
 
             return (
@@ -376,17 +388,19 @@ function Navbar() {
                 key={item.to}
                 to={item.to}
                 onClick={closeMenus}
-                // CAMBIO CLAVE: Movimos TODO a className para que Tailwind no pelee con el atributo style
                 className={({ isActive }) => `
-                  group relative flex items-center gap-3 mx-1 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 border border-transparent
-                  ${
-                    isActive
-                      ? "bg-jw-blue text-jw-text-light shadow-[0_10px_10px_-3px_rgba(0,0,0,0.1)] translate-x-1"
-                      : "bg-transparent text-jw-text-main opacity-80 hover:bg-jw-accent/20 hover:text-jw-accent hover:opacity-100 hover:translate-x-1"
-                  }
-                `}
+          group relative flex items-center gap-3 py-2 px-5 text-sm font-bold transition-all duration-300 border-l-4
+          ${
+            isActive
+              ? "bg-jw-navy/85 text-jw-text-light border-jw-navy rounded-r-2xl rounded-l-none shadow-lg z-10"
+              : "bg-transparent text-jw-text-main  hover:bg-jw-accent/30 rounded-2xl rounded-l-none border-transparent"
+          }
+        `}
               >
-                <span className="shrink-0 transition-transform duration-500 group-hover:scale-110">
+                {/* CORRECCIÓN AQUÍ: Usamos isAct en lugar de isActive */}
+                <span
+                  className={`shrink-0 transition-transform duration-500 ${isAct ? "scale-110" : "group-hover:scale-110"}`}
+                >
                   {item.icon}
                 </span>
 

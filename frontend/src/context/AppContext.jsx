@@ -35,7 +35,7 @@ export const themePalettes = {
       body: "#e0f7fa",    // <--- Color de fondo general de la página
       card: "#ffffff",    // <--- Color de fondo de las tarjetas blancas
       text_main: "#000512", // <--- Color del texto principal (ej. "Bienvenido")
-      text_light: "#000512",// <--- Color del texto que va SOBRE el Navbar/Footer
+      text_light: "#ffffff",// <--- Color del texto que va SOBRE el Navbar/Footer
       border: "#b2ebf2",  // <--- Color de las líneas divisorias
     },
     tarde: {
