@@ -389,19 +389,23 @@ function Navbar() {
                 to={item.to}
                 onClick={closeMenus}
                 className={({ isActive }) => `
-          group relative flex items-center gap-3 py-2 px-5 text-sm font-bold transition-all duration-300 border-l-4
+          group relative flex items-center gap-3 py-2 px-5 text-sm font-medium transition-all duration-300 border-l-4
           ${
             isActive
-              ? "bg-jw-navy/85 text-jw-text-light border-jw-navy rounded-r-2xl rounded-l-none shadow-lg z-10"
+              ? "nav-item-selected text-jw-text-light shadow-lg z-10"
               : "bg-transparent text-jw-text-main  hover:bg-jw-accent/30 rounded-2xl rounded-l-none border-transparent"
           }
         `}
               >
                 {/* CORRECCIÓN AQUÍ: Usamos isAct en lugar de isActive */}
                 <span
-                  className={`shrink-0 transition-transform duration-500 ${isAct ? "scale-110" : "group-hover:scale-110"}`}
-                >
-                  {item.icon}
+                  className={`shrink-0 transition-all duration-300 ${
+    isAct 
+      ? "scale-125 translate-x-1"      /* Icono seleccionado: Más grande y movido a la derecha */
+      : "group-hover:scale-125 group-hover:translate-x-1 group-hover:rotate-3" /* Hover: Grande, movido y con rotación */
+  }`}
+>
+  {item.icon}
                 </span>
 
                 <span className="relative z-10 tracking-wide">

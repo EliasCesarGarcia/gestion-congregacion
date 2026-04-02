@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * ARCHIVO: AppContext.jsx
  * UBICACIÓN: frontend/src/context/AppContext.jsx
@@ -19,7 +20,9 @@ import React, {
   useEffect,
   useCallback,
   useLayoutEffect,
+  useMemo,
 } from "react";
+import { Helmet } from "react-helmet-async"; // <--- NUEVA IMPORTACIÓN
 
 export const AppContext = createContext();
 
@@ -29,14 +32,14 @@ export const themePalettes = {
   oceano: {
     effect: "wave",
     manana: {
-      navy: "#1caab8",    // <--- ESTE ES EL COLOR DEL NAVBAR Y DEL FOOTER
-      blue: "#00838f",    // <--- Color de los botones principales y enlaces
-      accent: "#00bcd4",  // <--- Color de detalles, iconos, bordes activos, encabezado de menús (ej. inputs)
-      body: "#e0f7fa",    // <--- Color de fondo general de la página
-      card: "#ffffff",    // <--- Color de fondo de las tarjetas blancas
+      navy: "#1caab8", // <--- ESTE ES EL COLOR DEL NAVBAR Y DEL FOOTER
+      blue: "#00838f", // <--- Color de los botones principales y enlaces
+      accent: "#00bcd4", // <--- Color de detalles, iconos, bordes activos, encabezado de menús (ej. inputs)
+      body: "#e0f7fa", // <--- Color de fondo general de la página
+      card: "#ffffff", // <--- Color de fondo de las tarjetas blancas
       text_main: "#000512", // <--- Color del texto principal (ej. "Bienvenido")
-      text_light: "#ffffff",// <--- Color del texto que va SOBRE el Navbar/Footer
-      border: "#b2ebf2",  // <--- Color de las líneas divisorias
+      text_light: "#ffffff", // <--- Color del texto que va SOBRE el Navbar/Footer
+      border: "#b2ebf2", // <--- Color de las líneas divisorias
     },
     tarde: {
       navy: "#10597d",
@@ -117,7 +120,7 @@ export const themePalettes = {
     noche: {
       navy: "#000000",
       blue: "#111111",
-      accent: "#00c853",
+      accent: "#2256f2",
       body: "#000000",
       card: "#0a0a0a",
       text_main: "#ffffff",
@@ -241,54 +244,6 @@ export function AppProvider({ children }) {
     () => localStorage.getItem("app_theme") || "default",
   );
 
-  // Estado que realmente se aplica a la pantalla
-  const [activeTheme, setActiveTheme] = useState({});
-
-  // Calcula el tema por defecto (Horario)
-  const calculateDefaultTheme = useCallback(() => {
-    const hour = new Date().getHours();
-    if (hour >= 6 && hour < 12) {
-      return {
-        navy: "#33558b",
-        blue: "#4a6da7",
-        accent: "#8eb4f5",
-        body: "#f0f4f8",
-        card: "#ffffff",
-        text_main: "#1a1a1a",
-        text_light: "#ffffff",
-        border: "#d1d1d1",
-        effect: "none",
-        greeting: "Buenos días,",
-      };
-    } else if (hour >= 12 && hour < 19) {
-      return {
-        navy: "#3e4a59",
-        blue: "#5c6b7d",
-        accent: "#a1b4c7",
-        body: "#f5f7fa",
-        card: "#ffffff",
-        text_main: "#1a1a1a",
-        text_light: "#ffffff",
-        border: "#cfd8dc",
-        effect: "none",
-        greeting: "Buenas tardes,",
-      };
-    } else {
-      return {
-        navy: "#1a335a",
-        blue: "#214382",
-        accent: "#4a6da7",
-        body: "#f5f5f5",
-        card: "#ffffff",
-        text_main: "#1a1a1a",
-        text_light: "#ffffff",
-        border: "#d1d1d1",
-        effect: "none",
-        greeting: "Buenas noches,",
-      };
-    }
-  }, []);
-
   // NUEVA LÓGICA: Determina el momento del día
   const getCurrentTimeOfDay = useCallback(() => {
     const hour = new Date().getHours();
@@ -298,11 +253,12 @@ export function AppProvider({ children }) {
   }, []);
 
   // Aplica las variables CSS al :root para que Tailwind las use
-  const applyCSSVariables = (themeData) => {
+  const applyCSSVariables = (themeData, timeOfDay) => {
     const root = document.documentElement;
 
     // --- LÍNEA NUEVA A AGREGAR ---
     root.setAttribute("data-theme", themeData.effect);
+    root.setAttribute("data-time", timeOfDay);
     // -----------------------------
 
     root.style.setProperty("--color-jw-navy", themeData.navy);
@@ -315,20 +271,20 @@ export function AppProvider({ children }) {
     root.style.setProperty("--color-jw-border", themeData.border);
   };
 
-  // Efecto Maestro de Tema
-  useEffect(() => {
-    localStorage.setItem("app_theme", userTheme);
-    let currentThemeData;
-    const timeOfDay = getCurrentTimeOfDay();
+  
+  // 1. Obtenemos el momento del día actual (se evalúa al renderizar)
+  const timeOfDay = getCurrentTimeOfDay();
 
-    // Saludos dinámicos
+  // 2. Calculamos el tema activo de forma derivada (Evita el Error de ESLint)
+  const activeTheme = useMemo(() => {
+    let currentThemeData;
     let currentGreeting = "Hola,";
+
     if (timeOfDay === "manana") currentGreeting = "Buenos días,";
     if (timeOfDay === "tarde") currentGreeting = "Buenas tardes,";
     if (timeOfDay === "noche") currentGreeting = "Buenas noches,";
 
     if (userTheme === "default") {
-      // Tema predeterminado Institucional que tenías antes
       if (timeOfDay === "manana") {
         currentThemeData = {
           navy: "#33558b",
@@ -368,7 +324,6 @@ export function AppProvider({ children }) {
       }
       currentThemeData.greeting = currentGreeting;
     } else {
-      // Temas creativos: Extrae la sub-paleta correcta (mañana, tarde o noche)
       const baseTheme = themePalettes[userTheme];
       const timePalette = baseTheme[timeOfDay];
       currentThemeData = {
@@ -377,19 +332,25 @@ export function AppProvider({ children }) {
         greeting: currentGreeting,
       };
     }
+    return currentThemeData;
+  }, [userTheme, timeOfDay]);
 
-    setActiveTheme(currentThemeData);
-    applyCSSVariables(currentThemeData);
-  }, [userTheme, getCurrentTimeOfDay]);
-
+  // Disparador invisible para revisar la hora cada minuto
+  const [ , setTick] = useState(0);
+  
   // Bucle para actualizar la hora del día automáticamente
   useEffect(() => {
     const interval = setInterval(() => {
-      // Forzamos un re-render cambiando el estado por sí mismo para recalcular el useEffect principal
-      setUserTheme((prev) => prev);
+      setTick((t) => t + 1); 
     }, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  // 3. EFECTO LIMPIO: Solo se usa para interactuar con el exterior (DOM y Storage)
+  useEffect(() => {
+    localStorage.setItem("app_theme", userTheme);
+    applyCSSVariables(activeTheme, timeOfDay);
+  }, [userTheme, activeTheme, timeOfDay]);
 
   // Accesibilidad tipográfica
   useLayoutEffect(() => {
@@ -408,19 +369,96 @@ export function AppProvider({ children }) {
     sessionStorage.setItem("user_session", JSON.stringify(userData));
   };
 
+  // --- NUEVA LÓGICA SEO 2026: Calculadora de Imágenes Activas ---
+  const getBackgroundImages = useCallback((effect, timeOfDay) => {
+    const themeMap = {
+      wave: {
+        manana: {
+          pc: "oceano-pc-body-morning.webp",
+          movil: "oceano-movil-body-morning.webp",
+        },
+        tarde: {
+          pc: "oceano-pc-body-afternoon.webp",
+          movil: "oceano-movil-body-afternoon.webp",
+        },
+        noche: {
+          pc: "oceano-pc-body-night.webp",
+          movil: "oceano-movil-body-night.webp",
+        },
+      },
+      leaves: {
+        manana: {
+          pc: "otono-pc-body-morning.webp",
+          movil: "otono-movil-body-morning.webp",
+        },
+        tarde: {
+          pc: "otono-pc-body-afternoon.webp",
+          movil: "otono-movil-body-afternoon.webp",
+        },
+        noche: {
+          pc: "otono-pc-body-night.webp",
+          movil: "otono-movil-body-night.webp",
+        },
+      },
+      neon: {
+        manana: {
+          pc: "noche-pc-body-morning.webp",
+          movil: "noche-movil-body-morning.webp",
+        },
+        tarde: {
+          pc: "noche-pc-body-afternoon.webp",
+          movil: "noche-movil-body-afternoon.webp",
+        },
+        noche: {
+          pc: "noche-pc-body-night.webp",
+          movil: "noche-movil-body-night.webp",
+        },
+      },
+    };
+    return themeMap[effect]?.[timeOfDay] || null;
+  }, []);
+
+  const currentImages = getBackgroundImages(
+    activeTheme.effect,
+    getCurrentTimeOfDay(),
+  );
+
   return (
     <AppContext.Provider
       value={{
         user,
         login,
         logout,
-        activeTheme, // Tema visual actual con colores calculados
+        activeTheme,
         userTheme,
-        setUserTheme, // Preferencia del usuario
+        setUserTheme,
         fontSize,
         setFontSize,
       }}
     >
+      {/* 
+        PRE-CARGA INTELIGENTE LCP (SEO 2026): 
+        Solo descarga la imagen correspondiente a la pantalla actual (media query activo). 
+      */}
+      {currentImages && (
+        <Helmet>
+          <link
+            rel="preload"
+            as="image"
+            href={`/images/themes/${currentImages.movil}`}
+            media="(max-width: 768px)"
+            fetchpriority="high"
+          />
+          <link
+            rel="preload"
+            as="image"
+            href={`/images/themes/${currentImages.pc}`}
+            media="(min-width: 769px)"
+            fetchpriority="high"
+          />
+        </Helmet>
+      )}
+
       {children}
     </AppContext.Provider>
   );

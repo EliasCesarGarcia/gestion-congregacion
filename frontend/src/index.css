@@ -138,41 +138,60 @@ html[data-font-size="extra"] { font-size: 22px; }
 
 /* 
    ==========================================================
-   --- CONFIGURACIÓN ESPECÍFICA POR TEMAS ---
+   --- CONFIGURACIÓN ESPECÍFICA POR TEMAS Y HORARIOS ---
    ==========================================================
 */
 
+/* 1. MATRIZ DE RUTAS (Se asigna la variable según Tema y Horario) */
+
 /* --- TEMA OCÉANO (Wave) --- */
-html[data-theme="wave"] #root { background-color: #000512 !important; }
-html[data-theme="wave"] #root::before { 
-  background-image: url('/images/themes/oceano-vertical-body.webp'); 
-  image-rendering: -webkit-optimize-contrast;
-  filter: brightness(0.9) contrast(1.1) saturate(1.1);
-}
+html[data-theme="wave"][data-time="manana"] { --bg-pc: url('/images/themes/oceano-pc-body-morning.webp'); --bg-movil: url('/images/themes/oceano-movil-body-morning.webp'); }
+html[data-theme="wave"][data-time="tarde"]  { --bg-pc: url('/images/themes/oceano-movil-body-afternoon.webp'); --bg-movil: url('/images/themes/oceano-movil-body-afternoon.webp'); }
+html[data-theme="wave"][data-time="noche"]  { --bg-pc: url('/images/themes/oceano-pc-body-night.webp'); --bg-movil: url('/images/themes/oceano-movil-body-night.webp'); }
 
 /* --- TEMA OTOÑO (Leaves) --- */
-html[data-theme="leaves"] #root { background-color: #1a1110 !important; }
-html[data-theme="leaves"] #root::before { 
-  background-image: url('/images/themes/otono-vertical-body.webp'); 
-  filter: contrast(1.1) brightness(1) saturate(1.2); 
-  opacity: 0.8;
-  image-rendering: -webkit-optimize-contrast;
-}
+html[data-theme="leaves"][data-time="manana"] { --bg-pc: url('/images/themes/otono-pc-body-morning.webp'); --bg-movil: url('/images/themes/otono-movil-body-morning.webp'); }
+html[data-theme="leaves"][data-time="tarde"]  { --bg-pc: url('/images/themes/otono-pc-body-afternoon.webp'); --bg-movil: url('/images/themes/otono-movil-body-afternoon.webp'); }
+html[data-theme="leaves"][data-time="noche"]  { --bg-pc: url('/images/themes/otono-pc-body-night.webp'); --bg-movil: url('/images/themes/otono-movil-body-night.webp'); }
 
 /* --- TEMA MODO NOCHE (Neon) --- */
-html[data-theme="neon"] #root { background-color: #000000 !important; }
-html[data-theme="neon"] #root::before { 
-  background-image: url('/images/themes/noche-vertical-body.webp'); 
-  opacity: 0.85; 
-  filter: contrast(1.2) brightness(0.9);
+html[data-theme="neon"][data-time="manana"] { --bg-pc: url('/images/themes/noche-pc-body-morning.webp'); --bg-movil: url('/images/themes/noche-movil-body-morning.webp'); }
+html[data-theme="neon"][data-time="tarde"]  { --bg-pc: url('/images/themes/noche-pc-body-afternoon.webp'); --bg-movil: url('/images/themes/noche-movil-body-afternoon.webp'); }
+html[data-theme="neon"][data-time="noche"]  { --bg-pc: url('/images/themes/noche-pc-body-night.webp'); --bg-movil: url('/images/themes/noche-movil-body-night.webp'); }
+
+
+/* 2. APLICACIÓN DE LA IMAGEN EN EL ROOT */
+
+/* Por defecto se aplica la variable de Escritorio (PC) */
+html[data-theme="wave"] #root::before,
+html[data-theme="leaves"] #root::before,
+html[data-theme="neon"] #root::before {
+  background-image: var(--bg-pc);
   image-rendering: -webkit-optimize-contrast;
 }
 
-/* --- OPTIMIZACIÓN MÓVIL PARA FONDOS --- */
+/* Colores de fondo base y filtros de contraste por tema */
+html[data-theme="wave"] #root { background-color: #000512 !important; }
+html[data-theme="wave"] #root::before { filter: brightness(0.9) contrast(1.1) saturate(1.1); }
+
+html[data-theme="leaves"] #root { background-color: #1a1110 !important; }
+html[data-theme="leaves"] #root::before { filter: contrast(1.1) brightness(1) saturate(1.2); opacity: 0.8; }
+
+html[data-theme="neon"] #root { background-color: #000000 !important; }
+html[data-theme="neon"] #root::before { filter: contrast(1.2) brightness(0.9); opacity: 0.85; }
+
+
+/* 3. OPTIMIZACIÓN MÓVIL (Intercambio automático a la variable Móvil) */
 @media (max-width: 768px) {
-  html[data-theme="wave"] #root::before { background-image: url('/images/themes/oceano-movil-body.webp'); opacity: 0.9; }
-  html[data-theme="leaves"] #root::before { background-image: url('/images/themes/otono-movil-body.webp'); opacity: 0.85; }
-  html[data-theme="neon"] #root::before { background-image: url('/images/themes/noche-movil-body.webp'); opacity: 0.9; }
+  html[data-theme="wave"] #root::before,
+  html[data-theme="leaves"] #root::before,
+  html[data-theme="neon"] #root::before {
+    background-image: var(--bg-movil); /* Cambia todas las imágenes a móvil en 1 sola línea */
+  }
+  
+  html[data-theme="wave"] #root::before { opacity: 0.9; }
+  html[data-theme="leaves"] #root::before { opacity: 0.85; }
+  html[data-theme="neon"] #root::before { opacity: 0.9; }
 }
 
 /* 
@@ -298,4 +317,38 @@ body.body-freeze #root footer {
 #root footer {
   transition: filter 0.3s ease, brightness 0.3s ease;
   filter: blur(0px) brightness(1);
+}
+
+/* 
+   ==========================================================
+   --- CORRECCIÓN DE CONTRASTE: SELECCIÓN EN LA NOCHE --- 
+   ==========================================================
+*/
+
+/* 1. Estilo base para la selección (Mañana y Tarde) */
+.nav-item-selected {
+  background-color: var(--color-jw-navy) !important;
+  border-left: 5px solid var(--color-jw-accent) !important;
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+
+/* 2. ESTILO ACLARADO PARA LA NOCHE (Aquí está la magia) */
+html[data-time="noche"] .nav-item-selected {
+  /* 
+     Usamos blanco al 20% para "iluminar" el fondo. 
+     Si lo quieres más claro todavía, sube el 0.20 a 0.30 o 0.40 
+  */
+  background-color: rgba(255, 255, 255, 0.20) !important;
+  
+  /* Hacemos que el borde de color brille */
+  border-left-color: var(--color-jw-accent) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* 3. Sincronización del texto en la selección */
+.nav-item-selected span {
+  color: #ffffff !important;
+  font-weight: 650 !important;
+  opacity: 1 !important;
 }
