@@ -108,17 +108,20 @@ html[data-font-size="extra"] { font-size: 22px; }
   content: ""; 
   position: fixed; 
   top: 0; left: 0; right: 0;
-  height: 120vh;
+  /*inset: 0;*/
+  height: 110vh;
+  width: 100vw;
   z-index: -2;
   pointer-events: none;
-  background-position: center top;
+  background-position: center center;
   background-repeat: no-repeat;
   background-size: cover; 
   opacity: 0.7; 
   filter: contrast(1.1) brightness(1); 
   transform: translateY(var(--parallax-y, 0vh));
-  will-change: transform; 
-  transition: background-image 1s ease-in-out, opacity 0.5s;
+  will-change: transform;
+  /* El amortiguador 'transform 0.6s ease-out' absorbe los golpes de la rueda del mouse */
+  transition: background-image 1s ease-in-out, opacity 0.5s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* Capa de Gradiente de Profundidad (Efecto Inmersivo) */
@@ -146,7 +149,7 @@ html[data-font-size="extra"] { font-size: 22px; }
 
 /* --- TEMA OCÉANO (Wave) --- */
 html[data-theme="wave"][data-time="manana"] { --bg-pc: url('/images/themes/oceano-pc-body-morning.webp'); --bg-movil: url('/images/themes/oceano-movil-body-morning.webp'); }
-html[data-theme="wave"][data-time="tarde"]  { --bg-pc: url('/images/themes/oceano-movil-body-afternoon.webp'); --bg-movil: url('/images/themes/oceano-movil-body-afternoon.webp'); }
+html[data-theme="wave"][data-time="tarde"]  { --bg-pc: url('/images/themes/oceano-pc-body-afternoon.webp'); --bg-movil: url('/images/themes/oceano-movil-body-afternoon.webp'); }
 html[data-theme="wave"][data-time="noche"]  { --bg-pc: url('/images/themes/oceano-pc-body-night.webp'); --bg-movil: url('/images/themes/oceano-movil-body-night.webp'); }
 
 /* --- TEMA OTOÑO (Leaves) --- */
@@ -183,6 +186,10 @@ html[data-theme="neon"] #root::before { filter: contrast(1.2) brightness(0.9); o
 
 /* 3. OPTIMIZACIÓN MÓVIL (Intercambio automático a la variable Móvil) */
 @media (max-width: 768px) {
+   #root::before {
+    /* En celulares sí necesitamos "cover" para que respete la pantalla vertical sin aplastarse */
+    background-size: cover;
+  }
   html[data-theme="wave"] #root::before,
   html[data-theme="leaves"] #root::before,
   html[data-theme="neon"] #root::before {

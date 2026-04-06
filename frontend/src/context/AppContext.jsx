@@ -53,8 +53,8 @@ export const themePalettes = {
     },
     noche: {
       navy: "#001a23",
-      blue: "#003344",
-      accent: "#006688",
+      blue: "#00acc1",
+      accent: "#26c6da",
       body: "#000a12",
       card: "#001a23",
       text_main: "#ffffff",
@@ -86,11 +86,11 @@ export const themePalettes = {
     },
     noche: {
       navy: "#3e2723",
-      blue: "#4e342e",
-      accent: "#bf360c",
+      blue: "#ff8a65",
+      accent: "#ff7043",
       body: "#1a1110",
       card: "#271c19",
-      text_main: "#ffccbc",
+      text_main: "#faede8",
       text_light: "#ffffff",
       border: "#5d4037",
     },
@@ -218,8 +218,8 @@ export const themePalettes = {
     },
     noche: {
       navy: "#1b5e20",
-      blue: "#2e7d32",
-      accent: "#4caf50",
+      blue: "#66bb6a",
+      accent: "#81c784",
       body: "#0d1a0e",
       card: "#162e18",
       text_main: "#a5d6a7",
@@ -271,7 +271,6 @@ export function AppProvider({ children }) {
     root.style.setProperty("--color-jw-border", themeData.border);
   };
 
-  
   // 1. Obtenemos el momento del día actual (se evalúa al renderizar)
   const timeOfDay = getCurrentTimeOfDay();
 
@@ -336,12 +335,12 @@ export function AppProvider({ children }) {
   }, [userTheme, timeOfDay]);
 
   // Disparador invisible para revisar la hora cada minuto
-  const [ , setTick] = useState(0);
-  
+  const [, setTick] = useState(0);
+
   // Bucle para actualizar la hora del día automáticamente
   useEffect(() => {
     const interval = setInterval(() => {
-      setTick((t) => t + 1); 
+      setTick((t) => t + 1);
     }, 60000);
     return () => clearInterval(interval);
   }, []);
@@ -422,6 +421,47 @@ export function AppProvider({ children }) {
     activeTheme.effect,
     getCurrentTimeOfDay(),
   );
+
+  // --- MOTOR PARALLAX INTELIGENTE (Proporcional y Suave) ---
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollTop = window.scrollY;
+          const docHeight = document.documentElement.scrollHeight;
+          const winHeight = window.innerHeight;
+
+          // Si la página no tiene scroll (es corta), no movemos la imagen
+          if (docHeight <= winHeight) {
+            document.documentElement.style.setProperty("--parallax-y", "0vh");
+            ticking = false;
+            return;
+          }
+
+          // Calcula el porcentaje exacto de bajada (de 0.0 a 1.0)
+          const scrollPercent = scrollTop / (docHeight - winHeight);
+
+          // Movemos la imagen hacia arriba un máximo de 10vh (que es el margen extra que le dimos en CSS)
+          document.documentElement.style.setProperty(
+            "--parallax-y",
+            `-${scrollPercent * 10}vh`,
+          );
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // 'passive: true' es una norma estricta de SEO para no trabar el scroll del usuario
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Disparar una vez al cargar por si la página ya se cargó a la mitad
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <AppContext.Provider
