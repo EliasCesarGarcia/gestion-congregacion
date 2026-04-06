@@ -104,12 +104,11 @@ html[data-font-size="extra"] { font-size: 22px; }
    ==========================================================
 */
 /* Capa de Imagen de Fondo Principal */
-#root::before {
+#parallax-bg {
   content: ""; 
   position: fixed; 
   top: 0; left: 0; right: 0;
-  /*inset: 0;*/
-  height: 110vh;
+  height: 125vh;
   width: 100vw;
   z-index: -2;
   pointer-events: none;
@@ -118,10 +117,10 @@ html[data-font-size="extra"] { font-size: 22px; }
   background-size: cover; 
   opacity: 0.7; 
   filter: contrast(1.1) brightness(1); 
-  transform: translateY(var(--parallax-y, 0vh));
   will-change: transform;
-  /* El amortiguador 'transform 0.6s ease-out' absorbe los golpes de la rueda del mouse */
-  transition: background-image 1s ease-in-out, opacity 0.5s, transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  
+  /* AQUÍ DEJAMOS SOLO IMAGEN Y OPACIDAD. DEL TRANSFORM SE ENCARGA EL NUEVO JS */
+  transition: background-image 1s ease-in-out, opacity 0.5s;
 }
 
 /* Capa de Gradiente de Profundidad (Efecto Inmersivo) */
@@ -166,39 +165,39 @@ html[data-theme="neon"][data-time="noche"]  { --bg-pc: url('/images/themes/noche
 /* 2. APLICACIÓN DE LA IMAGEN EN EL ROOT */
 
 /* Por defecto se aplica la variable de Escritorio (PC) */
-html[data-theme="wave"] #root::before,
-html[data-theme="leaves"] #root::before,
-html[data-theme="neon"] #root::before {
+html[data-theme="wave"] #parallax-bg,
+html[data-theme="leaves"] #parallax-bg,
+html[data-theme="neon"] #parallax-bg {
   background-image: var(--bg-pc);
   image-rendering: -webkit-optimize-contrast;
 }
 
 /* Colores de fondo base y filtros de contraste por tema */
 html[data-theme="wave"] #root { background-color: #000512 !important; }
-html[data-theme="wave"] #root::before { filter: brightness(0.9) contrast(1.1) saturate(1.1); }
+html[data-theme="wave"] #parallax-bg { filter: brightness(0.9) contrast(1.1) saturate(1.1); }
 
 html[data-theme="leaves"] #root { background-color: #1a1110 !important; }
-html[data-theme="leaves"] #root::before { filter: contrast(1.1) brightness(1) saturate(1.2); opacity: 0.8; }
+html[data-theme="leaves"] #parallax-bg { filter: contrast(1.1) brightness(1) saturate(1.2); opacity: 0.8; }
 
 html[data-theme="neon"] #root { background-color: #000000 !important; }
-html[data-theme="neon"] #root::before { filter: contrast(1.2) brightness(0.9); opacity: 0.85; }
+html[data-theme="neon"] #parallax-bg { filter: contrast(1.2) brightness(0.9); opacity: 0.85; }
 
 
 /* 3. OPTIMIZACIÓN MÓVIL (Intercambio automático a la variable Móvil) */
 @media (max-width: 768px) {
-   #root::before {
+   #parallax-bg {
     /* En celulares sí necesitamos "cover" para que respete la pantalla vertical sin aplastarse */
     background-size: cover;
   }
-  html[data-theme="wave"] #root::before,
-  html[data-theme="leaves"] #root::before,
-  html[data-theme="neon"] #root::before {
+  html[data-theme="wave"] #parallax-bg,
+  html[data-theme="leaves"] #parallax-bg,
+  html[data-theme="neon"] #parallax-bg {
     background-image: var(--bg-movil); /* Cambia todas las imágenes a móvil en 1 sola línea */
   }
   
-  html[data-theme="wave"] #root::before { opacity: 0.9; }
-  html[data-theme="leaves"] #root::before { opacity: 0.85; }
-  html[data-theme="neon"] #root::before { opacity: 0.9; }
+  html[data-theme="wave"] #parallax-bg { opacity: 0.9; }
+  html[data-theme="leaves"] #parallax-bg { opacity: 0.85; }
+  html[data-theme="neon"] #parallax-bg { opacity: 0.9; }
 }
 
 /* 

@@ -21,6 +21,7 @@ import React, {
   useCallback,
   useLayoutEffect,
   useMemo,
+  useRef,
 } from "react";
 import { Helmet } from "react-helmet-async"; // <--- NUEVA IMPORTACIÓN
 
@@ -230,6 +231,7 @@ export const themePalettes = {
 };
 
 export function AppProvider({ children }) {
+  const bgRef = useRef(null);
   const [user, setUser] = useState(() => {
     const saved = sessionStorage.getItem("user_session");
     return saved ? JSON.parse(saved) : null;
@@ -422,45 +424,56 @@ export function AppProvider({ children }) {
     getCurrentTimeOfDay(),
   );
 
-  // --- MOTOR PARALLAX INTELIGENTE (Proporcional y Suave) ---
+  /// --- MOTOR PARALLAX PREMIUM DIRECTO (Cero Layout Thrashing) ---
   useEffect(() => {
-    let ticking = false;
+    let animationFrameId;
+    let targetY = 0;
+    let currentY = 0;
+    let initialized = false;
 
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollTop = window.scrollY;
-          const docHeight = document.documentElement.scrollHeight;
-          const winHeight = window.innerHeight;
-
-          // Si la página no tiene scroll (es corta), no movemos la imagen
-          if (docHeight <= winHeight) {
-            document.documentElement.style.setProperty("--parallax-y", "0vh");
-            ticking = false;
-            return;
-          }
-
-          // Calcula el porcentaje exacto de bajada (de 0.0 a 1.0)
-          const scrollPercent = scrollTop / (docHeight - winHeight);
-
-          // Movemos la imagen hacia arriba un máximo de 10vh (que es el margen extra que le dimos en CSS)
-          document.documentElement.style.setProperty(
-            "--parallax-y",
-            `-${scrollPercent * 10}vh`,
-          );
-          ticking = false;
-        });
-        ticking = true;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      
+      if (docHeight <= winHeight) {
+        targetY = 0;
+        return;
       }
+
+      const rawPercent = scrollTop / (docHeight - winHeight);
+      const scrollPercent = Math.max(0, Math.min(1, rawPercent));
+      
+      // En lugar de vh, calculamos PÍXELES EXACTOS (25% del alto de la ventana)
+      targetY = -(scrollPercent * (winHeight * 0.25)); 
     };
 
-    // 'passive: true' es una norma estricta de SEO para no trabar el scroll del usuario
+    const loop = () => {
+      // Evita que se "mueva sola" al cargar la página si ya estabas a la mitad
+      if (!initialized) {
+        currentY = targetY;
+        initialized = true;
+      } else {
+        // Amortiguador suave del 10% por fotograma
+        currentY += (targetY - currentY) * 0.1; 
+      }
+      
+      // ACTUALIZACIÓN DIRECTA: Solo movemos este div, sin afectar el resto del sitio
+      if (bgRef.current) {
+        bgRef.current.style.transform = `translate3d(0, ${currentY}px, 0)`;
+      }
+      
+      animationFrameId = window.requestAnimationFrame(loop);
+    };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-
-    // Disparar una vez al cargar por si la página ya se cargó a la mitad
     handleScroll();
+    loop();
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.cancelAnimationFrame(animationFrameId);
+    };
   }, []);
 
   return (
@@ -498,6 +511,9 @@ export function AppProvider({ children }) {
           />
         </Helmet>
       )}
+
+      {/* --- NUEVO FONDO DEDICADO DE ALTO RENDIMIENTO --- */}
+      <div id="parallax-bg" ref={bgRef} />
 
       {children}
     </AppContext.Provider>
