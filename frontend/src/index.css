@@ -278,32 +278,69 @@ html[data-theme="neon"] .shadow-md { box-shadow: none !important; }
 
 /* 
    ==========================================================
-   --- ELEMENTOS DE FORMULARIO (SLIDER) --- 
+   --- ELEMENTOS DE FORMULARIO (SLIDER DE PRECISIÓN) --- 
    ==========================================================
 */
 input[type="range"].custom-slider {
   -webkit-appearance: none;
   width: 100%;
+  height: 24px; /* Altura exacta interactiva */
   background: transparent;
+  outline: none;
 }
+
+/* 
+  EL SECRETO ESTÁ AQUÍ: 
+  El botón (thumb) existe, tiene 24x24px para que el dedo lo atrape fácil, 
+  pero lo hacemos completamente invisible. 
+*/
 input[type="range"].custom-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   height: 24px;
   width: 24px;
   border-radius: 50%;
-  background: var(--color-jw-blue);
+  
+  /* CAMBIOS APLICADOS: Fondo transparente y sin sombras */
+  background: transparent; 
+  box-shadow: none; 
+  border: none;
+  
   cursor: pointer;
-  margin-top: -10px;
-  box-shadow: 0 0 10px var(--color-jw-blue);
-  transition: transform 0.1s;
+  margin-top: 0; 
 }
-input[type="range"].custom-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
+
+/* Ya no necesitamos el efecto :active porque el botón no se ve.
+   La animación la maneja el punto HTML creado en ConfiguracionPage.jsx */
+input[type="range"].custom-slider::-webkit-slider-thumb:active { 
+  transform: none; 
+}
+
 input[type="range"].custom-slider::-webkit-slider-runnable-track {
   width: 100%;
-  height: 4px;
+  height: 4px; /* Ocupa poco espacio vertical, no afecta la interacción del thumb */
   cursor: pointer;
-  background: var(--color-jw-border);
-  border-radius: 2px;
+  background: transparent; 
+  border: none;
+}
+
+/* 
+   Compatibilidad extra para Firefox 
+   (Firefox usa -moz-range-thumb en lugar de -webkit-slider-thumb) 
+*/
+input[type="range"].custom-slider::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+input[type="range"].custom-slider::-moz-range-track {
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  border: none;
 }
 
 /* 

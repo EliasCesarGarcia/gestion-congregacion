@@ -13,7 +13,7 @@
  * - Estructura preparada para futuros módulos (Idiomas, Temas, Audio).
  */
 
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { AppContext, themePalettes } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
 // --- NUEVA IMPORTACIÓN PARA TRADUCCIONES ---
@@ -35,26 +35,29 @@ import {
   Eye,
   TextSelect,
   Languages,
+  Search,
+  Baseline,
 } from "lucide-react";
 
 // CAMBIO: Se crea una lista de objetos para construir la UI del selector de idiomas.
 // Esto mantiene la lógica de la UI separada de la configuración de i18next.
+// CAMBIO: Se añade una 'key' a cada idioma para poder traducirlo.
 const supportedLanguages = [
-  { code: "es", name: "Español" },
-  { code: "en", name: "English" },
-  { code: "de", name: "Deutsch" },
-  { code: "fr", name: "Français" },
-  { code: "pt", name: "Português" },
-  { code: "it", name: "Italiano" },
-  { code: "nl", name: "Nederlands" },
-  { code: "ru", name: "Русский" },
-  { code: "el", name: "Ελληνικά" },
-  { code: "ja", name: "日本語" },
-  { code: "zh-CN", name: "简体中文" },
-  { code: "ko", name: "한국어" },
-  { code: "id", name: "Bahasa Indonesia" },
-  { code: "vi", name: "Tiếng Việt" },
-  { code: "sw", name: "Kiswahili" },
+  { code: "es", name: "Español", key: "lang_es" },
+  { code: "en", name: "English", key: "lang_en" },
+  { code: "de", name: "Deutsch", key: "lang_de" },
+  { code: "fr", name: "Français", key: "lang_fr" },
+  { code: "pt", name: "Português", key: "lang_pt" },
+  { code: "it", name: "Italiano", key: "lang_it" },
+  { code: "nl", name: "Nederlands", key: "lang_nl" },
+  { code: "ru", name: "Русский", key: "lang_ru" },
+  { code: "el", name: "Ελληνικά", key: "lang_el" },
+  { code: "ja", name: "日本語", key: "lang_ja" },
+  { code: "zh-CN", name: "简体中文", key: "lang_zh_cn" },
+  { code: "ko", name: "한국어", key: "lang_ko" },
+  { code: "id", name: "Bahasa Indonesia", key: "lang_id" },
+  { code: "vi", name: "Tiếng Việt", key: "lang_vi" },
+  { code: "sw", name: "Kiswahili", key: "lang_sw" },
 ];
 
 function ConfiguracionPage() {
@@ -65,25 +68,41 @@ function ConfiguracionPage() {
   // --- HOOK DE TRADUCCIÓN ---
   const { t, i18n } = useTranslation(); // <-- El hook que nos da la función 't'
 
+  // CAMBIO: Estado para almacenar el texto del campo de búsqueda.
+  const [searchTerm, setSearchTerm] = useState("");
+
   // --- ESTADOS PARA EL VISUALIZADOR 3D ---
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
-  
   // CAMBIO: Los arrays ahora se definen DENTRO del componente para que puedan usar `t()`.
   // La función `t()` necesita el contexto de la traducción, que solo está disponible aquí.
   const timesOfDay = ["manana", "tarde", "noche"];
-  const labels = [t('time_morning'), t('time_afternoon'), t('time_night')];
+  const labels = [t("time_morning"), t("time_afternoon"), t("time_night")];
 
   const themes = [
-    { id: "default", name: t('theme_default'), icon: Wand2 },
-    { id: "oceano", name: t('theme_ocean'), icon: Waves },
-    { id: "otono", name: t('theme_autumn'), icon: Leaf },
-    { id: "oscuro", name: t('theme_dark'), icon: Moon },
-    { id: "solar", name: t('theme_solar'), icon: Sun },
-    { id: "retro", name: t('theme_retro'), icon: Terminal },
-    { id: "primavera", name: t('theme_spring'), icon: Flower2 },
+    { id: "default", name: t("theme_default"), icon: Wand2 },
+    { id: "oceano", name: t("theme_ocean"), icon: Waves },
+    { id: "otono", name: t("theme_autumn"), icon: Leaf },
+    { id: "oscuro", name: t("theme_dark"), icon: Moon },
+    { id: "solar", name: t("theme_solar"), icon: Sun },
+    { id: "retro", name: t("theme_retro"), icon: Terminal },
+    { id: "primavera", name: t("theme_spring"), icon: Flower2 },
   ];
+
+  // CAMBIO: Lógica para filtrar los idiomas según la búsqueda.
+  // `useMemo` optimiza el rendimiento, para que el filtrado no se ejecute en cada render, solo cuando cambia el término de búsqueda o el idioma.
+  const filteredLanguages = useMemo(() => {
+    if (!searchTerm) {
+      return supportedLanguages; // Si no hay búsqueda, no mostramos la lista filtrada.
+    }
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    return supportedLanguages.filter(
+      (lang) =>
+        lang.name.toLowerCase().includes(lowerCaseSearchTerm) || // Busca en el nombre nativo (e.g., "Deutsch")
+        t(lang.key).toLowerCase().includes(lowerCaseSearchTerm), // Busca en el nombre traducido (e.g., "Alemán")
+    );
+  }, [searchTerm, i18n.language, t]);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -95,6 +114,16 @@ function ConfiguracionPage() {
   const prevPreview = () => setPreviewIndex((prev) => (prev - 1 + 3) % 3);
 
   const fontSizes = ["small", "normal", "large", "extra"];
+
+  // CAMBIO: Se crea un array de objetos para definir las opciones de fuente.
+  // Esto hace que la lógica de renderizado sea mucho más limpia y mantenible.
+  const fontOptions = [
+    { id: "small", Icon: Baseline, props: { size: 16, strokeWidth: 2 } },
+    { id: "normal", Icon: Baseline, props: { size: 20, strokeWidth: 2 } },
+    { id: "large", Icon: Baseline, props: { size: 24, strokeWidth: 2.5 } },
+    { id: "extra", Icon: Baseline, props: { size: 28, strokeWidth: 2.5 } },
+  ];
+
   const sliderValue = fontSizes.indexOf(fontSize);
   const handleSliderChange = (e) =>
     setFontSize(fontSizes[parseInt(e.target.value)]);
@@ -305,7 +334,7 @@ function ConfiguracionPage() {
                 <Eye className="text-jw-accent" size={18} strokeWidth={2.5} />
                 {/* AHORA USA text-sm PARA CRECER */}
                 <h2 className="text-sm uppercase tracking-widest text-jw-text-main font-bold">
-                  {t('demo_visual_title')}
+                  {t("demo_visual_title")}
                 </h2>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 bg-jw-accent/10 text-jw-accent rounded-md uppercase">
@@ -449,54 +478,62 @@ function ConfiguracionPage() {
               </div>
             </div>
 
-            <div className="px-3 mb-2 relative">
-              <input
-                type="range"
-                min="0"
-                max="3"
-                step="1"
-                value={sliderValue}
-                onChange={handleSliderChange}
-                className="custom-slider"
-                aria-label="Ajustar tamaño de texto"
-              />
-              <div className="flex justify-between text-xs font-bold mt-4 uppercase tracking-widest text-jw-text-main/60">
-                <span
-                  className={
-                    sliderValue === 0
-                      ? "text-jw-accent scale-110 transition-transform"
-                      : ""
-                  }
-                >
-                  Peq
-                </span>
-                <span
-                  className={
-                    sliderValue === 1
-                      ? "text-jw-accent scale-110 transition-transform"
-                      : ""
-                  }
-                >
-                  Nor
-                </span>
-                <span
-                  className={
-                    sliderValue === 2
-                      ? "text-jw-accent scale-110 transition-transform"
-                      : ""
-                  }
-                >
-                  Gde
-                </span>
-                <span
-                  className={
-                    sliderValue === 3
-                      ? "text-jw-accent scale-110 transition-transform"
-                      : ""
-                  }
-                >
-                  Max
-                </span>
+            {/* NUEVA ESTRUCTURA: Alineación Matemática y Vertical Perfecta */}
+            <div className="relative w-full pt-2 pb-10 mt-2">
+              {/* Contenedor central de 24px (altura exacta del pulgar/botón) 
+                  Esto garantiza que la línea, el punto y el botón compartan el mismo eje vertical */}
+              <div className="relative w-full h-6 flex items-center">
+                {/* CAPA 1: La línea base continua 
+                    Achicada 12px de cada lado (left-[12px] right-[12px]) para los márgenes del pulgar */}
+                <div className="absolute left-[12px] right-[12px] h-1 bg-jw-border rounded-full pointer-events-none" />
+
+                {/* CAPA 2: Marcas e Iconos "A" */}
+                <div className="absolute left-[12px] right-[12px] h-full pointer-events-none">
+                  {fontOptions.map((option, index) => {
+                    const percent = (index / 3) * 100;
+                    const isActive = fontSize === option.id;
+                    const Icon = option.Icon;
+
+                    return (
+                      <div
+                        key={option.id}
+                        // h-full y flex items-center centran el punto verticalmente sobre la línea
+                        className="absolute h-full flex flex-col justify-center items-center"
+                        style={{
+                          left: `${percent}%`,
+                          // ¡CLAVE! Solo centramos horizontalmente (-50%), la vertical la maneja flexbox
+                          transform: "translateX(-50%)",
+                        }}
+                      >
+                        {/* El Punto/Marca (Centrado perfectamente en la línea) */}
+                        {/* El Punto/Marca (Centrado perfectamente en la línea y con Brillo) */}
+                        <div
+                          className={`w-3 h-3 rounded-full border-2 transition-all duration-300 ${isActive ? "bg-jw-accent border-jw-accent scale-150 shadow-[0_0_15px_var(--color-jw-accent)]" : "bg-jw-body border-jw-border"}`}
+                        />
+
+                        {/* El Icono "A" (Colgado con 'absolute top-8' para empujarlo hacia abajo sin romper el centrado del punto) */}
+                        <div
+                          className={`absolute top-8 transition-all duration-300 ${isActive ? "text-jw-accent scale-110" : "text-jw-text-main/40"}`}
+                        >
+                          <Icon {...option.props} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* CAPA 3: FUNCIONAL (El Slider real con el que interactúa el usuario) */}
+                <input
+                  type="range"
+                  min="0"
+                  max="3"
+                  step="1"
+                  value={sliderValue}
+                  onChange={handleSliderChange}
+                  // inset-0 hace que ocupe exactamente los 24px de alto y el 100% de ancho del contenedor padre
+                  className="custom-slider absolute inset-0 w-full h-full z-10 m-0"
+                  aria-label="Ajustar tamaño de texto"
+                />
               </div>
             </div>
           </section>
@@ -512,7 +549,7 @@ function ConfiguracionPage() {
                 />
                 {/* AHORA USA text-sm PARA CRECER */}
                 <h2 className="text-sm uppercase tracking-widest text-jw-text-main font-bold">
-                  {t('demo_reading_title')}
+                  {t("demo_reading_title")}
                 </h2>
               </div>
             </div>
@@ -520,24 +557,25 @@ function ConfiguracionPage() {
             <div className="p-4 bg-jw-body rounded-xl border border-jw-border transition-all duration-300 h-full flex flex-col justify-center">
               {/* CAMBIO: Contenido de la demo envuelto en t() */}
               <h3 className="text-jw-navy font-bold text-lg mb-2 leading-tight transition-all">
-                {t('demo_reading_header')}
+                {t("demo_reading_header")}
               </h3>
               <p className="text-jw-text-main/80 font-medium mb-4 leading-relaxed transition-all text-base">
-                {t('demo_reading_p')}
+                {t("demo_reading_p")}
               </p>
               <button className="bg-jw-accent text-jw-text-light px-4 py-2 rounded-lg font-bold shadow-md hover:brightness-110 transition-all active:scale-95 text-sm w-fit">
-                {t('demo_reading_button')}
+                {t("demo_reading_button")}
               </button>
             </div>
           </section>
         </div>
 
         {/* ========================================================= */}
-        {/* --- NUEVA FILA 3: SELECCIÓN DE IDIOMA ---                */}
+        {/* --- FILA 3: IDIOMAS (Lógica y UI Completamente Nuevas) --- */}
         {/* ========================================================= */}
+        {/* CAMBIO: La Fila 3 ahora usa una estructura de 2 columnas para alinearse con las demás. */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
           <section className="lg:col-span-6 bg-jw-card rounded-[1.5rem] shadow-xl border border-jw-border p-5 flex flex-col justify-center">
-            <div className="flex items-center gap-4 mb-3">
+            <div className="flex items-center gap-4 mb-4">
               <div className="p-2.5 bg-jw-accent/10 text-jw-accent rounded-xl">
                 <Languages size={20} strokeWidth={2.5} />
               </div>
@@ -550,19 +588,50 @@ function ConfiguracionPage() {
                 </p>
               </div>
             </div>
+            <div className="relative mb-4">
+              <Search
+                size={18}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-jw-text-main/40"
+              />
+              <input
+                type="text"
+                placeholder={t("lang_search")}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-jw-body border border-jw-border rounded-lg pl-10 pr-4 py-2 text-jw-text-main focus:ring-2 focus:ring-jw-accent focus:outline-none transition"
+              />
+            </div>
 
-            {/* CAMBIO: El selector de idiomas ahora es dinámico, generando botones a partir de la lista `supportedLanguages`. */}
-            <div className="flex flex-wrap justify-center items-center gap-3 pt-2">
-              {supportedLanguages.map((lang) => {
-                // `i18n.language` puede ser 'zh-CN', `lang.code` es 'zh-CN'.
-                // `i18n.language` también puede ser 'es-ES', `lang.code` es 'es'. `startsWith` maneja ambos casos.
-                const isActive = i18n.language.startsWith(lang.code);
-                return (<button key={lang.code} onClick={() => i18n.changeLanguage(lang.code)} className={`px-4 py-2 rounded-lg border-2 transition-all font-bold text-sm tracking-wider ${isActive ? "bg-jw-accent text-jw-text-light border-transparent shadow-lg" : "bg-transparent text-jw-text-main/70 border-jw-border hover:border-jw-accent hover:text-jw-accent"}`}>
-                  {lang.name}
-                </button>);
-              })}
+            {/* CAMBIO: Se añade un contenedor con altura fija y scroll vertical. */}
+            <div className="h-56 overflow-y-auto pr-2 custom-scrollbar">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {/* CAMBIO: La lógica ahora mapea sobre `filteredLanguages` que contiene todos los idiomas (o los filtrados) */}
+                {filteredLanguages.map((lang) => {
+                  const isActive = i18n.language.startsWith(lang.code);
+                  return (
+                    <button
+                      key={lang.code}
+                      onClick={() => {
+                        i18n.changeLanguage(lang.code);
+                        setSearchTerm("");
+                      }}
+                      className={`p-3 rounded-lg border-2 transition-all flex flex-col items-center justify-center text-center h-full ${isActive ? "bg-jw-accent text-jw-text-light border-transparent shadow-lg" : "bg-transparent text-jw-text-main/80 border-jw-border hover:border-jw-accent hover:text-jw-accent"}`}
+                    >
+                      <span className="font-bold text-base leading-tight">
+                        {lang.name}
+                      </span>
+                      <span className="text-xs font-medium opacity-70 mt-1">
+                        {t(lang.key)}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </section>
+
+          {/* Espacio vacío para mantener la alineación de dos columnas */}
+          <div className="hidden lg:block lg:col-span-6"></div>
         </div>
       </main>
     </div>
