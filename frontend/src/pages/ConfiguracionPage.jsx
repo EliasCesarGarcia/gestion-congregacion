@@ -16,6 +16,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { AppContext, themePalettes } from "../context/AppContext";
 import { useNavigate } from "react-router-dom";
+// --- NUEVA IMPORTACIÓN PARA TRADUCCIONES ---
+import { useTranslation } from "react-i18next";
 
 // IMPORTACIÓN DE ICONOS MINIMALISTAS
 import {
@@ -32,19 +34,56 @@ import {
   Flower2,
   Eye,
   TextSelect,
+  Languages,
 } from "lucide-react";
+
+// CAMBIO: Se crea una lista de objetos para construir la UI del selector de idiomas.
+// Esto mantiene la lógica de la UI separada de la configuración de i18next.
+const supportedLanguages = [
+  { code: "es", name: "Español" },
+  { code: "en", name: "English" },
+  { code: "de", name: "Deutsch" },
+  { code: "fr", name: "Français" },
+  { code: "pt", name: "Português" },
+  { code: "it", name: "Italiano" },
+  { code: "nl", name: "Nederlands" },
+  { code: "ru", name: "Русский" },
+  { code: "el", name: "Ελληνικά" },
+  { code: "ja", name: "日本語" },
+  { code: "zh-CN", name: "简体中文" },
+  { code: "ko", name: "한국어" },
+  { code: "id", name: "Bahasa Indonesia" },
+  { code: "vi", name: "Tiếng Việt" },
+  { code: "sw", name: "Kiswahili" },
+];
 
 function ConfiguracionPage() {
   const { activeTheme, userTheme, setUserTheme, fontSize, setFontSize } =
     useContext(AppContext);
   const navigate = useNavigate();
 
+  // --- HOOK DE TRADUCCIÓN ---
+  const { t, i18n } = useTranslation(); // <-- El hook que nos da la función 't'
+
   // --- ESTADOS PARA EL VISUALIZADOR 3D ---
   const [previewIndex, setPreviewIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
 
+  
+  // CAMBIO: Los arrays ahora se definen DENTRO del componente para que puedan usar `t()`.
+  // La función `t()` necesita el contexto de la traducción, que solo está disponible aquí.
   const timesOfDay = ["manana", "tarde", "noche"];
-  const labels = ["Mañana", "Tarde", "Noche"];
+  const labels = [t('time_morning'), t('time_afternoon'), t('time_night')];
+
+  const themes = [
+    { id: "default", name: t('theme_default'), icon: Wand2 },
+    { id: "oceano", name: t('theme_ocean'), icon: Waves },
+    { id: "otono", name: t('theme_autumn'), icon: Leaf },
+    { id: "oscuro", name: t('theme_dark'), icon: Moon },
+    { id: "solar", name: t('theme_solar'), icon: Sun },
+    { id: "retro", name: t('theme_retro'), icon: Terminal },
+    { id: "primavera", name: t('theme_spring'), icon: Flower2 },
+  ];
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
@@ -54,17 +93,6 @@ function ConfiguracionPage() {
 
   const nextPreview = () => setPreviewIndex((prev) => (prev + 1) % 3);
   const prevPreview = () => setPreviewIndex((prev) => (prev - 1 + 3) % 3);
-
-  // --- DATOS ---
-  const themes = [
-    { id: "default", name: "Automático", icon: Wand2 },
-    { id: "oceano", name: "Océano", icon: Waves },
-    { id: "otono", name: "Otoño", icon: Leaf },
-    { id: "oscuro", name: "Noche", icon: Moon },
-    { id: "solar", name: "Solar", icon: Sun },
-    { id: "retro", name: "Retro", icon: Terminal },
-    { id: "primavera", name: "Primavera", icon: Flower2 },
-  ];
 
   const fontSizes = ["small", "normal", "large", "extra"];
   const sliderValue = fontSizes.indexOf(fontSize);
@@ -109,7 +137,7 @@ function ConfiguracionPage() {
         },
         tarde: {
           pc: "oceano-pc-body-afternoon.webp",
-          movil: "oceano-movil-body.webp",
+          movil: "oceano-movil-body-afternoon.webp",
         },
         noche: {
           pc: "oceano-pc-body-night.webp",
@@ -123,7 +151,7 @@ function ConfiguracionPage() {
         },
         tarde: {
           pc: "otono-pc-body-afternoon.webp",
-          movil: "otono-movil-body.webp",
+          movil: "otono-movil-body-afternoon.webp",
         },
         noche: {
           pc: "otono-pc-body-night.webp",
@@ -141,7 +169,7 @@ function ConfiguracionPage() {
         },
         noche: {
           pc: "noche-pc-body-night.webp",
-          movil: "noche-movil-body.webp",
+          movil: "noche-movil-body-night.webp",
         },
       },
     };
@@ -170,7 +198,10 @@ function ConfiguracionPage() {
             strokeWidth={2.5}
             className="group-hover:-translate-x-1 transition-transform"
           />
-          <span className="text-sm tracking-wide uppercase">Volver</span>
+          {/* TEXTO AHORA TRADUCIDO */}
+          <span className="text-sm tracking-wide uppercase">
+            {t("config_back")}
+          </span>
         </button>
       </div>
 
@@ -222,11 +253,11 @@ function ConfiguracionPage() {
               </div>
               <div>
                 <h2 className="text-base font-semibold tracking-tight text-jw-text-main leading-tight">
-                  Temas Visuales
+                  {t("themes_title")}
                 </h2>
                 {/* AHORA USA text-xs PARA CRECER CON EL SLIDER */}
                 <p className="text-xs text-jw-accent font-medium uppercase tracking-wider">
-                  Personaliza tu entorno
+                  {t("themes_subtitle")}
                 </p>
               </div>
             </div>
@@ -274,7 +305,7 @@ function ConfiguracionPage() {
                 <Eye className="text-jw-accent" size={18} strokeWidth={2.5} />
                 {/* AHORA USA text-sm PARA CRECER */}
                 <h2 className="text-sm uppercase tracking-widest text-jw-text-main font-bold">
-                  Demo Visual en Vivo
+                  {t('demo_visual_title')}
                 </h2>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 bg-jw-accent/10 text-jw-accent rounded-md uppercase">
@@ -409,11 +440,11 @@ function ConfiguracionPage() {
               </div>
               <div>
                 <h2 className="text-base font-semibold tracking-tight text-jw-text-main leading-tight">
-                  Tamaño de Texto
+                  {t("fontSize_title")}
                 </h2>
                 {/* AHORA USA text-xs PARA CRECER */}
                 <p className="text-xs text-jw-accent font-medium uppercase tracking-wider">
-                  Ajuste horizontal dinámico
+                  {t("fontSize_subtitle")}
                 </p>
               </div>
             </div>
@@ -481,22 +512,55 @@ function ConfiguracionPage() {
                 />
                 {/* AHORA USA text-sm PARA CRECER */}
                 <h2 className="text-sm uppercase tracking-widest text-jw-text-main font-bold">
-                  Demo de Lectura
+                  {t('demo_reading_title')}
                 </h2>
               </div>
             </div>
 
             <div className="p-4 bg-jw-body rounded-xl border border-jw-border transition-all duration-300 h-full flex flex-col justify-center">
+              {/* CAMBIO: Contenido de la demo envuelto en t() */}
               <h3 className="text-jw-navy font-bold text-lg mb-2 leading-tight transition-all">
-                Título de Ejemplo
+                {t('demo_reading_header')}
               </h3>
               <p className="text-jw-text-main/80 font-medium mb-4 leading-relaxed transition-all text-base">
-                El texto de la plataforma se ajustará dinámicamente. Esto mejora
-                la legibilidad para todos los usuarios.
+                {t('demo_reading_p')}
               </p>
               <button className="bg-jw-accent text-jw-text-light px-4 py-2 rounded-lg font-bold shadow-md hover:brightness-110 transition-all active:scale-95 text-sm w-fit">
-                Botón de Acción
+                {t('demo_reading_button')}
               </button>
+            </div>
+          </section>
+        </div>
+
+        {/* ========================================================= */}
+        {/* --- NUEVA FILA 3: SELECCIÓN DE IDIOMA ---                */}
+        {/* ========================================================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+          <section className="lg:col-span-6 bg-jw-card rounded-[1.5rem] shadow-xl border border-jw-border p-5 flex flex-col justify-center">
+            <div className="flex items-center gap-4 mb-3">
+              <div className="p-2.5 bg-jw-accent/10 text-jw-accent rounded-xl">
+                <Languages size={20} strokeWidth={2.5} />
+              </div>
+              <div>
+                <h2 className="text-base font-semibold tracking-tight text-jw-text-main leading-tight">
+                  {t("lang_title")}
+                </h2>
+                <p className="text-xs text-jw-accent font-medium uppercase tracking-wider">
+                  {t("lang_subtitle")}
+                </p>
+              </div>
+            </div>
+
+            {/* CAMBIO: El selector de idiomas ahora es dinámico, generando botones a partir de la lista `supportedLanguages`. */}
+            <div className="flex flex-wrap justify-center items-center gap-3 pt-2">
+              {supportedLanguages.map((lang) => {
+                // `i18n.language` puede ser 'zh-CN', `lang.code` es 'zh-CN'.
+                // `i18n.language` también puede ser 'es-ES', `lang.code` es 'es'. `startsWith` maneja ambos casos.
+                const isActive = i18n.language.startsWith(lang.code);
+                return (<button key={lang.code} onClick={() => i18n.changeLanguage(lang.code)} className={`px-4 py-2 rounded-lg border-2 transition-all font-bold text-sm tracking-wider ${isActive ? "bg-jw-accent text-jw-text-light border-transparent shadow-lg" : "bg-transparent text-jw-text-main/70 border-jw-border hover:border-jw-accent hover:text-jw-accent"}`}>
+                  {lang.name}
+                </button>);
+              })}
             </div>
           </section>
         </div>

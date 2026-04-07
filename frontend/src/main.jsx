@@ -23,6 +23,8 @@ import { AppProvider } from "./context/AppContext";
 
 import "./index.css";
 
+import "./i18n"; //Para idiomas / traducciones
+
 // ==========================================================
 // --- CONFIGURACIÓN ESTRATÉGICA DE RED (AXIOS) ---
 // ==========================================================
