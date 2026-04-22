@@ -563,9 +563,16 @@ func UploadFotoHandler(db *gorm.DB) http.HandlerFunc {
 			FotoURL   string `json:"foto_url"`
 		}
 		json.NewDecoder(r.Body).Decode(&data)
-		db.Table("core_personas").Where("id = ?", data.PersonaID).Update("url_imagen", data.FotoURL)
+
+		// --- AGREGA ESTA LÍNEA PARA ASEGURAR EL NOMBRE CORRECTO DEL BUCKET ---
+        // Esto reemplaza "PEOPLE_PROFILE" por "People_profile" si viniera mal desde el frontend
+        fixedURL := strings.Replace(data.FotoURL, "PEOPLE_PROFILE", "People_profile", -1)
+
+        db.Table("core_personas").Where("id = ?", data.PersonaID).Update("url_imagen", fixedURL)
+
+		
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(map[string]string{"status": "success"})
+		json.NewEncoder(w).Encode(map[string]string{"status": "success", "url": fixedURL})
 	}
 }
 

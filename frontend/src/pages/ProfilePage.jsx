@@ -3,11 +3,10 @@
  * UBICACIÓN: frontend/src/pages/ProfilePage.jsx
  * DESCRIPCIÓN: Panel de administración centralizado del usuario.
  * Gestiona la identidad digital, seguridad, preferencias de avatar institucional
- * y la integridad de la cuenta. 
- * Implementa optimizaciones de imagen (compresión y formato WebP) y 
+ * y la integridad de la cuenta.
+ * Implementa optimizaciones de imagen (compresión y formato WebP) y
  * flujos de verificación de identidad de doble factor (PIN por correo).
  */
-
 
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
@@ -50,14 +49,13 @@ import {
   UserRoundPlus,
   Glasses,
 } from "lucide-react";
-
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion";
 import imageCompression from "browser-image-compression";
 import axios from "axios";
 import { supabase } from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import Modal from "../components/Modal";
-
 
 // --- COMPONENTES AUXILIARES DE INTERFAZ ---
 
@@ -140,7 +138,6 @@ function EditableRow({ label, value, icon, onEdit }) {
   );
 }
 
-
 // ==========================================================
 // --- COMPONENTE PRINCIPAL: ProfilePage ---
 // ==========================================================
@@ -155,7 +152,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const scrollRef = useRef(null);
-  
+
   // URL Base para imágenes almacenadas en Supabase Storage
   const urlBase =
     "https://zigdywbtvyvubgnziwtn.supabase.co/storage/v1/object/public/People_profile/";
@@ -180,7 +177,7 @@ function ProfilePage() {
   const [showCurrent, setShowCurrent] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  
+
   // Valores de los formularios de edición
   const [formValues, setFormValues] = useState({
     newValue: "",
@@ -220,8 +217,8 @@ function ProfilePage() {
       })
       .catch(() => setSeguridadDate("No disponible"));
 
-    // Manejo de anclaje directo a la sección de seguridad    
-      if (window.location.hash === "#seguridad") {
+    // Manejo de anclaje directo a la sección de seguridad
+    if (window.location.hash === "#seguridad") {
       const element = document.getElementById("seguridad");
       if (element) {
         setTimeout(() => {
@@ -245,7 +242,7 @@ function ProfilePage() {
           );
           setUsernameExists(res.data.exists);
           setSuggestions(res.data.suggestions || []);
-        } catch (err) {
+        } catch {
           console.error("Error validando usuario");
         }
       }, 400);
@@ -268,7 +265,7 @@ function ProfilePage() {
     return `${name[0]}${"*".repeat(name.length - 2)}${name.slice(-1)}@${domain}`;
   };
 
-  const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  //const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const isPassStrong = (p) => {
     const hasLen = p.length >= 8;
@@ -311,7 +308,7 @@ function ProfilePage() {
       setToast(true);
       setTimeout(() => setToast(false), 3000);
       setVerificationStep(3);
-    } catch (err) {
+    } catch {
       setModal({
         show: true,
         type: "error",
@@ -331,7 +328,7 @@ function ProfilePage() {
     try {
       await axios.post("/api/verify-pin", { pin });
       setVerificationStep(4);
-    } catch (err) {
+    } catch {
       setModal({
         show: true,
         type: "error",
@@ -358,17 +355,23 @@ function ProfilePage() {
       };
       const compressed = await imageCompression(file, options);
       const fileName = `perfil_${user.persona_id}.jpg`;
-      
+
       // Carga física a Supabase
       await supabase.storage
         .from("People_profile")
         .upload(fileName, compressed, { upsert: true });
-      
+
       // Actualización de referencia en DB Backend
-        await axios.post("/api/upload-foto", {
-        persona_id: String(user.persona_id),
-        foto_url: fileName,
-      });
+      await axios.post(
+        "/api/upload-foto",
+        {
+          persona_id: String(user.persona_id),
+          foto_url: fileName,
+        },
+        {
+          headers: { Authorization: `Bearer ${sessionStorage.getItem("auth_token")}`}, // Agregamos el token
+        },
+      );
       setImgTimestamp(Date.now());
       login({ ...user, foto_url: fileName });
       setModal({
@@ -377,7 +380,7 @@ function ProfilePage() {
         title: "¡Éxito!",
         message: "Foto actualizada.",
       });
-    } catch (err) {
+    } catch {
       setModal({
         show: true,
         type: "error",
@@ -402,10 +405,16 @@ function ProfilePage() {
       onConfirm: async () => {
         setLoading(true);
         try {
-          await axios.post("/api/upload-foto", {
-            persona_id: String(user.persona_id),
-            foto_url: imagePath,
-          });
+          await axios.post(
+            "/api/upload-foto",
+            {
+              persona_id: String(user.persona_id),
+              foto_url: imagePath,
+            },
+            {
+              headers: { Authorization: `Bearer ${sessionStorage.getItem("auth_token")}` }, // Agregamos el token
+            },
+          );
           login({ ...user, foto_url: imagePath });
           setImgTimestamp(Date.now());
           setModal({
@@ -414,7 +423,7 @@ function ProfilePage() {
             title: "¡Éxito!",
             message: "Perfil actualizado con tu nueva ilustración.",
           });
-        } catch (err) {
+        } catch {
           setModal({
             show: true,
             type: "error",
@@ -427,7 +436,7 @@ function ProfilePage() {
       },
     });
   };
-  
+
   /**
    * processUpdate: Ejecuta el cambio final de datos (email, usuario, contacto o clave).
    */
@@ -560,7 +569,7 @@ function ProfilePage() {
       });
       logout();
       navigate("/login");
-    } catch (err) {
+    } catch {
       setModal({
         show: true,
         type: "error",
@@ -721,7 +730,7 @@ function ProfilePage() {
           ✅ CÓDIGO ENVIADO
         </div>
       )}
-      
+
       {/* --- MODAL DE SISTEMA --- */}
       <Modal
         isOpen={modal.show}
@@ -850,7 +859,6 @@ function ProfilePage() {
 
       {/* --- DISEÑO DEL PANEL PRINCIPAL --- */}
       <div className="max-w-4xl mx-auto space-y-6">
-        
         {/* SECCIÓN 1: ADMINISTRACIÓN DE CREDENCIALES */}
         <section className="bg-white rounded-xl shadow-sm border border-jw-border overflow-hidden">
           <div className="p-5 bg-jw-navy text-white border-b-4 border-jw-blue">
@@ -890,7 +898,7 @@ function ProfilePage() {
                 </div>
               </div>
             </div>
-            <div className="groGRup">
+            <div className="group">
               <EditableRow
                 label="Usuario"
                 value="Cambiar alias"
@@ -1179,13 +1187,11 @@ function ProfilePage() {
                                       width="160" // Evita saltos de diseño (CLS)
                                       height="160" // Evita saltos de diseño (CLS)
                                       onError={(e) => {
-                                        console.error(
-                                          "Error cargando WebP en:",
-                                          fullPath,
-                                        );
-                                        // Fallback por si te olvidaste de convertir alguna
-                                        e.target.src =
-                                          "https://via.placeholder.com/150?text=Error+WebP";
+                                        if (!e.target.dataset.error) {
+                                          e.target.dataset.error = "true"; // Marcamos que ya falló una vez
+                                          e.target.src =
+                                            "https://ui-avatars.com/api/?name=Error&background=random";
+                                        }
                                       }}
                                     />
                                   </motion.div>

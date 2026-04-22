@@ -1,13 +1,68 @@
-# Secretos
+
+# ARCHIVO: .gitignore
+# UBICACIÓN: / (Carpeta raíz del proyecto GESTION-CONGREGACION)
+# DESCRIPCIÓN: Define los archivos y directorios que el sistema de control de 
+# versiones Git debe ignorar. Es una pieza crítica de la arquitectura para 
+# prevenir fugas de seguridad, mantener el repositorio ligero y evitar 
+# conflictos entre entornos de desarrollo (local vs producción).
+# 
+# FUNCIONALIDADES CLAVE:
+# - Protección de credenciales y claves privadas (Secretos).
+# - Exclusión de artefactos compilados (Binarios).
+# - Aislamiento de dependencias pesadas (Node Modules).
+# - Limpieza de archivos temporales del sistema operativo.
+ 
+
+ 
+#  ==========================================================
+#   --- 1. SEGURIDAD Y SECRETOS (CRÍTICO) --- 
+#  ==========================================================
+#   SEO 2026: La integridad de la aplicación es un factor de posicionamiento. 
+#   La filtración de claves de Supabase o contraseñas de DB penaliza la 
+#   confiabilidad técnica del sistema.
+
+
+# .env: Contiene variables de entorno, tokens JWT y credenciales sensibles. 
+# NUNCA debe subirse a la nube (GitHub/GitLab).
 .env
 
-# Go
+ 
+#   ==========================================================
+#   --- 2. BACKEND (GO / SERVIDOR) --- 
+#   ==========================================================
+
+
+# backend/backend: El archivo binario resultante de la compilación en Go.
+# Solo se ignoran los ejecutables, no el código fuente (.go).
 backend/backend
 *.exe
 
-# React
+
+#   ==========================================================
+#   --- 3. FRONTEND (REACT / VITE) --- 
+#   ==========================================================
+
+
+# node_modules/: Carpeta de dependencias. Se reconstruye en cada entorno 
+# mediante 'npm install'. Pesa cientos de MB y no debe versionarse.
 node_modules/
+
+# frontend/dist/: Carpeta de producción generada por Vite.
+# Contiene el código minificado y optimizado. El servidor de despliegue 
+# (como Vercel) la genera automáticamente a partir del código fuente.
 frontend/dist/
 
-# Sistema
+ 
+#   ==========================================================
+#   --- 4. BASURA DEL SISTEMA Y HERRAMIENTAS --- 
+#   ==========================================================
+
+
+# .DS_Store: Archivos ocultos creados por macOS que guardan preferencias 
+# de visualización de carpetas. Son irrelevantes para el funcionamiento del código.
 .DS_Store
+
+# (Opcional) Ignora logs de errores de npm que puedan generarse en local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

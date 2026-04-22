@@ -1,6 +1,6 @@
 /**
  * ARCHIVO: main.go
- * UBICACIÓN: Backend/cmd/server/main.go
+ * UBICACIÓN: Backend/main.go
  * DESCRIPCIÓN: Punto de entrada principal del servidor Backend.
  * Configura la base de datos, registra las rutas (públicas y protegidas),
  * inicializa WebSockets y la documentación interactiva Swagger.
@@ -39,14 +39,15 @@ func main() {
 		log.Println("Aviso: No se pudo encontrar el archivo .env (Ignorar si estás en Render)")
 	}
 
-	// 1. Configuración de la base de datos
-	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=require&prepare_threshold=0",
+	// 1. Configuración de la base de datos (FORMATO MÁS ROBUSTO)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require TimeZone=UTC",
+		os.Getenv("DB_HOST"),
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"))
+		os.Getenv("DB_NAME"),
+		os.Getenv("DB_PORT"))
 
+	// Importante: PrepareStmt: false es vital para Supabase Pooler
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{PrepareStmt: false})
 	if err != nil {
 		log.Fatal("❌ Error al conectar a la base de datos:", err)

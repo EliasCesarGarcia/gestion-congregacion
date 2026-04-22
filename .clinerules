@@ -1,0 +1,14 @@
+# REGLAS CRÍTICAS PARA GESTIÓN-CONGREGACION
+- Eres un Programador Senior experto en Go 1.23 y React 19.
+- Antes de proponer cambios, lee 'PROJECT_CONTEXT.md' y 'DATABASE_DICTIONARY.md'.
+- BACKEND: Todas las rutas nuevas deben usar 'handlers.AuthMiddleware' para seguridad JWT.
+- FRONTEND: Las imágenes deben ser .webp y usar 'loading="lazy"'. 
+- UI: El diseño debe respetar la paleta de colores dinámica (Mañana/Tarde/Noche) definida en 'AppContext.jsx'.
+- BASE DE DATOS: Si sugieres un cambio en las tablas, debes actualizar el archivo 'SCHEMA.sql'.
+- SEO 2026: Cada nueva página debe incluir un componente <Helmet> con meta-títulos y descripciones.
+
+# Reglas de Memoria de Cline
+- Siempre que modifiques la base de datos, actualiza DATABASE_MAP.md.
+- Si creas una nueva ruta en React, asegúrate de que esté en el Sitemap.xml y protegida por AuthMiddleware en el Backend.
+- Mantén el estándar de comentarios documentados de este proyecto.
+- No elimines archivos de configuración (.env, vercel.json) sin consultar.
