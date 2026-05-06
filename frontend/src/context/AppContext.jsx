@@ -14,6 +14,7 @@
  * - Seguridad Activa: Cierre de sesión automático por inactividad.
  */
 
+import axios from "axios";
 import React, {
   createContext,
   useState,
@@ -366,10 +367,39 @@ export function AppProvider({ children }) {
   }, []);
 
   const login = (userData) => {
-    setUser(userData);
-    sessionStorage.setItem("user_session", JSON.stringify(userData));
-  };
+    // 1. Recuperamos la sesión actual del almacenamiento para no perder nada
+    const savedSession = sessionStorage.getItem("user_session");
+    const existingData = savedSession ? JSON.parse(savedSession) : {};
 
+    let finalUserData;
+
+    // 2. Lógica de Fusión Inteligente
+    if (userData && userData.token) {
+      // Si es un login completo (trae token), lo usamos todo
+      finalUserData = userData;
+    } else {
+      // Si es una actualización (ej. foto), mantenemos el token viejo
+      // y solo actualizamos la parte del usuario
+      const currentUserObj = existingData.user || existingData;
+      finalUserData = {
+        ...existingData,
+        user: {
+          ...currentUserObj,
+          ...userData,
+        },
+      };
+    }
+
+    // 3. Guardamos los cambios
+    setUser(finalUserData);
+    sessionStorage.setItem("user_session", JSON.stringify(finalUserData));
+
+    // 4. Sincronizamos Axios (Validamos que el token exista antes de asignarlo)
+    if (finalUserData && finalUserData.token) {
+      axios.defaults.headers.common["Authorization"] =
+        `Bearer ${finalUserData.token}`;
+    }
+  };
   // --- NUEVA LÓGICA SEO 2026: Calculadora de Imágenes Activas ---
   const getBackgroundImages = useCallback((effect, timeOfDay) => {
     const themeMap = {
@@ -435,7 +465,7 @@ export function AppProvider({ children }) {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const docHeight = document.documentElement.scrollHeight;
       const winHeight = window.innerHeight;
-      
+
       if (docHeight <= winHeight) {
         targetY = 0;
         return;
@@ -443,9 +473,9 @@ export function AppProvider({ children }) {
 
       const rawPercent = scrollTop / (docHeight - winHeight);
       const scrollPercent = Math.max(0, Math.min(1, rawPercent));
-      
+
       // En lugar de vh, calculamos PÍXELES EXACTOS (25% del alto de la ventana)
-      targetY = -(scrollPercent * (winHeight * 0.25)); 
+      targetY = -(scrollPercent * (winHeight * 0.25));
     };
 
     const loop = () => {
@@ -455,14 +485,14 @@ export function AppProvider({ children }) {
         initialized = true;
       } else {
         // Amortiguador suave del 10% por fotograma
-        currentY += (targetY - currentY) * 0.1; 
+        currentY += (targetY - currentY) * 0.1;
       }
-      
+
       // ACTUALIZACIÓN DIRECTA: Solo movemos este div, sin afectar el resto del sitio
       if (bgRef.current) {
         bgRef.current.style.transform = `translate3d(0, ${currentY}px, 0)`;
       }
-      
+
       animationFrameId = window.requestAnimationFrame(loop);
     };
 

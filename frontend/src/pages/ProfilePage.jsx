@@ -348,6 +348,14 @@ function ProfilePage() {
     if (!file) return;
     setLoading(true);
     try {
+      // 1. Obtener el token real desde la sesión (No usar sessionStorage directamente aquí)
+      const token = session?.token;
+
+      if (!token) {
+        console.error("No hay token disponible");
+        throw new Error("Sesión expirada");
+      }
+
       const options = {
         maxSizeMB: 0.3,
         maxWidthOrHeight: 500,
@@ -356,12 +364,12 @@ function ProfilePage() {
       const compressed = await imageCompression(file, options);
       const fileName = `perfil_${user.persona_id}.jpg`;
 
-      // Carga física a Supabase
+      // 2. Subida a Supabase
       await supabase.storage
         .from("People_profile")
         .upload(fileName, compressed, { upsert: true });
 
-      // Actualización de referencia en DB Backend
+      // 3. Notificar al Backend con el Token EXPLÍCITO
       await axios.post(
         "/api/upload-foto",
         {
@@ -369,23 +377,27 @@ function ProfilePage() {
           foto_url: fileName,
         },
         {
-          headers: { Authorization: `Bearer ${sessionStorage.getItem("auth_token")}`}, // Agregamos el token
+          headers: { Authorization: `Bearer ${token}` }, // <--- AQUÍ ESTABA EL ERROR
         },
       );
+
       setImgTimestamp(Date.now());
-      login({ ...user, foto_url: fileName });
+      login({ foto_url: fileName });
+
       setModal({
         show: true,
         type: "success",
         title: "¡Éxito!",
-        message: "Foto actualizada.",
+        message: "Foto actualizada correctamente.",
       });
-    } catch {
+    } catch (err) {
+      console.error("Error detallado:", err);
       setModal({
         show: true,
         type: "error",
-        title: "Error",
-        message: "Fallo al subir imagen.",
+        title: "Error de Permisos",
+        message:
+          "No se pudo actualizar. Por seguridad, cierra sesión y vuelve a entrar.",
       });
     } finally {
       setLoading(false);
@@ -399,12 +411,14 @@ function ProfilePage() {
     setModal({
       show: true,
       type: "confirm",
-      title: "¿Confirmar nuevo avatar?",
-      message:
-        "¿Deseas establecer esta ilustración como tu nueva foto de perfil?",
+      title: "¿Establecer avatar?",
+      message: "¿Deseas usar esta ilustración como foto de perfil?",
       onConfirm: async () => {
         setLoading(true);
+        setModal({ ...modal, show: false }); // Cerrar el confirm
         try {
+          const token = session?.token; // Obtener token del contexto
+
           await axios.post(
             "/api/upload-foto",
             {
@@ -412,23 +426,26 @@ function ProfilePage() {
               foto_url: imagePath,
             },
             {
-              headers: { Authorization: `Bearer ${sessionStorage.getItem("auth_token")}` }, // Agregamos el token
+              headers: { Authorization: `Bearer ${token}` }, // <--- TOKEN CORREGIDO
             },
           );
-          login({ ...user, foto_url: imagePath });
+
+          login({ foto_url: imagePath });
           setImgTimestamp(Date.now());
+
           setModal({
             show: true,
             type: "success",
             title: "¡Éxito!",
-            message: "Perfil actualizado con tu nueva ilustración.",
+            message: "Avatar institucional establecido.",
           });
-        } catch {
+        } catch (err) {
+          console.error("Error en avatar:", err);
           setModal({
             show: true,
             type: "error",
             title: "Error",
-            message: "No se pudo guardar.",
+            message: "Error de autenticación.",
           });
         } finally {
           setLoading(false);
@@ -1297,15 +1314,15 @@ function ProfilePage() {
                   <Loader2 className="w-10 h-10 text-jw-blue animate-spin" />
                 ) : user?.foto_url ? (
                   <img
-                    key={user.foto_url}
+                    // El key obliga a React a destruir la imagen vieja y poner la nueva al instante
+                    key={`${user.foto_url}-${imgTimestamp}`}
                     src={
-                      user.foto_url.startsWith("/avatars/") ||
-                      user.foto_url.startsWith("http")
-                        ? user.foto_url
-                        : `${urlBase}${user.foto_url}?v=${imgTimestamp}&width=400&quality=80&format=webp`
+                      user.foto_url.startsWith("/avatars/")
+                        ? `${user.foto_url}?v=${imgTimestamp}`
+                        : `${urlBase}${user.foto_url}?v=${imgTimestamp}`
                     }
                     alt="Perfil"
-                    className="w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <User className="w-16 h-16 text-gray-300" />

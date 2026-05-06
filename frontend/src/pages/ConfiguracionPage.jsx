@@ -67,7 +67,7 @@ function ConfiguracionPage() {
 
   // --- HOOK DE TRADUCCIÓN ---
   const { t, i18n } = useTranslation(); // <-- El hook que nos da la función 't'
-
+  
   // CAMBIO: Estado para almacenar el texto del campo de búsqueda.
   const [searchTerm, setSearchTerm] = useState("");
 

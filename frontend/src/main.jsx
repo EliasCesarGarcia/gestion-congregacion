@@ -16,42 +16,43 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import axios from "axios"; // <--- AGREGADO
-import { HelmetProvider } from "react-helmet-async"; // <--- AGREGAR ESTO
+import axios from "axios"; 
+import { HelmetProvider } from "react-helmet-async"; 
 import App from "./App.jsx";
 import { AppProvider } from "./context/AppContext";
 
 import "./index.css";
-
-import "./i18n"; //Para idiomas / traducciones
+import "./i18n"; 
 
 // ==========================================================
 // --- CONFIGURACIÓN ESTRATÉGICA DE RED (AXIOS) ---
 // ==========================================================
 
-// Detección automática del entorno de ejecución
 const isLocal = window.location.hostname === "localhost";
 
-/**
- * BaseURL: Define la dirección del servidor Backend.
- * Cambia dinámicamente entre el entorno de desarrollo local y el servidor en Render.
- */
 axios.defaults.baseURL = isLocal
   ? "http://localhost:8080"
   : "https://gestion-teocratica-backend.onrender.com";
 
 /**
- * HIDRATACIÓN DE SEGURIDAD (JWT):
- * Si el usuario refresca la página (F5), React se reinicia, pero sessionStorage
- * mantiene el token. Recuperamos el token e inyectamos el Header de Autorización
- * para que las peticiones protegidas no pierdan el acceso.
+ * HIDRATACIÓN DE SEGURIDAD (JWT) - REEMPLAZADO:
+ * Recuperamos el objeto completo 'user_session', lo convertimos de texto a JSON
+ * y extraemos el token para que Axios lo use en todas las peticiones.
  */
-const savedToken = sessionStorage.getItem("auth_token");
-if (savedToken) {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${savedToken}`;
+const sessionData = sessionStorage.getItem("user_session");
+if (sessionData) {
+  try {
+    const parsed = JSON.parse(sessionData);
+    const token = parsed.token; 
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    }
+  } catch (error) {
+    console.error("Error al hidratar la sesión:", error);
+  }
 }
 
-// Log institucional para verificación técnica en consola de desarrollador (F12)
+// Log institucional
 console.log("🚀 Conectado al servidor:", axios.defaults.baseURL);
 
 // ==========================================================
