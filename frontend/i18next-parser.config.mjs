@@ -6,7 +6,12 @@ export default  {
   createOldCatalogs: false, 
   
   // Códigos de los idiomas que quieres generar
-  locales: ['es', 'en', 'de', 'fr', 'pt', 'it', 'nl', 'ru', 'el', 'ja', 'zh-CN', 'ko', 'id', 'vi', 'sw'],
+  locales: [
+    'es', 'en', 'de', 'fr', 'pt', 'it', 'nl', 'ru', 'el', 'ja', 'zh-CN', 'ko', 'id', 'vi', 'sw',
+    'af', 'sq', 'am', 'ar', 'he', 'ca', 'zh-TW', 'hr', 'cs', 'da', 'ee', 'fi', 'ht', 'haw', 'hi',
+    'hu', 'ilo', 'jam', 'lr', 'mg', 'ml', 'no', 'pap', 'pcm', 'pl', 'ro', 'nso', 'st', 'sk', 'sl',
+    'sv', 'tl', 'ta', 'th', 'tr', 'tw', 'uk', 'xh', 'zu', 'gn', 'qu'
+  ],
   
   // Dónde colocar los archivos generados
   output: 'public/locales/$LOCALE/translation.json',

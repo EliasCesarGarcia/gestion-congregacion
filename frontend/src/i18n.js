@@ -6,7 +6,64 @@ import HttpApi from "i18next-http-backend";
 
 // Lista de idiomas que tu aplicación soportará.
 // El primer idioma ('es') será considerado el idioma por defecto.
-const supportedLngs = ['es', 'en', 'de', 'fr', 'pt', 'it', 'nl', 'ru', 'el', 'ja', 'zh-CN', 'ko', 'id', 'vi', 'sw'];
+const supportedLngs = [
+  "es",
+  "en",
+  "de",
+  "fr",
+  "pt",
+  "it",
+  "nl",
+  "ru",
+  "el",
+  "ja",
+  "zh-CN",
+  "ko",
+  "id",
+  "vi",
+  "sw",
+  "af",
+  "sq",
+  "am",
+  "ar",
+  "he",
+  "ca",
+  "zh-TW",
+  "hr",
+  "cs",
+  "da",
+  "ee",
+  "fi",
+  "ht",
+  "haw",
+  "hi",
+  "hu",
+  "ilo",
+  "jam",
+  "lr",
+  "mg",
+  "ml",
+  "no",
+  "pap",
+  "pcm",
+  "pl",
+  "ro",
+  "nso",
+  "st",
+  "sk",
+  "sl",
+  "sv",
+  "tl",
+  "ta",
+  "th",
+  "tr",
+  "tw",
+  "uk",
+  "xh",
+  "zu",
+  "gn",
+  "qu",
+];
 
 i18n
   .use(HttpApi) // Carga traducciones desde el servidor/carpeta pública
@@ -14,13 +71,13 @@ i18n
   .use(initReactI18next) // Pasa i18n a react-i18next
   .init({
     // IMPORTANTE: Ya no se pone el objeto 'resources' aquí.
-    
+
     supportedLngs: supportedLngs,
     fallbackLng: "es", // Si el idioma detectado no está en la lista, usa español.
 
     // Configuración para el backend que carga los archivos JSON
     backend: {
-      loadPath: '/locales/{{lng}}/translation.json', // Ruta a los archivos. {{lng}} es una variable para el código de idioma.
+      loadPath: "/locales/{{lng}}/translation.json", // Ruta a los archivos. {{lng}} es una variable para el código de idioma.
     },
 
     // Configuración para el detector de idioma
@@ -32,11 +89,19 @@ i18n
     // React specific configuration
     react: {
       // Desactiva React Suspense. Es más sencillo manejar la carga manualmente.
-      useSuspense: false, 
+      useSuspense: false,
     },
-    
+
     // Muestra logs en la consola durante el desarrollo. Poner en 'false' para producción.
-    debug: true, 
+    debug: true,
   });
+
+// Detector dinámico de dirección de lectura (LTR / RTL) para el elemento HTML raíz
+i18n.on("languageChanged", (lng) => {
+  const rtlLanguages = ["ar", "he"];
+  const dir = rtlLanguages.includes(lng) ? "rtl" : "ltr";
+  document.documentElement.dir = dir;
+  document.documentElement.lang = lng;
+});
 
 export default i18n;

@@ -58,6 +58,47 @@ const supportedLanguages = [
   { code: "id", name: "Bahasa Indonesia", key: "lang_id" },
   { code: "vi", name: "Tiếng Việt", key: "lang_vi" },
   { code: "sw", name: "Kiswahili", key: "lang_sw" },
+  { code: "af", name: "Afrikaans", key: "lang_af" },
+  { code: "sq", name: "Shqip", key: "lang_sq" },
+  { code: "am", name: "አማርኛ", key: "lang_am" },
+  { code: "ar", name: "العربية", key: "lang_ar" },
+  { code: "he", name: "עברית", key: "lang_he" },
+  { code: "ca", name: "Català", key: "lang_ca" },
+  { code: "zh-TW", name: "繁體中文", key: "lang_zh_tw" },
+  { code: "hr", name: "Hrvatski", key: "lang_hr" },
+  { code: "cs", name: "Čeština", key: "lang_cs" },
+  { code: "da", name: "Dansk", key: "lang_da" },
+  { code: "ee", name: "Eʋegbe", key: "lang_ee" },
+  { code: "fi", name: "Suomi", key: "lang_fi" },
+  { code: "ht", name: "Kreyòl ayisyen", key: "lang_ht" },
+  { code: "haw", name: "ʻŌlelo Hawaiʻi", key: "lang_haw" },
+  { code: "hi", name: "हिन्दी", key: "lang_hi" },
+  { code: "hu", name: "Magyar", key: "lang_hu" },
+  { code: "ilo", name: "Ilokano", key: "lang_ilo" },
+  { code: "jam", name: "Patois", key: "lang_jam" },
+  { code: "lr", name: "Liberian English", key: "lang_lr" },
+  { code: "mg", name: "Malagasy", key: "lang_mg" },
+  { code: "ml", name: "മലയാളം", key: "lang_ml" },
+  { code: "no", name: "Norsk", key: "lang_no" },
+  { code: "pap", name: "Papiamentu", key: "lang_pap" },
+  { code: "pcm", name: "Naijá", key: "lang_pcm" },
+  { code: "pl", name: "Polski", key: "lang_pl" },
+  { code: "ro", name: "Română", key: "lang_ro" },
+  { code: "nso", name: "Sepedi", key: "lang_nso" },
+  { code: "st", name: "Sesotho", key: "lang_st" },
+  { code: "sk", name: "Slovenčina", key: "lang_sk" },
+  { code: "sl", name: "Slovenščina", key: "lang_sl" },
+  { code: "sv", name: "Svenska", key: "lang_sv" },
+  { code: "tl", name: "Tagalog", key: "lang_tl" },
+  { code: "ta", name: "தமிழ்", key: "lang_ta" },
+  { code: "th", name: "ไทย", key: "lang_th" },
+  { code: "tr", name: "Türkçe", key: "lang_tr" },
+  { code: "tw", name: "Twi", key: "lang_tw" },
+  { code: "uk", name: "Українська", key: "lang_uk" },
+  { code: "xh", name: "isiXhosa", key: "lang_xh" },
+  { code: "zu", name: "isiZulu", key: "lang_zu" },
+  { code: "gn", name: "Avañe'ẽ", key: "lang_gn" },
+  { code: "qu", name: "Runasimi", key: "lang_qu" },
 ];
 
 function ConfiguracionPage() {
@@ -67,7 +108,12 @@ function ConfiguracionPage() {
 
   // --- HOOK DE TRADUCCIÓN ---
   const { t, i18n } = useTranslation(); // <-- El hook que nos da la función 't'
-  
+
+  // Detección de idioma de derecha a izquierda (RTL)
+  const isRtl = i18n.dir
+    ? i18n.dir() === "rtl"
+    : ["ar", "he"].includes(i18n.language);
+
   // CAMBIO: Estado para almacenar el texto del campo de búsqueda.
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -207,7 +253,10 @@ function ConfiguracionPage() {
   };
 
   return (
-    <div className="min-h-screen bg-transparent pb-10 font-sans transition-colors duration-700 relative overflow-hidden">
+    <div
+      className="min-h-screen bg-transparent pb-10 font-sans transition-colors duration-700 relative overflow-hidden"
+      dir={isRtl ? "rtl" : "ltr"}
+    >
       {/* FONDO CREATIVO DE LA PÁGINA */}
       <div
         className="absolute top-0 left-0 w-full h-96 opacity-10 pointer-events-none transition-all duration-1000"
@@ -217,16 +266,25 @@ function ConfiguracionPage() {
       />
 
       {/* ENCABEZADO */}
-      <div className="pt-6 px-4 max-w-6xl mx-auto relative z-10 flex items-center">
+      <div className="pt-6 px-4 max-w-6xl mx-auto relative z-10 flex items-center justify-start">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center gap-2 text-jw-text-main font-semibold px-4 py-2 bg-jw-card rounded-xl shadow-sm hover:shadow-md hover:text-jw-accent transition-all border border-jw-border active:scale-95 group"
         >
-          <ChevronLeft
-            size={18}
-            strokeWidth={2.5}
-            className="group-hover:-translate-x-1 transition-transform"
-          />
+          {isRtl ? (
+            <ChevronRight
+              size={18}
+              strokeWidth={2.5}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          ) : (
+            <ChevronLeft
+              size={18}
+              strokeWidth={2.5}
+              className="group-hover:-translate-x-1 transition-transform"
+            />
+          )}
+          
           {/* TEXTO AHORA TRADUCIDO */}
           <span className="text-sm tracking-wide uppercase">
             {t("config_back")}
@@ -353,9 +411,11 @@ function ConfiguracionPage() {
                 if (offset === -2) offset = 1;
 
                 const isActive = offset === 0;
-                const translateX = offset * 55;
+                
+                // Si es RTL, invertimos el desplazamiento en X para que la experiencia visual sea congruente
+                const translateX = isRtl ? offset * -55 : offset * 55;
                 const translateZ = isActive ? 0 : -6; // -6rem (Se adapta al zoom)
-                const rotateY = offset * -15;
+                const rotateY = isRtl ? offset * 15 : offset * -15;
                 const scale = isActive ? 1 : 0.85;
                 const opacity = isActive ? 1 : 0.3;
                 const zIndex = isActive ? 30 : 10;
@@ -442,16 +502,16 @@ function ConfiguracionPage() {
               <button
                 aria-label="Tema anterior"
                 onClick={prevPreview}
-                className="absolute left-0 z-40 p-2 rounded-full bg-jw-card/90 backdrop-blur border border-jw-border shadow-md text-jw-text-main hover:text-jw-accent hover:scale-110 active:scale-90 transition-all"
+                className={`absolute z-40 p-2 rounded-full bg-jw-card/90 backdrop-blur border border-jw-border shadow-md text-jw-text-main hover:text-jw-accent hover:scale-110 active:scale-90 transition-all ${isRtl ? 'right-0' : 'left-0'}`}
               >
-                <ChevronLeft size={18} />
+                {isRtl ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
               </button>
               <button
                 aria-label="Siguiente tema"
                 onClick={nextPreview}
-                className="absolute right-0 z-40 p-2 rounded-full bg-jw-card/90 backdrop-blur border border-jw-border shadow-md text-jw-text-main hover:text-jw-accent hover:scale-110 active:scale-90 transition-all"
+                className={`absolute z-40 p-2 rounded-full bg-jw-card/90 backdrop-blur border border-jw-border shadow-md text-jw-text-main hover:text-jw-accent hover:scale-110 active:scale-90 transition-all ${isRtl ? 'left-0' : 'right-0'}`}
               >
-                <ChevronRight size={18} />
+                {isRtl ? <ChevronLeft size={18} /> : <ChevronRight size={18} />}
               </button>
             </div>
           </section>
@@ -500,7 +560,8 @@ function ConfiguracionPage() {
                         // h-full y flex items-center centran el punto verticalmente sobre la línea
                         className="absolute h-full flex flex-col justify-center items-center"
                         style={{
-                          left: `${percent}%`,
+                          // En caso de RTL, invertimos la posición del marcador absoluto
+                          left: isRtl ? `${100 - percent}%` : `${percent}%`,
                           // ¡CLAVE! Solo centramos horizontalmente (-50%), la vertical la maneja flexbox
                           transform: "translateX(-50%)",
                         }}
@@ -554,7 +615,8 @@ function ConfiguracionPage() {
               </div>
             </div>
 
-            <div className="p-4 bg-jw-body rounded-xl border border-jw-border transition-all duration-300 h-full flex flex-col justify-center">
+            {/* Alineación del texto dinámico según RTL */}
+             <div className={`p-4 bg-jw-body rounded-xl border border-jw-border transition-all duration-300 h-full flex flex-col justify-center ${isRtl ? 'text-right' : 'text-left'}`}>
               {/* CAMBIO: Contenido de la demo envuelto en t() */}
               <h3 className="text-jw-navy font-bold text-lg mb-2 leading-tight transition-all">
                 {t("demo_reading_header")}
@@ -562,7 +624,7 @@ function ConfiguracionPage() {
               <p className="text-jw-text-main/80 font-medium mb-4 leading-relaxed transition-all text-base">
                 {t("demo_reading_p")}
               </p>
-              <button className="bg-jw-accent text-jw-text-light px-4 py-2 rounded-lg font-bold shadow-md hover:brightness-110 transition-all active:scale-95 text-sm w-fit">
+              <button className={`bg-jw-accent text-jw-text-light px-4 py-2 rounded-lg font-bold shadow-md hover:brightness-110 transition-all active:scale-95 text-sm w-fit ${isRtl ? 'self-end' : 'self-start'}`}>
                 {t("demo_reading_button")}
               </button>
             </div>
@@ -588,22 +650,25 @@ function ConfiguracionPage() {
                 </p>
               </div>
             </div>
+
+            {/* Controles del buscador con soporte posicional para RTL */}
             <div className="relative mb-4">
               <Search
                 size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-jw-text-main/40"
+                className={`absolute top-1/2 -translate-y-1/2 text-jw-text-main/40 ${isRtl ? 'right-3' : 'left-3'}`}
               />
               <input
                 type="text"
                 placeholder={t("lang_search")}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-jw-body border border-jw-border rounded-lg pl-10 pr-4 py-2 text-jw-text-main focus:ring-2 focus:ring-jw-accent focus:outline-none transition"
+                className={`w-full bg-jw-body border border-jw-border rounded-lg py-2 text-jw-text-main focus:ring-2 focus:ring-jw-accent focus:outline-none transition ${isRtl ? 'pr-10 pl-4 text-right' : 'pl-10 pr-4 text-left'}`}
               />
             </div>
 
             {/* CAMBIO: Se añade un contenedor con altura fija y scroll vertical. */}
-            <div className="h-56 overflow-y-auto pr-2 custom-scrollbar">
+            {/* Ajuste del scroll lateral según RTL */}
+            <div className={`h-56 overflow-y-auto custom-scrollbar ${isRtl ? 'pl-2' : 'pr-2'}`}>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {/* CAMBIO: La lógica ahora mapea sobre `filteredLanguages` que contiene todos los idiomas (o los filtrados) */}
                 {filteredLanguages.map((lang) => {
