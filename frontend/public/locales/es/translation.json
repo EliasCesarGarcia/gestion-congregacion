@@ -21,6 +21,9 @@
   "time_afternoon": "Tarde",
   "time_morning": "Mañana",
   "time_night": "Noche",
+  "lang_search": "Buscar idioma...",
+  "device_mobile": "Celular",
+  "device_pc": "PC",
 
   "lang_es": "Español",
   "lang_en": "Inglés",
@@ -78,7 +81,5 @@
   "lang_xh": "Xhosa",
   "lang_zu": "Zulú",
   "lang_gn": "Guaraní",
-  "lang_qu": "Quechua boliviano",
-
-  "lang_search": "Buscar idioma..."
-}
+  "lang_qu": "Quechua boliviano"
+  }

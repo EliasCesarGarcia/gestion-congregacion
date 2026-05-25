@@ -1,0 +1,30 @@
+{
+  "config_back": "Zpět",
+  "demo_reading_button": "Akční tlačítko",
+  "demo_reading_header": "Ukázkový titulek",
+  "demo_reading_p": "Text platformy se dynamicky přizpůsobí. To zlepšuje čitelnost pro všechny uživatele.",
+  "demo_reading_title": "Ukázka čtení",
+  "demo_visual_title": "Živé vizuální demo",
+  "fontSize_subtitle": "Dynamické horizontální nastavení",
+  "fontSize_title": "Velikost textu",
+  "lang_subtitle": "Vyberte své preference",
+  "lang_title": "Jazyk",
+  "theme_autumn": "Podzim",
+  "theme_dark": "Noc",
+  "theme_default": "Automaticky",
+  "theme_ocean": "Oceán",
+  "theme_retro": "Retro",
+  "theme_solar": "Solární",
+  "theme_spring": "Jaro",
+  "themes_subtitle": "Přizpůsobte si své prostředí",
+  "themes_title": "Vizuální témata",
+  "time_afternoon": "Odpoledne",
+  "time_morning": "Ráno",
+  "time_night": "Noc",
+  "lang_search": "Hledat jazyk...",
+  "device_mobile": "Mobilní telefon",
+  "device_pc": "Počítač",
+
+  "lang_es": "Španělština", "lang_en": "Angličtina", "lang_de": "Němčina", "lang_fr": "Francouzština", "lang_pt": "Portugalština", "lang_it": "Italština", "lang_nl": "Nizozemština", "lang_ru": "Ruština", "lang_el": "Řečtina", "lang_ja": "Japonština", "lang_zh_cn": "Zjednodušená čínština", "lang_ko": "Korejština", "lang_id": "Indonéština", "lang_vi": "Vietnamština", "lang_sw": "Svahilština", "lang_af": "Afrikánština", "lang_sq": "Albánština", "lang_am": "Amharština", "lang_ar": "Arabština", "lang_he": "Hebrejština", "lang_ca": "Katalánština", "lang_zh_tw": "Tradiční čínština", "lang_hr": "Chorvatština", "lang_cs": "Čeština", "lang_da": "Dánština", "lang_ee": "Eveština", "lang_fi": "Finština", "lang_ht": "Haitská kreolština", "lang_haw": "Havajština", "lang_hi": "Hindština", "lang_hu": "Maďarština", "lang_ilo": "Ilokánština", "lang_jam": "Jamajská kreolština", "lang_lr": "Liberijština", "lang_mg": "Malgaština", "lang_ml": "Malayalamština", "lang_no": "Norština", "lang_pap": "Papiamento", "lang_pcm": "Nigerijský pidžin", "lang_pl": "Polština", "lang_ro": "Rumunština", "lang_nso": "Severní sothoština", "lang_st": "Sothoština", "lang_sk": "Slovenština", "lang_sl": "Slovinština", "lang_sv": "Švédština", "lang_tl": "Tagalog", "lang_ta": "Tamilština", "lang_th": "Thajština", "lang_tr": "Turečtina", "lang_tw": "Twi", "lang_uk": "Ukrajinština", "lang_xh": "Xhoština", "lang_zu": "Zuluština", "lang_gn": "Guaranština", "lang_qu": "Kečuánština"
+  
+}

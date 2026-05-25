@@ -396,7 +396,7 @@ function ConfiguracionPage() {
                 </h2>
               </div>
               <span className="text-xs font-bold px-2 py-0.5 bg-jw-accent/10 text-jw-accent rounded-md uppercase">
-                {isMobile ? "Celular" : "PC"}
+                {isMobile ? t("device_mobile") : t("device_pc")}
               </span>
             </div>
 
