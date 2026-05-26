@@ -1,1 +1,40 @@
-# Contexto del Proyecto: GESTIÓN-CONGREGACION (Sistema Premium 2026) 3 | 4 | ## Visión General 5 | Este es un ecosistema de gestión administrativa para congregaciones, diseñado para alto rendimiento y escalabilidad. Utiliza una arquitectura desacoplada: 6 | - **Backend:** Go 1.23 con GORM, JWT para seguridad, WebSockets para notificaciones y Resend para envíos de PIN. 7 | - **Frontend:** React 19 con Vite, Tailwind CSS v4, e i18next para soporte multi-idioma (58 idiomas). 8 | - **Base de Datos:** PostgreSQL alojado en Supabase con un esquema relacional complejo. 9 | 10 | ## Arquitectura de Red y Despliegue 11 | - **Frontend:** Desplegado en Vercel (maneja el enrutamiento SPA y proxy de API). 12 | - **Backend:** Desplegado en Render (servidor de Go). 13 | - **SEO 2026:** Implementación de metadatos dinámicos con React Helmet, Sitemaps, Robots.txt y carga optimizada de imágenes WebP. 14 | 15 | ## Estructura de Carpetas Crítica 16 | - `/backend`: Lógica de Go, handlers, modelos y docs de Swagger. 17 | - `/frontend`: Código fuente de React, activos públicos (avatars, temas) y traducciones. 18 | - `/`: Archivos de configuración de orquestación (vercel.json, .gitignore). 19 | 20 | ## Estándares de Codificación 21 | 1. **Seguridad:** Uso estricto de JWT y verificación por PIN de 6 dígitos. 22 | 2. **UI/UX:** Interfaz adaptativa según el horario (Mañana/Tarde/Noche) y accesibilidad de fuente (14px a 22px). 23 | 3. **Optimización:** Todas las imágenes nuevas deben ser formato .webp. 24 | 25 | ## Flujos Críticos 26 | - **Autenticación:** Login -> Verificación de PIN vía Email (Resend) -> Emisión de JWT. 27 | - **Personalización:** El sistema detecta la hora local y cambia el tema visual automáticamente. 28 | - **Escalabilidad:** Soporte planeado para 58 idiomas mediante i18next. 29 | 30 | ## Archivos de Configuración Clave 31 | - `vercel.json`: Orquestador de proxy para evitar errores de CORS entre Vercel y Render. 32 | - `index.css`: Contiene las variables de color del sistema institucional. 33 | - `main.go`: Punto de entrada principal del servidor Backend. (File has 32 lines total.)
+# Informe General del Proyecto: GESTIÓN LOCAL PREMIUM 2026
+
+## 1. Visión General
+Este proyecto es un ecosistema administrativo avanzado para congregaciones. Está diseñado bajo estándares de alto rendimiento, seguridad de grado bancario (JWT + PIN) y una experiencia de usuario adaptativa basada en el horario local del usuario.
+
+## 2. Arquitectura de Software
+El sistema utiliza una arquitectura desacoplada:
+- **Backend:** Go 1.23. Servidor RESTful unificado, WebSockets para notificaciones push y GORM para persistencia.
+- **Frontend:** React 19 + Vite. UI construida con Tailwind CSS v4, Framer Motion para animaciones y `i18next` para soporte de 58 idiomas.
+- **Base de Datos:** PostgreSQL alojado en Supabase.
+- **Seguridad:** Autenticación vía JWT con "MFA Lite" (Validación de identidad por PIN de 6 dígitos enviado por email).
+
+## 3. Infraestructura de Red y Despliegue (CEO 2026)
+- **Frontend (Vercel):** Gestiona el renderizado de la UI y los activos estáticos.
+- **Backend (Render):** Procesa la lógica de negocio y las conexiones a la base de datos.
+- **Proxy Orquestador:** El archivo `vercel.json` en la raíz actúa como puente para redirigir las peticiones `/api` al backend de Render, eliminando problemas de CORS.
+
+## 4. Estructura de Carpetas (Estado: OPTIMIZADO)
+- `/` (Raíz): Archivos de configuración maestra (`vercel.json`, `.clinerules`, `SCHEMA.sql`, `DATABASE_DICTIONARY.md`).
+- `/backend`:
+    - `main.go`: **Punto de entrada único** del servidor (incluye rutas, middleware y Swagger).
+    - `/internal/auth`: Lógica de generación y validación de tokens JWT.
+    - `/internal/handlers`: Controladores de lógica de negocio (Autenticación, Publicaciones, Perfil).
+    - `/internal/models`: Definición de estructuras GORM y JSON.
+    - `/internal/ws`: Gestión de conexiones WebSocket (Hub).
+    - `/docs`: Documentación interactiva de la API (Swagger).
+- `/frontend`:
+    - `/src/context/AppContext.jsx`: Cerebro del frontend (gestiona sesiones y temas dinámicos).
+    - `/src/pages`: Vistas principales (Dashboard, Perfil, Publicaciones, Seguridad).
+    - `/public`: Activos públicos (Avatars .webp, Temas visuales y archivos de traducción).
+
+## 5. Reglas de Negocio Críticas
+1. **Identidad:** La tabla `core_personas` es el eje central. Todo registro (pedidos, entregas, usuarios) debe estar vinculado a un ID de persona.
+2. **Interfaz Adaptativa:** El sistema lee la `zona_horaria` de la congregación para aplicar temas de Mañana, Tarde o Noche.
+3. **Optimización de Medios:** No se permiten imágenes en formatos pesados. Todo nuevo recurso visual debe ser `.webp` con `loading="lazy"`.
+4. **SEO:** Se utiliza `react-helmet-async` para asegurar que cada página tenga metadatos únicos para indexación por IAs y buscadores.
+
+## 6. Configuración de Base de Datos
+- **Pooler:** Se utiliza el puerto 6543 de Supabase con `PrepareStmt: false` para evitar errores de conexión persistente.
+- **Esquema:** Documentado detalladamente en `SCHEMA.sql` y `DATABASE_DICTIONARY.md`.
