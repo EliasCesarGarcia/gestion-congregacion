@@ -25,5 +25,41 @@
   "device_mobile": "கைபேசி",
   "device_pc": "கணினி",
 
-  "lang_es": "ஸ்பானிஷ்", "lang_en": "ஆங்கிலம்", "lang_de": "ஜெர்மன்", "lang_fr": "பிரெஞ்சு", "lang_pt": "போர்த்துகீசியம்", "lang_it": "இத்தாலியன்", "lang_nl": "டச்சு", "lang_ru": "ரஷ்யன்", "lang_el": "கிரேக்கம்", "lang_ja": "ஜப்பானியர்கள்", "lang_zh_cn": "எளிமைப்படுத்தப்பட்ட சீனம்", "lang_ko": "கொரியன்", "lang_id": "இந்தோனேசியன்", "lang_vi": "வியட்நாமியர்கள்", "lang_sw": "சுவாஹிலி", "lang_af": "ஆஃப்ரிகான்ஸ்", "lang_sq": "அல்பேனியன்", "lang_am": "அம்ஹாரிக்", "lang_ar": "அரபு", "lang_he": "ஹீப்ரு", "lang_ca": "கற்றலான்", "lang_zh_tw": "பாரம்பரிய சீனம்", "lang_hr": "குரோஷியன்", "lang_cs": "செக்", "lang_da": "டேனிஷ்", "lang_ee": "ஈவ்", "lang_fi": "பின்னிஷ்", "lang_ht": "ஹைட்டிய கிரியோல்", "lang_haw": "ஹவாய்", "lang_hi": "இந்தி", "lang_hu": "ஹங்கேரியன்", "lang_ilo": "இலோகோ", "lang_jam": "ஜமைக்கன் கிரியோல்", "lang_lr": "லைபீரியன்", "lang_mg": "மலகாசி", "lang_ml": "മലയാളം", "lang_no": "நோர்வேஜியன்", "lang_pap": "பாபியாமெண்டோ", "lang_pcm": "பிட்ஜின்", "lang_pl": "போலிஷ்", "lang_ro": "ருமேனியன்", "lang_nso": "செபேடி", "lang_st": "செசோதோ", "lang_sk": "ஸ்லோவாக்", "lang_sl": "ஸ்லோவேனியன்", "lang_sv": "ஸ்வீடிஷ்", "lang_tl": "தகலாக்", "lang_ta": "தமிழ்", "lang_th": "தாய்", "lang_tr": "துருக்கியர்", "lang_tw": "ட்வி", "lang_uk": "உக்ரைனியன்", "lang_xh": "கோசா", "lang_zu": "ஜுலு", "lang_gn": "குவாரானி", "lang_qu": "பொலிவியன் கெச்சுவா"
+  "lang_es": "ஸ்பானிஷ்", "lang_en": "ஆங்கிலம்", "lang_de": "ஜெர்மன்", "lang_fr": "பிரெஞ்சு", "lang_pt": "போர்த்துகீசியம்", "lang_it": "இத்தாலியன்", "lang_nl": "டச்சு", "lang_ru": "ரஷ்யன்", "lang_el": "கிரேக்கம்", "lang_ja": "ஜப்பானியர்கள்", "lang_zh_cn": "எளிமைப்படுத்தப்பட்ட சீனம்", "lang_ko": "கொரியன்", "lang_id": "இந்தோனேசியன்", "lang_vi": "வியட்நாமியர்கள்", "lang_sw": "சுவாஹிலி", "lang_af": "ஆஃப்ரிகான்ஸ்", "lang_sq": "அல்பேனியன்", "lang_am": "அம்ஹாரிக்", "lang_ar": "அரபு", "lang_he": "ஹீப்ரு", "lang_ca": "கற்றலான்", "lang_zh_tw": "பாரம்பரிய சீனம்", "lang_hr": "குரோஷியன்", "lang_cs": "செக்", "lang_da": "டேனிஷ்", "lang_ee": "ஈவ்", "lang_fi": "பின்னிஷ்", "lang_ht": "ஹைட்டிய கிரியோல்", "lang_haw": "ஹவாய்", "lang_hi": "இந்தி", "lang_hu": "ஹங்கேரியன்", "lang_ilo": "இலோகோ", "lang_jam": "ஜமைக்கன் கிரியோல்", "lang_lr": "லைபீரியன்", "lang_mg": "மலகாசி", "lang_ml": "മലയാളം", "lang_no": "நோர்வேஜியன்", "lang_pap": "பாபியாமெண்டோ", "lang_pcm": "பிட்ஜின்", "lang_pl": "போலிஷ்", "lang_ro": "ருமேனியன்", "lang_nso": "செபேடி", "lang_st": "செசோதோ", "lang_sk": "ஸ்லோவாக்", "lang_sl": "ஸ்லோவேனியன்", "lang_sv": "ஸ்வீடிஷ்", "lang_tl": "தகலாக்", "lang_ta": "தமிழ்", "lang_th": "தாய்", "lang_tr": "துருக்கியர்", "lang_tw": "ட்வி", "lang_uk": "உக்ரைனியன்", "lang_xh": "கோசா", "lang_zu": "ஜுலு", "lang_gn": "குவாரானி", "lang_qu": "பொலிவியன் கெச்சுவா",
+
+  
+  "greeting_morning": "காலை வணக்கம்,",
+  "greeting_afternoon": "மதிய வணக்கம்,",
+  "greeting_night": "மாலை வணக்கம்,",
+  "nav_admin_account": "கணக்கை நிர்வகி",
+  "nav_close_menu": "மெனுவை மூடு",
+  "nav_config": "அமைப்புகள்",
+  "nav_congregation": "சபை",
+  "nav_go_home": "முகப்புக்குச் செல்",
+  "nav_help": "உதவி & தொடர்பு",
+  "nav_help_contact": "உதவி மற்றும் தொடர்பு மையம்",
+  "nav_home": "முகப்பு",
+  "nav_logout": "வெளியேறு",
+  "nav_menu_title": "முதன்மை மெனு",
+  "nav_my_account": "எனது கணக்கு",
+  "nav_my_account_options": "கணக்கு விருப்பங்களைப் பார்",
+  "nav_my_profile_alt": "எனது சுயவிவரம்",
+  "nav_open_menu": "மெனுவைத் திற",
+  "nav_profile": "சுயவிவரம்",
+  "nav_profile_admin": "கணக்கு நிர்வாகம்",
+  "nav_publications": "பிரசுரங்கள்",
+  "nav_publications_mod": "பிரசுரப் பிரிவு",
+  "nav_region": "வட்டாரம்",
+  "nav_security": "டிஜிட்டல் பாதுகாப்பு",
+  "nav_security_dig": "டிஜிட்டல் பாதுகாப்பு",
+  "nav_system_title": "நிர்வாக அமைப்பு",
+  "nav_undefined": "வரையறுக்கப்படவில்லை",
+  "region_asia": "ஆசியா",
+  "region_africa": "ஆப்பிரிக்கா",
+  "region_europa": "ஐரோப்பா",
+  "region_north_america": "வட அமெரிக்கா",
+  "region_central_america": "மத்திய அமெரிக்கா",
+  "region_south_america": "தென் அமெரிக்கா",
+  "region_oceania": "ஓசியானியா"
+
 }

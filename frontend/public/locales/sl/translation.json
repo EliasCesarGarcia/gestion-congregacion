@@ -25,5 +25,41 @@
   "device_mobile": "Mobilnik",
   "device_pc": "Računalnik",
 
-  "lang_es": "Španščina", "lang_en": "Angleščina", "lang_de": "Nemščina", "lang_fr": "Francoščina", "lang_pt": "Portugalščina", "lang_it": "Italijanščina", "lang_nl": "Nizozemščina", "lang_ru": "Ruščina", "lang_el": "Grščina", "lang_ja": "Japonščina", "lang_zh_cn": "Poenostavljena kitajščina", "lang_ko": "Korejščina", "lang_id": "Indonezijščina", "lang_vi": "Vietnamščina", "lang_sw": "Svahili", "lang_af": "Afrikanščina", "lang_sq": "Albanščina", "lang_am": "Amharščina", "lang_ar": "Arabščina", "lang_he": "Hebrejščina", "lang_ca": "Katalonščina", "lang_zh_tw": "Tradicionalna kitajščina", "lang_hr": "Hrvaščina", "lang_cs": "Češčina", "lang_da": "Danščina", "lang_ee": "Evejščina", "lang_fi": "Finščina", "lang_ht": "Haitijska kreolščina", "lang_haw": "Havajščina", "lang_hi": "Hindujščina", "lang_hu": "Madžarščina", "lang_ilo": "Ilokanščina", "lang_jam": "Jamajška kreolščina", "lang_lr": "Liberijščina", "lang_mg": "Malgaščina", "lang_ml": "Malajalamščina", "lang_no": "Norveščina", "lang_pap": "Papiamento", "lang_pcm": "Pidžin", "lang_pl": "Poljščina", "lang_ro": "Romunščina", "lang_nso": "Severni sotho", "lang_st": "Sesoto", "lang_sk": "Slovaščina", "lang_sl": "Slovenščina", "lang_sv": "Švedščina", "lang_tl": "Tagalog", "lang_ta": "Tamilščina", "lang_th": "Tajščina", "lang_tr": "Turščina", "lang_tw": "Twi", "lang_uk": "Ukrajinščina", "lang_xh": "Xhosa", "lang_zu": "Zulujščina", "lang_gn": "Gvaranijščina", "lang_qu": "Bolivijska kečuanščina"
+  "lang_es": "Španščina", "lang_en": "Angleščina", "lang_de": "Nemščina", "lang_fr": "Francoščina", "lang_pt": "Portugalščina", "lang_it": "Italijanščina", "lang_nl": "Nizozemščina", "lang_ru": "Ruščina", "lang_el": "Grščina", "lang_ja": "Japonščina", "lang_zh_cn": "Poenostavljena kitajščina", "lang_ko": "Korejščina", "lang_id": "Indonezijščina", "lang_vi": "Vietnamščina", "lang_sw": "Svahili", "lang_af": "Afrikanščina", "lang_sq": "Albanščina", "lang_am": "Amharščina", "lang_ar": "Arabščina", "lang_he": "Hebrejščina", "lang_ca": "Katalonščina", "lang_zh_tw": "Tradicionalna kitajščina", "lang_hr": "Hrvaščina", "lang_cs": "Češčina", "lang_da": "Danščina", "lang_ee": "Evejščina", "lang_fi": "Finščina", "lang_ht": "Haitijska kreolščina", "lang_haw": "Havajščina", "lang_hi": "Hindujščina", "lang_hu": "Madžarščina", "lang_ilo": "Ilokanščina", "lang_jam": "Jamajška kreolščina", "lang_lr": "Liberijščina", "lang_mg": "Malgaščina", "lang_ml": "Malajalamščina", "lang_no": "Norveščina", "lang_pap": "Papiamento", "lang_pcm": "Pidžin", "lang_pl": "Poljščina", "lang_ro": "Romunščina", "lang_nso": "Severni sotho", "lang_st": "Sesoto", "lang_sk": "Slovaščina", "lang_sl": "Slovenščina", "lang_sv": "Švedščina", "lang_tl": "Tagalog", "lang_ta": "Tamilščina", "lang_th": "Tajščina", "lang_tr": "Turščina", "lang_tw": "Twi", "lang_uk": "Ukrajinščina", "lang_xh": "Xhosa", "lang_zu": "Zulujščina", "lang_gn": "Gvaranijščina", "lang_qu": "Bolivijska kečuanščina",
+
+  
+  "greeting_morning": "Dobro jutro,",
+  "greeting_afternoon": "Dober dan,",
+  "greeting_night": "Dober večer,",
+  "nav_admin_account": "Upravljanje računa",
+  "nav_close_menu": "Zapri meni",
+  "nav_config": "Nastavitve",
+  "nav_congregation": "Občina",
+  "nav_go_home": "Pojdi na domov",
+  "nav_help": "Pomoč & Stik",
+  "nav_help_contact": "Center za pomoč & stik",
+  "nav_home": "Domov",
+  "nav_logout": "Odjava",
+  "nav_menu_title": "Glavni meni",
+  "nav_my_account": "Moj račun",
+  "nav_my_account_options": "Prikaži možnosti računa",
+  "nav_my_profile_alt": "Moj profil",
+  "nav_open_menu": "Odpri navigacijski meni",
+  "nav_profile": "Moj profil",
+  "nav_profile_admin": "Upravljanje računa",
+  "nav_publications": "Publikacije",
+  "nav_publications_mod": "Modul Publikacije",
+  "nav_region": "Regija",
+  "nav_security": "Digitalna varnost",
+  "nav_security_dig": "Digitalna varnost",
+  "nav_system_title": "Sistem upravljanja",
+  "nav_undefined": "Ni določeno",
+  "region_asia": "Azija",
+  "region_africa": "Afrika",
+  "region_europa": "Evropa",
+  "region_north_america": "Severna Amerika",
+  "region_central_america": "Srednja Amerika",
+  "region_south_america": "Južna Amerika",
+  "region_oceania": "Oceanija"
+
 }

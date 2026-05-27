@@ -25,5 +25,41 @@
   "device_mobile": "Mobil",
   "device_pc": "Datamaskin",
 
-  "lang_es": "Spansk", "lang_en": "Engelsk", "lang_de": "Tysk", "lang_fr": "Fransk", "lang_pt": "Portugisisk", "lang_it": "Italiensk", "lang_nl": "Nederlandsk", "lang_ru": "Russisk", "lang_el": "Gresk", "lang_ja": "Japansk", "lang_zh_cn": "Kinesisk (forenklet)", "lang_ko": "Koreansk", "lang_id": "Indonesisk", "lang_vi": "Vietnamesisk", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albansk", "lang_am": "Amharisk", "lang_ar": "Arabisk", "lang_he": "Hebraisk", "lang_ca": "Katalansk", "lang_zh_tw": "Kinesisk (tradisjonell)", "lang_hr": "Kroatisk", "lang_cs": "Tjekkisk", "lang_da": "Dansk", "lang_ee": "Ewe", "lang_fi": "Finsk", "lang_ht": "Haitisk kreol", "lang_haw": "Hawaiisk", "lang_hi": "Hindi", "lang_hu": "Ungarsk", "lang_ilo": "Ilocano", "lang_jam": "Jamaikansk kreol", "lang_lr": "Liberiansk", "lang_mg": "Madagassisk", "lang_ml": "Malayalam", "lang_no": "Norsk", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polsk", "lang_ro": "Rumensk", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovakisk", "lang_sl": "Slovensk", "lang_sv": "Svensk", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Tyrkisk", "lang_tw": "Twi", "lang_uk": "Ukrainsk", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Boliviansk quechua"
+  "lang_es": "Spansk", "lang_en": "Engelsk", "lang_de": "Tysk", "lang_fr": "Fransk", "lang_pt": "Portugisisk", "lang_it": "Italiensk", "lang_nl": "Nederlandsk", "lang_ru": "Russisk", "lang_el": "Gresk", "lang_ja": "Japansk", "lang_zh_cn": "Kinesisk (forenklet)", "lang_ko": "Koreansk", "lang_id": "Indonesisk", "lang_vi": "Vietnamesisk", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albansk", "lang_am": "Amharisk", "lang_ar": "Arabisk", "lang_he": "Hebraisk", "lang_ca": "Katalansk", "lang_zh_tw": "Kinesisk (tradisjonell)", "lang_hr": "Kroatisk", "lang_cs": "Tjekkisk", "lang_da": "Dansk", "lang_ee": "Ewe", "lang_fi": "Finsk", "lang_ht": "Haitisk kreol", "lang_haw": "Hawaiisk", "lang_hi": "Hindi", "lang_hu": "Ungarsk", "lang_ilo": "Ilocano", "lang_jam": "Jamaikansk kreol", "lang_lr": "Liberiansk", "lang_mg": "Madagassisk", "lang_ml": "Malayalam", "lang_no": "Norsk", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polsk", "lang_ro": "Rumensk", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovakisk", "lang_sl": "Slovensk", "lang_sv": "Svensk", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Tyrkisk", "lang_tw": "Twi", "lang_uk": "Ukrainsk", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Boliviansk quechua",
+
+  
+  "greeting_morning": "God morgen,",
+  "greeting_afternoon": "God dag,",
+  "greeting_night": "God kveld,",
+  "nav_admin_account": "Administrer konto",
+  "nav_close_menu": "Lukk meny",
+  "nav_config": "Innstillinger",
+  "nav_congregation": "Menighet",
+  "nav_go_home": "Gå til startside",
+  "nav_help": "Hjelp & Kontakt",
+  "nav_help_contact": "Hjelp- & Kontaktsenter",
+  "nav_home": "Startside",
+  "nav_logout": "Logg ut",
+  "nav_menu_title": "Hovedmeny",
+  "nav_my_account": "Min Konto",
+  "nav_my_account_options": "Vis kontovalg",
+  "nav_my_profile_alt": "Min profil",
+  "nav_open_menu": "Åpne navigasjonsmeny",
+  "nav_profile": "Min Profil",
+  "nav_profile_admin": "Kontoadministrasjon",
+  "nav_publications": "Publikasjoner",
+  "nav_publications_mod": "Publikasjonsmodul",
+  "nav_region": "Region",
+  "nav_security": "Digital Sikkerhet",
+  "nav_security_dig": "Digital Sikkerhet",
+  "nav_system_title": "Administrasjonssystem",
+  "nav_undefined": "Ikke definert",
+  "region_asia": "Asia",
+  "region_africa": "Afrika",
+  "region_europa": "Europa",
+  "region_north_america": "Nord-Amerika",
+  "region_central_america": "Sentral-Amerika",
+  "region_south_america": "Sør-Amerika",
+  "region_oceania": "Oseania"
+
 }

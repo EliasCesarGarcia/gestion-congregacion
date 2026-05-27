@@ -25,5 +25,41 @@
   "device_mobile": "मोबाइल",
   "device_pc": "कंप्यूटर",
 
-  "lang_es": "स्पैनिश", "lang_en": "अंग्रेज़ी", "lang_de": "जर्मन", "lang_fr": "फ़्रेंच", "lang_pt": "पुर्तगाली", "lang_it": "इतालवी", "lang_nl": "डच", "lang_ru": "रूसी", "lang_el": "ग्रीक", "lang_ja": "जापानी", "lang_zh_cn": "सरलीकृत चीनी", "lang_ko": "कोरियाई", "lang_id": "इंडोनेशियाई", "lang_vi": "वियतनामी", "lang_sw": "स्वाहिली", "lang_af": "अफ़्रीकी", "lang_sq": "अल्बेनियाई", "lang_am": "अम्हारिक", "lang_ar": "अरबी", "lang_he": "हिब्रू", "lang_ca": "कातालान", "lang_zh_tw": "पारंपरिक चीनी", "lang_hr": "क्रोएशियन्", "lang_cs": "चेक", "lang_da": "डेनिश", "lang_ee": "इवे", "lang_fi": "फ़िनिश", "lang_ht": "हैतियाई क्रियोल", "lang_haw": "हवाईयन", "lang_hi": "हिन्दी", "lang_hu": "हंगेरियन", "lang_ilo": "इलोकानो", "lang_jam": "जमैकन क्रियोल", "lang_lr": "लाइबेरियाई", "lang_mg": "मालागासी", "lang_ml": "मलयालम", "lang_no": "नार्वेजियन", "lang_pap": "पापियामेंटो", "lang_pcm": "पिजिन", "lang_pl": "पोलिश", "lang_ro": "रोमानियाई", "lang_nso": "सेपेदी", "lang_st": "सेसोथो", "lang_sk": "स्लोवाक", "lang_sl": "स्लोवेनियाई", "lang_sv": "स्वीडिश", "lang_tl": "तागालोग", "lang_ta": "तमिल", "lang_th": "थाई", "lang_tr": "तुर्की", "lang_tw": "ट्वी", "lang_uk": "यूक्रेनी", "lang_xh": "षोसा", "lang_zu": "ज़ुलु", "lang_gn": "गुआरानी", "lang_qu": "बोलिवियाई केचुआ"
+  "lang_es": "स्पैनिश", "lang_en": "अंग्रेज़ी", "lang_de": "जर्मन", "lang_fr": "फ़्रेंच", "lang_pt": "पुर्तगाली", "lang_it": "इतालवी", "lang_nl": "डच", "lang_ru": "रूसी", "lang_el": "ग्रीक", "lang_ja": "जापानी", "lang_zh_cn": "सरलीकृत चीनी", "lang_ko": "कोरियाई", "lang_id": "इंडोनेशियाई", "lang_vi": "वियतनामी", "lang_sw": "स्वाहिली", "lang_af": "अफ़्रीकी", "lang_sq": "अल्बेनियाई", "lang_am": "अम्हारिक", "lang_ar": "अरबी", "lang_he": "हिब्रू", "lang_ca": "कातालान", "lang_zh_tw": "पारंपरिक चीनी", "lang_hr": "क्रोएशियन्", "lang_cs": "चेक", "lang_da": "डेनिश", "lang_ee": "इवे", "lang_fi": "फ़िनिश", "lang_ht": "हैतियाई क्रियोल", "lang_haw": "हवाईयन", "lang_hi": "हिन्दी", "lang_hu": "हंगेरियन", "lang_ilo": "इलोकानो", "lang_jam": "जमैकन क्रियोल", "lang_lr": "लाइबेरियाई", "lang_mg": "मालागासी", "lang_ml": "मलयालम", "lang_no": "नार्वेजियन", "lang_pap": "पापियामेंटो", "lang_pcm": "पिजिन", "lang_pl": "पोलिश", "lang_ro": "रोमानियाई", "lang_nso": "सेपेदी", "lang_st": "सेसोथो", "lang_sk": "स्लोवाक", "lang_sl": "स्लोवेनियाई", "lang_sv": "स्वीडिश", "lang_tl": "तागालोग", "lang_ta": "तमिल", "lang_th": "थाई", "lang_tr": "तुर्की", "lang_tw": "ट्वी", "lang_uk": "यूक्रेनी", "lang_xh": "षोसा", "lang_zu": "ज़ुलु", "lang_gn": "गुआरानी", "lang_qu": "बोलिवियाई केचुआ",
+
+  
+  "greeting_morning": "शुभ प्रभात,",
+  "greeting_afternoon": "शुभ दोपहर,",
+  "greeting_night": "शुभ संध्या,",
+  "nav_admin_account": "खाता प्रबंधित करें",
+  "nav_close_menu": "मेनू बंद करें",
+  "nav_config": "समायोजन",
+  "nav_congregation": "मंडली",
+  "nav_go_home": "होम पर जाएं",
+  "nav_help": "सहायता और संपर्क",
+  "nav_help_contact": "सहायता और संपर्क केंद्र",
+  "nav_home": "होम",
+  "nav_logout": "लॉग आउट करें",
+  "nav_menu_title": "मुख्य मेनू",
+  "nav_my_account": "मेरा खाता",
+  "nav_my_account_options": "खाता विकल्प देखें",
+  "nav_my_profile_alt": "मेरी प्रोफ़ाइल",
+  "nav_open_menu": "नेविगेशन मेनू खोलें",
+  "nav_profile": "मेरी प्रोफ़ाइल",
+  "nav_profile_admin": "खाता व्यवस्थापन",
+  "nav_publications": "प्रकाशन",
+  "nav_publications_mod": "प्रकाशन मॉड्यूल",
+  "nav_region": "क्षेत्र",
+  "nav_security": "डिजिटल सुरक्षा",
+  "nav_security_dig": "डिजिटल सुरक्षा",
+  "nav_system_title": "प्रबंधन प्रणाली",
+  "nav_undefined": "अपरिभाषित",
+  "region_asia": "एशिया",
+  "region_africa": "अफ्रीका",
+  "region_europa": "यूरोप",
+  "region_north_america": "उत्तरी अमेरिका",
+  "region_central_america": "मध्य अमेरिका",
+  "region_south_america": "दक्षिण अमेरिका",
+  "region_oceania": "ओशिनिया"
+
 }

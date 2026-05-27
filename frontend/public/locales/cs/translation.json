@@ -25,6 +25,41 @@
   "device_mobile": "Mobilní telefon",
   "device_pc": "Počítač",
 
-  "lang_es": "Španělština", "lang_en": "Angličtina", "lang_de": "Němčina", "lang_fr": "Francouzština", "lang_pt": "Portugalština", "lang_it": "Italština", "lang_nl": "Nizozemština", "lang_ru": "Ruština", "lang_el": "Řečtina", "lang_ja": "Japonština", "lang_zh_cn": "Zjednodušená čínština", "lang_ko": "Korejština", "lang_id": "Indonéština", "lang_vi": "Vietnamština", "lang_sw": "Svahilština", "lang_af": "Afrikánština", "lang_sq": "Albánština", "lang_am": "Amharština", "lang_ar": "Arabština", "lang_he": "Hebrejština", "lang_ca": "Katalánština", "lang_zh_tw": "Tradiční čínština", "lang_hr": "Chorvatština", "lang_cs": "Čeština", "lang_da": "Dánština", "lang_ee": "Eveština", "lang_fi": "Finština", "lang_ht": "Haitská kreolština", "lang_haw": "Havajština", "lang_hi": "Hindština", "lang_hu": "Maďarština", "lang_ilo": "Ilokánština", "lang_jam": "Jamajská kreolština", "lang_lr": "Liberijština", "lang_mg": "Malgaština", "lang_ml": "Malayalamština", "lang_no": "Norština", "lang_pap": "Papiamento", "lang_pcm": "Nigerijský pidžin", "lang_pl": "Polština", "lang_ro": "Rumunština", "lang_nso": "Severní sothoština", "lang_st": "Sothoština", "lang_sk": "Slovenština", "lang_sl": "Slovinština", "lang_sv": "Švédština", "lang_tl": "Tagalog", "lang_ta": "Tamilština", "lang_th": "Thajština", "lang_tr": "Turečtina", "lang_tw": "Twi", "lang_uk": "Ukrajinština", "lang_xh": "Xhoština", "lang_zu": "Zuluština", "lang_gn": "Guaranština", "lang_qu": "Kečuánština"
+  "lang_es": "Španělština", "lang_en": "Angličtina", "lang_de": "Němčina", "lang_fr": "Francouzština", "lang_pt": "Portugalština", "lang_it": "Italština", "lang_nl": "Nizozemština", "lang_ru": "Ruština", "lang_el": "Řečtina", "lang_ja": "Japonština", "lang_zh_cn": "Zjednodušená čínština", "lang_ko": "Korejština", "lang_id": "Indonéština", "lang_vi": "Vietnamština", "lang_sw": "Svahilština", "lang_af": "Afrikánština", "lang_sq": "Albánština", "lang_am": "Amharština", "lang_ar": "Arabština", "lang_he": "Hebrejština", "lang_ca": "Katalánština", "lang_zh_tw": "Tradiční čínština", "lang_hr": "Chorvatština", "lang_cs": "Čeština", "lang_da": "Dánština", "lang_ee": "Eveština", "lang_fi": "Finština", "lang_ht": "Haitská kreolština", "lang_haw": "Havajština", "lang_hi": "Hindština", "lang_hu": "Maďarština", "lang_ilo": "Ilokánština", "lang_jam": "Jamajská kreolština", "lang_lr": "Liberijština", "lang_mg": "Malgaština", "lang_ml": "Malayalamština", "lang_no": "Norština", "lang_pap": "Papiamento", "lang_pcm": "Nigerijský pidžin", "lang_pl": "Polština", "lang_ro": "Rumunština", "lang_nso": "Severní sothoština", "lang_st": "Sothoština", "lang_sk": "Slovenština", "lang_sl": "Slovinština", "lang_sv": "Švédština", "lang_tl": "Tagalog", "lang_ta": "Tamilština", "lang_th": "Thajština", "lang_tr": "Turečtina", "lang_tw": "Twi", "lang_uk": "Ukrajinština", "lang_xh": "Xhoština", "lang_zu": "Zuluština", "lang_gn": "Guaranština", "lang_qu": "Kečuánština",
+
+  
+  "greeting_morning": "Dobré ráno,",
+  "greeting_afternoon": "Dobré odpoledne,",
+  "greeting_night": "Dobrý večer,",
+  "nav_admin_account": "Správa účtu",
+  "nav_close_menu": "Zavřít menu",
+  "nav_config": "Nastavení",
+  "nav_congregation": "Sbor",
+  "nav_go_home": "Přejít na úvod",
+  "nav_help": "Nápověda a kontakt",
+  "nav_help_contact": "Centrum nápovědy a kontaktů",
+  "nav_home": "Úvod",
+  "nav_logout": "Odhlásit se",
+  "nav_menu_title": "Hlavní menu",
+  "nav_my_account": "Můj účet",
+  "nav_my_account_options": "Zobrazit nastavení účtu",
+  "nav_my_profile_alt": "Můj profil",
+  "nav_open_menu": "Otevřít navigační menu",
+  "nav_profile": "Můj profil",
+  "nav_profile_admin": "Správa účtu",
+  "nav_publications": "Publikace",
+  "nav_publications_mod": "Modul Publikace",
+  "nav_region": "Region",
+  "nav_security": "Digitální bezpečnost",
+  "nav_security_dig": "Digitální bezpečnost",
+  "nav_system_title": "Systém správy",
+  "nav_undefined": "Není definováno",
+  "region_asia": "Asie",
+  "region_africa": "Afrika",
+  "region_europa": "Evropa",
+  "region_north_america": "Severní Amerika",
+  "region_central_america": "Střední Amerika",
+  "region_south_america": "Jižní Amerika",
+  "region_oceania": "Oceánie"
   
 }

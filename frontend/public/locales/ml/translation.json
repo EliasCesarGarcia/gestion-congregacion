@@ -25,5 +25,41 @@
   "device_mobile": "മൊബൈൽ",
   "device_pc": "കമ്പ്യൂട്ടർ",
 
-  "lang_es": "സ്പാനിഷ്", "lang_en": "ഇംഗ്ലീഷ്", "lang_de": "ജർമ്മൻ", "lang_fr": "ഫ്രഞ്ച്", "lang_pt": "പോർച്ചുഗീസ്", "lang_it": "ഇറ്റാലിയൻ", "lang_nl": "ഡച്ച്", "lang_ru": "റഷ്യൻ", "lang_el": "ഗ്രീക്ക്", "lang_ja": "ജാപ്പനീസ്", "lang_zh_cn": "ലളിതമാക്കിയ ചൈനീസ്", "lang_ko": "കൊറിയൻ", "lang_id": "ഇന്തോനേഷ്യൻ", "lang_vi": "വിയറ്റ്നാമീസ്", "lang_sw": "സ്വാഹിലി", "lang_af": "ആഫ്രിക്കൻസ്", "lang_sq": "അൽബേനിയൻ", "lang_am": "അംഹാരിക്", "lang_ar": "അറബിക്", "lang_he": "ഹീബ്രു", "lang_ca": "കാറ്റലൻ", "lang_zh_tw": "പരമ്പരാഗത ചൈനീസ്", "lang_hr": "ക്രൊയേഷ്യൻ", "lang_cs": "ചെക്ക്", "lang_da": "ഡാനിഷ്", "lang_ee": "എവെ", "lang_fi": "ഫിന്നിഷ്", "lang_ht": "ഹെയ്തിയൻ ക്രിയോൾ", "lang_haw": "ഹവായിയൻ", "lang_hi": "ഹിന്ദി", "lang_hu": "ഹംഗേറിയൻ", "lang_ilo": "ഇലോകോ", "lang_jam": "ജമൈക്കൻ ക്രിയോൾ", "lang_lr": "ലൈബീരിയൻ", "lang_mg": "മലഗാസി", "lang_ml": "മലയാളം", "lang_no": "നോർവീജียนൻ", "lang_pap": "പാപിയാമെന്റോ", "lang_pcm": "പിഡ്ജിൻ", "lang_pl": "പോളിഷ്", "lang_ro": "റൊമാനിയൻ", "lang_nso": "സെപെദി", "lang_st": "സെസോതോ", "lang_sk": "സ്ലോവാക്", "lang_sl": "സ്ലോവേനിയൻ", "lang_sv": "സ്വീഡിഷ്", "lang_tl": "തഗാലോഗ്", "lang_ta": "തമിഴ്", "lang_th": "തായ്", "lang_tr": "തുർക്കിഷ്", "lang_tw": "ട്വി", "lang_uk": "ഉക്രേനിയൻ", "lang_xh": "ഖോസ", "lang_zu": "സുലു", "lang_gn": "ഗുറാനി", "lang_qu": "ബൊളീവിയൻ ക്വെച്ചുവ"
+  "lang_es": "സ്പാനിഷ്", "lang_en": "ഇംഗ്ലീഷ്", "lang_de": "ജർമ്മൻ", "lang_fr": "ഫ്രഞ്ച്", "lang_pt": "പോർച്ചുഗീസ്", "lang_it": "ഇറ്റാലിയൻ", "lang_nl": "ഡച്ച്", "lang_ru": "റഷ്യൻ", "lang_el": "ഗ്രീക്ക്", "lang_ja": "ജാപ്പനീസ്", "lang_zh_cn": "ലളിതമാക്കിയ ചൈനീസ്", "lang_ko": "കൊറിയൻ", "lang_id": "ഇന്തോനേഷ്യൻ", "lang_vi": "വിയറ്റ്നാമീസ്", "lang_sw": "സ്വാഹിലി", "lang_af": "ആഫ്രിക്കൻസ്", "lang_sq": "അൽബേനിയൻ", "lang_am": "അംഹാരിക്", "lang_ar": "അറബിക്", "lang_he": "ഹീബ്രു", "lang_ca": "കാറ്റലൻ", "lang_zh_tw": "പരമ്പരാഗത ചൈനീസ്", "lang_hr": "ക്രൊയേഷ്യൻ", "lang_cs": "ചെക്ക്", "lang_da": "ഡാനിഷ്", "lang_ee": "എവെ", "lang_fi": "ഫിന്നിഷ്", "lang_ht": "ഹെയ്തിയൻ ക്രിയോൾ", "lang_haw": "ഹവായിയൻ", "lang_hi": "ഹിന്ദി", "lang_hu": "ഹംഗേറിയൻ", "lang_ilo": "ഇലോകോ", "lang_jam": "ജമൈക്കൻ ക്രിയോൾ", "lang_lr": "ലൈബീരിയൻ", "lang_mg": "മലഗാസി", "lang_ml": "മലയാളം", "lang_no": "നോർവീജียนൻ", "lang_pap": "പാപിയാമെന്റോ", "lang_pcm": "പിഡ്ജിൻ", "lang_pl": "പോളിഷ്", "lang_ro": "റൊമാനിയൻ", "lang_nso": "സെപെദി", "lang_st": "സെസോതോ", "lang_sk": "സ്ലോവാക്", "lang_sl": "സ്ലോവേനിയൻ", "lang_sv": "സ്വീഡിഷ്", "lang_tl": "തഗാലോഗ്", "lang_ta": "തമിഴ്", "lang_th": "തായ്", "lang_tr": "തുർക്കിഷ്", "lang_tw": "ട്വി", "lang_uk": "ഉക്രേനിയൻ", "lang_xh": "ഖോസ", "lang_zu": "സുലു", "lang_gn": "ഗുറാനി", "lang_qu": "ബൊളീവിയൻ ക്വെച്ചുവ",
+
+  
+  "greeting_morning": "സുപ്രഭാതം,",
+  "greeting_afternoon": "ശുഭദിനം,",
+  "greeting_night": "ശുഭരാത്രി,",
+  "nav_admin_account": "അക്കൗണ്ട് നിയന്ത്രിക്കുക",
+  "nav_close_menu": "മെനു അടയ്ക്കുക",
+  "nav_config": "ക്രമീകരണങ്ങൾ",
+  "nav_congregation": "സഭ",
+  "nav_go_home": "ഹോമിലേക്ക് പോകുക",
+  "nav_help": "സഹായവും സമ്പർക്കവും",
+  "nav_help_contact": "സഹായ-സമ്പർക്ക കേന്ദ്രം",
+  "nav_home": "ഹോം",
+  "nav_logout": "പുറത്തുകടക്കുക",
+  "nav_menu_title": "പ്രധാന മെനു",
+  "nav_my_account": "എന്റെ അക്കൗണ്ട്",
+  "nav_my_account_options": "അക്കൗണ്ട് ഓപ്ഷനുകൾ കാണുക",
+  "nav_my_profile_alt": "എന്റെ പ്രൊഫൈൽ",
+  "nav_open_menu": "മെനു തുറക്കുക",
+  "nav_profile": "എന്റെ പ്രൊഫൈൽ",
+  "nav_profile_admin": "അക്കൗണ്ട് അഡ്മിനിസ്ട്രേഷൻ",
+  "nav_publications": "പ്രസിദ്ധീകരണങ്ങൾ",
+  "nav_publications_mod": "പ്രസിദ്ധീകരണ മൊഡ്യൂൾ",
+  "nav_region": "മേഖല",
+  "nav_security": "ഡിജിറ്റൽ സുരക്ഷ",
+  "nav_security_dig": "ഡിജിറ്റൽ സുരക്ഷ",
+  "nav_system_title": "മാനേജ്മെന്റ് സിസ്റ്റം",
+  "nav_undefined": "നിർവചിച്ചിട്ടില്ല",
+  "region_asia": "ഏഷ്യ",
+  "region_africa": "ആഫ്രിക്ക",
+  "region_europa": "യൂറോപ്പ്",
+  "region_north_america": "വടക്കേ അമേരിക്ക",
+  "region_central_america": "മധ്യ അമേരിക്ക",
+  "region_south_america": "തെക്കേ അമേരിക്ക",
+  "region_oceania": "ഓഷ്യാനിയ"
+
 }

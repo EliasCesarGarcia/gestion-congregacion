@@ -25,5 +25,41 @@
   "device_mobile": "ስልክ",
   "device_pc": "ኮምፒውተር",
 
-  "lang_es": "ስፓኒሽ", "lang_en": "እንግሊዝኛ", "lang_de": "ጀርመንኛ", "lang_fr": "ፈረንሳይኛ", "lang_pt": "ፖርቹጋልኛ", "lang_it": "ጣሊያንኛ", "lang_nl": "ደች", "lang_ru": "ሩሲያኛ", "lang_el": "ግሪክኛ", "lang_ja": "ጃፓንኛ", "lang_zh_cn": "ቀላል ቻይንኛ", "lang_ko": "ኮሪያኛ", "lang_id": "ኢንዶኔዥኛ", "lang_vi": "ቪየትናምኛ", "lang_sw": "ስዋሂሊኛ", "lang_af": "አፍሪካንስ", "lang_sq": "አልባኒያንኛ", "lang_am": "አማርኛ", "lang_ar": "አረብኛ", "lang_he": "ዕብራይስጥ", "lang_ca": "ካታላንኛ", "lang_zh_tw": "ባህላዊ ቻይንኛ", "lang_hr": "ክሮሺያንኛ", "lang_cs": "ቼክኛ", "lang_da": "ዴንማርክኛ", "lang_ee": "ኤዌ", "lang_fi": "ፊንላንድኛ", "lang_ht": "ሀይቲያን ክሪኦል", "lang_haw": "ሃዋይኛ", "lang_hi": "ሂንዱኛ", "lang_hu": "ሀንгаሪኛ", "lang_ilo": "ኢሎካኖ", "lang_jam": "ጃማይካን ክሪኦል", "lang_lr": "ላይቤሪያን", "lang_mg": "ማላጋሲ", "lang_ml": "ማላയാላምኛ", "lang_no": "ኖርዌጂያንኛ", "lang_pap": "ፓፒያሜንቶ", "lang_pcm": "ፒድጂን", "lang_pl": "પોሊሽኛ", "lang_ro": "ሮማንያኛ", "lang_nso": "ሰፔዲ", "lang_st": "ሴሶቶኛ", "lang_sk": "ስলোቫክኛ", "lang_sl": "ስሎቬንያኛ", "lang_sv": "ስዊድንኛ", "lang_tl": "ታጋሎግኛ", "lang_ta": "ታሚልኛ", "lang_th": "ታይኛ", "lang_tr": "ቱರ್ክኛ", "lang_tw": "ትዊ", "lang_uk": "ዩክሬንኛ", "lang_xh": "ኮሳኛ", "lang_zu": "ዙሉኛ", "lang_gn": "ጓራኒኛ", "lang_qu": "ቦሊቪያን ኬቹዋ"
+  "lang_es": "ስፓኒሽ", "lang_en": "እንግሊዝኛ", "lang_de": "ጀርመንኛ", "lang_fr": "ፈረንሳይኛ", "lang_pt": "ፖርቹጋልኛ", "lang_it": "ጣሊያንኛ", "lang_nl": "ደች", "lang_ru": "ሩሲያኛ", "lang_el": "ግሪክኛ", "lang_ja": "ጃፓንኛ", "lang_zh_cn": "ቀላል ቻይንኛ", "lang_ko": "ኮሪያኛ", "lang_id": "ኢንዶኔዥኛ", "lang_vi": "ቪየትናምኛ", "lang_sw": "ስዋሂሊኛ", "lang_af": "አፍሪካንስ", "lang_sq": "አልባኒያንኛ", "lang_am": "አማርኛ", "lang_ar": "አረብኛ", "lang_he": "ዕብራይስጥ", "lang_ca": "ካታላንኛ", "lang_zh_tw": "ባህላዊ ቻይንኛ", "lang_hr": "ክሮሺያንኛ", "lang_cs": "ቼክኛ", "lang_da": "ዴንማርክኛ", "lang_ee": "ኤዌ", "lang_fi": "ፊንላንድኛ", "lang_ht": "ሀይቲያን ክሪኦል", "lang_haw": "ሃዋይኛ", "lang_hi": "ሂንዱኛ", "lang_hu": "ሀንгаሪኛ", "lang_ilo": "ኢሎካኖ", "lang_jam": "ጃማይካን ክሪኦል", "lang_lr": "ላይቤሪያን", "lang_mg": "ማላጋሲ", "lang_ml": "ማላയാላምኛ", "lang_no": "ኖርዌጂያንኛ", "lang_pap": "ፓፒያሜንቶ", "lang_pcm": "ፒድጂን", "lang_pl": "પોሊሽኛ", "lang_ro": "ሮማንያኛ", "lang_nso": "ሰፔዲ", "lang_st": "ሴሶቶኛ", "lang_sk": "ስলোቫክኛ", "lang_sl": "ስሎቬንያኛ", "lang_sv": "ስዊድንኛ", "lang_tl": "ታጋሎግኛ", "lang_ta": "ታሚልኛ", "lang_th": "ታይኛ", "lang_tr": "ቱರ್ክኛ", "lang_tw": "ትዊ", "lang_uk": "ዩክሬንኛ", "lang_xh": "ኮሳኛ", "lang_zu": "ዙሉኛ", "lang_gn": "ጓራኒኛ", "lang_qu": "ቦሊቪያን ኬቹዋ",
+
+  
+  "greeting_morning": "እንደምን አደሩ፣",
+  "greeting_afternoon": "እንደምን ዋሉ፣",
+  "greeting_night": "መልካም ምሽት፣",
+  "nav_admin_account": "መለያ ማስተዳደር",
+  "nav_close_menu": "ምናሌ ዝጋ",
+  "nav_config": "ቅንብሮች",
+  "nav_congregation": "ጉባኤ",
+  "nav_go_home": "ወደ መነሻ ሂድ",
+  "nav_help": "እርዳታ እና ግንኙነት",
+  "nav_help_contact": "የእርዳታ እና ግንኙነት ማእከል",
+  "nav_home": "መነሻ",
+  "nav_logout": "ውጣ",
+  "nav_menu_title": "ዋና ምናሌ",
+  "nav_my_account": "የእኔ መለያ",
+  "nav_my_account_options": "የመለያ አማራጮችን እይ",
+  "nav_my_profile_alt": "የእኔ መገለጫ",
+  "nav_open_menu": "የአሰሳ ምናሌ ክፈት",
+  "nav_profile": "የእኔ መገለጫ",
+  "nav_profile_admin": "የመለያ አስተዳደር",
+  "nav_publications": "ጽሑፎች",
+  "nav_publications_mod": "የጽሑፎች ሞጁል",
+  "nav_region": "ክልል",
+  "nav_security": "ዲጂታል ደህንነት",
+  "nav_security_dig": "ዲጂታል ደህንነት",
+  "nav_system_title": "የአስተዳደር ስርዓት",
+  "nav_undefined": "ያልተገለጸ",
+  "region_asia": "እስያ",
+  "region_africa": "አፍሪካ",
+  "region_europa": "አውሮፓ",
+  "region_north_america": "ሰሜን አሜሪካ",
+  "region_central_america": "መካከለኛው አሜሪካ",
+  "region_south_america": "ደቡብ አሜሪካ",
+  "region_oceania": "ኦሺኒያ"
+
 }

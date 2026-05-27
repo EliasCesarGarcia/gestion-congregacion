@@ -25,5 +25,41 @@
   "device_mobile": "Karurimay",
   "device_pc": "Antañiqiq",
 
-  "lang_es": "Kastilla simi", "lang_en": "Inlis simi", "lang_de": "Aliman simi", "lang_fr": "Fransis simi", "lang_pt": "Purtugis simi", "lang_it": "Italyanu simi", "lang_nl": "Ulandis simi", "lang_ru": "Rus simi", "lang_el": "Griyu simi", "lang_ja": "Nipun simi", "lang_zh_cn": "Chinu simi (Sula)", "lang_ko": "Kuriya simi", "lang_id": "Indunisya simi", "lang_vi": "Wiyetnam simi", "lang_sw": "Swahili simi", "lang_af": "Afrikaans simi", "lang_sq": "Albanya simi", "lang_am": "Amhara simi", "lang_ar": "Arabya simi", "lang_he": "Hebreo simi", "lang_ca": "Katalan simi", "lang_zh_tw": "Chinu simi (Kikin)", "lang_hr": "Krowasya simi", "lang_cs": "Cheko simi", "lang_da": "Danis simi", "lang_ee": "Ewe simi", "lang_fi": "Finis simi", "lang_ht": "Hayiti simi", "lang_haw": "Hawai simi", "lang_hi": "Hindi simi", "lang_hu": "Hungarya simi", "lang_ilo": "Ilocano simi", "lang_jam": "Hamayka simi", "lang_lr": "Liberya simi", "lang_mg": "Madagaskar simi", "lang_ml": "Malayalam simi", "lang_no": "Norwega simi", "lang_pap": "Papiamento simi", "lang_pcm": "Pidgin simi", "lang_pl": "Polonya simi", "lang_ro": "Rumanya simi", "lang_nso": "Sepedi simi", "lang_st": "Sesotho simi", "lang_sk": "Slowakya simi", "lang_sl": "Slowenya simi", "lang_sv": "Suwisya simi", "lang_tl": "Tagalo simi", "lang_ta": "Tamil simi", "lang_th": "Taylandya simi", "lang_tr": "Turkiya simi", "lang_tw": "Twi simi", "lang_uk": "Ukranis simi", "lang_xh": "Xhosa simi", "lang_zu": "Zulu simi", "lang_gn": "Warani simi", "lang_qu": "Runasimi"
+  "lang_es": "Kastilla simi", "lang_en": "Inlis simi", "lang_de": "Aliman simi", "lang_fr": "Fransis simi", "lang_pt": "Purtugis simi", "lang_it": "Italyanu simi", "lang_nl": "Ulandis simi", "lang_ru": "Rus simi", "lang_el": "Griyu simi", "lang_ja": "Nipun simi", "lang_zh_cn": "Chinu simi (Sula)", "lang_ko": "Kuriya simi", "lang_id": "Indunisya simi", "lang_vi": "Wiyetnam simi", "lang_sw": "Swahili simi", "lang_af": "Afrikaans simi", "lang_sq": "Albanya simi", "lang_am": "Amhara simi", "lang_ar": "Arabya simi", "lang_he": "Hebreo simi", "lang_ca": "Katalan simi", "lang_zh_tw": "Chinu simi (Kikin)", "lang_hr": "Krowasya simi", "lang_cs": "Cheko simi", "lang_da": "Danis simi", "lang_ee": "Ewe simi", "lang_fi": "Finis simi", "lang_ht": "Hayiti simi", "lang_haw": "Hawai simi", "lang_hi": "Hindi simi", "lang_hu": "Hungarya simi", "lang_ilo": "Ilocano simi", "lang_jam": "Hamayka simi", "lang_lr": "Liberya simi", "lang_mg": "Madagaskar simi", "lang_ml": "Malayalam simi", "lang_no": "Norwega simi", "lang_pap": "Papiamento simi", "lang_pcm": "Pidgin simi", "lang_pl": "Polonya simi", "lang_ro": "Rumanya simi", "lang_nso": "Sepedi simi", "lang_st": "Sesotho simi", "lang_sk": "Slowakya simi", "lang_sl": "Slowenya simi", "lang_sv": "Suwisya simi", "lang_tl": "Tagalo simi", "lang_ta": "Tamil simi", "lang_th": "Taylandya simi", "lang_tr": "Turkiya simi", "lang_tw": "Twi simi", "lang_uk": "Ukranis simi", "lang_xh": "Xhosa simi", "lang_zu": "Zulu simi", "lang_gn": "Warani simi", "lang_qu": "Runasimi",
+
+  
+  "greeting_morning": "Allin p'unchay,",
+  "greeting_afternoon": "Allin sukhayay,",
+  "greeting_night": "Allin tuta,",
+  "nav_admin_account": "Jallch'ay cuentata",
+  "nav_close_menu": "Wichq'ay tapuyta",
+  "nav_config": "Mubuykuna",
+  "nav_congregation": "T'aqaka",
+  "nav_go_home": "Ripuy qallariyman",
+  "nav_help": "Yanapay ha Tinkuy",
+  "nav_help_contact": "Yanapay ha Tinkuy Wasichay",
+  "nav_home": "Qallariy",
+  "nav_logout": "Lluqsiy",
+  "nav_menu_title": "Hatun Tapuy",
+  "nav_my_account": "Cuentay",
+  "nav_my_account_options": "Rikuy cuentapa mubuykunata",
+  "nav_my_profile_alt": "Rikch'ayniy",
+  "nav_open_menu": "Kichay puriyta",
+  "nav_profile": "Rikch'ayniy",
+  "nav_profile_admin": "Cuentata kamachiy",
+  "nav_publications": "Mayt'ukuna",
+  "nav_publications_mod": "Mayt'ukuna raqi",
+  "nav_region": "Suyu",
+  "nav_security": "Wasi wepe jark'ay",
+  "nav_security_dig": "Wasi wepe jark'ay",
+  "nav_system_title": "Kamachina llikachasqa",
+  "nav_undefined": "Mana riqsisqa",
+  "region_asia": "Asia",
+  "region_africa": "África",
+  "region_europa": "Europa",
+  "region_north_america": "Norte América",
+  "region_central_america": "América Central",
+  "region_south_america": "América del Sur",
+  "region_oceania": "Oceanía"
+
 }

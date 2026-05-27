@@ -25,5 +25,41 @@
   "device_mobile": "Phone",
   "device_pc": "Computer",
 
-  "lang_es": "Spanish", "lang_en": "English", "lang_de": "German", "lang_fr": "French", "lang_pt": "Portuguese", "lang_it": "Italian", "lang_nl": "Dutch", "lang_ru": "Russian", "lang_el": "Greek", "lang_ja": "Japanese", "lang_zh_cn": "Chinese (Simple)", "lang_ko": "Korean", "lang_id": "Indonesian", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabic", "lang_he": "Hebrew", "lang_ca": "Catalan", "lang_zh_tw": "Chinese (Tradition)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Patois", "lang_lr": "Liberian English", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Naijá", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua"
+  "lang_es": "Spanish", "lang_en": "English", "lang_de": "German", "lang_fr": "French", "lang_pt": "Portuguese", "lang_it": "Italian", "lang_nl": "Dutch", "lang_ru": "Russian", "lang_el": "Greek", "lang_ja": "Japanese", "lang_zh_cn": "Chinese (Simple)", "lang_ko": "Korean", "lang_id": "Indonesian", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabic", "lang_he": "Hebrew", "lang_ca": "Catalan", "lang_zh_tw": "Chinese (Tradition)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Patois", "lang_lr": "Liberian English", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Naijá", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+
+  
+  "greeting_morning": "Good morning,",
+  "greeting_afternoon": "Good afternoon,",
+  "greeting_night": "Good evening,",
+  "nav_admin_account": "Manage account",
+  "nav_close_menu": "Close di menu",
+  "nav_config": "Settings",
+  "nav_congregation": "Congregation",
+  "nav_go_home": "Go to home",
+  "nav_help": "Help & Contact",
+  "nav_help_contact": "Center for Help & Contact",
+  "nav_home": "Home",
+  "nav_logout": "Log out",
+  "nav_menu_title": "Main Menu",
+  "nav_my_account": "My Account",
+  "nav_my_account_options": "See options for account",
+  "nav_my_profile_alt": "My profile image",
+  "nav_open_menu": "Open di menu",
+  "nav_profile": "My Profile",
+  "nav_profile_admin": "Account Admin",
+  "nav_publications": "Publications",
+  "nav_publications_mod": "Publications Module",
+  "nav_region": "Region",
+  "nav_security": "Digital Security",
+  "nav_security_dig": "Digital Security",
+  "nav_system_title": "Management System",
+  "nav_undefined": "E no dey set",
+  "region_asia": "Asia",
+  "region_africa": "Africa",
+  "region_europa": "Europe",
+  "region_north_america": "North America",
+  "region_central_america": "Central America",
+  "region_south_america": "South America",
+  "region_oceania": "Oceania"
+
 }

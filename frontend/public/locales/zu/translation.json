@@ -25,5 +25,41 @@
   "device_mobile": "Foni",
   "device_pc": "Ikhompyutha",
 
-  "lang_es": "i-Spanish", "lang_en": "i-English", "lang_de": "i-German", "lang_fr": "i-French", "lang_pt": "i-Portuguese", "lang_it": "i-Italian", "lang_nl": "i-Dutch", "lang_ru": "i-Russian", "lang_el": "i-Greek", "lang_ja": "i-Japanese", "lang_zh_cn": "i-Chinese (esilula)", "lang_ko": "i-Korean", "lang_id": "i-Indonesian", "lang_vi": "i-Vietnamese", "lang_sw": "isiSwahili", "lang_af": "isiAfrikaans", "lang_sq": "isi-Albanian", "lang_am": "isi-Amharic", "lang_ar": "isi-Arabic", "lang_he": "isi-Hebrew", "lang_ca": "isi-Catalan", "lang_zh_tw": "i-Chinese (yesiko)", "lang_hr": "isi-Croatian", "lang_cs": "isi-Czech", "lang_da": "isi-Danish", "lang_ee": "isi-Ewe", "lang_fi": "isi-Finnish", "lang_ht": "isi-Haitian", "lang_haw": "isi-Hawaiian", "lang_hi": "isi-Hindi", "lang_hu": "isi-Hungarian", "lang_ilo": "isi-Ilocano", "lang_jam": "isi-Jamaican", "lang_lr": "isi-Liberian", "lang_mg": "isi-Malagasy", "lang_ml": "isi-Malayalam", "lang_no": "isi-Norwegian", "lang_pap": "isi-Papiamento", "lang_pcm": "isi-Pidgin", "lang_pl": "isi-Polish", "lang_ro": "isi-Romanian", "lang_nso": "isiSepedi", "lang_st": "isiSesotho", "lang_sk": "isi-Slovak", "lang_sl": "isi-Slovenian", "lang_sv": "isi-Swedish", "lang_tl": "isi-Tagalog", "lang_ta": "isi-Tamil", "lang_th": "isi-Thai", "lang_tr": "isi-Turkish", "lang_tw": "isi-Twi", "lang_uk": "isi-Ukrainian", "lang_xh": "isiXhosa", "lang_zu": "isiZulu", "lang_gn": "isi-Guarani", "lang_qu": "isi-Quechua"
+  "lang_es": "i-Spanish", "lang_en": "i-English", "lang_de": "i-German", "lang_fr": "i-French", "lang_pt": "i-Portuguese", "lang_it": "i-Italian", "lang_nl": "i-Dutch", "lang_ru": "i-Russian", "lang_el": "i-Greek", "lang_ja": "i-Japanese", "lang_zh_cn": "i-Chinese (esilula)", "lang_ko": "i-Korean", "lang_id": "i-Indonesian", "lang_vi": "i-Vietnamese", "lang_sw": "isiSwahili", "lang_af": "isiAfrikaans", "lang_sq": "isi-Albanian", "lang_am": "isi-Amharic", "lang_ar": "isi-Arabic", "lang_he": "isi-Hebrew", "lang_ca": "isi-Catalan", "lang_zh_tw": "i-Chinese (yesiko)", "lang_hr": "isi-Croatian", "lang_cs": "isi-Czech", "lang_da": "isi-Danish", "lang_ee": "isi-Ewe", "lang_fi": "isi-Finnish", "lang_ht": "isi-Haitian", "lang_haw": "isi-Hawaiian", "lang_hi": "isi-Hindi", "lang_hu": "isi-Hungarian", "lang_ilo": "isi-Ilocano", "lang_jam": "isi-Jamaican", "lang_lr": "isi-Liberian", "lang_mg": "isi-Malagasy", "lang_ml": "isi-Malayalam", "lang_no": "isi-Norwegian", "lang_pap": "isi-Papiamento", "lang_pcm": "isi-Pidgin", "lang_pl": "isi-Polish", "lang_ro": "isi-Romanian", "lang_nso": "isiSepedi", "lang_st": "isiSesotho", "lang_sk": "isi-Slovak", "lang_sl": "isi-Slovenian", "lang_sv": "isi-Swedish", "lang_tl": "isi-Tagalog", "lang_ta": "isi-Tamil", "lang_th": "isi-Thai", "lang_tr": "isi-Turkish", "lang_tw": "isi-Twi", "lang_uk": "isi-Ukrainian", "lang_xh": "isiXhosa", "lang_zu": "isiZulu", "lang_gn": "isi-Guarani", "lang_qu": "isi-Quechua",
+
+  
+  "greeting_morning": "Sawubona,",
+  "greeting_afternoon": "Sawubona (emini),",
+  "greeting_night": "Sanibonani,",
+  "nav_admin_account": "Phatha i-akhawunti",
+  "nav_close_menu": "Vala imenyu",
+  "nav_config": "Izilungiselelo",
+  "nav_congregation": "Ibandla",
+  "nav_go_home": "Iya ekhaya",
+  "nav_help": "Usizo nokuXhumana",
+  "nav_help_contact": "Isizinda soSizo",
+  "nav_home": "Ikhaya",
+  "nav_logout": "Phuma",
+  "nav_menu_title": "Imenyu Enkulu",
+  "nav_my_account": "I-akhawunti Yami",
+  "nav_my_account_options": "Buka izinketho ze-akhawunti",
+  "nav_my_profile_alt": "Iphrofayili yami",
+  "nav_open_menu": "Vula imenyu yendlela",
+  "nav_profile": "Iphrofayili Yami",
+  "nav_profile_admin": "Ukuphathwa kwe-akhawunti",
+  "nav_publications": "Izincwadi",
+  "nav_publications_mod": "Icandelo lezincwadi",
+  "nav_region": "Isifunda",
+  "nav_security": "Ukuphepha kwe-Intanethi",
+  "nav_security_dig": "Ukuphepha kwe-Intanethi",
+  "nav_system_title": "Isistimu Yokuphatha",
+  "nav_undefined": "Akuchaziwe",
+  "region_asia": "Asia",
+  "region_africa": "Afrika",
+  "region_europa": "Europa",
+  "region_north_america": "Amerika Nyr",
+  "region_central_america": "Amerika Phakathi",
+  "region_south_america": "Amerika eNingizimu",
+  "region_oceania": "Oceania"
+
 }

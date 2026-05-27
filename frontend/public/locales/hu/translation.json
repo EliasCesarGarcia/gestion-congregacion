@@ -25,5 +25,41 @@
   "device_mobile": "Mobil",
   "device_pc": "Számítógép",
 
-  "lang_es": "Spanyol", "lang_en": "Angol", "lang_de": "Német", "lang_fr": "Francia", "lang_pt": "Portugál", "lang_it": "Olasz", "lang_nl": "Holland", "lang_ru": "Orosz", "lang_el": "Görög", "lang_ja": "Japán", "lang_zh_cn": "Kínai (Egyszerűsített)", "lang_ko": "Koreai", "lang_id": "Indonéz", "lang_vi": "Vietnámi", "lang_sw": "Szuahéli", "lang_af": "Afrikaans", "lang_sq": "Albán", "lang_am": "Amhara", "lang_ar": "Arab", "lang_he": "Héber", "lang_ca": "Katalán", "lang_zh_tw": "Kínai (Hagyományos)", "lang_hr": "Horvát", "lang_cs": "Cseh", "lang_da": "Dán", "lang_ee": "Ewe", "lang_fi": "Finn", "lang_ht": "Haiti kreol", "lang_haw": "Havaian", "lang_hi": "Hindi", "lang_hu": "Magyar", "lang_ilo": "Iloko", "lang_jam": "Jamaikai kreol", "lang_lr": "Libériai", "lang_mg": "Malagaszi", "lang_ml": "Malajálam", "lang_no": "Norvég", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Lengyel", "lang_ro": "Román", "lang_nso": "Sepedi", "lang_st": "Sotho", "lang_sk": "Szlovák", "lang_sl": "Szlovén", "lang_sv": "Svéd", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Török", "lang_tw": "Twi", "lang_uk": "Ukrán", "lang_xh": "Xhosza", "lang_zu": "Zulu", "lang_gn": "Guaraní", "lang_qu": "Bolíviai kecsua"
+  "lang_es": "Spanyol", "lang_en": "Angol", "lang_de": "Német", "lang_fr": "Francia", "lang_pt": "Portugál", "lang_it": "Olasz", "lang_nl": "Holland", "lang_ru": "Orosz", "lang_el": "Görög", "lang_ja": "Japán", "lang_zh_cn": "Kínai (Egyszerűsített)", "lang_ko": "Koreai", "lang_id": "Indonéz", "lang_vi": "Vietnámi", "lang_sw": "Szuahéli", "lang_af": "Afrikaans", "lang_sq": "Albán", "lang_am": "Amhara", "lang_ar": "Arab", "lang_he": "Héber", "lang_ca": "Katalán", "lang_zh_tw": "Kínai (Hagyományos)", "lang_hr": "Horvát", "lang_cs": "Cseh", "lang_da": "Dán", "lang_ee": "Ewe", "lang_fi": "Finn", "lang_ht": "Haiti kreol", "lang_haw": "Havaian", "lang_hi": "Hindi", "lang_hu": "Magyar", "lang_ilo": "Iloko", "lang_jam": "Jamaikai kreol", "lang_lr": "Libériai", "lang_mg": "Malagaszi", "lang_ml": "Malajálam", "lang_no": "Norvég", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Lengyel", "lang_ro": "Román", "lang_nso": "Sepedi", "lang_st": "Sotho", "lang_sk": "Szlovák", "lang_sl": "Szlovén", "lang_sv": "Svéd", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Török", "lang_tw": "Twi", "lang_uk": "Ukrán", "lang_xh": "Xhosza", "lang_zu": "Zulu", "lang_gn": "Guaraní", "lang_qu": "Bolíviai kecsua",
+
+  
+  "greeting_morning": "Jó reggelt,",
+  "greeting_afternoon": "Jó napot,",
+  "greeting_night": "Jó estét,",
+  "nav_admin_account": "Fiók kezelése",
+  "nav_close_menu": "Menü bezárása",
+  "nav_config": "Beállítások",
+  "nav_congregation": "Gyülekezet",
+  "nav_go_home": "Főoldalra",
+  "nav_help": "Súgó és kapcsolat",
+  "nav_help_contact": "Súgó és Kapcsolati Központ",
+  "nav_home": "Kezdőlap",
+  "nav_logout": "Kijelentkezés",
+  "nav_menu_title": "Főmenü",
+  "nav_my_account": "Fiókom",
+  "nav_my_account_options": "Fiókbeállítások megtekintése",
+  "nav_my_profile_alt": "Profilom",
+  "nav_open_menu": "Navigációs menü megnyitása",
+  "nav_profile": "Profilom",
+  "nav_profile_admin": "Fiók adminisztráció",
+  "nav_publications": "Kiadványok",
+  "nav_publications_mod": "Kiadványok modul",
+  "nav_region": "Régió",
+  "nav_security": "Digitális biztonság",
+  "nav_security_dig": "Digitális biztonság",
+  "nav_system_title": "Kezelőrendszer",
+  "nav_undefined": "Nincs meghatározva",
+  "region_asia": "Ázsia",
+  "region_africa": "Afrika",
+  "region_europa": "Európa",
+  "region_north_america": "Észak-Amerika",
+  "region_central_america": "Közép-Amerika",
+  "region_south_america": "Dél-Amerika",
+  "region_oceania": "Óceánia"
+
 }

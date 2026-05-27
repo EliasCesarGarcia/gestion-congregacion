@@ -25,5 +25,41 @@
   "device_mobile": "มือถือ",
   "device_pc": "คอมพิวเตอร์",
 
-  "lang_es": "สเปน", "lang_en": "อังกฤษ", "lang_de": "เยอรมัน", "lang_fr": "ฝรั่งเศส", "lang_pt": "โปรตุเกส", "lang_it": "อิตาลี", "lang_nl": "ดัตช์", "lang_ru": "รัสเซีย", "lang_el": "กรีก", "lang_ja": "ญี่ปุ่น", "lang_zh_cn": "จีนตัวย่อ", "lang_ko": "เกาหลี", "lang_id": "อินโดนีเซีย", "lang_vi": "เวียดนาม", "lang_sw": "สวาฮีลี", "lang_af": "แอฟริกานส์", "lang_sq": "แอลเบเนีย", "lang_am": "อัมฮาริก", "lang_ar": "อาหรับ", "lang_he": "ฮิบรู", "lang_ca": "คาตาลัน", "lang_zh_tw": "จีนตัวเต็ม", "lang_hr": "โครเอเชีย", "lang_cs": "เช็ก", "lang_da": "เดนมาร์ก", "lang_ee": "เอเว่", "lang_fi": "ฟินแลนด์", "lang_ht": "เฮติครีโอล", "lang_haw": "ฮาวาย", "lang_hi": "ฮินดี", "lang_hu": "ฮังการี", "lang_ilo": "อิโลกาโน", "lang_jam": "จาเมกาครีโอล", "lang_lr": "ไลบีเรีย", "lang_mg": "มาลากาซี", "lang_ml": "มลายาลัม", "lang_no": "นอร์เวย์", "lang_pap": "ปาเปียเมนตู", "lang_pcm": "พิดจิน", "lang_pl": "โปแลนด์", "lang_ro": "โรมาเนีย", "lang_nso": "เซเปดี", "lang_st": "เซโซโท", "lang_sk": "สโลวัก", "lang_sl": "สโลวีเนีย", "lang_sv": "สวีเดน", "lang_tl": "ตากาล็อก", "lang_ta": "ทมิฬ", "lang_th": "ไทย", "lang_tr": "ตุรกี", "lang_tw": "ทวี", "lang_uk": "ยูเครน", "lang_xh": "โคซา", "lang_zu": "ซูลู", "lang_gn": "กัวรานี", "lang_qu": "เคชัวโบลิเวีย"
+  "lang_es": "สเปน", "lang_en": "อังกฤษ", "lang_de": "เยอรมัน", "lang_fr": "ฝรั่งเศส", "lang_pt": "โปรตุเกส", "lang_it": "อิตาลี", "lang_nl": "ดัตช์", "lang_ru": "รัสเซีย", "lang_el": "กรีก", "lang_ja": "ญี่ปุ่น", "lang_zh_cn": "จีนตัวย่อ", "lang_ko": "เกาหลี", "lang_id": "อินโดนีเซีย", "lang_vi": "เวียดนาม", "lang_sw": "สวาฮีลี", "lang_af": "แอฟริกานส์", "lang_sq": "แอลเบเนีย", "lang_am": "อัมฮาริก", "lang_ar": "อาหรับ", "lang_he": "ฮิบรู", "lang_ca": "คาตาลัน", "lang_zh_tw": "จีนตัวเต็ม", "lang_hr": "โครเอเชีย", "lang_cs": "เช็ก", "lang_da": "เดนมาร์ก", "lang_ee": "เอเว่", "lang_fi": "ฟินแลนด์", "lang_ht": "เฮติครีโอล", "lang_haw": "ฮาวาย", "lang_hi": "ฮินดี", "lang_hu": "ฮังการี", "lang_ilo": "อิโลกาโน", "lang_jam": "จาเมกาครีโอล", "lang_lr": "ไลบีเรีย", "lang_mg": "มาลากาซี", "lang_ml": "มลายาลัม", "lang_no": "นอร์เวย์", "lang_pap": "ปาเปียเมนตู", "lang_pcm": "พิดจิน", "lang_pl": "โปแลนด์", "lang_ro": "โรมาเนีย", "lang_nso": "เซเปดี", "lang_st": "เซโซโท", "lang_sk": "สโลวัก", "lang_sl": "สโลวีเนีย", "lang_sv": "สวีเดน", "lang_tl": "ตากาล็อก", "lang_ta": "ทมิฬ", "lang_th": "ไทย", "lang_tr": "ตุรกี", "lang_tw": "ทวี", "lang_uk": "ยูเครน", "lang_xh": "โคซา", "lang_zu": "ซูลู", "lang_gn": "กัวรานี", "lang_qu": "เคชัวโบลิเวีย",
+
+  
+  "greeting_morning": "อรุณสวัสดิ์,",
+  "greeting_afternoon": "สวัสดีตอนบ่าย,",
+  "greeting_night": "ราตรีสวัสดิ์,",
+  "nav_admin_account": "จัดการบัญชี",
+  "nav_close_menu": "ปิดเมนู",
+  "nav_config": "การตั้งค่า",
+  "nav_congregation": "ประชาคม",
+  "nav_go_home": "ไปที่หน้าแรก",
+  "nav_help": "ความช่วยเหลือและติดต่อ",
+  "nav_help_contact": "ศูนย์ช่วยเหลือและติดต่อ",
+  "nav_home": "หน้าแรก",
+  "nav_logout": "ออกจากระบบ",
+  "nav_menu_title": "เมนูหลัก",
+  "nav_my_account": "บัญชีของฉัน",
+  "nav_my_account_options": "ดูตัวเลือกบัญชี",
+  "nav_my_profile_alt": "โปรไฟล์ของฉัน",
+  "nav_open_menu": "เปิดเมนูนำทาง",
+  "nav_profile": "โปรไฟล์ของฉัน",
+  "nav_profile_admin": "การจัดการบัญชี",
+  "nav_publications": "สิ่งพิมพ์",
+  "nav_publications_mod": "ระบบงานสิ่งพิมพ์",
+  "nav_region": "ภูมิภาค",
+  "nav_security": "ความปลอดภัยดิจิทัล",
+  "nav_security_dig": "ความปลอดภัยดิจิทัล",
+  "nav_system_title": "ระบบการจัดการ",
+  "nav_undefined": "ไม่ได้กำหนด",
+  "region_asia": "เอเชีย",
+  "region_africa": "แอฟริกา",
+  "region_europa": "ยุโรป",
+  "region_north_america": "อเมริกาเหนือ",
+  "region_central_america": "อเมริกากลาง",
+  "region_south_america": "อเมริกาใต้",
+  "region_oceania": "โอเชียเนีย"
+
 }

@@ -25,5 +25,41 @@
   "device_mobile": "Celular",
   "device_pc": "Kompjuter",
 
-  "lang_es": "Spanjisht", "lang_en": "Anglisht", "lang_de": "Gjermanisht", "lang_fr": "Frëngjisht", "lang_pt": "Portugezisht", "lang_it": "Italisht", "lang_nl": "Holandisht", "lang_ru": "Rusisht", "lang_el": "Greqisht", "lang_ja": "Japonisht", "lang_zh_cn": "Kinezisht (e thjeshtuar)", "lang_ko": "Koreanisht", "lang_id": "Indonezisht", "lang_vi": "Vietnamisht", "lang_sw": "Suahilisht", "lang_af": "Afrikaans", "lang_sq": "Albanisht", "lang_am": "Amharisht", "lang_ar": "Arabisht", "lang_he": "Hebraisht", "lang_ca": "Katalanisht", "lang_zh_tw": "Kinezisht (tradicionale)", "lang_hr": "Kroatisht", "lang_cs": "Çekisht", "lang_da": "Danisht", "lang_ee": "Ewe", "lang_fi": "Finandisht", "lang_ht": "Kreole haitiane", "lang_haw": "Havajisht", "lang_hi": "Hindisht", "lang_hu": "Hungarisht", "lang_ilo": "Ilokano", "lang_jam": "Kreole xhamajkane", "lang_lr": "Liberiane", "lang_mg": "Madagaskare", "lang_ml": "Malajalamisht", "lang_no": "Norvegjisht", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polonisht", "lang_ro": "Rumanisht", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Sllovakisht", "lang_sl": "Sllovenisht", "lang_sv": "Suedisht", "lang_tl": "Tagalog", "lang_ta": "Tamilisht", "lang_th": "Tajlandisht", "lang_tr": "Turqisht", "lang_tw": "Twi", "lang_uk": "Ukrainisht", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guaranisht", "lang_qu": "Kexhua boliviane"
+  "lang_es": "Spanjisht", "lang_en": "Anglisht", "lang_de": "Gjermanisht", "lang_fr": "Frëngjisht", "lang_pt": "Portugezisht", "lang_it": "Italisht", "lang_nl": "Holandisht", "lang_ru": "Rusisht", "lang_el": "Greqisht", "lang_ja": "Japonisht", "lang_zh_cn": "Kinezisht (e thjeshtuar)", "lang_ko": "Koreanisht", "lang_id": "Indonezisht", "lang_vi": "Vietnamisht", "lang_sw": "Suahilisht", "lang_af": "Afrikaans", "lang_sq": "Albanisht", "lang_am": "Amharisht", "lang_ar": "Arabisht", "lang_he": "Hebraisht", "lang_ca": "Katalanisht", "lang_zh_tw": "Kinezisht (tradicionale)", "lang_hr": "Kroatisht", "lang_cs": "Çekisht", "lang_da": "Danisht", "lang_ee": "Ewe", "lang_fi": "Finandisht", "lang_ht": "Kreole haitiane", "lang_haw": "Havajisht", "lang_hi": "Hindisht", "lang_hu": "Hungarisht", "lang_ilo": "Ilokano", "lang_jam": "Kreole xhamajkane", "lang_lr": "Liberiane", "lang_mg": "Madagaskare", "lang_ml": "Malajalamisht", "lang_no": "Norvegjisht", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polonisht", "lang_ro": "Rumanisht", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Sllovakisht", "lang_sl": "Sllovenisht", "lang_sv": "Suedisht", "lang_tl": "Tagalog", "lang_ta": "Tamilisht", "lang_th": "Tajlandisht", "lang_tr": "Turqisht", "lang_tw": "Twi", "lang_uk": "Ukrainisht", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guaranisht", "lang_qu": "Kexhua boliviane",
+
+  
+  "greeting_morning": "Mirëmëngjes,",
+  "greeting_afternoon": "Mirëdita,",
+  "greeting_night": "Mirëmbrëma,",
+  "nav_admin_account": "Menaxho llogarinë",
+  "nav_close_menu": "Mbyll menunë",
+  "nav_config": "Cilësimet",
+  "nav_congregation": "Kongregacioni",
+  "nav_go_home": "Shko tek fillimi",
+  "nav_help": "Ndihmë & Kontakt",
+  "nav_help_contact": "Qendra e Ndihmës & Kontaktit",
+  "nav_home": "Fillimi",
+  "nav_logout": "Dil",
+  "nav_menu_title": "Menuja Kryesore",
+  "nav_my_account": "Llogaria Ime",
+  "nav_my_account_options": "Shiko opsionet e llogarisë",
+  "nav_my_profile_alt": "Profili im",
+  "nav_open_menu": "Hap menunë e lundrimit",
+  "nav_profile": "Profili Im",
+  "nav_profile_admin": "Administrimi i Llogarisë",
+  "nav_publications": "Botimet",
+  "nav_publications_mod": "Moduli i Botimeve",
+  "nav_region": "Rajoni",
+  "nav_security": "Siguria Dixhitale",
+  "nav_security_dig": "Siguria Dixhitale",
+  "nav_system_title": "Sistemi i Menaxhimit",
+  "nav_undefined": "E papërcaktuar",
+  "region_asia": "Azi",
+  "region_africa": "Afrikë",
+  "region_europa": "Evropë",
+  "region_north_america": "Amerika e Veriut",
+  "region_central_america": "Amerika Qendrore",
+  "region_south_america": "Amerika e Jugut",
+  "region_oceania": "Oqeani"
+
 }

@@ -25,5 +25,41 @@
   "device_mobile": "Founu",
   "device_pc": "Khomphutha",
 
-  "lang_es": "Sefapaniki", "lang_en": "Seesemane", "lang_de": "Sejeremane", "lang_fr": "Sefora", "lang_pt": "Sepotokisi", "lang_it": "Seitaliana", "lang_nl": "Sedatšhe", "lang_ru": "Seruša", "lang_el": "Segerika", "lang_ja": "Sejapane", "lang_zh_cn": "Sechina (Seo se nolofaditšwego)", "lang_ko": "Sekorea", "lang_id": "Seindonesia", "lang_vi": "Sevietnam", "lang_sw": "Seswahili", "lang_af": "Seafrikaanse", "lang_sq": "Sealbania", "lang_am": "Seamhariki", "lang_ar": "Searabia", "lang_he": "Sehebere", "lang_ca": "Secatalan", "lang_zh_tw": "Sechina (Se seng sa setšo)", "lang_hr": "Sekroasia", "lang_cs": "Setšheka", "lang_da": "Sedanish", "lang_ee": "Se-ewe", "lang_fi": "Sefinnish", "lang_ht": "Se-haiti", "lang_haw": "Se-hawaii", "lang_hi": "Sehindi", "lang_hu": "Sehungary", "lang_ilo": "Se-ilocano", "lang_jam": "Se-jamaica", "lang_lr": "Se-liberia", "lang_mg": "Semalgasy", "lang_ml": "Semalayalam", "lang_no": "Senorwegian", "lang_pap": "Sepapiamento", "lang_pcm": "Sepidgin", "lang_pl": "Sepolish", "lang_ro": "Seromania", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Seslovakia", "lang_sl": "Seslovenia", "lang_sv": "Sesweden", "lang_tl": "Setagalog", "lang_ta": "Setamil", "lang_th": "Sethai", "lang_tr": "Seturkish", "lang_tw": "Setwi", "lang_uk": "Seukraine", "lang_xh": "Sexhosa", "lang_zu": "Sezulu", "lang_gn": "Seguarani", "lang_qu": "Sequechua"
+  "lang_es": "Sefapaniki", "lang_en": "Seesemane", "lang_de": "Sejeremane", "lang_fr": "Sefora", "lang_pt": "Sepotokisi", "lang_it": "Seitaliana", "lang_nl": "Sedatšhe", "lang_ru": "Seruša", "lang_el": "Segerika", "lang_ja": "Sejapane", "lang_zh_cn": "Sechina (Seo se nolofaditšwego)", "lang_ko": "Sekorea", "lang_id": "Seindonesia", "lang_vi": "Sevietnam", "lang_sw": "Seswahili", "lang_af": "Seafrikaanse", "lang_sq": "Sealbania", "lang_am": "Seamhariki", "lang_ar": "Searabia", "lang_he": "Sehebere", "lang_ca": "Secatalan", "lang_zh_tw": "Sechina (Se seng sa setšo)", "lang_hr": "Sekroasia", "lang_cs": "Setšheka", "lang_da": "Sedanish", "lang_ee": "Se-ewe", "lang_fi": "Sefinnish", "lang_ht": "Se-haiti", "lang_haw": "Se-hawaii", "lang_hi": "Sehindi", "lang_hu": "Sehungary", "lang_ilo": "Se-ilocano", "lang_jam": "Se-jamaica", "lang_lr": "Se-liberia", "lang_mg": "Semalgasy", "lang_ml": "Semalayalam", "lang_no": "Senorwegian", "lang_pap": "Sepapiamento", "lang_pcm": "Sepidgin", "lang_pl": "Sepolish", "lang_ro": "Seromania", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Seslovakia", "lang_sl": "Seslovenia", "lang_sv": "Sesweden", "lang_tl": "Setagalog", "lang_ta": "Setamil", "lang_th": "Sethai", "lang_tr": "Seturkish", "lang_tw": "Setwi", "lang_uk": "Seukraine", "lang_xh": "Sexhosa", "lang_zu": "Sezulu", "lang_gn": "Seguarani", "lang_qu": "Sequechua",
+
+  
+  "greeting_morning": "Mmoro,",
+  "greeting_afternoon": "Dumela,",
+  "greeting_night": "Fonane,",
+  "nav_admin_account": "Laola akhaonto",
+  "nav_close_menu": "Koala lenaneo",
+  "nav_config": "Dipehelo",
+  "nav_congregation": "Phuthego",
+  "nav_go_home": "Eya gae",
+  "nav_help": "Thuso le Kgokahano",
+  "nav_help_contact": "Senthara ya Thuso",
+  "nav_home": "Gae",
+  "nav_logout": "Tswa weping",
+  "nav_menu_title": "Lenaneo le fihlelang",
+  "nav_my_account": "Akhaonto ya ka",
+  "nav_my_account_options": "Bona tseo o ka di kgethang",
+  "nav_my_profile_alt": "Profil ya ka",
+  "nav_open_menu": "Bula lenaneo la tsela",
+  "nav_profile": "Profil ya ka",
+  "nav_profile_admin": "Tsamaiso ya Akhaonto",
+  "nav_publications": "Dipuku",
+  "nav_publications_mod": "Karolo ya Dipuku",
+  "nav_region": "Sebaka",
+  "nav_security": "Tshireletso ya Inthaneteng",
+  "nav_security_dig": "Tshireletso ya Inthaneteng",
+  "nav_system_title": "Tshebetso ya Tsamaiso",
+  "nav_undefined": "Ha e so hlaloswe",
+  "region_asia": "Asia",
+  "region_africa": "Afrika",
+  "region_europa": "Europa",
+  "region_north_america": "Amerika Leboa",
+  "region_central_america": "Amerika Gare",
+  "region_south_america": "Amerika Borwa",
+  "region_oceania": "Oceania"
+
 }

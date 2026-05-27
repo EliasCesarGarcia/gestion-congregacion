@@ -25,5 +25,41 @@
   "device_mobile": "Pumbyry",
   "device_pc": "Mohendaha",
 
-  "lang_es": "Karaiñe'ẽ", "lang_en": "Inglesñe'ẽ", "lang_de": "Alemañañe'ẽ", "lang_fr": "Fransiañe'ẽ", "lang_pt": "Portuguéñe'ẽ", "lang_it": "Italiañe'ẽ", "lang_nl": "Holandañe'ẽ", "lang_ru": "Rusiañe'ẽ", "lang_el": "Griekonye'ẽ", "lang_ja": "Hapoñe'ẽ", "lang_zh_cn": "Chinoñe'ẽ sa'i", "lang_ko": "Koreañe'ẽ", "lang_id": "Indonesiañe'ẽ", "lang_vi": "Vietnamñe'ẽ", "lang_sw": "Suahiliñe'ẽ", "lang_af": "Afrikaansñe'ẽ", "lang_sq": "Albaniañe'ẽ", "lang_am": "Amharañe'ẽ", "lang_ar": "Arabeñe'ẽ", "lang_he": "Hebreoñe'ẽ", "lang_ca": "Katalãñe'ẽ", "lang_zh_tw": "Chinoñe'ẽ tee", "lang_hr": "Kroasiañe'ẽ", "lang_cs": "Chekoñe'ẽ", "lang_da": "Daneñe'ẽ", "lang_ee": "Eweñe'ẽ", "lang_fi": "Finlandiañe'ẽ", "lang_ht": "Haitiñe'ẽ", "lang_haw": "Hawaiñe'ẽ", "lang_hi": "Hindiñe'ẽ", "lang_hu": "Hungariañe'ẽ", "lang_ilo": "Ilokoñe'ẽ", "lang_jam": "Jamaikañe'ẽ", "lang_lr": "Liberiañe'ẽ", "lang_mg": "Madagaskarñe'ẽ", "lang_ml": "Malajalamñe'ẽ", "lang_no": "Noruegañe'ẽ", "lang_pap": "Papiamentoñe'ẽ", "lang_pcm": "Pidginñe'ẽ", "lang_pl": "Poloniañe'ẽ", "lang_ro": "Romaniañe'ẽ", "lang_nso": "Sepediñe'ẽ", "lang_st": "Sesothoñe'ẽ", "lang_sk": "Slovakiañe'ẽ", "lang_sl": "Sloveniañe'ẽ", "lang_sv": "Suesiañe'ẽ", "lang_tl": "Tagaloñe'ẽ", "lang_ta": "Tamilñe'ẽ", "lang_th": "Tailandiañe'ẽ", "lang_tr": "Turkiañe'ẽ", "lang_tw": "Twiñe'ẽ", "lang_uk": "Ukraniañe'ẽ", "lang_xh": "Xhosañe'ẽ", "lang_zu": "Zuluñe'ẽ", "lang_gn": "Avañe'ẽ", "lang_qu": "Kichuañe'ẽ"
+  "lang_es": "Karaiñe'ẽ", "lang_en": "Inglesñe'ẽ", "lang_de": "Alemañañe'ẽ", "lang_fr": "Fransiañe'ẽ", "lang_pt": "Portuguéñe'ẽ", "lang_it": "Italiañe'ẽ", "lang_nl": "Holandañe'ẽ", "lang_ru": "Rusiañe'ẽ", "lang_el": "Griekonye'ẽ", "lang_ja": "Hapoñe'ẽ", "lang_zh_cn": "Chinoñe'ẽ sa'i", "lang_ko": "Koreañe'ẽ", "lang_id": "Indonesiañe'ẽ", "lang_vi": "Vietnamñe'ẽ", "lang_sw": "Suahiliñe'ẽ", "lang_af": "Afrikaansñe'ẽ", "lang_sq": "Albaniañe'ẽ", "lang_am": "Amharañe'ẽ", "lang_ar": "Arabeñe'ẽ", "lang_he": "Hebreoñe'ẽ", "lang_ca": "Katalãñe'ẽ", "lang_zh_tw": "Chinoñe'ẽ tee", "lang_hr": "Kroasiañe'ẽ", "lang_cs": "Chekoñe'ẽ", "lang_da": "Daneñe'ẽ", "lang_ee": "Eweñe'ẽ", "lang_fi": "Finlandiañe'ẽ", "lang_ht": "Haitiñe'ẽ", "lang_haw": "Hawaiñe'ẽ", "lang_hi": "Hindiñe'ẽ", "lang_hu": "Hungariañe'ẽ", "lang_ilo": "Ilokoñe'ẽ", "lang_jam": "Jamaikañe'ẽ", "lang_lr": "Liberiañe'ẽ", "lang_mg": "Madagaskarñe'ẽ", "lang_ml": "Malajalamñe'ẽ", "lang_no": "Noruegañe'ẽ", "lang_pap": "Papiamentoñe'ẽ", "lang_pcm": "Pidginñe'ẽ", "lang_pl": "Poloniañe'ẽ", "lang_ro": "Romaniañe'ẽ", "lang_nso": "Sepediñe'ẽ", "lang_st": "Sesothoñe'ẽ", "lang_sk": "Slovakiañe'ẽ", "lang_sl": "Sloveniañe'ẽ", "lang_sv": "Suesiañe'ẽ", "lang_tl": "Tagaloñe'ẽ", "lang_ta": "Tamilñe'ẽ", "lang_th": "Tailandiañe'ẽ", "lang_tr": "Turkiañe'ẽ", "lang_tw": "Twiñe'ẽ", "lang_uk": "Ukraniañe'ẽ", "lang_xh": "Xhosañe'ẽ", "lang_zu": "Zuluñe'ẽ", "lang_gn": "Avañe'ẽ", "lang_qu": "Kichuañe'ẽ",
+
+  
+  "greeting_morning": "Mba'éichapa ndepyhare,",
+  "greeting_afternoon": "Tandeka'aru porãite,",
+  "greeting_night": "Ka'aru porã,",
+  "nav_admin_account": "Eñangareko ne kuéntare",
+  "nav_close_menu": "Emboty tembiapo",
+  "nav_config": "Mba'ereko mbohekopy",
+  "nav_congregation": "Aty guasu",
+  "nav_go_home": "Tereho mbytépe",
+  "nav_help": "Pytyvõ ha Ñe'ẽndy",
+  "nav_help_contact": "Mbyte Pytyvõ ha Ñe'ẽndy",
+  "nav_home": "Mbyte",
+  "nav_logout": "Eheja tembiapo",
+  "nav_menu_title": "Aty Porã Guasu",
+  "nav_my_account": "Che Kuénta",
+  "nav_my_account_options": "Ehecha mba'e iporãva ne kuéntare",
+  "nav_my_profile_alt": "Che ra'anga",
+  "nav_open_menu": "Eipe'a tembiapojere",
+  "nav_profile": "Che Rekove",
+  "nav_profile_admin": "Sãmbyhykuéra ne kuéntare",
+  "nav_publications": "Kuatiahakuéra",
+  "nav_publications_mod": "Kuatiahakuéra mbyte",
+  "nav_region": "Región",
+  "nav_security": "Mo'ãha wepe",
+  "nav_security_dig": "Mo'ãha wepe",
+  "nav_system_title": "Sãmbyhykuéra Mbyte",
+  "nav_undefined": "Mbohekopy'ỹva",
+  "region_asia": "Asia",
+  "region_africa": "África",
+  "region_europa": "Europa",
+  "region_north_america": "Norte América",
+  "region_central_america": "América Central",
+  "region_south_america": "América del Sur",
+  "region_oceania": "Oceanía"
+
 }

@@ -25,5 +25,41 @@
   "device_mobile": "Kelepona",
   "device_pc": "Kamepiula",
 
-  "lang_es": "Paniolo", "lang_en": "Pelekānia", "lang_de": "Kelemānia", "lang_fr": "Palani", "lang_pt": "Pukikī", "lang_it": "Ikalia", "lang_nl": "Hōlani", "lang_ru": "Rusia", "lang_el": "Helene", "lang_ja": "Iapana", "lang_zh_cn": "Pākē (Māmā)", "lang_ko": "Kōlea", "lang_id": "Inidonesia", "lang_vi": "Wiekanama", "lang_sw": "Suahili", "lang_af": "Aferikana", "lang_sq": "Alebania", "lang_am": "Amehalika", "lang_ar": "Arabia", "lang_he": "Hebela", "lang_ca": "Katalana", "lang_zh_tw": "Pākē (Kuʻuna)", "lang_hr": "Koloasia", "lang_cs": "Teka", "lang_da": "Denemaka", "lang_ee": "Ewe", "lang_fi": "Pinilana", "lang_ht": "Haiki", "lang_haw": "Hawaiʻi", "lang_hi": "Hini", "lang_hu": "Hunakalia", "lang_ilo": "Iloko", "lang_jam": "Iamaika", "lang_lr": "Liberia", "lang_mg": "Malagasi", "lang_ml": "Malaialama", "lang_no": "Norewai", "lang_pap": "Papiameto", "lang_pcm": "Pikina", "lang_pl": "Poloka", "lang_ro": "Romania", "lang_nso": "Sepedi", "lang_st": "Sesoto", "lang_sk": "Solowakia", "lang_sl": "Solowenia", "lang_sv": "Kuekene", "lang_tl": "Takaloka", "lang_ta": "Kamila", "lang_th": "Tailani", "lang_tr": "Tureke", "lang_tw": "Twi", "lang_uk": "Ukelena", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Ualani", "lang_qu": "Ketiua"
+  "lang_es": "Paniolo", "lang_en": "Pelekānia", "lang_de": "Kelemānia", "lang_fr": "Palani", "lang_pt": "Pukikī", "lang_it": "Ikalia", "lang_nl": "Hōlani", "lang_ru": "Rusia", "lang_el": "Helene", "lang_ja": "Iapana", "lang_zh_cn": "Pākē (Māmā)", "lang_ko": "Kōlea", "lang_id": "Inidonesia", "lang_vi": "Wiekanama", "lang_sw": "Suahili", "lang_af": "Aferikana", "lang_sq": "Alebania", "lang_am": "Amehalika", "lang_ar": "Arabia", "lang_he": "Hebela", "lang_ca": "Katalana", "lang_zh_tw": "Pākē (Kuʻuna)", "lang_hr": "Koloasia", "lang_cs": "Teka", "lang_da": "Denemaka", "lang_ee": "Ewe", "lang_fi": "Pinilana", "lang_ht": "Haiki", "lang_haw": "Hawaiʻi", "lang_hi": "Hini", "lang_hu": "Hunakalia", "lang_ilo": "Iloko", "lang_jam": "Iamaika", "lang_lr": "Liberia", "lang_mg": "Malagasi", "lang_ml": "Malaialama", "lang_no": "Norewai", "lang_pap": "Papiameto", "lang_pcm": "Pikina", "lang_pl": "Poloka", "lang_ro": "Romania", "lang_nso": "Sepedi", "lang_st": "Sesoto", "lang_sk": "Solowakia", "lang_sl": "Solowenia", "lang_sv": "Kuekene", "lang_tl": "Takaloka", "lang_ta": "Kamila", "lang_th": "Tailani", "lang_tr": "Tureke", "lang_tw": "Twi", "lang_uk": "Ukelena", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Ualani", "lang_qu": "Ketiua",
+
+  
+  "greeting_morning": "Aloha kakahiaka,",
+  "greeting_afternoon": "Aloha ʻauinalā,",
+  "greeting_night": "Aloha ahiahi,",
+  "nav_admin_account": "Mālama i ka waihona",
+  "nav_close_menu": "E pani i ka papa kuhikuhi",
+  "nav_config": "Nā hoʻonohonoho",
+  "nav_congregation": "Ikehu",
+  "nav_go_home": "E hoʻi i ka home",
+  "nav_help": "Kōkua & Hoʻopili",
+  "nav_help_contact": "Kikowaena Kōkua",
+  "nav_home": "Home",
+  "nav_logout": "E haʻalele",
+  "nav_menu_title": "Papa kuhikuhi nui",
+  "nav_my_account": "Kaʻu Waihona",
+  "nav_my_account_options": "Nānā i nā koho waihona",
+  "nav_my_profile_alt": "Koʻu kiʻi",
+  "nav_open_menu": "Wehe i ka papa kuhikuhi",
+  "nav_profile": "Koʻu Moʻolelo",
+  "nav_profile_admin": "Mālama i ka waihona",
+  "nav_publications": "Nā puke",
+  "nav_publications_mod": "Mokuna puke",
+  "nav_region": "Pōʻaiapuni",
+  "nav_security": "Malu kamepiula",
+  "nav_security_dig": "Malu kamepiula",
+  "nav_system_title": "Pūnaehana mālama",
+  "nav_undefined": "ʻAʻole i wehewehe ʻia",
+  "region_asia": "ʻAsia",
+  "region_africa": "ʻApelika",
+  "region_europa": "ʻEulopa",
+  "region_north_america": "ʻAmelika ʻĀkau",
+  "region_central_america": "ʻAmelika Waena",
+  "region_south_america": "ʻAmelika Hema",
+  "region_oceania": "Oseaenia"
+
 }

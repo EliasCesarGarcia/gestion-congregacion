@@ -25,5 +25,41 @@
   "device_mobile": "Mobiili",
   "device_pc": "Tietokone",
 
-  "lang_es": "Espanja", "lang_en": "Englanti", "lang_de": "Saksa", "lang_fr": "Ranska", "lang_pt": "Portugali", "lang_it": "Italia", "lang_nl": "Hollanti", "lang_ru": "Venäjä", "lang_el": "Kreikka", "lang_ja": "Japani", "lang_zh_cn": "Kiina (Yksinkertaistettu)", "lang_ko": "Korea", "lang_id": "Indonesia", "lang_vi": "Vietnam", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albania", "lang_am": "Amhara", "lang_ar": "Arabia", "lang_he": "Heprea", "lang_ca": "Katalaani", "lang_zh_tw": "Kiina (Perinteinen)", "lang_hr": "Kroatia", "lang_cs": "Tšekki", "lang_da": "Tanska", "lang_ee": "Ewe", "lang_fi": "Suomi", "lang_ht": "Haitinkreoli", "lang_haw": "Havaiji", "lang_hi": "Hindi", "lang_hu": "Unkari", "lang_ilo": "Iloko", "lang_jam": "Jamaikankreoli", "lang_lr": "Liberianenglanti", "lang_mg": "Malagassi", "lang_ml": "Malajalam", "lang_no": "Norja", "lang_pap": "Papiamentu", "lang_pcm": "Nigerianpidgin", "lang_pl": "Puola", "lang_ro": "Romania", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovakia", "lang_sl": "Sloveeni", "lang_sv": "Ruotsi", "lang_tl": "Tagalog", "lang_ta": "Tamili", "lang_th": "Thai", "lang_tr": "Turkki", "lang_tw": "Twi", "lang_uk": "Ukraina", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Ketšua"
+  "lang_es": "Espanja", "lang_en": "Englanti", "lang_de": "Saksa", "lang_fr": "Ranska", "lang_pt": "Portugali", "lang_it": "Italia", "lang_nl": "Hollanti", "lang_ru": "Venäjä", "lang_el": "Kreikka", "lang_ja": "Japani", "lang_zh_cn": "Kiina (Yksinkertaistettu)", "lang_ko": "Korea", "lang_id": "Indonesia", "lang_vi": "Vietnam", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albania", "lang_am": "Amhara", "lang_ar": "Arabia", "lang_he": "Heprea", "lang_ca": "Katalaani", "lang_zh_tw": "Kiina (Perinteinen)", "lang_hr": "Kroatia", "lang_cs": "Tšekki", "lang_da": "Tanska", "lang_ee": "Ewe", "lang_fi": "Suomi", "lang_ht": "Haitinkreoli", "lang_haw": "Havaiji", "lang_hi": "Hindi", "lang_hu": "Unkari", "lang_ilo": "Iloko", "lang_jam": "Jamaikankreoli", "lang_lr": "Liberianenglanti", "lang_mg": "Malagassi", "lang_ml": "Malajalam", "lang_no": "Norja", "lang_pap": "Papiamentu", "lang_pcm": "Nigerianpidgin", "lang_pl": "Puola", "lang_ro": "Romania", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovakia", "lang_sl": "Sloveeni", "lang_sv": "Ruotsi", "lang_tl": "Tagalog", "lang_ta": "Tamili", "lang_th": "Thai", "lang_tr": "Turkki", "lang_tw": "Twi", "lang_uk": "Ukraina", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Ketšua",
+
+  
+  "greeting_morning": "Hyvää huomenta,",
+  "greeting_afternoon": "Hyvää iltapäivää,",
+  "greeting_night": "Hyvää iltaa,",
+  "nav_admin_account": "Hallitse tiliä",
+  "nav_close_menu": "Sulje valikko",
+  "nav_config": "Asetukset",
+  "nav_congregation": "Seurakunta",
+  "nav_go_home": "Mene etusivulle",
+  "nav_help": "Apua & Yhteystiedot",
+  "nav_help_contact": "Tuki- ja yhteystietokeskus",
+  "nav_home": "Etusivu",
+  "nav_logout": "Kirjaudu ulos",
+  "nav_menu_title": "Päävalikko",
+  "nav_my_account": "Oma tili",
+  "nav_my_account_options": "Näytä tilin asetukset",
+  "nav_my_profile_alt": "Oma profiili",
+  "nav_open_menu": "Avaa navigointivalikko",
+  "nav_profile": "Oma profiili",
+  "nav_profile_admin": "Tilin ylläpito",
+  "nav_publications": "Julkaisut",
+  "nav_publications_mod": "Julkaisut-moduuli",
+  "nav_region": "Alue",
+  "nav_security": "Digitaalinen turvallisuus",
+  "nav_security_dig": "Digitaalinen turvallisuus",
+  "nav_system_title": "Hallintajärjestelmä",
+  "nav_undefined": "Määrittelemätön",
+  "region_asia": "Aasia",
+  "region_africa": "Afrikka",
+  "region_europa": "Eurooppa",
+  "region_north_america": "Pohjois-Amerikka",
+  "region_central_america": "Keski-Amerikka",
+  "region_south_america": "Etelä-Amerikka",
+  "region_oceania": "Oseania"
+
 }

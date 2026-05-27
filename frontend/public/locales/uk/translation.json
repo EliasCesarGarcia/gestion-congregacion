@@ -25,5 +25,41 @@
   "device_mobile": "Мобільний",
   "device_pc": "ПК",
 
-  "lang_es": "Іспанська", "lang_en": "Англійська", "lang_de": "Німецька", "lang_fr": "Французька", "lang_pt": "Португальська", "lang_it": "Італійська", "lang_nl": "Нідерландська", "lang_ru": "Російська", "lang_el": "Грецька", "lang_ja": "Японська", "lang_zh_cn": "Китайська (Спрощена)", "lang_ko": "Корейська", "lang_id": "Індонезійська", "lang_vi": "В'єтнамська", "lang_sw": "Суахілі", "lang_af": "Африкаанс", "lang_sq": "Албанська", "lang_am": "Амхарська", "lang_ar": "Арабська", "lang_he": "Іврит", "lang_ca": "Каталонська", "lang_zh_tw": "Китайська (Традиційна)", "lang_hr": "Хорватська", "lang_cs": "Чеська", "lang_da": "Данська", "lang_ee": "Еве", "lang_fi": "Фінська", "lang_ht": "Гаїтянська креольська", "lang_haw": "Гавайська", "lang_hi": "Хінді", "lang_hu": "Угорська", "lang_ilo": "Ілоканська", "lang_jam": "Ямайська креольська", "lang_lr": "Ліберійська", "lang_mg": "Малагасійська", "lang_ml": "Малаялам", "lang_no": "Норвезька", "lang_pap": "Пап'яменто", "lang_pcm": "Піджин", "lang_pl": "Польська", "lang_ro": "Румунська", "lang_nso": "Сепеді", "lang_st": "Сесото", "lang_sk": "Словацька", "lang_sl": "Словенська", "lang_sv": "Шведська", "lang_tl": "Тагальська", "lang_ta": "Тамільська", "lang_th": "Тайська", "lang_tr": "Турецька", "lang_tw": "Тві", "lang_uk": "Українська", "lang_xh": "Коса", "lang_zu": "Зулу", "lang_gn": "Гуарані", "lang_qu": "Кечуа болівійська"
+  "lang_es": "Іспанська", "lang_en": "Англійська", "lang_de": "Німецька", "lang_fr": "Французька", "lang_pt": "Португальська", "lang_it": "Італійська", "lang_nl": "Нідерландська", "lang_ru": "Російська", "lang_el": "Грецька", "lang_ja": "Японська", "lang_zh_cn": "Китайська (Спрощена)", "lang_ko": "Корейська", "lang_id": "Індонезійська", "lang_vi": "В'єтнамська", "lang_sw": "Суахілі", "lang_af": "Африкаанс", "lang_sq": "Албанська", "lang_am": "Амхарська", "lang_ar": "Арабська", "lang_he": "Іврит", "lang_ca": "Каталонська", "lang_zh_tw": "Китайська (Традиційна)", "lang_hr": "Хорватська", "lang_cs": "Чеська", "lang_da": "Данська", "lang_ee": "Еве", "lang_fi": "Фінська", "lang_ht": "Гаїтянська креольська", "lang_haw": "Гавайська", "lang_hi": "Хінді", "lang_hu": "Угорська", "lang_ilo": "Ілоканська", "lang_jam": "Ямайська креольська", "lang_lr": "Ліберійська", "lang_mg": "Малагасійська", "lang_ml": "Малаялам", "lang_no": "Норвезька", "lang_pap": "Пап'яменто", "lang_pcm": "Піджин", "lang_pl": "Польська", "lang_ro": "Румунська", "lang_nso": "Сепеді", "lang_st": "Сесото", "lang_sk": "Словацька", "lang_sl": "Словенська", "lang_sv": "Шведська", "lang_tl": "Тагальська", "lang_ta": "Тамільська", "lang_th": "Тайська", "lang_tr": "Турецька", "lang_tw": "Тві", "lang_uk": "Українська", "lang_xh": "Коса", "lang_zu": "Зулу", "lang_gn": "Гуарані", "lang_qu": "Кечуа болівійська",
+
+  
+  "greeting_morning": "Anɔpa dɛ,",
+  "greeting_afternoon": "Awia dɛ,",
+  "greeting_night": "Anadwo dɛ,",
+  "nav_admin_account": "Siesie w'akawnti",
+  "nav_close_menu": "To menu no mu",
+  "nav_config": "Mpanyinfo nhyehyɛe",
+  "nav_congregation": "Asafo",
+  "nav_go_home": "Kɔ fie",
+  "nav_help": "Mmoa & Nkitahodi",
+  "nav_help_contact": "Mmoa & Nkitahodi Bea",
+  "nav_home": "Fie",
+  "nav_logout": "Fi mu kɔ",
+  "nav_menu_title": "Nnwuma titiriw kwan",
+  "nav_my_account": "M'akawnti",
+  "nav_my_account_options": "Hwɛ nhyehyɛe horow",
+  "nav_my_profile_alt": "Me mfonini",
+  "nav_open_menu": "Bue nkitahodi kwan",
+  "nav_profile": "M'asetra mu",
+  "nav_profile_admin": "Akawnti ho nhyehyɛe",
+  "nav_publications": "Nhomawa horow",
+  "nav_publications_mod": "Nhomawa horow bea",
+  "nav_region": "Ɔmantam",
+  "nav_security": "Banbɔ ho nyansa",
+  "nav_security_dig": "Banbɔ ho nyansa",
+  "nav_system_title": "Nnwuma ho nhyehyɛe",
+  "nav_undefined": "Yɛnkyerɛɛ mu",
+  "region_asia": "Asia",
+  "region_africa": "Afrika",
+  "region_europa": "Europa",
+  "region_north_america": "Atifi Amerika",
+  "region_central_america": "Mfinimfini Amerika",
+  "region_south_america": "Anafo Amerika",
+  "region_oceania": "Oceania"
+
 }

@@ -25,5 +25,41 @@
   "device_mobile": "Mobil",
   "device_pc": "PC",
 
-  "lang_es": "Spaniolă", "lang_en": "Engleză", "lang_de": "Germană", "lang_fr": "Franceză", "lang_pt": "Portugheză", "lang_it": "Italiană", "lang_nl": "Olandeză", "lang_ru": "Rusă", "lang_el": "Greacă", "lang_ja": "Japoneză", "lang_zh_cn": "Chineză (Simplificată)", "lang_ko": "Coreeană", "lang_id": "Indoneziană", "lang_vi": "Vietnameză", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albaneză", "lang_am": "Amharică", "lang_ar": "Arabă", "lang_he": "Ebraică", "lang_ca": "Catalană", "lang_zh_tw": "Chineză (Tradițională)", "lang_hr": "Croată", "lang_cs": "Cehă", "lang_da": "Daneză", "lang_ee": "Ewe", "lang_fi": "Finlandeză", "lang_ht": "Creolă haitiană", "lang_haw": "Hawaiiană", "lang_hi": "Hindi", "lang_hu": "Maghiară", "lang_ilo": "Ilocano", "lang_jam": "Creolă jamaicană", "lang_lr": "Liberiană", "lang_mg": "Malgasă", "lang_ml": "Malayalam", "lang_no": "Norvegiană", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Poloneză", "lang_ro": "Română", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovacă", "lang_sl": "Slovenă", "lang_sv": "Suedeză", "lang_tl": "Tagalog", "lang_ta": "Tamilă", "lang_th": "Thailandeză", "lang_tr": "Turcă", "lang_tw": "Twi", "lang_uk": "Ucraineană", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua boliviană"
+  "lang_es": "Spaniolă", "lang_en": "Engleză", "lang_de": "Germană", "lang_fr": "Franceză", "lang_pt": "Portugheză", "lang_it": "Italiană", "lang_nl": "Olandeză", "lang_ru": "Rusă", "lang_el": "Greacă", "lang_ja": "Japoneză", "lang_zh_cn": "Chineză (Simplificată)", "lang_ko": "Coreeană", "lang_id": "Indoneziană", "lang_vi": "Vietnameză", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albaneză", "lang_am": "Amharică", "lang_ar": "Arabă", "lang_he": "Ebraică", "lang_ca": "Catalană", "lang_zh_tw": "Chineză (Tradițională)", "lang_hr": "Croată", "lang_cs": "Cehă", "lang_da": "Daneză", "lang_ee": "Ewe", "lang_fi": "Finlandeză", "lang_ht": "Creolă haitiană", "lang_haw": "Hawaiiană", "lang_hi": "Hindi", "lang_hu": "Maghiară", "lang_ilo": "Ilocano", "lang_jam": "Creolă jamaicană", "lang_lr": "Liberiană", "lang_mg": "Malgasă", "lang_ml": "Malayalam", "lang_no": "Norvegiană", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Poloneză", "lang_ro": "Română", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovacă", "lang_sl": "Slovenă", "lang_sv": "Suedeză", "lang_tl": "Tagalog", "lang_ta": "Tamilă", "lang_th": "Thailandeză", "lang_tr": "Turcă", "lang_tw": "Twi", "lang_uk": "Ucraineană", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua boliviană",
+
+  
+  "greeting_morning": "Bună dimineața,",
+  "greeting_afternoon": "Bună ziua,",
+  "greeting_night": "Bună seara,",
+  "nav_admin_account": "Administrare cont",
+  "nav_close_menu": "Închide meniul",
+  "nav_config": "Setări",
+  "nav_congregation": "Congregație",
+  "nav_go_home": "Mergi la pagina de pornire",
+  "nav_help": "Ajutor & Contact",
+  "nav_help_contact": "Centrul de Ajutor & Contact",
+  "nav_home": "Pagina de pornire",
+  "nav_logout": "Deconectare",
+  "nav_menu_title": "Meniu Principal",
+  "nav_my_account": "Contul Meu",
+  "nav_my_account_options": "Vizualizare opțiuni cont",
+  "nav_my_profile_alt": "Profilul meu",
+  "nav_open_menu": "Deschide meniul de navigare",
+  "nav_profile": "Profilul Meu",
+  "nav_profile_admin": "Administrare Cont",
+  "nav_publications": "Publicații",
+  "nav_publications_mod": "Modul Publicații",
+  "nav_region": "Regiune",
+  "nav_security": "Securitate Digitală",
+  "nav_security_dig": "Securitate Digitală",
+  "nav_system_title": "Sistem de Gestiune",
+  "nav_undefined": "Nedefinită",
+  "region_asia": "Asia",
+  "region_africa": "Africa",
+  "region_europa": "Europa",
+  "region_north_america": "America de Nord",
+  "region_central_america": "America Centrală",
+  "region_south_america": "America de Sud",
+  "region_oceania": "Oceania"
+
 }

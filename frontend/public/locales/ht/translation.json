@@ -25,5 +25,41 @@
   "device_mobile": "Telefòn",
   "device_pc": "Òdinatè",
 
-  "lang_es": "Espanyòl", "lang_en": "Anglè", "lang_de": "Alman", "lang_fr": "Franse", "lang_pt": "Pòtigè", "lang_it": "Ityalyen", "lang_nl": "Olandè", "lang_ru": "Ris", "lang_el": "Grèk", "lang_ja": "Japonè", "lang_zh_cn": "Chinwa (Senplifye)", "lang_ko": "Koreyen", "lang_id": "Endonezyen", "lang_vi": "Vyetnamyen", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanè", "lang_am": "Amharik", "lang_ar": "Arab", "lang_he": "Ebre", "lang_ca": "Katalan", "lang_zh_tw": "Chinwa (Tradisyonèl)", "lang_hr": "Krowat", "lang_cs": "Tchèk", "lang_da": "Danwa", "lang_ee": "Ewe", "lang_fi": "Finlandè", "lang_ht": "Kreyòl ayisyen", "lang_haw": "Awayen", "lang_hi": "Hindi", "lang_hu": "Ongwa", "lang_ilo": "Ilocano", "lang_jam": "Kreyòl jamaiken", "lang_lr": "Liberyen", "lang_mg": "Malgach", "lang_ml": "Malayalam", "lang_no": "Nòvejyen", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polonè", "lang_ro": "Woumen", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Sloven", "lang_sv": "Sywedwa", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Tayilandè", "lang_tr": "Tiki", "lang_tw": "Twi", "lang_uk": "Ikrenyen", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Kechua bolivyen"
+  "lang_es": "Espanyòl", "lang_en": "Anglè", "lang_de": "Alman", "lang_fr": "Franse", "lang_pt": "Pòtigè", "lang_it": "Ityalyen", "lang_nl": "Olandè", "lang_ru": "Ris", "lang_el": "Grèk", "lang_ja": "Japonè", "lang_zh_cn": "Chinwa (Senplifye)", "lang_ko": "Koreyen", "lang_id": "Endonezyen", "lang_vi": "Vyetnamyen", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanè", "lang_am": "Amharik", "lang_ar": "Arab", "lang_he": "Ebre", "lang_ca": "Katalan", "lang_zh_tw": "Chinwa (Tradisyonèl)", "lang_hr": "Krowat", "lang_cs": "Tchèk", "lang_da": "Danwa", "lang_ee": "Ewe", "lang_fi": "Finlandè", "lang_ht": "Kreyòl ayisyen", "lang_haw": "Awayen", "lang_hi": "Hindi", "lang_hu": "Ongwa", "lang_ilo": "Ilocano", "lang_jam": "Kreyòl jamaiken", "lang_lr": "Liberyen", "lang_mg": "Malgach", "lang_ml": "Malayalam", "lang_no": "Nòvejyen", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polonè", "lang_ro": "Woumen", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Sloven", "lang_sv": "Sywedwa", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Tayilandè", "lang_tr": "Tiki", "lang_tw": "Twi", "lang_uk": "Ikrenyen", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Kechua bolivyen",
+
+  
+  "greeting_morning": "Bonjou,",
+  "greeting_afternoon": "Bonswa (aprèmidi),",
+  "greeting_night": "Bonswa (aswè),",
+  "nav_admin_account": "Jere kont lan",
+  "nav_close_menu": "Fèmen meni",
+  "nav_config": "Konfigirasyon",
+  "nav_congregation": "Kongregasyon",
+  "nav_go_home": "Ale nan paj akèy",
+  "nav_help": "Èd ak Kontak",
+  "nav_help_contact": "Sant Èd ak Kontak",
+  "nav_home": "Paj Akèy",
+  "nav_logout": "Dekonekte",
+  "nav_menu_title": "Meni Prensipal",
+  "nav_my_account": "Kont Mwen",
+  "nav_my_account_options": "Gade opsyon kont mwen",
+  "nav_my_profile_alt": "Pwofil mwen",
+  "nav_open_menu": "Ibe meni navigasyon",
+  "nav_profile": "Pwofil Mwen",
+  "nav_profile_admin": "Administrasyon Kont",
+  "nav_publications": "Piblikasyon",
+  "nav_publications_mod": "Modil Piblikasyon",
+  "nav_region": "Rejyon",
+  "nav_security": "Sekirite Nimeral",
+  "nav_security_dig": "Sekirite Nimeral",
+  "nav_system_title": "Sistèm Jesyon",
+  "nav_undefined": "Pa defini",
+  "region_asia": "Azi",
+  "region_africa": "Afrik",
+  "region_europa": "Ewòp",
+  "region_north_america": "Amerik di Nò",
+  "region_central_america": "Amerik Santral",
+  "region_south_america": "Amerik di Sid",
+  "region_oceania": "Oseyani"
+
 }

@@ -25,5 +25,41 @@
   "device_mobile": "Mobile",
   "device_pc": "Kompyuter",
 
-  "lang_es": "Espanyol", "lang_en": "Ingles", "lang_de": "Aleman", "lang_fr": "Pranses", "lang_pt": "Portuges", "lang_it": "Italyano", "lang_nl": "Olandes", "lang_ru": "Ruso", "lang_el": "Griyego", "lang_ja": "Hapon", "lang_zh_cn": "Tsino (Simple)", "lang_ko": "Koreano", "lang_id": "Indonesiyo", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabe", "lang_he": "Hebreo", "lang_ca": "Catalan", "lang_zh_tw": "Tsino (Tradisyunal)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Creole", "lang_lr": "Liberian English", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua"
+  "lang_es": "Espanyol", "lang_en": "Ingles", "lang_de": "Aleman", "lang_fr": "Pranses", "lang_pt": "Portuges", "lang_it": "Italyano", "lang_nl": "Olandes", "lang_ru": "Ruso", "lang_el": "Griyego", "lang_ja": "Hapon", "lang_zh_cn": "Tsino (Simple)", "lang_ko": "Koreano", "lang_id": "Indonesiyo", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabe", "lang_he": "Hebreo", "lang_ca": "Catalan", "lang_zh_tw": "Tsino (Tradisyunal)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Creole", "lang_lr": "Liberian English", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+
+  
+  "greeting_morning": "Magandang umaga,",
+  "greeting_afternoon": "Magandang hapon,",
+  "greeting_night": "Magandang gabi,",
+  "nav_admin_account": "Pamahalaan ang account",
+  "nav_close_menu": "Isara ang menu",
+  "nav_config": "Mga Setting",
+  "nav_congregation": "Kongregasyon",
+  "nav_go_home": "Pumunta sa home",
+  "nav_help": "Tulong & Contact",
+  "nav_help_contact": "Sentro ng Tulong & Contact",
+  "nav_home": "Home",
+  "nav_logout": "Log out",
+  "nav_menu_title": "Pangunahing Menu",
+  "nav_my_account": "Aking Account",
+  "nav_my_account_options": "Tingnan ang mga opsyon sa account",
+  "nav_my_profile_alt": "Aking profile",
+  "nav_open_menu": "Buksan ang menu ng navigasyon",
+  "nav_profile": "Aking Profile",
+  "nav_profile_admin": "Pamamahala ng Account",
+  "nav_publications": "Mga Publikasyon",
+  "nav_publications_mod": "Modyul ng Publikasyon",
+  "nav_region": "Rehiyon",
+  "nav_security": "Seguridad na Digital",
+  "nav_security_dig": "Seguridad na Digital",
+  "nav_system_title": "Sistema ng Pamamahala",
+  "nav_undefined": "Hindi tinukoy",
+  "region_asia": "Asya",
+  "region_africa": "Afrika",
+  "region_europa": "Europa",
+  "region_north_america": "Hilagang Amerika",
+  "region_central_america": "Gitnang Amerika",
+  "region_south_america": "Timog Amerika",
+  "region_oceania": "Oceania"
+
 }

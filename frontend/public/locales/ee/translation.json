@@ -25,5 +25,41 @@
   "device_mobile": "Kaƒomɔ",
   "device_pc": "Kɔmpiuta",
 
-  "lang_es": "Spaniagbe", "lang_en": "Eŋlisigbe", "lang_de": "Germaniagbe", "lang_fr": "Fransigbe", "lang_pt": "Portugaliagbe", "lang_it": "Italiagbe", "lang_nl": "Hollandgbe", "lang_ru": "Rusiagbe", "lang_el": "Greekgbe", "lang_ja": "Japangbe", "lang_zh_cn": "Chinesegbe (Bɔbɔ)", "lang_ko": "Koreagbe", "lang_id": "Indonesiagbe", "lang_vi": "Vietnamgbe", "lang_sw": "Swahiligbe", "lang_af": "Afrikaansgbe", "lang_sq": "Albaniagbe", "lang_am": "Amharicgbe", "lang_ar": "Arabiagbe", "lang_he": "Hebreogbe", "lang_ca": "Catalangbe", "lang_zh_tw": "Chinesegbe (Kikin)", "lang_hr": "Croatiagbe", "lang_cs": "Czechgbe", "lang_da": "Danishgbe", "lang_ee": "Ewegbe", "lang_fi": "Finnishgbe", "lang_ht": "Haitigbe", "lang_haw": "Hawaiigbe", "lang_hi": "Hindigbe", "lang_hu": "Hungarygbe", "lang_ilo": "Ilocanogbe", "lang_jam": "Jamaicagbe", "lang_lr": "Liberiagbe", "lang_mg": "Malagasigbe", "lang_ml": "Malayalamgbe", "lang_no": "Norwaygbe", "lang_pap": "Papiamentogbe", "lang_pcm": "Pidgingbe", "lang_pl": "Polandgbe", "lang_ro": "Romaniagbe", "lang_nso": "Sepedigbe", "lang_st": "Sesothogbe", "lang_sk": "Slovakiagbe", "lang_sl": "Sloveniagbe", "lang_sv": "Swedengbe", "lang_tl": "Tagaloggbe", "lang_ta": "Tamilgbe", "lang_th": "Thaigbe", "lang_tr": "Turkeygbe", "lang_tw": "Twigbe", "lang_uk": "Ukraingbe", "lang_xh": "Xhosagbe", "lang_zu": "Zulugbe", "lang_gn": "Guaranigbe", "lang_qu": "Quechuagbe"
+  "lang_es": "Spaniagbe", "lang_en": "Eŋlisigbe", "lang_de": "Germaniagbe", "lang_fr": "Fransigbe", "lang_pt": "Portugaliagbe", "lang_it": "Italiagbe", "lang_nl": "Hollandgbe", "lang_ru": "Rusiagbe", "lang_el": "Greekgbe", "lang_ja": "Japangbe", "lang_zh_cn": "Chinesegbe (Bɔbɔ)", "lang_ko": "Koreagbe", "lang_id": "Indonesiagbe", "lang_vi": "Vietnamgbe", "lang_sw": "Swahiligbe", "lang_af": "Afrikaansgbe", "lang_sq": "Albaniagbe", "lang_am": "Amharicgbe", "lang_ar": "Arabiagbe", "lang_he": "Hebreogbe", "lang_ca": "Catalangbe", "lang_zh_tw": "Chinesegbe (Kikin)", "lang_hr": "Croatiagbe", "lang_cs": "Czechgbe", "lang_da": "Danishgbe", "lang_ee": "Ewegbe", "lang_fi": "Finnishgbe", "lang_ht": "Haitigbe", "lang_haw": "Hawaiigbe", "lang_hi": "Hindigbe", "lang_hu": "Hungarygbe", "lang_ilo": "Ilocanogbe", "lang_jam": "Jamaicagbe", "lang_lr": "Liberiagbe", "lang_mg": "Malagasigbe", "lang_ml": "Malayalamgbe", "lang_no": "Norwaygbe", "lang_pap": "Papiamentogbe", "lang_pcm": "Pidgingbe", "lang_pl": "Polandgbe", "lang_ro": "Romaniagbe", "lang_nso": "Sepedigbe", "lang_st": "Sesothogbe", "lang_sk": "Slovakiagbe", "lang_sl": "Sloveniagbe", "lang_sv": "Swedengbe", "lang_tl": "Tagaloggbe", "lang_ta": "Tamilgbe", "lang_th": "Thaigbe", "lang_tr": "Turkeygbe", "lang_tw": "Twigbe", "lang_uk": "Ukraingbe", "lang_xh": "Xhosagbe", "lang_zu": "Zulugbe", "lang_gn": "Guaranigbe", "lang_qu": "Quechuagbe",
+
+  
+  "greeting_morning": "Ŋdi,",
+  "greeting_afternoon": "Ŋdɔ,",
+  "greeting_night": "Fiɛyi,",
+  "nav_admin_account": "Kpɔ nusiwo le akɔnta me",
+  "nav_close_menu": "Tutu nuɖoɖowatɔ",
+  "nav_config": "Nuɖoɖowo",
+  "nav_congregation": "Hame",
+  "nav_go_home": "Yi mɔgbe",
+  "nav_help": "Kpekpeɖeŋu & Kadodo",
+  "nav_help_contact": "Kpekpeɖeŋu & Kadodo Xɔ",
+  "nav_home": "Gɔme",
+  "nav_logout": "Do le eme",
+  "nav_menu_title": "Nuku si le vevie",
+  "nav_my_account": "Nye Akɔnta",
+  "nav_my_account_options": "Kpɔ nye akɔnta me nusiwo li",
+  "nav_my_profile_alt": "Nye nɔnɔmetata",
+  "nav_open_menu": "Ʋu mɔfiametata",
+  "nav_profile": "Nye nɔnɔme",
+  "nav_profile_admin": "Akɔntadzikpɔla dɔ",
+  "nav_publications": "Vichapo",
+  "nav_publications_mod": "Vichapo Dɔwɔƒe",
+  "nav_region": "Nutome",
+  "nav_security": "Kakaɖedzi le internet dzi",
+  "nav_security_dig": "Kakaɖedzi le internet dzi",
+  "nav_system_title": "Dɔwɔƒe Zikpɔtɔ",
+  "nav_undefined": "Womefiae o",
+  "region_asia": "Asia",
+  "region_africa": "Afrika",
+  "region_europa": "Europa",
+  "region_north_america": "Dzigbe Amerika",
+  "region_central_america": "Titina Amerika",
+  "region_south_america": "Anyigbe Amerika",
+  "region_oceania": "Oceania"
+
 }
