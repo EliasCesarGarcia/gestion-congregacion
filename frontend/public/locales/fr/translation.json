@@ -115,6 +115,10 @@
   "region_north_america": "Amérique du Nord",
   "region_central_america": "Amérique Centrale",
   "region_south_america": "Amérique du Sud",
-  "region_oceania": "Océanie"
+  "region_oceania": "Océanie",
+
+  "footer_title": "GESTION LOCALE THÉOCRATIQUE",
+  "footer_use": "Usage Institutionnel",
+  "footer_terms": "Conditions d'Utilisation"
 
 }

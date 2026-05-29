@@ -60,6 +60,10 @@
   "region_north_america": "Pohjois-Amerikka",
   "region_central_america": "Keski-Amerikka",
   "region_south_america": "Etelä-Amerikka",
-  "region_oceania": "Oseania"
+  "region_oceania": "Oseania",
+
+  "footer_title": "TEOKRAATTINEN PAIKALLISHALLINTO",
+  "footer_use": "Institutionaalinen käyttö",
+  "footer_terms": "Käyttöehdot"
 
 }

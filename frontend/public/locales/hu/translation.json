@@ -60,6 +60,10 @@
   "region_north_america": "Észak-Amerika",
   "region_central_america": "Közép-Amerika",
   "region_south_america": "Dél-Amerika",
-  "region_oceania": "Óceánia"
+  "region_oceania": "Óceánia",
+
+  "footer_title": "TEOKRATIKUS HELYI KEZELÉS",
+  "footer_use": "Intézményi használatra",
+  "footer_terms": "Felhasználási feltételek"
 
 }

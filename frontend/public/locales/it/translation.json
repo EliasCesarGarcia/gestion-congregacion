@@ -115,6 +115,10 @@
   "region_north_america": "America del Nord",
   "region_central_america": "America Centrale",
   "region_south_america": "America del Sud",
-  "region_oceania": "Oceania"
+  "region_oceania": "Oceania",
+
+  "footer_title": "GESTIONE LOCALE TEOCRATICA",
+  "footer_use": "Uso Istituzionale",
+  "footer_terms": "Condizioni d'Uso"
 
 }

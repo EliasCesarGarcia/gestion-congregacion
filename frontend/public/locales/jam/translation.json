@@ -60,6 +60,10 @@
   "region_north_america": "North America",
   "region_central_america": "Central America",
   "region_south_america": "South America",
-  "region_oceania": "Oceania"
+  "region_oceania": "Oceania",
+
+  "footer_title": "THEOCRATIC LOCAL MAANIJMENT",
+  "footer_use": "Institutional Use",
+  "footer_terms": "Terms of Use"
 
 }

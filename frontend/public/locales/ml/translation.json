@@ -60,6 +60,10 @@
   "region_north_america": "വടക്കേ അമേരിക്ക",
   "region_central_america": "മധ്യ അമേരിക്ക",
   "region_south_america": "തെക്കേ അമേരിക്ക",
-  "region_oceania": "ഓഷ്യാനിയ"
+  "region_oceania": "ഓഷ്യാനിയ",
+
+  "footer_title": "ദൈവാധിപത്യ പ്രാദേശിക മാനേജ്മെന്റ്",
+  "footer_use": "സ്ഥാപനപരമായ ഉപയോഗം",
+  "footer_terms": "ഉപയോഗ നിബന്ധനകൾ"
 
 }

@@ -115,6 +115,10 @@
   "region_north_america": "Северная Америка",
   "region_central_america": "Центральная Америка",
   "region_south_america": "Южная Америка",
-  "region_oceania": "Океания"
+  "region_oceania": "Океания",
+
+  "footer_title": "ТЕОКРАТИЧЕСКОЕ МЕСТНОЕ УПРАВЛЕНИЕ",
+  "footer_use": "Служебное использование",
+  "footer_terms": "Условия использования"
 
 }

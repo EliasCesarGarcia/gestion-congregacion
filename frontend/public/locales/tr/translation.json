@@ -115,6 +115,10 @@
   "region_north_america": "Kuzey Amerika",
   "region_central_america": "Orta Amerika",
   "region_south_america": "Güney Amerika",
-  "region_oceania": "Okyanusya"
+  "region_oceania": "Okyanusya",
+
+  "footer_title": "TEOKRATİK YEREL YÖNETİM",
+  "footer_use": "Kurumsal Kullanım",
+  "footer_terms": "Kullanım Koşulları"
 
 }

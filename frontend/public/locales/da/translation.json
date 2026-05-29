@@ -115,6 +115,10 @@
   "region_north_america": "Nordamerika",
   "region_central_america": "Centralamerika",
   "region_south_america": "Sydamerika",
-  "region_oceania": "Oceanien"
+  "region_oceania": "Oceanien",
+
+  "footer_title": "TEOKRATISK LOKAL ADMINISTRATION",
+  "footer_use": "Institutionel brug",
+  "footer_terms": "Vilkår for anvendelse"
 
 }

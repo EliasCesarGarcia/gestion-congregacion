@@ -115,6 +115,10 @@
   "region_north_america": "북아메리카",
   "region_central_america": "중앙아메리카",
   "region_south_america": "남아메리카",
-  "region_oceania": "오세아니아"
+  "region_oceania": "오세아니아",
+
+  "footer_title": "신정적 지역 관리",
+  "footer_use": "조직 내 사용",
+  "footer_terms": "이용 약관"
 
 }

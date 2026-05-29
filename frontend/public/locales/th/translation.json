@@ -60,6 +60,10 @@
   "region_north_america": "อเมริกาเหนือ",
   "region_central_america": "อเมริกากลาง",
   "region_south_america": "อเมริกาใต้",
-  "region_oceania": "โอเชียเนีย"
+  "region_oceania": "โอเชียเนีย",
+
+  "footer_title": "การจัดการท้องถิ่นตามระบอบเทวธิปไตย",
+  "footer_use": "การใช้งานภายในองค์กร",
+  "footer_terms": "เงื่อนไขการใช้งาน"
 
 }

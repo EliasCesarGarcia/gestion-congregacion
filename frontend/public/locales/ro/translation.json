@@ -60,6 +60,10 @@
   "region_north_america": "America de Nord",
   "region_central_america": "America Centrală",
   "region_south_america": "America de Sud",
-  "region_oceania": "Oceania"
+  "region_oceania": "Oceania",
+
+  "footer_title": "ADMINISTRARE LOCALĂ TEOCRATICĂ",
+  "footer_use": "Uz Instituțional",
+  "footer_terms": "Condiții de Utilizare"
 
 }

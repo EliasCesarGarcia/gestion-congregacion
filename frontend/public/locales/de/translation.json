@@ -115,6 +115,10 @@
   "region_north_america": "Nordamerika",
   "region_central_america": "Zentralamerika",
   "region_south_america": "Südamerika",
-  "region_oceania": "Ozeanien"
+  "region_oceania": "Ozeanien",
+
+  "footer_title": "THEOKRATISCHE LOKALE VERWALTUNG",
+  "footer_use": "Institutionelle Nutzung",
+  "footer_terms": "Nutzungsbedingungen"
 
 }

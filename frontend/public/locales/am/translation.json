@@ -60,6 +60,10 @@
   "region_north_america": "ሰሜን አሜሪካ",
   "region_central_america": "መካከለኛው አሜሪካ",
   "region_south_america": "ደቡብ አሜሪካ",
-  "region_oceania": "ኦሺኒያ"
+  "region_oceania": "ኦሺኒያ",
+
+  "footer_title": "ቲኦክራሲያዊ አካባቢያዊ አስተዳደር",
+  "footer_use": "ለድርጅታዊ አገልግሎት ብቻ",
+  "footer_terms": "የአጠቃቀም ውሎች"
 
 }

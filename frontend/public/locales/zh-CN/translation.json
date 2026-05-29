@@ -115,6 +115,10 @@
   "region_north_america": "北美洲",
   "region_central_america": "中美洲",
   "region_south_america": "南美洲",
-  "region_oceania": "大洋洲"
+  "region_oceania": "大洋洲",
+
+  "footer_title": "神治地方管理",
+  "footer_use": "机构内部使用",
+  "footer_terms": "使用条款"
 
 }

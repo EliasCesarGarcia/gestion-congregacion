@@ -115,6 +115,10 @@
   "region_north_america": "אמריקה הצפונית",
   "region_central_america": "אמריקה המרכזית",
   "region_south_america": "אמריקה הדרומית",
-  "region_oceania": "אוקיאניה"
+  "region_oceania": "אוקיאניה",
+
+  "footer_title": "ניהול תיאוקרטי מקומי",
+  "footer_use": "שימוש מוסדי",
+  "footer_terms": "תנאי שימוש"
 
 }

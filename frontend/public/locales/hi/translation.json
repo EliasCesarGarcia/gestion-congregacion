@@ -60,6 +60,10 @@
   "region_north_america": "उत्तरी अमेरिका",
   "region_central_america": "मध्य अमेरिका",
   "region_south_america": "दक्षिण अमेरिका",
-  "region_oceania": "ओशिनिया"
+  "region_oceania": "ओशिनिया",
+
+  "footer_title": "ईश्वरशासित स्थानीय प्रबंधन",
+  "footer_use": "संस्थागत उपयोग",
+  "footer_terms": "उपयोग की शर्तें"
 
 }

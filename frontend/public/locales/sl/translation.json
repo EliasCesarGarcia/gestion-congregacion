@@ -60,6 +60,10 @@
   "region_north_america": "Severna Amerika",
   "region_central_america": "Srednja Amerika",
   "region_south_america": "Južna Amerika",
-  "region_oceania": "Oceanija"
+  "region_oceania": "Oceanija",
+
+  "footer_title": "TEOKRATIČNO LOKALNO UPRAVLJANJE",
+  "footer_use": "Uradna uporaba",
+  "footer_terms": "Pogoji uporabe"
 
 }

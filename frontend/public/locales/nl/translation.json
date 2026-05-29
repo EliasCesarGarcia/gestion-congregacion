@@ -115,6 +115,10 @@
   "region_north_america": "Noord-Amerika",
   "region_central_america": "Centraal-Amerika",
   "region_south_america": "Zuid-Amerika",
-  "region_oceania": "Oceanië"
+  "region_oceania": "Oceanië",
+
+  "footer_title": "THEOCRATISCH LOKAAL BEHEER",
+  "footer_use": "Institutioneel Gebruik",
+  "footer_terms": "Gebruiksvoorwaarden"
 
 }

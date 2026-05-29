@@ -115,6 +115,10 @@
   "region_north_america": "Bắc Mỹ",
   "region_central_america": "Trung Mỹ",
   "region_south_america": "Nam Mỹ",
-  "region_oceania": "Châu Đại Dương"
+  "region_oceania": "Châu Đại Dương",
+
+  "footer_title": "QUẢN LÝ ĐỊA PHƯƠNG THẦN QUYỀN",
+  "footer_use": "Sử dụng nội bộ tổ chức",
+  "footer_terms": "Điều khoản sử dụng"
 
 }

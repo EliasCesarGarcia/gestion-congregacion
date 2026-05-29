@@ -60,6 +60,10 @@
   "region_north_america": "Amerika e Veriut",
   "region_central_america": "Amerika Qendrore",
   "region_south_america": "Amerika e Jugut",
-  "region_oceania": "Oqeani"
+  "region_oceania": "Oqeani",
+
+  "footer_title": "ADMINISTRIMI LOKAL TEOKRATIK",
+  "footer_use": "Përdorim Institucional",
+  "footer_terms": "Kushtet e Përdorimit"
 
 }

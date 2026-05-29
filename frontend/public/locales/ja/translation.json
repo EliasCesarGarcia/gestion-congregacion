@@ -115,6 +115,10 @@
   "region_north_america": "北アメリカ",
   "region_central_america": "中央アメリカ",
   "region_south_america": "南アメリカ",
-  "region_oceania": "オセアニア"
+  "region_oceania": "オセアニア",
+
+  "footer_title": "神権的な組織管理",
+  "footer_use": "組織内利用",
+  "footer_terms": "利用規約"
 
 }

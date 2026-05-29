@@ -60,6 +60,10 @@
   "region_north_america": "Amerika Leboa",
   "region_central_america": "Amerika Phakathi",
   "region_south_america": "Amerika eMzantsi",
-  "region_oceania": "Oceania"
+  "region_oceania": "Oceania",
+
+  "footer_title": "ULAWULO LWEBANDLA LWE-TEOKRATIKI",
+  "footer_use": "Ukusetyenziswa kwebandla",
+  "footer_terms": "Imigaqo yokusetyenziswa"
 
 }

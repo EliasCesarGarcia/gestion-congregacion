@@ -60,6 +60,10 @@
   "region_north_america": "Amerika Nyr",
   "region_central_america": "Amerika Phakathi",
   "region_south_america": "Amerika eNingizimu",
-  "region_oceania": "Oceania"
+  "region_oceania": "Oceania",
+
+  "footer_title": "UKUPHATHWA KWEBANDLA KWE-TEOKRATIKI",
+  "footer_use": "Ukusetshenziswa kwebandla",
+  "footer_terms": "Imigomo yokusetshenziswa"
 
 }

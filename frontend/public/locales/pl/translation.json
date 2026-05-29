@@ -115,6 +115,10 @@
   "region_north_america": "Ameryka Północna",
   "region_central_america": "Ameryka Środkowa",
   "region_south_america": "Ameryka Południowa",
-  "region_oceania": "Oceania"
+  "region_oceania": "Oceania",
+
+  "footer_title": "TEOKRATYCZNE LOKALNE ZARZĄDZANIE",
+  "footer_use": "Użytek Instytucjonalny",
+  "footer_terms": "Warunki korzystania"
 
 }

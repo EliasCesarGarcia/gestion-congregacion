@@ -60,6 +60,10 @@
   "region_north_america": "வட அமெரிக்கா",
   "region_central_america": "மத்திய அமெரிக்கா",
   "region_south_america": "தென் அமெரிக்கா",
-  "region_oceania": "ஓசியானியா"
+  "region_oceania": "ஓசியானியா",
+
+  "footer_title": "தேவராஜ்ய உள்ளூர் நிர்வாகம்",
+  "footer_use": "நிறுவன பயன்பாடு",
+  "footer_terms": "பயன்பாட்டு விதிமுறைகள்"
 
 }

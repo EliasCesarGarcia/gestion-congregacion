@@ -115,6 +115,10 @@
   "region_north_america": "أمريكا الشمالية",
   "region_central_america": "أمريكا الوسطى",
   "region_south_america": "أمريكا الجنوبية",
-  "region_oceania": "أوقيانوسيا"
+  "region_oceania": "أوقيانوسيا",
+
+  "footer_title": "الإدارة اللاهوتية المحلية",
+  "footer_use": "الاستخدام المؤسسي",
+  "footer_terms": "شروط الاستخدام"
 
 }
