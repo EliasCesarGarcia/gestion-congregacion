@@ -1,6 +1,6 @@
-// UBICACIÓN: /i18next-parser.config.js (en la raíz del proyecto)
+// UBICACIÓN: frontend/i18next-parser.config.js (en la raíz del proyecto)
 
-// UBICACIÓN: /i18next-parser.config.mjs (nombre nuevo con extensión .mjs)
+// UBICACIÓN: frontend/i18next-parser.config.mjs (nombre nuevo con extensión .mjs)
 export default  {
   // Guarda las claves antiguas en caso de que se eliminen del código
   createOldCatalogs: false, 
