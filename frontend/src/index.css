@@ -258,3 +258,56 @@ body.body-freeze #root footer {
   filter: blur(2px) brightness(0.9);
   pointer-events: none;
 }
+
+/* 
+   ==========================================================
+   --- MOTOR DE DEGRADADOS DINÁMICOS (SISTEMA UNIVERSAL) --- 
+   ==========================================================
+   Esta regla crea el efecto de "espejo" y profundidad en los encabezados
+   de los menús, adaptándose automáticamente al color del tema.
+*/
+
+.menu-header-dynamic {
+  /* Usamos color-mix para que el degradado nazca del color Navy del tema */
+  --header-base: var(--color-jw-navy);
+  --header-accent: var(--color-jw-accent);
+
+  background-image: linear-gradient(
+    to bottom,
+    var(--header-base) 0%,
+    color-mix(in srgb, var(--header-base), var(--header-accent) 15%) 40%,
+    color-mix(in srgb, var(--header-base), transparent 30%) 80%,
+    transparent 100%
+  ) !important;
+  
+  background-size: 100% 220px;
+  background-repeat: no-repeat;
+  border-bottom: 1px solid color-mix(in srgb, var(--header-accent), transparent 80%);
+}
+
+/* Efecto de resplandor para el modo Noche (Neon) */
+html[data-theme="neon"] .menu-header-dynamic {
+  --neon-glow: color-mix(in srgb, var(--color-jw-accent), transparent 80%);
+  box-shadow: inset 0 20px 40px -10px var(--neon-glow);
+}
+
+/* 
+   ==========================================================
+   --- OPTIMIZACIÓN DE DISEÑO FULL-WIDTH (ROOT) --- 
+   ==========================================================
+*/
+#root {
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+  width: 100%; /* Corregido: ocupa todo el ancho sin márgenes */
+  text-align: center;
+}
+
+/* Blur dinámico para cuando el menú está abierto */
+body.body-freeze #root main,
+body.body-freeze #root footer {
+  filter: blur(4px) brightness(0.8); /* Aumentamos el blur para dar más enfoque al menú */
+  pointer-events: none;
+  transition: all 0.5s ease;
+}

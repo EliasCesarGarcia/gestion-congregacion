@@ -294,12 +294,12 @@ function Navbar() {
             >
               {/* Cabecera del Dropdown */}
               <div
-                className={`p-4 bg-transparent border-b border-jw-border/10 ${isRtl ? "text-right" : "text-left"} relative z-20`}
+                className={`py-4 px-6 menu-header-dynamic ${isRtl ? "text-start" : "text-start"} relative z-20`}
               >
-                <p className="text-base font-bold leading-tight text-jw-text-light">
+                <p className="text-lg font-bold leading-tight text-white drop-shadow-sm">
                   {user?.nombre_completo}
                 </p>
-                <p className="text-base text-jw-text-light opacity-80 italic mt-0.5 font-light">
+                <p className="text-sm text-white/70 italic mt-0.5 font-light">
                   @{user?.username}
                 </p>
               </div>
@@ -373,37 +373,32 @@ function Navbar() {
           --- MENÚ LATERAL (DERECHA EN RTL / IZQUIERDA EN LTR) --- 
       */}
       <div
-        className={`fixed top-1.5 h-[calc(100vh-16px)] rounded-2xl w-72 md:w-70 bg-jw-card z-[150] transition-transform duration-500 ease-[cubic-bezier(0.2,1,0.2,1)] overflow-hidden border border-jw-border will-change-transform ${
-          isRtl
-            ? "right-1 shadow-[-20px_0_50px_rgba(0,0,0,0.1)]"
-            : "left-1 shadow-[20px_0_50px_rgba(0,0,0,0.1)]"
-        } ${
-          isMenuOpen
-            ? "translate-x-0"
-            : isRtl
-              ? "translate-x-[calc(100%+20px)]"
-              : "-translate-x-[calc(100%+20px)]"
-        }`}
+        className={`fixed top-0 h-screen w-60 md:w-70 bg-jw-card z-[150] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden shadow-2xl 
+  ${isRtl ? "right-0 border-l border-jw-border" : "left-0 border-r border-jw-border"} 
+  ${isMenuOpen ? "translate-x-0" : isRtl ? "translate-x-full" : "-translate-x-full"}`}
       >
-        <div className="bg-transparent border-b border-jw-border/10 py-4 px-6 text-jw-text-light flex justify-between items-center relative z-20">
+        {/* --- AHORA (Nivel Dios) --- */}
+        <div className="menu-header-dynamic py-5 px-5 text-jw-text-light flex justify-between items-start relative z-20">
           <div className="flex items-center gap-4">
             <LayoutGrid
-              size={28}
-              className="shrink-0 text-jw-text-light opacity-80"
+              size={32}
+              className="shrink-0 text-white drop-shadow-md"
             />
-            <span className="text-xs tracking-[0.25em] font-medium uppercase leading-none text-jw-text-light">
-              {t("nav_menu_title", "Menú Principal")}
-            </span>
+            <div className="flex flex-col items-start text-start">
+              <span className="text-[10px] tracking-[0.3em] font-black uppercase opacity-60">
+                {t("nav_menu_title", "Menú Principal")}
+              </span>
+              <span className="text-sm font-bold italic text-white">
+                {user?.congregacion_nombre}
+              </span>
+            </div>
           </div>
+          {/* Botón X de cierre corregido con inset-inline-end */}
           <button
-            onClick={() => {
-              setIsMenuOpen((prev) => !prev);
-              setIsProfileOpen(false);
-            }}
-            aria-label={t("nav_close_menu", "Cerrar menú")}
-            className="hover:bg-white/20 p-1.5 rounded-full transition-all active:scale-75 text-jw-text-light"
+            onClick={() => setIsMenuOpen(false)}
+            className="hover:bg-white/20 p-2 rounded-full transition-all"
           >
-            <X className="w-5 h-5" />
+            <X className="w-6 h-6 text-white" />
           </button>
         </div>
 
