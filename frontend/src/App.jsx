@@ -85,7 +85,7 @@ function App() {
      * flex-col: Permite que el 'main' crezca y ocupe el espacio sobrante.
      */
 
-    <div className="min-h-screen bg-transparent text-jw-text-main flex flex-col overflow-x-hidden transition-colors duration-700">
+    <div className="min-h-screen text-jw-text-main flex flex-col transition-colors duration-700">
       {/* BARRA DE NAVEGACIÓN: Posicionamiento fijo gestionado internamente */}
       <Navbar />
 
@@ -94,7 +94,7 @@ function App() {
     //pt-16: Compensación de altura por el Navbar fijo (h-16).
     //flex-grow: Fuerza a este contenedor a ocupar todo el espacio entre Navbar y Footer.
     */}
-      <main className="flex-grow w-full pt-16 overflow-x-hidden">
+      <main className="flex-grow w-full pt-16">
         <Routes>
           {/* RUTA PÚBLICA: Acceso libre para autenticación */}
           <Route path="/login" element={<LoginPage />} />

@@ -53,8 +53,7 @@ body {
   min-height: 100vh;
   position: relative;
   z-index: 10;
-  max-width: 1280px; /* De App.css */
-  margin: 0 auto;    /* De App.css */
+  width: 100%; /* De App.css */
   text-align: center; /* De App.css */
 }
 

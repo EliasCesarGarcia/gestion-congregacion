@@ -14,7 +14,7 @@ import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { CheckCircle2, AlertCircle, HelpCircle, X, ShieldCheck } from 'lucide-react';
 
-function Modal({ isOpen, type, title, message, onConfirm, onClose }) {
+function Modal({ isOpen, type, title, message, onConfirm, onClose, children }) {
   
   // Bloquear scroll del body al abrir
   useEffect(() => {
@@ -54,6 +54,10 @@ function Modal({ isOpen, type, title, message, onConfirm, onClose }) {
         </div>
         <h3 className="text-xl font-bold text-jw-navy mb-3 italic">{title}</h3>
         <p className="text-gray-500 text-sm mb-8">{message}</p>
+        
+        {/* AÑADIR ESTO: Si pasas contenido extra, se dibujará aquí */}
+        {children && <div className="mb-6">{children}</div>}
+
         <div className="flex flex-col gap-3">
           <button onClick={onConfirm || onClose} className={`w-full py-3 text-white rounded-xl font-bold uppercase ${config.btn}`}>{type === 'confirm' ? 'CONFIRMAR' : 'ENTENDIDO'}</button>
           {onConfirm && <button onClick={onClose} className="text-gray-400 text-xs font-black uppercase tracking-widest">CANCELAR</button>}
