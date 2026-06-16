@@ -1,3 +1,5 @@
+# UBICACIÓN: DATABASE_DICTIONARY.md
+# NOMBRE: DATABASE_DICTIONARY.md
 # Diccionario de Base de Datos - Gestión Local Premium 2026
 
 ## Módulo 1: Core (Identidad y Geografía)

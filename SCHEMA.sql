@@ -2,6 +2,8 @@
 -- GESTIÓN CONGREGACIÓN 2026 - ESQUEMA COMPLETO DE BASE DE DATOS
 -- Ubicación: Supabase (PostgreSQL)
 -- Descripción: Estructura relacional para la gestión de miembros y literatura.
+-- Archivo: SCHEMA.sql
+-- Ubicación: SCHEMA.sql
 -- ==========================================================
 
 -- ----------------------------------------------------------
