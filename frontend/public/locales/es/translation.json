@@ -175,6 +175,7 @@
   "profile_danger_desc": "Su cuenta pasará a estado de BAJA de manera permanente.",
   "profile_danger_btn": "ELIMINAR CUENTA",
   "profile_danger_final_confirm": "SÍ, CONFIRMO ELIMINACIÓN",
+  "profile_danger_final_confirm_msg": "PIN validado. Al confirmar ahora, su sesión se cerrará inmediatamente.",
   "profile_pub_title": "Mi perfil público",
   "profile_pub_name": "Nombre Completo",
   "profile_pub_cong": "Congregación Local",
@@ -188,6 +189,7 @@
   "profile_pub_help_text": "Pídale ayuda al",
   "profile_pub_help_coord": "Anciano Coordinador",
   "profile_pub_help_sec": "Anciano Secretario",
+  "profile_pub_help_or": "o el",
   "profile_pub_help_service": "Anciano de Servicio",
   "profile_pub_help_suffix": "de su congregación."
 

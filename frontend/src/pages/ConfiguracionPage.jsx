@@ -14,7 +14,8 @@
  */
 
 import React, { useContext, useState, useEffect, useMemo } from "react";
-import { AppContext, themePalettes } from "../context/AppContext";
+import { AppContext } from "../context/AppContext";
+import { themePalettes } from "../config/themeConfig"; // <--- Importamos desde la nueva ubicación
 import { useNavigate } from "react-router-dom";
 // --- NUEVA IMPORTACIÓN PARA TRADUCCIONES ---
 import { useTranslation } from "react-i18next";
