@@ -1,452 +1,495 @@
 /**
  * ARCHIVO: SecurityTipsPage.jsx
  * UBICACIÓN: frontend/src/pages/SecurityTipsPage.jsx
- * DESCRIPCIÓN: Página informativa dedicada a los recordatorios y consejos de seguridad digital.
- * Presenta una guía visual e interactiva sobre la protección de dispositivos, gestión
- * de contraseñas, prevención de phishing, seguridad familiar y respaldos.
- * Permite la visualización de actualizaciones dinámicas enviadas por el administrador
- * desde la base de datos (tabla core_seguridad_info).
+ * DESCRIPCIÓN: Centro de Seguridad Digital. Diseño Industrial (Bordes Rectos),
+ * Glassmorphism calibrado y Tags interactivos.
+ * Estándar: Senior God Level (Zero ESLint Errors - High Performance).
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Helmet } from "react-helmet-async"; // <--- AGREGAR ESTO
+import { motion as Motion, AnimatePresence } from "framer-motion"; // Rename to Motion for ESLint fix
+import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet-async";
 
 // Importación de Iconos
 import {
   ShieldCheck,
   Smartphone,
-  Lock,
-  Globe,
-  Users,
   MousePointer2,
+  Users,
   ChevronLeft,
+  CheckCircle,
+  AlertTriangle,
   Zap,
   ShieldAlert,
-  CheckCircle,
-  Database,
-  AlertTriangle,
-  Key,
+  Fingerprint,
   HardDrive,
-  Shield,
+  Info,
+  Key,
 } from "lucide-react";
 
-function SecurityTipsPage() {
-  // --- INICIALIZACIÓN Y ESTADOS ---
-  const navigate = useNavigate();
-  // Estado para almacenar la información dinámica desde la base de datos
-  const [info, setInfo] = useState({ contenido: "", updated_at: "" });
-
-  // --- LÓGICA DE CARGA (SIDE EFFECTS) ---
-  useEffect(() => {
-    // Asegura que la página siempre inicie desde arriba
-    window.scrollTo(0, 0);
-    // Petición al backend para obtener la última actualización de seguridad
-    axios
-      .get("/api/seguridad-info")
-      .then((res) => {
-        if (res.data) setInfo(res.data);
-      })
-      .catch((err) => console.error("Error cargando info de seguridad", err));
-  }, []);
-
-  // --- FUNCIONES AUXILIARES ---
-  // Formatea la fecha recibida del servidor a un formato legible
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "Reciente";
-    return new Date(dateStr).toLocaleDateString("es-ES", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
-  };
-
-  // Maneja el retorno a la página de perfil con el ancla de seguridad
-  const handleBack = () => {
-    navigate("/perfil#seguridad");
-  };
-
-  // --- CONFIGURACIÓN DE ANIMACIONES (FRAMER MOTION) ---
-  // Animación de levitación para los iconos de las tarjetas
-  const floatingIcon = {
-    animate: {
-      y: [0, -6, 0],
-      transition: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-    },
-  };
-
-  // Animación de pulso suave para el escudo de la introducción
-  const pulseScale = {
-    animate: {
-      scale: [1, 1.02, 1],
-      transition: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-    },
-  };
-
-  // Animación de entrada para las tarjetas al hacer scroll
-  const cardVariants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-  };
+/**
+ * COMPONENTE: InteractiveTag
+ * Despliega información detallada al foco (hover/tap).
+ */
+const InteractiveTag = ({ label, info }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="bg-transparent min-h-screen font-sans text-slate-800 pb-12 overflow-x-hidden transition-colors duration-700">
-      {/* --- BLOQUE SEO INICIO --- */}
-      <Helmet>
-        <title>Seguridad Digital y Blindaje | Gestión Local</title>
-        <meta
-          name="description"
-          content="Guía de protección y seguridad digital para miembros de la congregación. Consejos sobre phishing, contraseñas y privacidad."
-        />
-      </Helmet>
-      {/* --- BLOQUE SEO FIN --- */}
-      {/* ==========================================
-          SECCIÓN: ENCABEZADO (HEADER)
-          ========================================== */}
-      <header className="bg-sky-700 text-white p-2.5 sm:p-4 sticky top-0 z-50 shadow-md border-b-2 border-sky-400">
-        <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
-          {/* Botón Volver con efectos de Hover */}
-          <button
-            onClick={handleBack}
-            className="flex items-center gap-2 text-sm sm:text-base font-light uppercase tracking-widest bg-sky-800/50 px-3 py-1 rounded-xl shrink-0 transition-all duration-300 hover:scale-105 hover:bg-sky-600 hover:shadow-lg active:scale-95"
-          >
-            <ChevronLeft size={20} /> Volver
-          </button>
+    <div
+      className="relative mb-2" // Añadimos un pequeño margen inferior
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      // Soporte para celulares: toca para abrir, toca fuera para cerrar
+      onClick={() => setIsHovered(!isHovered)}
+    >
+      <Motion.div
+        whileHover={{ backgroundColor: "var(--color-jw-navy)", color: "#fff" }}
+        className="cursor-pointer px-4 py-2 text-[12px] font-medium uppercase tracking-widest bg-jw-card/90 text-jw-navy border border-jw-navy/40 flex items-center gap-2 rounded-none transition-colors"
+      >
+        {label} <Info size={12} className="opacity-40" />
+      </Motion.div>
 
-          {/* Título y Fecha de Revisión */}
-          <div className="text-right min-w-0">
-            <h1 className="text-xl sm:text-3xl font-normal  uppercase tracking-tighter leading-none truncate">
-              Blindaje Digital
-            </h1>
-            <p className="text-[12px] sm:text-[12px] text-sky-140 font-normal mt-0.5 uppercase truncate opacity-90">
-              Revisión: {formatDate(info.updated_at)}
+      <AnimatePresence>
+        {isHovered && (
+          <Motion.div
+            /* Animación: aparece desde arriba hacia abajo */
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            /* EXPLICACIÓN: 
+             w-[280px]: Ancho base para celulares.
+             sm:w-[450px]: Se extiende a la derecha en tablets/PC (más ancho para que el texto no baje tanto).
+             z-[110]: Un nivel más arriba para asegurar que flote SOBRE el siguiente ítem sin empujarlo.
+            */
+            className="absolute top-full left-0 w-[280px] sm:w-[450px] p-5 bg-jw-navy border-t-2 border-t-jw-accent shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[110] rounded-none mt-1 pointer-events-none"
+          >
+            <p className="text-tip-info text-white font-medium leading-relaxed normal whitespace-normal">
+              {info}
             </p>
-          </div>
+          </Motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+/**
+ * COMPONENTE: GlassContainer
+ * Opacidad calibrada al 80% para equilibrio entre transparencia y lectura.
+ * Bordes rectos (Industrial Design).
+ */
+const GlassContainer = ({ children, className = "" }) => (
+  <div
+    className={`backdrop-blur-xl bg-jw-card/80 border border-white/20 shadow-2xl rounded-none ${className}`}
+  >
+    {children}
+  </div>
+);
+
+/**
+ * COMPONENTE: SecurityTipCard
+ */
+const SecurityTipCard = ({ tip, index }) => {
+  const isEven = index % 2 === 0;
+
+  return (
+    <Motion.article
+      /* Definimos el estado inicial: fuera de la pantalla y con un leve desenfoque */
+      initial={{
+        opacity: 0,
+        x: isEven ? -150 : 150, // Más distancia para que el efecto sea más notorio
+        filter: "blur(5px)",
+      }}
+      /* Definimos el estado cuando entra en pantalla */
+      whileInView={{
+        opacity: 1,
+        x: 0,
+        filter: "blur(0px)",
+      }}
+      /* Configuramos el Viewport para que se repita SIEMPRE */
+      viewport={{
+        once: false, // Permite que la animación se repita al hacer scroll arriba y abajo
+        amount: 0.3, // Se dispara cuando el 30% del elemento entra en el visor
+      }}
+      transition={{
+        type: "spring", // Efecto elástico moderno
+        stiffness: 50, // Rigidez (controla la velocidad del rebote)
+        damping: 20, // Amortiguación
+        duration: 0.8,
+      }}
+      className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0 items-stretch mb-16 relative group`}
+    >
+      {/* 1. La caja se queda quieta (div estándar) */}
+      <div className="bg-jw-navy p-8 flex items-center justify-center shrink-0 border border-white/10 shadow-2xl">
+        {/* 2. Solo el icono se mueve (Motion.div interno) */}
+        <Motion.div
+          animate={{
+            y: [0, -12, 0], // Oscilación vertical del icono
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="text-jw-accent"
+        >
+          {React.cloneElement(tip.icon, { size: 54 })}
+        </Motion.div>
+      </div>
+
+      {/* Contenedor de Texto cristalizado */}
+      <GlassContainer
+        className={`flex-1 p-8 text-left border-l-0 md:border-l-4 md:border-l-jw-accent`}
+      >
+        <h3 className="text-xl font-black uppercase tracking-tighter text-jw-navy mb-1">
+          {tip.title}
+        </h3>
+        <p className="text-base text-jw-text-main font-bold leading-snug mb-5">
+          {tip.description}
+        </p>
+
+        <div className="flex flex-wrap gap-5 justify-start relative">
+          {tip.tags?.map((tag, i) => (
+            <InteractiveTag key={i} label={tag.label} info={tag.info} />
+          ))}
+        </div>
+      </GlassContainer>
+    </Motion.article>
+  );
+};
+
+function SecurityTipsPage() {
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const [dbInfo, setDbInfo] = useState({ contenido: "", updated_at: "" });
+
+  // Función para formatear la fecha dinámicamente según el idioma
+  const formatDate = (dateStr) => {
+    if (!dateStr) return t("security.recent", "Reciente");
+    try {
+      return new Date(dateStr).toLocaleDateString(i18n.language, {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      });
+    } catch {
+      return t("security.recent", "Reciente");
+    }
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    axios
+      .get("/api/seguridad-info")
+      .then((res) => setDbInfo(res.data))
+      .catch((err) => console.error(err));
+  }, []);
+
+  const handleBack = () => navigate("/perfil#seguridad");
+
+  const tips = useMemo(
+    () => [
+      {
+        id: "estafas",
+        icon: <ShieldAlert />,
+        title: t("security.tips.estafas.title", "1. Ciberestafas"),
+        description: t(
+          "security.tips.estafas.desc",
+          "El contenido digital falso puede imitar voces y rostros conocidos para robarte información o dinero.",
+        ),
+        tags: [
+          {
+            label: "Prevención",
+            info: "Si te apuran para pedirte plata: pará, pensá y verificá.",
+          },
+          {
+            label: "Verificación",
+            info: "Corta la llamada y comunícate tú mismo con la persona por un medio conocido.",
+          },
+          {
+            label: "Deepfake",
+            info: "Tecnología que clona identidades. No confíes solo en lo que ves o oyes en una pantalla.",
+          },
+        ],
+      },
+      {
+        id: "perimetro",
+        icon: <Smartphone />,
+        title: t("security.tips.physical.title", "2. Perímetro Físico"),
+        description: t(
+          "security.tips.physical.desc",
+          "Tu móvil es la llave maestra. Un equipo sin bloqueo es una puerta abierta a toda tu vida privada.",
+        ),
+        tags: [
+          {
+            label: "Biometría",
+            info: "Configura FaceID o Huella. Es mucho más seguro que un patrón que alguien pueda ver.",
+          },
+          {
+            label: "Actualizaciones",
+            info: "No ignores el mensaje de 'Nueva versión'; cierran agujeros de seguridad críticos.",
+          },
+          {
+            label: "Cifrado",
+            info: "Asegúrate de que el cifrado esté activo para proteger tus fotos ante posibles robos.",
+          },
+        ],
+      },
+      {
+        id: "claves",
+        icon: <Key />,
+        title: t("security.tips.keys.title", "3. Claves de Impacto"),
+        description: t(
+          "security.tips.keys.desc",
+          "Evita usar datos obvios. La mayoría de los ataques ocurren por contraseñas débiles o repetidas.",
+        ),
+        tags: [
+          {
+            label: "2FA",
+            info: "Activa la verificación en dos pasos siempre. Es una segunda capa de blindaje vital.",
+          },
+          {
+            label: "Robustez",
+            info: "Usa frases en lugar de palabras. Ejemplo: 'Ciel0-Azul-2026!' es mejor que 'pedro123'.",
+          },
+          {
+            label: "Passphrases",
+            info: "Las frases largas son mucho más difíciles de descifrar para las computadoras de los atacantes.",
+          },
+        ],
+      },
+      {
+        id: "phishing",
+        icon: <MousePointer2 />,
+        title: t("security.tips.phishing.title", "4. Detectando el Anzuelo"),
+        description: t(
+          "security.tips.phishing.desc",
+          "Los criminales fingen ser soporte técnico o bancos para robar tus datos mediante el miedo o la urgencia.",
+        ),
+        tags: [
+          {
+            label: "Urgencia",
+            info: "Si el mensaje dice 'Tu cuenta se cerrará en 1 hora', es casi seguro que es una estafa.",
+          },
+          {
+            label: "Enlaces",
+            info: "Revisa bien la dirección. En vez de google.com, los estafadores usan g00gle-login.net.",
+          },
+          {
+            label: "Archivos",
+            info: "Nunca abras un archivo .ZIP o .EXE que no hayas solicitado explícitamente.",
+          },
+        ],
+      },
+      {
+        id: "family",
+        icon: <Users />,
+        title: t("security.tips.family.title", "5. Legado de los Hijos"),
+        description: t(
+          "security.tips.family.desc",
+          "Los niños no tienen malicia para detectar trampas. Enséñales que lo que se sube a internet, se queda ahí.",
+        ),
+        tags: [
+          {
+            label: "Identidad",
+            info: "Evita revelar datos sensibles en fotos, como uniformes, logos o ubicaciones reales.",
+          },
+          {
+            label: "Extraños",
+            info: "Regla de oro para menores: 'Si no lo conoces en persona, no es tu amigo'.",
+          },
+          {
+            label: "Privacidad",
+            info: "Revisa periódicamente los ajustes de privacidad de las redes sociales de tu familia.",
+          },
+        ],
+      },
+      {
+        id: "backup",
+        icon: <HardDrive />,
+        title: t("security.tips.backup.title", "6. Supervivencia de Datos"),
+        description: t(
+          "security.tips.backup.desc",
+          "Un virus puede bloquear tus archivos. La única copia segura es la que está físicamente desconectada.",
+        ),
+        tags: [
+          {
+            label: "Frecuencia",
+            info: "Realiza respaldos al menos una vez al mes de tus fotos y documentos más valiosos.",
+          },
+          {
+            label: "Desconexión",
+            info: "Copia tus archivos a un disco externo y, lo más importante, desconéctalo del equipo.",
+          },
+          {
+            label: "Nube",
+            info: "Usa servicios de nube con cifrado, pero no dependas únicamente de ellos.",
+          },
+        ],
+      },
+    ],
+    [t],
+  );
+
+  return (
+    <div className="min-h-screen bg-transparent pb-20 overflow-x-hidden relative">
+      <Helmet>
+        <title>{t("security.seo.title", "Consejos de Seguridad")}</title>
+      </Helmet>
+
+      {/* HEADER INDUSTRIAL */}
+      <header className="relative z-10 backdrop-blur-xl bg-jw-navy/90 border-b border-white/10 text-white shadow-xl">
+        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+          <Motion.button
+            whileHover="animateChevron" // Disparador para los hijos
+            onClick={handleBack}
+            className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] px-5 py-2 border border-white/40 hover:bg-white/10 transition-all rounded-none group"
+          >
+            {/* Envolvemos la flecha en un Motion.span para animarla */}
+            <Motion.span
+              variants={{
+                animateChevron: {
+                  x: [0, -6, 0], // Movimiento moderado a la izquierda
+                },
+              }}
+              transition={{
+                repeat: Infinity, // Se repite mientras dure el hover
+                duration: 0.8, // Velocidad moderada
+                ease: "easeInOut",
+              }}
+            >
+              <ChevronLeft size={14} />
+            </Motion.span>
+
+            <span>{t("security.back", "Volver")}</span>
+          </Motion.button>
+
+          <h1 className="text-sm sm:text-base font-medium tracking-[0.15em] uppercase text-jw-accent">
+            {t("security.header_title", "Consejos de Seguridad")}
+          </h1>
+
+          {/* Subtexto: Última revisión automática y multi-idioma */}
+          <p className="text-[10px] sm:text-xs text-jw-accent font-normal uppercase tracking-widest mt-0.5 opacity-90">
+            {t("security.revision", "Última revisión")}:{" "}
+            {formatDate(dbInfo.updated_at)}
+          </p>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto p-3 sm:p-6 mt-1 sm:mt-1 space-y-5 sm:space-y-8">
-        {/* ==========================================
-            SECCIÓN: INTRODUCCIÓN PRINCIPAL
-            ========================================== */}
-        <section className="text-center space-y-2 sm:space-y-4 bg-slate-200 p-4 sm:p-8 rounded-xl border border-sky-100 shadow-sm">
-          <motion.div
-            variants={pulseScale}
-            animate="animate"
-            className="inline-block p-2.5 sm:p-4 bg-sky-50 rounded-full text-sky-600"
-          >
-            <ShieldCheck size={30} className="sm:w-[40px] sm:h-[40px]" />
-          </motion.div>
-          <div className="space-y-1">
-            <h2 className="text-2x1 sm:text-2xl font-light italic text-sky-900 leading-tight">
-              Protegemos lo que{" "}
-              <span className="font-black text-sky-700">más importa.</span>
-            </h2>
-            <p className="text-slate-550 max-w-lg mx-auto leading-tight text-[16px] sm:text-base font-light italic">
-              "La seguridad no es un producto, es un hábito". Guía actualizada
-              para tu protección digital.
-            </p>
-          </div>
+      <main className="max-w-4xl mx-auto px-6 pt-10">
+        {/* HERO SECTION */}
+        <section className="mb-16">
+          <GlassContainer className="p-8 sm:p-10 border-l-8 border-l-jw-accent flex flex-col md:flex-row items-center gap-8">
+            {/* CONTENEDOR DEL ICONO (A la izquierda) */}
+            <div className="relative shrink-0">
+              <Motion.div
+                animate={{
+                  scale: [1, 1.1, 1],
+                  filter: [
+                    "drop-shadow(0 0 0px rgba(var(--color-jw-accent), 0))",
+                    "drop-shadow(0 0 20px rgba(var(--color-jw-accent), 0.8))",
+                    "drop-shadow(0 0 0px rgba(var(--color-jw-accent), 0))",
+                  ],
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 2,
+                  ease: "easeInOut",
+                }}
+                className="p-6 bg-jw-accent/20 border border-jw-accent/40 rounded-none"
+              >
+                <ShieldCheck size={65} className="text-jw-accent" />
+              </Motion.div>
+            </div>
+
+            {/* CONTENEDOR DE TEXTO (A la derecha, alineado a la izquierda) */}
+            <div className="text-left space-y-2">
+              <h2 className="text-2xl sm:text-4xl font-medium text-jw-navy uppercase tracking-tighter leading-none">
+                {t("security.hero_title", "Tu integridad es")} <br />
+                <span className="text-jw-accent">
+                  {t("security.hero_highlight", "nuestra prioridad")}
+                </span>
+              </h2>
+              <p className="text-xs sm:text-sm text-jw-text-main font-bold uppercase tracking-widest leading-relaxed max-w-xl">
+                {/* Frase sugerida: más corta y directa */}
+                {t(
+                  "security.hero_sub",
+                  "Hábitos esenciales para el cuidado de tu privacidad e información personal.",
+                )}
+              </p>
+            </div>
+          </GlassContainer>
         </section>
 
-        {/* CONTENEDOR DE TARJETAS DE CONSEJOS */}
-        <div className="grid gap-5 sm:gap-8">
-          {/* --- TARJETA 1: DISPOSITIVOS (PERÍMETRO FÍSICO) --- */}
-          <motion.section
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border-l-4 border-l-purple-500 border border-slate-200"
-          >
-            <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
-              <motion.div
-                variants={floatingIcon}
-                animate="animate"
-                className="p-3 bg-purple-50 rounded-xl text-purple-600 w-fit h-fit shadow-inner"
-              >
-                <Smartphone size={24} className="sm:w-[32px] sm:h-[32px]" />
-              </motion.div>
-              <div className="space-y-2 flex-1 text-left">
-                <h3 className="text-xl sm:text-lg font-black uppercase italic text-purple-900 tracking-tight">
-                  1. El Perímetro Físico
-                </h3>
-                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
-                  Tu móvil es la llave maestra de tu identidad. Un equipo sin
-                  bloqueo es una puerta abierta a tu vida privada.
-                </p>
-                <div className="bg-slate-50 p-3 sm:p-4 rounded-lg border border-slate-100 space-y-2">
-                  <p className="text-[14px] sm:text-[12px] font-bold text-purple-700 uppercase tracking-widest">
-                    Ejemplos de blindaje:
-                  </p>
-                  <ul className="space-y-3 text-left mt-3">
-                    {[
-                      {
-                        t: "Biometría:",
-                        d: "Configura FaceID o Huella. Es mucho más seguro que un patrón.",
-                      },
-                      {
-                        t: "Actualizaciones:",
-                        d: "No ignores el mensaje de 'Nueva versión'; cierran agujeros de seguridad.",
-                      },
-                      {
-                        t: "Cifrado:",
-                        d: "Asegúrate de que el cifrado esté activo para proteger tus fotos ante robos.",
-                      },
-                    ].map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className="shrink-0 text-xl sm:text-2xl leading-none text-purple-500 mt-[-8px] font-black select-none">
-                          •
-                        </span>
-                        <p className="text-[14px] sm:text-[14px] leading-snug text-left">
-                          <span className="font-bold text-slate-800">
-                            {item.t}
-                          </span>{" "}
-                          <span className="font-normal text-slate-500">
-                            {item.d}
-                          </span>
-                        </p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* --- TARJETA 2: CONTRASEÑAS (CLAVES DE ALTO IMPACTO) --- */}
-          <motion.section
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border-l-4 border-l-sky-500 border border-slate-200"
-          >
-            <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
-              <motion.div
-                variants={floatingIcon}
-                animate="animate"
-                className="p-3 bg-sky-50 rounded-xl text-sky-600 w-fit h-fit shadow-inner"
-              >
-                <Key size={24} className="sm:w-[32px] sm:h-[32px]" />
-              </motion.div>
-              <div className="space-y-2 flex-1 min-w-0 text-left">
-                <h3 className="text-xl sm:text-lg font-black uppercase italic text-sky-900 tracking-tight">
-                  2. Claves de Alto Impacto
-                </h3>
-                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
-                  Evita usar datos obvios. La mayoría de los ataques ocurren por
-                  contraseñas débiles o repetidas.
-                </p>
-                <div className="bg-sky-50 p-2.5 sm:p-4 rounded-lg border border-sky-100">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left">
-                    <div className="p-2 bg-red-100 rounded-md border border-red-100 overflow-hidden">
-                      <p className="text-[14px] text-red-600 font-black uppercase mb-0.5">
-                        Inseguro
-                      </p>
-                      <p className="text-[14px] font-mono text-red-800 break-all leading-none">
-                        pedro2024
-                      </p>
-                    </div>
-                    <div className="p-2 bg-green-100 rounded-md border border-green-100 overflow-hidden">
-                      <p className="text-[14px] text-green-600 font-black uppercase mb-0.5">
-                        Blindado
-                      </p>
-                      <p className="text-[14px] font-mono text-green-800 break-all leading-none">
-                        P3dr0.2024#Talar
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* --- TARJETA 3: PHISHING (DETECTANDO EL ANZUELO) --- */}
-          <motion.section
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border-l-4 border-l-orange-500 border border-slate-200"
-          >
-            <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
-              <motion.div
-                variants={floatingIcon}
-                animate="animate"
-                className="p-3 bg-orange-50 rounded-xl text-orange-600 w-fit h-fit shadow-inner"
-              >
-                <MousePointer2 size={24} className="sm:w-[32px] sm:h-[32px]" />
-              </motion.div>
-              <div className="space-y-2 flex-1 text-left">
-                <h3 className="text-xl sm:text-lg font-black uppercase italic text-orange-900 tracking-tight">
-                  3. Detectando el Anzuelo
-                </h3>
-                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
-                  Los criminales fingen ser soporte técnico o bancos para robar
-                  tus datos mediante el miedo.
-                </p>
-                <div className="border border-orange-200 p-3 sm:p-4 rounded-lg bg-orange-50/30 text-left">
-                  <p className="text-[14px] sm:text-xs font-bold text-orange-800 italic mb-2">
-                    Identifica la estafa:
-                  </p>
-                  <div className="border border-orange-200 p-4 rounded-lg bg-orange-50/30 text-left mt-3">
-                    <p className="text-[14px] sm:text-sm font-bold text-orange-800 italic mb-3">
-                      Identifica la estafa:
-                    </p>
-                    <ul className="space-y-3">
-                      {[
-                        {
-                          t: "Urgencia:",
-                          d: '"Tu cuenta se cerrará en 1 hora si no actúas".',
-                        },
-                        {
-                          t: "Enlaces:",
-                          d: "En vez de google.com, dice g00gle-login.net.",
-                        },
-                        {
-                          t: "Archivos:",
-                          d: "Nunca abras un .ZIP o .EXE inesperado.",
-                        },
-                      ].map((item, idx) => (
-                        <li key={idx} className="flex items-start gap-2">
-                          <span className="shrink-0 text-xl sm:text-2xl leading-none text-orange-500 mt-[-7px] font-black select-none">
-                            •
-                          </span>
-                          <p className="text-[14px] sm:text-[14px] leading-snug text-left">
-                            <span className="font-bold text-slate-800">
-                              {item.t}
-                            </span>{" "}
-                            <span className="font-normal text-slate-600">
-                              {item.d}
-                            </span>
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* --- TARJETA 4: NIÑOS Y FAMILIA --- */}
-          <motion.section
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-slate-800 p-4 sm:p-6 rounded-xl shadow-xl text-white flex flex-col md:flex-row gap-4 sm:gap-6 border border-slate-700"
-          >
-            <motion.div
-              variants={floatingIcon}
-              animate="animate"
-              className="p-3 bg-sky-500 rounded-xl text-white w-fit h-fit shadow-lg"
-            >
-              <Users size={24} className="sm:w-[32px] sm:h-[32px]" />
-            </motion.div>
-            <div className="space-y-2 flex-1 text-left">
-              <h3 className="text-xl sm:text-lg font-black uppercase italic text-sky-300 tracking-tight">
-                4. El Legado de los Hijos
-              </h3>
-              <p className="text-[14px] sm:text-sm text-slate-300 leading-snug font-light">
-                Los niños no tienen malicia para detectar trampas. Enséñales que
-                lo que se sube, se queda.
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-1">
-                <div className="p-2.5 bg-white/5 rounded-lg border border-white/10 text-left">
-                  <h4 className="text-sky-300 text-[14px] font-black uppercase mb-1">
-                    Identidad
-                  </h4>
-                  <p className="text-[14px] text-slate-200 italic">
-                    Evita revelar datos sensibles en fotos, como uniformes con
-                    logos, ubicaciones en tiempo real o detalles del entorno que
-                    identifiquen tu hogar.
-                  </p>
-                </div>
-                <div className="p-2.5 bg-white/5 rounded-lg border border-white/10 text-left">
-                  <h4 className="text-sky-300 text-[14px] font-black uppercase mb-1">
-                    Extraños
-                  </h4>
-                  <p className="text-[14px] text-slate-200 italic">
-                    "Si no lo conoces en persona, no es tu amigo".
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* --- TARJETA 5: RESPALDO (BACKUP) --- */}
-          <motion.section
-            variants={cardVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border-l-4 border-l-emerald-500 border border-slate-200"
-          >
-            <div className="flex flex-col md:flex-row gap-4 sm:gap-6 text-left">
-              <motion.div
-                variants={floatingIcon}
-                animate="animate"
-                className="p-3 bg-emerald-50 rounded-xl text-emerald-600 w-fit h-fit shadow-inner"
-              >
-                <HardDrive size={24} className="sm:w-[32px] sm:h-[32px]" />
-              </motion.div>
-              <div className="space-y-2 flex-1 text-left">
-                <h3 className="text-xl sm:text-lg font-black uppercase italic text-emerald-900 tracking-tight">
-                  5. Supervivencia de Datos
-                </h3>
-                <p className="text-[14px] sm:text-sm text-slate-600 leading-snug">
-                  Un virus puede bloquear tus archivos. La única copia segura es
-                  la que está físicamente desconectada.
-                </p>
-                <div className="bg-emerald-50 p-3 rounded-lg border border-emerald-100 italic text-left">
-                  <p className="text-[14px] sm:text-[14px] text-slate-500 leading-relaxed">
-                    Una vez al mes, copia tus archivos a un disco externo y{" "}
-                    <b>desconéctalo</b>.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.section>
-
-          {/* ==========================================
-              SECCIÓN: CONTENIDO EXTRA (DESDE BASE DE DATOS)
-              ========================================== */}
-          {info.contenido && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              className="bg-slate-200 p-4 rounded-xl border border-sky-100 text-left overflow-hidden"
-            >
-              <h4 className="text-sky-900 font-black uppercase text-[14px] sm:text-[9px] mb-1.5 flex items-center gap-2 italic">
-                <AlertTriangle size={12} /> Actualización Especial:
-              </h4>
-              <p className="text-[14px] sm:text-xs text-sky-800 leading-snug italic font-light">
-                {info.contenido}
-              </p>
-            </motion.div>
-          )}
+        {/* LISTADO COMPLETO DE TIPS */}
+        <div className="space-y-6">
+          {tips.map((tip, index) => (
+            <SecurityTipCard key={tip.id} tip={tip} index={index} />
+          ))}
         </div>
 
-        {/* ==========================================
-            SECCIÓN: CIERRE Y BOTÓN DE ACEPTACIÓN
-            ========================================== */}
-        <section className="text-center pt-6 border-t border-slate-200 space-y-4">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleBack}
-            className="bg-sky-600 text-white w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-3.5 rounded-full font-black uppercase tracking-widest text-[14px] sm:text-xs shadow-lg flex items-center justify-center gap-2 mx-auto transition-all"
-          >
-            ACEPTO Y VUELVO <CheckCircle size={16} />
-          </motion.button>
+        {/* DB INFO (GLASS) */}
+        <AnimatePresence>
+          {dbInfo.contenido && (
+            <Motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="mt-8"
+            >
+              <GlassContainer className="py-4 px-6 border-l-8 border-l-jw-accent relative overflow-hidden">
+                <h4 className="flex items-center gap-2 text-jw-accent font-black uppercase tracking-widest text-[10px] mb-3">
+                  <AlertTriangle size={14} />{" "}
+                  {t("security.db_alert", "Aviso de Último Minuto")}
+                </h4>
+                <p className="text-lg font-bold italic text-jw-navy">
+                  "{dbInfo.contenido}"
+                </p>
+              </GlassContainer>
+            </Motion.div>
+          )}
+        </AnimatePresence>
 
-          <p className="text-[12px] sm:text-[10px] text-slate-400 uppercase font-normal tracking-[0.1em] px-4 leading-tight">
-            Gestión Local Teocrática • Seguridad 2.0
-          </p>
+        {/* BOTÓN FINAL CON EFECTO FILL */}
+        <section className="mt-24 text-center">
+          <Motion.button
+            /* Forzamos que los estados se reconozcan siempre */
+            initial="rest"
+            animate="rest"
+            whileHover="hover"
+            onClick={handleBack}
+            /* EXPLICACIÓN: bg-jw-navy !important asegura que no sea transparente. 
+        border-2 border-jw-accent le da el contorno industrial. */
+            className="group relative px-12 py-5 bg-jw-navy border-2 border-jw-accent font-black uppercase tracking-[0.3em] text-[11px] shadow-2xl overflow-hidden rounded-none"
+            style={{ backgroundColor: "var(--color-jw-navy)" }} // Refuerzo de seguridad Nivel Dios
+          >
+            {/* 1. Fondo de Relleno (Celeste/Naranja según el tema) */}
+            <Motion.div
+              variants={{
+                rest: { y: "101%" }, // Escondido abajo
+                hover: { y: 0 }, // Sube y cubre todo
+              }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="absolute inset-0 bg-jw-accent z-0"
+              style={{ backgroundColor: "var(--color-jw-accent)" }}
+            />
+
+            {/* 2. El Texto (Siempre encima y legible) */}
+            <Motion.span
+              variants={{
+                rest: { color: "#ffffff" }, // Blanco sobre fondo Navy
+                hover: { color: "var(--color-jw-navy)" }, // Navy sobre fondo Accent
+              }}
+              transition={{ duration: 0.2 }}
+              className="relative z-10 flex items-center justify-center gap-3"
+            >
+              {t("security.accept_btn", "Entendido y volver")}{" "}
+              <CheckCircle size={18} />
+            </Motion.span>
+          </Motion.button>
         </section>
       </main>
     </div>
