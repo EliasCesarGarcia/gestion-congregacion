@@ -81,7 +81,6 @@
   "lang_zu": "Zulu",
   "lang_gn": "Guarani",
   "lang_qu": "Bolivian Quechua",
-
   
   "greeting_morning": "Good morning,",
   "greeting_afternoon": "Good afternoon,",
@@ -120,7 +119,6 @@
   "footer_title": "THEOCRATIC LOCAL MANAGEMENT",
   "footer_use": "Institutional Use",
   "footer_terms": "Terms of Use",
-
 
   "profile_title": "Account Administration",
   "profile_personal_id": "Personal ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Secretary Elder",
   "profile_pub_help_or": "or the",
   "profile_pub_help_service": "Service Elder",
-  "profile_pub_help_suffix": "of your congregation."
+  "profile_pub_help_suffix": "of your congregation.",
 
-  
+  "security": {
+    "seo": {
+      "title": "Security Tips | Local Management",
+      "desc": "Advanced digital shielding and data protection guide for the congregation."
+    },
+    "header_title": "Security Tips",
+    "back": "Back",
+    "revision": "Last revision",
+    "recent": "Recent",
+    "hero_title": "Your integrity is",
+    "hero_highlight": "our priority.",
+    "hero_sub": "Essential habits for the care of your privacy and personal information.",
+    "db_alert": "Last Minute Notice",
+    "accept_btn": "Understood and go back",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyber Scams",
+        "desc": "Fake digital content can mimic known voices and faces to steal your information or money.",
+        "tags": {
+          "prevention": "Prevention",
+          "prevention_info": "If you are rushed to provide money or sensitive data: stop, think, and always verify.",
+          "verification": "Verification",
+          "verification_info": "End the communication and call the person yourself through a known secure channel.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Identity cloning technology. Do not trust only what you see or hear through a screen."
+        }
+      },
+      "physical": {
+        "title": "2. Physical Perimeter",
+        "desc": "Your phone is the master key. A device without a lock is an open door to your entire private life.",
+        "tags": {
+          "biometry": "Biometry",
+          "biometry_info": "Set up FaceID or Fingerprint. It is much safer than a pattern that someone could spy over your shoulder.",
+          "updates": "Updates",
+          "updates_info": "Do not ignore 'New version' messages; they often close critical security holes discovered recently.",
+          "encryption": "Encryption",
+          "encryption_info": "Make sure disk encryption is active to protect your files and photos from potential physical theft."
+        }
+      },
+      "keys": {
+        "title": "3. High-Impact Keys",
+        "desc": "Avoid using obvious data. Most attacks occur due to weak passwords or those repeated across multiple sites.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Activate two-step verification on all your accounts. It is the most important second layer of shielding.",
+          "robustness": "Robustness",
+          "robustness_info": "Use long phrases instead of simple words. Example: 'Blue-Sky-2026!' is exponentially better than 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Long phrases are almost impossible for today's attacker computers to crack."
+        }
+      },
+      "phishing": {
+        "title": "4. Detecting the Hook",
+        "desc": "Criminals pretend to be technical support or banks to steal your data through fear or excessive urgency.",
+        "tags": {
+          "urgency": "Urgency",
+          "urgency_info": "If the message says 'Your account will close in 1 hour if you don't click', it is almost certainly a scam.",
+          "links": "Links",
+          "links_info": "Check the URL carefully. Scammers often use similar names like 'g00gle.net' instead of 'google.com'.",
+          "files": "Files",
+          "files_info": "Never open unexpected attachments, especially if they have extensions like .ZIP, .EXE, or .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Children's Legacy",
+        "desc": "Children lack the malice to detect traps. Teach them that what is uploaded to the internet stays there forever.",
+        "tags": {
+          "identity": "Identity",
+          "identity_info": "Avoid revealing sensitive data in public photos, such as school uniforms, company logos, or real-time locations.",
+          "strangers": "Strangers",
+          "strangers_info": "Golden rule for minors: 'If you don't know them physically in person, they are not a real friend'.",
+          "privacy": "Privacy",
+          "privacy_info": "Periodically review the privacy settings of your family members' social networks and devices."
+        }
+      },
+      "backup": {
+        "title": "6. Data Survival",
+        "desc": "A virus can lock or delete your files. The only truly safe copy is the one that is physically disconnected.",
+        "tags": {
+          "frequency": "Frequency",
+          "frequency_info": "Back up your most valuable photos and documents at least once a month.",
+          "disconnection": "Disconnection",
+          "disconnection_info": "Copy your files to an external drive and, most importantly, physically disconnect it from the computer when finished.",
+          "cloud": "Cloud",
+          "cloud_info": "Use cloud storage services with encryption, but never rely solely on them as a single copy."
+        }
+      }
+    }
+  }
 }

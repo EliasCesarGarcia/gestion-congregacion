@@ -34,20 +34,22 @@ import {
  * COMPONENTE: InteractiveTag
  * Despliega información detallada al foco (hover/tap).
  */
-const InteractiveTag = ({ label, info }) => {
+const InteractiveTag = ({ label, info, index }) => {
   const [isHovered, setIsHovered] = useState(false);
+
+  // Detectamos si es un botón de la columna derecha en móvil (índices 1, 3, 5...)
+  const isRightColumnMobile = index % 2 !== 0;
 
   return (
     <div
-      className="relative mb-2" // Añadimos un pequeño margen inferior
+      className="relative"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      // Soporte para celulares: toca para abrir, toca fuera para cerrar
       onClick={() => setIsHovered(!isHovered)}
     >
       <Motion.div
         whileHover={{ backgroundColor: "var(--color-jw-navy)", color: "#fff" }}
-        className="cursor-pointer px-4 py-2 text-[12px] font-medium uppercase tracking-widest bg-jw-card/90 text-jw-navy border border-jw-navy/40 flex items-center gap-2 rounded-none transition-colors"
+        className="cursor-pointer px-4 py-2 text-[11px] sm:text-[12px] font-medium uppercase tracking-widest bg-jw-card/90 text-jw-navy border border-jw-navy/40 flex items-center justify-between gap-2 rounded-none transition-colors h-full"
       >
         {label} <Info size={12} className="opacity-40" />
       </Motion.div>
@@ -55,19 +57,23 @@ const InteractiveTag = ({ label, info }) => {
       <AnimatePresence>
         {isHovered && (
           <Motion.div
-            /* Animación: aparece desde arriba hacia abajo */
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            /* EXPLICACIÓN: 
-             w-[280px]: Ancho base para celulares.
-             sm:w-[450px]: Se extiende a la derecha en tablets/PC (más ancho para que el texto no baje tanto).
-             z-[110]: Un nivel más arriba para asegurar que flote SOBRE el siguiente ítem sin empujarlo.
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.2 }}
+            /* 
+               EXPLICACIÓN DE LA LÓGICA NIVEL DIOS:
+               1. absolute left-0: SIEMPRE alinea el inicio del texto con el inicio del botón.
+               2. sm:w-[450px]: En PC, el ancho es fijo y amplio hacia la derecha.
+               3. w-[calc(100vw-120px)]: En la primera columna de móvil, ocupa casi todo el ancho.
+               4. isRightColumnMobile ? 'w-[calc(50vw-20px)]' : ... : Si el botón está a la derecha,
+                  limitamos su ancho para que no choque con el borde del celular.
             */
-            className="absolute top-full left-0 w-[280px] sm:w-[450px] p-5 bg-jw-navy border-t-2 border-t-jw-accent shadow-[0_20px_50px_rgba(0,0,0,0.5)] z-[110] rounded-none mt-1 pointer-events-none"
+            className={`absolute top-full left-0 mt-1 p-4 bg-jw-navy border-t-2 border-t-jw-accent shadow-[0_20px_50px_rgba(0,0,0,0.6)] z-[150] pointer-events-none
+              ${isRightColumnMobile ? "w-[calc(46vw)]" : "w-[calc(85vw)]"} 
+              sm:w-[450px]`}
           >
-            <p className="text-tip-info text-white font-medium leading-relaxed normal whitespace-normal">
+            <p className="text-[13px] sm:text-[15px] text-white font-medium leading-relaxed normal-case whitespace-normal">
               {info}
             </p>
           </Motion.div>
@@ -121,7 +127,7 @@ const SecurityTipCard = ({ tip, index }) => {
         damping: 20, // Amortiguación
         duration: 0.8,
       }}
-      className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0 items-stretch mb-16 relative group`}
+      className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0 items-stretch mb-16 relative group hover:z-[100] focus-within:z-[100] transition-all`}
     >
       {/* 1. La caja se queda quieta (div estándar) */}
       <div className="bg-jw-navy p-8 flex items-center justify-center shrink-0 border border-white/10 shadow-2xl">
@@ -152,9 +158,14 @@ const SecurityTipCard = ({ tip, index }) => {
           {tip.description}
         </p>
 
-        <div className="flex flex-wrap gap-5 justify-start relative">
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 sm:gap-5 justify-start relative">
           {tip.tags?.map((tag, i) => (
-            <InteractiveTag key={i} label={tag.label} info={tag.info} />
+            <InteractiveTag
+              key={i}
+              label={tag.label}
+              info={tag.info}
+              index={i}
+            />
           ))}
         </div>
       </GlassContainer>
@@ -203,16 +214,16 @@ function SecurityTipsPage() {
         ),
         tags: [
           {
-            label: "Prevención",
-            info: "Si te apuran para pedirte plata: pará, pensá y verificá.",
+            label: t("security.tips.estafas.tags.prevention", "Prevención"),
+            info: t("security.tips.estafas.tags.prevention_info"),
           },
           {
-            label: "Verificación",
-            info: "Corta la llamada y comunícate tú mismo con la persona por un medio conocido.",
+            label: t("security.tips.estafas.tags.verification", "Verificación"),
+            info: t("security.tips.estafas.tags.verification_info"),
           },
           {
-            label: "Deepfake",
-            info: "Tecnología que clona identidades. No confíes solo en lo que ves o oyes en una pantalla.",
+            label: t("security.tips.estafas.tags.deepfake", "Deepfake"),
+            info: t("security.tips.estafas.tags.deepfake_info"),
           },
         ],
       },
@@ -226,16 +237,16 @@ function SecurityTipsPage() {
         ),
         tags: [
           {
-            label: "Biometría",
-            info: "Configura FaceID o Huella. Es mucho más seguro que un patrón que alguien pueda ver.",
+            label: t("security.tips.physical.tags.biometry", "Biometría"),
+            info: t("security.tips.physical.tags.biometry_info"),
           },
           {
-            label: "Actualizaciones",
-            info: "No ignores el mensaje de 'Nueva versión'; cierran agujeros de seguridad críticos.",
+            label: t("security.tips.physical.tags.updates", "Actualizaciones"),
+            info: t("security.tips.physical.tags.updates_info"),
           },
           {
-            label: "Cifrado",
-            info: "Asegúrate de que el cifrado esté activo para proteger tus fotos ante posibles robos.",
+            label: t("security.tips.physical.tags.encryption", "Cifrado"),
+            info: t("security.tips.physical.tags.encryption_info"),
           },
         ],
       },
@@ -249,16 +260,16 @@ function SecurityTipsPage() {
         ),
         tags: [
           {
-            label: "2FA",
-            info: "Activa la verificación en dos pasos siempre. Es una segunda capa de blindaje vital.",
+            label: t("security.tips.keys.tags.2fa", "2FA"),
+            info: t("security.tips.keys.tags.2fa_info"),
           },
           {
-            label: "Robustez",
-            info: "Usa frases en lugar de palabras. Ejemplo: 'Ciel0-Azul-2026!' es mejor que 'pedro123'.",
+            label: t("security.tips.keys.tags.robustness", "Robustez"),
+            info: t("security.tips.keys.tags.robustness_info"),
           },
           {
-            label: "Passphrases",
-            info: "Las frases largas son mucho más difíciles de descifrar para las computadoras de los atacantes.",
+            label: t("security.tips.keys.tags.passphrases", "Passphrases"),
+            info: t("security.tips.keys.tags.passphrases_info"),
           },
         ],
       },
@@ -272,16 +283,16 @@ function SecurityTipsPage() {
         ),
         tags: [
           {
-            label: "Urgencia",
-            info: "Si el mensaje dice 'Tu cuenta se cerrará en 1 hora', es casi seguro que es una estafa.",
+            label: t("security.tips.phishing.tags.urgency", "Urgencia"),
+            info: t("security.tips.phishing.tags.urgency_info"),
           },
           {
-            label: "Enlaces",
-            info: "Revisa bien la dirección. En vez de google.com, los estafadores usan g00gle-login.net.",
+            label: t("security.tips.phishing.tags.links", "Enlaces"),
+            info: t("security.tips.phishing.tags.links_info"),
           },
           {
-            label: "Archivos",
-            info: "Nunca abras un archivo .ZIP o .EXE que no hayas solicitado explícitamente.",
+            label: t("security.tips.phishing.tags.files", "Archivos"),
+            info: t("security.tips.phishing.tags.files_info"),
           },
         ],
       },
@@ -295,16 +306,16 @@ function SecurityTipsPage() {
         ),
         tags: [
           {
-            label: "Identidad",
-            info: "Evita revelar datos sensibles en fotos, como uniformes, logos o ubicaciones reales.",
+            label: t("security.tips.family.tags.identity", "Identidad"),
+            info: t("security.tips.family.tags.identity_info"),
           },
           {
-            label: "Extraños",
-            info: "Regla de oro para menores: 'Si no lo conoces en persona, no es tu amigo'.",
+            label: t("security.tips.family.tags.strangers", "Extraños"),
+            info: t("security.tips.family.tags.strangers_info"),
           },
           {
-            label: "Privacidad",
-            info: "Revisa periódicamente los ajustes de privacidad de las redes sociales de tu familia.",
+            label: t("security.tips.family.tags.privacy", "Privacidad"),
+            info: t("security.tips.family.tags.privacy_info"),
           },
         ],
       },
@@ -318,16 +329,16 @@ function SecurityTipsPage() {
         ),
         tags: [
           {
-            label: "Frecuencia",
-            info: "Realiza respaldos al menos una vez al mes de tus fotos y documentos más valiosos.",
+            label: t("security.tips.backup.tags.frequency", "Frecuencia"),
+            info: t("security.tips.backup.tags.frequency_info"),
           },
           {
-            label: "Desconexión",
-            info: "Copia tus archivos a un disco externo y, lo más importante, desconéctalo del equipo.",
+            label: t("security.tips.backup.tags.disconnection", "Desconexión"),
+            info: t("security.tips.backup.tags.disconnection_info"),
           },
           {
-            label: "Nube",
-            info: "Usa servicios de nube con cifrado, pero no dependas únicamente de ellos.",
+            label: t("security.tips.backup.tags.cloud", "Nube"),
+            info: t("security.tips.backup.tags.cloud_info"),
           },
         ],
       },
