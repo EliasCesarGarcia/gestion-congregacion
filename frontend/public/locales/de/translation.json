@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Bolivianisches Quechua",
 
-  
   "greeting_morning": "Guten Morgen,",
   "greeting_afternoon": "Guten Tag,",
   "greeting_night": "Guten Abend,",
@@ -120,7 +119,6 @@
   "footer_title": "THEOKRATISCHE LOKALE VERWALTUNG",
   "footer_use": "Institutionelle Nutzung",
   "footer_terms": "Nutzungsbedingungen",
-
 
   "profile_title": "Kontoverwaltung",
   "profile_personal_id": "Persönliche ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Sekretär",
   "profile_pub_help_or": "oder den",
   "profile_pub_help_service": "Dienstaufseher",
-  "profile_pub_help_suffix": "Ihrer Versammlung."
+  "profile_pub_help_suffix": "Ihrer Versammlung.",
 
-
+  "security": {
+    "seo": {
+      "title": "Sicherheitstipps | Lokale Verwaltung",
+      "desc": "Leitfaden für erweiterten digitalen Schutz und Datenschutz für die Gemeinde."
+    },
+    "header_title": "Sicherheitstipps",
+    "back": "Zurück",
+    "revision": "Letzte Überarbeitung",
+    "recent": "Aktuell",
+    "hero_title": "Ihre Integrität ist",
+    "hero_highlight": "unsere Priorität.",
+    "hero_sub": "Wesentliche Gewohnheiten zum Schutz Ihrer Privatsphäre und persönlichen Informationen.",
+    "db_alert": "Aktuelle Mitteilung",
+    "accept_btn": "Verstanden und zurück",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyber-Betrug",
+        "desc": "Gefälschte digitale Inhalte können bekannte Stimmen und Gesichter nachahmen, um Ihre Informationen oder Ihr Geld zu stehlen.",
+        "tags": {
+          "prevention": "Prävention",
+          "prevention_info": "Wenn Sie gedrängt werden, Geld oder sensible Daten preiszugeben: Halten Sie inne, denken Sie nach und verifizieren Sie immer.",
+          "verification": "Verifizierung",
+          "verification_info": "Beenden Sie die Kommunikation und rufen Sie die Person selbst über einen bekannten sicheren Kanal an.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Technologie zur Identitätsklonung. Vertrauen Sie nicht nur dem, was Sie auf einem Bildschirm sehen oder hören."
+        }
+      },
+      "physical": {
+        "title": "2. Physischer Umfang",
+        "desc": "Ihr Telefon ist der Hauptschlüssel. Ein Gerät ohne Sperre ist eine offene Tür zu Ihrem gesamten Privatleben.",
+        "tags": {
+          "biometry": "Biometrie",
+          "biometry_info": "Richten Sie FaceID oder Fingerabdruck ein. Es ist viel sicherer als ein Muster, das Ihnen jemand über die Schulter ausspähen könnte.",
+          "updates": "Updates",
+          "updates_info": "Ignorieren Sie keine 'Neue Version'-Meldungen; sie schließen oft kritische Sicherheitslücken, die kürzlich entdeckt wurden.",
+          "encryption": "Verschlüsselung",
+          "encryption_info": "Stellen Sie sicher, dass die Festplattenverschlüsselung aktiv ist, um Ihre Dateien und Fotos vor möglichem Diebstahl zu schützen."
+        }
+      },
+      "keys": {
+        "title": "3. Hochwirksame Passwörter",
+        "desc": "Vermeiden Sie offensichtliche Daten. Die meisten Angriffe geschehen aufgrund schwacher oder auf mehreren Seiten wiederholter Passwörter.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktivieren Sie die Zwei-Faktor-Authentifizierung für alle Ihre Konten. Es ist die wichtigste zweite Schutzschicht.",
+          "robustness": "Robustheit",
+          "robustness_info": "Verwenden Sie lange Phrasen anstelle einfacher Wörter. Beispiel: 'Blauer-Himmel-2026!' ist exponentiell besser als 'peter123'.",
+          "passphrases": "Passphrasen",
+          "passphrases_info": "Lange Phrasen sind für die heutigen Angreifer-Computer fast unmöglich zu knacken."
+        }
+      },
+      "phishing": {
+        "title": "4. Den Haken erkennen",
+        "desc": "Kriminelle geben sich als technischer Support oder Banken aus, um Ihre Daten durch Angst oder übermäßige Dringlichkeit zu stehlen.",
+        "tags": {
+          "urgency": "Dringlichkeit",
+          "urgency_info": "Wenn die Nachricht besagt: 'Ihr Konto wird in 1 Stunde geschlossen, wenn Sie nicht klicken', ist es fast sicher ein Betrug.",
+          "links": "Links",
+          "links_info": "Prüfen Sie die URL sorgfältig. Betrüger verwenden oft ähnliche Namen wie 'g00gle.net' statt 'google.com'.",
+          "files": "Dateien",
+          "files_info": "Öffnen Sie niemals unerwartete Anhänge, insbesondere wenn sie Endungen wie .ZIP, .EXE oder .BAT haben."
+        }
+      },
+      "family": {
+        "title": "5. Erbe der Kinder",
+        "desc": "Kindern fehlt die Arglist, um Fallen zu erkennen. Lehren Sie sie, dass das, was im Internet hochgeladen wird, für immer dort bleibt.",
+        "tags": {
+          "identity": "Identität",
+          "identity_info": "Vermeiden Sie die Preisgabe sensibler Daten auf öffentlichen Fotos, wie Schuluniformen, Firmenlogos oder Echtzeit-Standorte.",
+          "strangers": "Fremde",
+          "strangers_info": "Goldene Regel für Minderjährige: 'Wenn du sie nicht physisch persönlich kennst, sind sie kein echter Freund'.",
+          "privacy": "Privatsphäre",
+          "privacy_info": "Überprüfen Sie regelmäßig die Datenschutzeinstellungen der sozialen Netzwerke und Geräte Ihrer Familienmitglieder."
+        }
+      },
+      "backup": {
+        "title": "6. Datenüberleben",
+        "desc": "Ein Virus kann Ihre Dateien sperren oder löschen. Die einzige wirklich sichere Kopie ist die, die physisch getrennt ist.",
+        "tags": {
+          "frequency": "Häufigkeit",
+          "frequency_info": "Sichern Sie Ihre wertvollsten Fotos und Dokumente mindestens einmal im Monat.",
+          "disconnection": "Trennung",
+          "disconnection_info": "Kopieren Sie Ihre Dateien auf ein externes Laufwerk und trennen Sie es nach Abschluss physisch vom Computer.",
+          "cloud": "Cloud",
+          "cloud_info": "Nutzen Sie Cloud-Speicherdienste mit Verschlüsselung, verlassen Sie sich aber nie ausschließlich auf sie als einzige Kopie."
+        }
+      }
+    }
+  }
 }

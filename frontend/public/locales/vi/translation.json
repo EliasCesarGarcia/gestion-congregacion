@@ -82,7 +82,6 @@
   "lang_gn": "Tiếng Guarani",
   "lang_qu": "Tiếng Quechua Bolivia",
 
-  
   "greeting_morning": "Chào buổi sáng,",
   "greeting_afternoon": "Chào buổi chiều,",
   "greeting_night": "Chào buổi tối,",
@@ -120,7 +119,6 @@
   "footer_title": "QUẢN LÝ ĐỊA PHƯƠNG THẦN QUYỀN",
   "footer_use": "Sử dụng nội bộ tổ chức",
   "footer_terms": "Điều khoản sử dụng",
-
 
   "profile_title": "Quản trị Tài khoản",
   "profile_personal_id": "ID Cá nhân",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Trưởng lão Thư ký",
   "profile_pub_help_or": "hoặc",
   "profile_pub_help_service": "Trưởng lão Phục vụ",
-  "profile_pub_help_suffix": "trong hội thánh của bạn."
+  "profile_pub_help_suffix": "trong hội thánh của bạn.",
 
-
+  "security": {
+    "seo": {
+      "title": "Mẹo bảo mật | Quản lý địa phương",
+      "desc": "Hướng dẫn bảo vệ kỹ thuật số nâng cao và bảo vệ dữ liệu cho hội thánh."
+    },
+    "header_title": "Mẹo bảo mật",
+    "back": "Quay lại",
+    "revision": "Lần soát xét cuối",
+    "recent": "Gần đây",
+    "hero_title": "Sự liêm chính của bạn là",
+    "hero_highlight": "ưu tiên của chúng tôi.",
+    "hero_sub": "Những thói quen thiết yếu để chăm sóc quyền riêng tư và thông tin cá nhân của bạn.",
+    "db_alert": "Thông báo phút chót",
+    "accept_btn": "Đã hiểu và quay lại",
+    "tips": {
+      "estafas": {
+        "title": "1. Lừa đảo mạng",
+        "desc": "Nội dung kỹ thuật số giả mạo có thể bắt chước giọng nói và khuôn mặt quen thuộc để đánh cắp thông tin hoặc tiền của bạn.",
+        "tags": {
+          "prevention": "Phòng ngừa",
+          "prevention_info": "Nếu bạn bị thúc giục cung cấp tiền hoặc dữ liệu nhạy cảm: hãy dừng lại, suy nghĩ và luôn xác minh.",
+          "verification": "Xác minh",
+          "verification_info": "Kết thúc liên lạc và tự gọi cho người đó thông qua một kênh an toàn đã biết.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Công nghệ nhân bản danh tính. Đừng chỉ tin vào những gì bạn thấy hoặc nghe qua màn hình."
+        }
+      },
+      "physical": {
+        "title": "2. Phạm vi vật lý",
+        "desc": "Điện thoại của bạn là chìa khóa vạn năng. Một thiết bị không khóa là cánh cửa mở toang cho toàn bộ đời tư của bạn.",
+        "tags": {
+          "biometry": "Sinh trắc học",
+          "biometry_info": "Thiết lập FaceID hoặc Vân tay. Nó an toàn hơn nhiều so với hình vẽ mẫu mà ai đó có thể nhìn trộm qua vai bạn.",
+          "updates": "Cập nhật",
+          "updates_info": "Đừng bỏ qua các thông báo 'Phiên bản mới'; chúng thường vá các lỗ hổng bảo mật nghiêm trọng vừa được phát hiện.",
+          "encryption": "Mã hóa",
+          "encryption_info": "Đảm bảo mã hóa đĩa đang hoạt động để bảo vệ tệp và ảnh của bạn khỏi nguy cơ bị trộm cắp vật lý."
+        }
+      },
+      "keys": {
+        "title": "3. Khóa bảo mật cao",
+        "desc": "Tránh sử dụng dữ liệu hiển nhiên. Hầu hết các cuộc tấn công xảy ra do mật khẩu yếu hoặc lặp lại trên nhiều trang web.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Kích hoạt xác minh hai bước trên tất cả các tài khoản của bạn. Đây là lớp bảo vệ quan trọng thứ hai.",
+          "robustness": "Độ mạnh",
+          "robustness_info": "Sử dụng các cụm từ dài thay vì các từ đơn giản. Ví dụ: 'Bau-Troi-Xanh-2026!' tốt hơn nhiều so với 'minh123'.",
+          "passphrases": "Cụm mật khẩu",
+          "passphrases_info": "Các cụm từ dài gần như không thể bị bẻ khóa bởi các máy tính tấn công ngày nay."
+        }
+      },
+      "phishing": {
+        "title": "4. Phát hiện lưỡi câu",
+        "desc": "Tội phạm giả làm hỗ trợ kỹ thuật hoặc ngân hàng để đánh cắp dữ liệu của bạn thông qua nỗi sợ hãi hoặc sự khẩn cấp quá mức.",
+        "tags": {
+          "urgency": "Khẩn cấp",
+          "urgency_info": "Nếu tin nhắn nói 'Tài khoản của bạn sẽ đóng trong 1 giờ nếu bạn không nhấp vào', thì đó chắc chắn là lừa đảo.",
+          "links": "Liên kết",
+          "links_info": "Kiểm tra URL cẩn thận. Kẻ lừa đảo thường dùng tên tương tự như 'g00gle.net' thay vì 'google.com'.",
+          "files": "Tệp tin",
+          "files_info": "Không bao giờ mở các tệp đính kèm bất ngờ, đặc biệt nếu chúng có phần mở rộng như .ZIP, .EXE hoặc .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Di sản cho trẻ em",
+        "desc": "Trẻ em thiếu sự cảnh giác để phát hiện cạm bẫy. Hãy dạy trẻ rằng những gì đăng lên internet sẽ ở đó mãi mãi.",
+        "tags": {
+          "identity": "Danh tính",
+          "identity_info": "Tránh tiết lộ dữ liệu nhạy cảm trong ảnh công khai, chẳng hạn như đồng phục trường, logo công ty hoặc vị trí thời gian thực.",
+          "strangers": "Người lạ",
+          "strangers_info": "Quy tắc vàng cho trẻ vị thành niên: 'Nếu con không biết họ ngoài đời thực, họ không phải là bạn thật'.",
+          "privacy": "Riêng tư",
+          "privacy_info": "Định kỳ xem lại cài đặt quyền riêng tư của mạng xã hội và thiết bị của các thành viên trong gia đình."
+        }
+      },
+      "backup": {
+        "title": "6. Sinh tồn dữ liệu",
+        "desc": "Vi-rút có thể khóa hoặc xóa tệp của bạn. Bản sao thực sự an toàn duy nhất là bản sao được ngắt kết nối vật lý.",
+        "tags": {
+          "frequency": "Tần suất",
+          "frequency_info": "Sao lưu những bức ảnh và tài liệu quý giá nhất của bạn ít nhất mỗi tháng một lần.",
+          "disconnection": "Ngắt kết nối",
+          "disconnection_info": "Sao chép tệp vào ổ cứng ngoài và quan trọng nhất là ngắt kết nối vật lý khỏi máy tính khi hoàn tất.",
+          "cloud": "Đám mây",
+          "cloud_info": "Sử dụng dịch vụ lưu trữ đám mây có mã hóa, nhưng đừng bao giờ chỉ dựa vào chúng như một bản sao duy nhất."
+        }
+      }
+    }
+  }
 }

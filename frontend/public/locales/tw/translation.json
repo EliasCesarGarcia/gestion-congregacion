@@ -25,9 +25,63 @@
   "device_mobile": "Fon",
   "device_pc": "Kɔmputa",
 
-  "lang_es": "Spanish", "lang_en": "English", "lang_de": "German", "lang_fr": "French", "lang_pt": "Portuguese", "lang_it": "Italian", "lang_nl": "Dutch", "lang_ru": "Russian", "lang_el": "Greek", "lang_ja": "Japanese", "lang_zh_cn": "Chinese (Simple)", "lang_ko": "Korean", "lang_id": "Indonesian", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabic", "lang_he": "Hebrew", "lang_ca": "Catalan", "lang_zh_tw": "Chinese (Tradition)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Patois", "lang_lr": "Liberian English", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+  "lang_es": "Spanish",
+  "lang_en": "English",
+  "lang_de": "German",
+  "lang_fr": "French",
+  "lang_pt": "Portuguese",
+  "lang_it": "Italian",
+  "lang_nl": "Dutch",
+  "lang_ru": "Russian",
+  "lang_el": "Greek",
+  "lang_ja": "Japanese",
+  "lang_zh_cn": "Chinese (Simple)",
+  "lang_ko": "Korean",
+  "lang_id": "Indonesian",
+  "lang_vi": "Vietnamese",
+  "lang_sw": "Swahili",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albanian",
+  "lang_am": "Amharic",
+  "lang_ar": "Arabic",
+  "lang_he": "Hebrew",
+  "lang_ca": "Catalan",
+  "lang_zh_tw": "Chinese (Tradition)",
+  "lang_hr": "Croatian",
+  "lang_cs": "Czech",
+  "lang_da": "Danish",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finnish",
+  "lang_ht": "Haitian Creole",
+  "lang_haw": "Hawaiian",
+  "lang_hi": "Hindi",
+  "lang_hu": "Hungarian",
+  "lang_ilo": "Ilocano",
+  "lang_jam": "Jamaican Patois",
+  "lang_lr": "Liberian English",
+  "lang_mg": "Malagasy",
+  "lang_ml": "Malayalam",
+  "lang_no": "Norwegian",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Polish",
+  "lang_ro": "Romanian",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Slovak",
+  "lang_sl": "Slovenian",
+  "lang_sv": "Swedish",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamil",
+  "lang_th": "Thai",
+  "lang_tr": "Turkish",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrainian",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guarani",
+  "lang_qu": "Quechua",
 
-  
   "greeting_morning": "Anɔpa dɛ,",
   "greeting_afternoon": "Awia dɛ,",
   "greeting_night": "Anadwo dɛ,",
@@ -65,7 +119,6 @@
   "footer_title": "TEOKRATIK MPANYINFO NHYEHYƐE",
   "footer_use": "Asafo Nnwuma Sɛso",
   "footer_terms": "Nnwuma ho Nhyehyɛe",
-
 
   "profile_title": "Akont So Hwɛ",
   "profile_personal_id": "W'ankasa Wo ID",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Asafo mu kyerɛwfoɔ",
   "profile_pub_help_or": "anaa",
   "profile_pub_help_service": "Som ho ɔhwɛfoɔ",
-  "profile_pub_help_suffix": "a ɛwɔ wo asafo mu."
+  "profile_pub_help_suffix": "a ɛwɔ wo asafo mu.",
 
-
+  "security": {
+    "seo": {
+      "title": "Ahobammɔ ho afutuo | Mpɔtam so hyehyɛe",
+      "desc": "Akwan a yɛfa so bɔ yɛn ho ban wɔ kɔmputa so na yɛbɔ yɛn nneɛma ho ban."
+    },
+    "header_title": "Ahobammɔ ho afutuo",
+    "back": "Sane kɔ akyi",
+    "revision": "Nhwehwɛmu a ɛdi akyi",
+    "recent": "Akyiri yi deɛ",
+    "hero_title": "Wo nokoredi ne",
+    "hero_highlight": "yɛn anidasoɔ titiriw.",
+    "hero_sub": "Suban titiriw a ɛbɛma woabɔ wo kokoamsɛm ne wo nneɛma ho ban.",
+    "db_alert": "Amanneɛbɔ a ɛba mpo",
+    "accept_btn": "Mate ase, sane kɔ akyi",
+    "tips": {
+      "estafas": {
+        "title": "1. Kɔmputa so nnaadaa",
+        "desc": "Atoro nneɛma bi betumi asuasua nnipa a wo nim wɔn nne ne wɔn anim de awia wo nneɛma anaa wo sika.",
+        "tags": {
+          "prevention": "Kwan a yɛsi siane",
+          "prevention_info": "Sɛ obi hyehyɛ wo sɛ ma sika anaa wo kokoamsɛm a: gyina, dwen ho, na hwehwɛ mu yie.",
+          "verification": "Nhwehwɛmu",
+          "verification_info": "Twa nkitahodi no mu na wo ankasa frɛ onipa no wɔ fon so kwan a ɛyɛ hu mu.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Mfiri a wɔde suasua onipa anim ne ne nne. Mma wo nni nea woahu anaa woate wɔ mfiri so nyinaa nni."
+        }
+      },
+      "physical": {
+        "title": "2. Wo fon ho ahobammɔ",
+        "desc": "Wo fon no ne wo safie titiriw. Sɛ fon a nsafoa nni ho a, ɛte sɛ ɛpono a abue ma wo kokoamsɛm nyinaa.",
+        "tags": {
+          "biometry": "Biometry",
+          "biometry_info": "Hyehyɛ anim deɛ anaa nsateaa deɛ a wɔde safoa fon. Ɛyɛ yie koraa sene nsɛmkyerɛ bi a obi betumi ahu wɔ wo maba so.",
+          "updates": "Nsesaeɛ",
+          "updates_info": "Mma wo mmu nsesaeɛ afoforo (New version) animtia; ɛboa siesie ahobammɔ fɛm biara a ɛba.",
+          "encryption": "Encryption",
+          "encryption_info": "Ma wo hu sɛ encryption no reyɛ adwuma na woatumi abɔ wo mfoni ne wo nneɛma ho ban."
+        }
+      },
+      "keys": {
+        "title": "3. Nsafoa a ɛyɛ den",
+        "desc": "Mma wo mmfa nsɛm a nnipa betumi ahu mmu safoa. Atahye ntumi mma yie sɛ wo nsafoa no yɛ mmerɛ.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Ma ahobammɔ akwan mmienu no nyɛ adwuma wɔ wo akɔnta nyinaa so. Ɛno ne kwan titiriw a ɛbɔ wo ho ban.",
+          "robustness": "Emu yiedie",
+          "robustness_info": "Fa nsɛmfua ntenten mmu safoa sene nsɛmfua ntiantia. Nhwɛsoɔ: 'Blue-Sky-2026!' ye koraa sene 'peter123'.",
+          "passphrases": "Nsafoa nsɛm",
+          "passphrases_info": "Nsɛm ntenten yɛ den yie ma kɔmputa so adifudepɛfoɔ sɛ wɔbɛbue."
+        }
+      },
+      "phishing": {
+        "title": "4. Nnaadaa akyiwadeɛ",
+        "desc": "Adifudepɛfoɔ yɛ wɔn ho sɛ sikakorabea anaa mfiridwumayɛfoɔ de fa ehu so wia wo nneɛma.",
+        "tags": {
+          "urgency": "Ntɛmpɛ",
+          "urgency_info": "Sɛ mmoa kyerɛ kyerɛ sɛ 'Wɔbɛto wo akɔnta mu dɔnhwere 1 mu' a, ɛnneɛ ɛyɛ nnaadaa.",
+          "links": "Links",
+          "links_info": "Hwɛ URL no yie. Nnaadaafoɔ taa de din a ɛsɛ 'google.com' nanso ɛnyɛ bi te sɛ 'g00gle.net' na ɛdi dwuma.",
+          "files": "Nneɛma",
+          "files_info": "Mma wo mmue nneɛma biara a wo nhwɛ kwan, titiriw nea ɛwie wɔ .ZIP, .EXE, anaa .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Mmofra agyapadeɛ",
+        "desc": "Mmofra nni nyansa a wɔde bɛhu nnaadaa. Kyerɛ wɔn sɛ biribiara a ɛkɔ intanɛt so no tena hɔ daa.",
+        "tags": {
+          "identity": "Onipa su",
+          "identity_info": "Mma wo mmfa wo sukuu ntadeɛ anaa baabi a wo te nkyerɛ nnipa pii wɔ kɔmputa so.",
+          "strangers": "Ananafoɔ",
+          "strangers_info": "Mmofra mmara titiriw: 'Sɛ wo nnyiaa onipa no anim ne anim a, ɛnneɛ ɔnyɛ wo adamfo pa'.",
+          "privacy": "Kokoamsɛm",
+          "privacy_info": "Bere ne bere mu no, hwehwɛ wo abusuafoɔ kokoamsɛm hyehyɛeɛ mu wɔ wɔn fon so."
+        }
+      },
+      "backup": {
+        "title": "6. Nneɛma a yɛkora",
+        "desc": "Mmoawa bi betumi asɛe wo nneɛma. Kwan a ɛyɛ den ne sɛ wo de bɛkora baabi a ɛne kɔmputa no nni nkitahodi.",
+        "tags": {
+          "frequency": "Bere ne bere mu",
+          "frequency_info": "Kora wo mfoni ne wo nkrataa titiriw anyɛ yie koraa no bosome biara.",
+          "disconnection": "Nkitahodi a yɛtwa",
+          "disconnection_info": "Fa wo nneɛma kɔ external drive so na yi fi kɔmputa no mu sɛ wo wie adwuma no a.",
+          "cloud": "Cloud",
+          "cloud_info": "Fa cloud kwan so kora nneɛma nanso mma ɛnyɛ ɛno nkoaa na wo de wo ho bɛto so."
+        }
+      }
+    }
+  }
 }

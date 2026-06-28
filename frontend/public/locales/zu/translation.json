@@ -25,9 +25,63 @@
   "device_mobile": "Foni",
   "device_pc": "Ikhompyutha",
 
-  "lang_es": "i-Spanish", "lang_en": "i-English", "lang_de": "i-German", "lang_fr": "i-French", "lang_pt": "i-Portuguese", "lang_it": "i-Italian", "lang_nl": "i-Dutch", "lang_ru": "i-Russian", "lang_el": "i-Greek", "lang_ja": "i-Japanese", "lang_zh_cn": "i-Chinese (esilula)", "lang_ko": "i-Korean", "lang_id": "i-Indonesian", "lang_vi": "i-Vietnamese", "lang_sw": "isiSwahili", "lang_af": "isiAfrikaans", "lang_sq": "isi-Albanian", "lang_am": "isi-Amharic", "lang_ar": "isi-Arabic", "lang_he": "isi-Hebrew", "lang_ca": "isi-Catalan", "lang_zh_tw": "i-Chinese (yesiko)", "lang_hr": "isi-Croatian", "lang_cs": "isi-Czech", "lang_da": "isi-Danish", "lang_ee": "isi-Ewe", "lang_fi": "isi-Finnish", "lang_ht": "isi-Haitian", "lang_haw": "isi-Hawaiian", "lang_hi": "isi-Hindi", "lang_hu": "isi-Hungarian", "lang_ilo": "isi-Ilocano", "lang_jam": "isi-Jamaican", "lang_lr": "isi-Liberian", "lang_mg": "isi-Malagasy", "lang_ml": "isi-Malayalam", "lang_no": "isi-Norwegian", "lang_pap": "isi-Papiamento", "lang_pcm": "isi-Pidgin", "lang_pl": "isi-Polish", "lang_ro": "isi-Romanian", "lang_nso": "isiSepedi", "lang_st": "isiSesotho", "lang_sk": "isi-Slovak", "lang_sl": "isi-Slovenian", "lang_sv": "isi-Swedish", "lang_tl": "isi-Tagalog", "lang_ta": "isi-Tamil", "lang_th": "isi-Thai", "lang_tr": "isi-Turkish", "lang_tw": "isi-Twi", "lang_uk": "isi-Ukrainian", "lang_xh": "isiXhosa", "lang_zu": "isiZulu", "lang_gn": "isi-Guarani", "lang_qu": "isi-Quechua",
+  "lang_es": "i-Spanish",
+  "lang_en": "i-English",
+  "lang_de": "i-German",
+  "lang_fr": "i-French",
+  "lang_pt": "i-Portuguese",
+  "lang_it": "i-Italian",
+  "lang_nl": "i-Dutch",
+  "lang_ru": "i-Russian",
+  "lang_el": "i-Greek",
+  "lang_ja": "i-Japanese",
+  "lang_zh_cn": "i-Chinese (esilula)",
+  "lang_ko": "i-Korean",
+  "lang_id": "i-Indonesian",
+  "lang_vi": "i-Vietnamese",
+  "lang_sw": "isiSwahili",
+  "lang_af": "isiAfrikaans",
+  "lang_sq": "isi-Albanian",
+  "lang_am": "isi-Amharic",
+  "lang_ar": "isi-Arabic",
+  "lang_he": "isi-Hebrew",
+  "lang_ca": "isi-Catalan",
+  "lang_zh_tw": "i-Chinese (yesiko)",
+  "lang_hr": "isi-Croatian",
+  "lang_cs": "isi-Czech",
+  "lang_da": "isi-Danish",
+  "lang_ee": "isi-Ewe",
+  "lang_fi": "isi-Finnish",
+  "lang_ht": "isi-Haitian",
+  "lang_haw": "isi-Hawaiian",
+  "lang_hi": "isi-Hindi",
+  "lang_hu": "isi-Hungarian",
+  "lang_ilo": "isi-Ilocano",
+  "lang_jam": "isi-Jamaican",
+  "lang_lr": "isi-Liberian",
+  "lang_mg": "isi-Malagasy",
+  "lang_ml": "isi-Malayalam",
+  "lang_no": "isi-Norwegian",
+  "lang_pap": "isi-Papiamento",
+  "lang_pcm": "isi-Pidgin",
+  "lang_pl": "isi-Polish",
+  "lang_ro": "isi-Romanian",
+  "lang_nso": "isiSepedi",
+  "lang_st": "isiSesotho",
+  "lang_sk": "isi-Slovak",
+  "lang_sl": "isi-Slovenian",
+  "lang_sv": "isi-Swedish",
+  "lang_tl": "isi-Tagalog",
+  "lang_ta": "isi-Tamil",
+  "lang_th": "isi-Thai",
+  "lang_tr": "isi-Turkish",
+  "lang_tw": "isi-Twi",
+  "lang_uk": "isi-Ukrainian",
+  "lang_xh": "isiXhosa",
+  "lang_zu": "isiZulu",
+  "lang_gn": "isi-Guarani",
+  "lang_qu": "isi-Quechua",
 
-  
   "greeting_morning": "Sawubona,",
   "greeting_afternoon": "Sawubona (emini),",
   "greeting_night": "Sanibonani,",
@@ -65,7 +119,6 @@
   "footer_title": "UKUPHATHWA KWEBANDLA KWE-TEOKRATIKI",
   "footer_use": "Ukusetshenziswa kwebandla",
   "footer_terms": "Imigomo yokusetshenziswa",
-
 
   "profile_title": "Ukuphathwa kwe-Akhawunti",
   "profile_personal_id": "ID yoMuntu",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "mdala unobhala",
   "profile_pub_help_or": "noma",
   "profile_pub_help_service": "mdala wenkonzo",
-  "profile_pub_help_suffix": "webandla lakini."
+  "profile_pub_help_suffix": "webandla lakini.",
 
-
+  "security": {
+    "seo": {
+      "title": "Izeluleko zezokuphepha | Ukuphathwa kwendawo",
+      "desc": "Umhlahlandlela wokuvikelwa kwedatha nokuvikeleka kwedijithali webandla."
+    },
+    "header_title": "Izeluleko zezokuphepha",
+    "back": "Buyela emuva",
+    "revision": "Ukubuyekezwa kokugcina",
+    "recent": "Okwakamuva",
+    "hero_title": "Ubuqotho bakho",
+    "hero_highlight": "iyinto eza kuqala kithi.",
+    "hero_sub": "Imikhuba ebalulekile yokunakekela ubumfihlo bakho nemininingwane yakho.",
+    "db_alert": "Isaziso somzuzu wokugcina",
+    "accept_btn": "Kuzwakele futhi buyela emuva",
+    "tips": {
+      "estafas": {
+        "title": "1. Ukukhwabanisa kwe-Inthanethi",
+        "desc": "Okuqukethwe kwedijithali okungelona iqiniso kungalingisa amazwi nobuso obaziwayo ukuze kwebiwe imininingwane yakho noma imali yakho.",
+        "tags": {
+          "prevention": "Ukuvimbela",
+          "prevention_info": "Uma ucindezelwa ukuba unikeze imali noma idatha ebucayi: yima, cabanga, futhi uqinisekise ngaso sonke isikhathi.",
+          "verification": "Ukuqinisekisa",
+          "verification_info": "Nqamula ukuxhumana bese uzifonela wena lowo muntu usebenzisa indlela evikelekile neyaziwayo.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Ubuchwepheshe bokulingisa umuntu. Ungathembi kuphela lokho okubonayo noma okuzwayo esikrinini."
+        }
+      },
+      "physical": {
+        "title": "2. Ukuphepha kwefoni",
+        "desc": "Ifoni yakho iyisikhiye esiyinhloko. Idivayisi engenalo ukukhiya isikrini iyisicabha esivulekile kuyo yonke impilo yakho eyimfihlo.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Setha ubuso (FaceID) noma umunwe. Kuphephe kakhulu kunephethini umuntu angayibona ehlombe lakho.",
+          "updates": "Izibuyekezo",
+          "updates_info": "Ungayishayi indiva imiyalezo 'yenguqulo entsha'; ivamise ukuvala izikhala zezokuphepha ezitholakale muva nje.",
+          "encryption": "Encryption",
+          "encryption_info": "Qinisekisa ukuthi ukuvikelwa kwe-disk kuyasebenza ukuze uvikele amafayela nezithombe zakho ekuntshontshweni."
+        }
+      },
+      "keys": {
+        "title": "3. Amaphasiwedi anamandla",
+        "desc": "Gwema ukusebenzisa imininingwane esobala. Ukuhlaselwa okuningi kwenzeka ngenxa yamaphasiwedi abuthakathaka.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Vula ukuqinisekiswa kwezinyathelo ezimbili kuwo wonke ama-akhawunti akho. Kuyisivikelo esibaluleke kakhulu.",
+          "robustness": "Ukuqina",
+          "robustness_info": "Sebenzisa imishwana emide esikhundleni samagama alula. Isibonelo: 'Blue-Sky-2026!' ingcono kakhulu kune 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Imishwana emide kunzima kakhulu kumakhompiyutha abahlaseli ukuba bayiqhekeze namuhla."
+        }
+      },
+      "phishing": {
+        "title": "4. Ukubona iGwegwe",
+        "desc": "Izigilamkhuba zenza sengathi zivela ebhange noma kubantu bezobuchwepheshe ukuze zibe idatha yakho ngokukwesabisa.",
+        "tags": {
+          "urgency": "Ukuphuthuma",
+          "urgency_info": "Uma umlayezo uthi 'I-akhawunti yakho izovalwa eklasini eli-1', ngokuqinisekile wukukhwabanisa.",
+          "links": "Izixhumanisi",
+          "links_info": "Hlola i-URL ngokucophelela. Abakhwabanisi bavame ukusebenzisa amagama afana ne 'g00gle.net' esikhundleni se 'google.com'.",
+          "files": "Amafayela",
+          "files_info": "Ungalokothi uvule amafayela ongawalindele, ikakhulukazi uma enezijobelelo ezinjenge .ZIP, .EXE, noma .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Ifa Lezingane",
+        "desc": "Izingane azinalo ulwazi lokubona imigibe. Zifundise ukuthi lokho okufakwa ku-inthanethi kuhlala lapho phakade.",
+        "tags": {
+          "identity": "Umazisi",
+          "identity_info": "Gwema ukudalula imininingwane ebucayi ezithombeni zomphakathi, njengeyunifomu yesikole noma indawo okuyo.",
+          "strangers": "Abantu ongabazi",
+          "strangers_info": "Umthetho wegolide wezingane: 'Uma ungabazi mathupha, ababona abangane bangempela'.",
+          "privacy": "Ubumfihlo",
+          "privacy_info": "Hlola ngezikhathi ezithile izilungiselelo zobumfihlo zezinkundla zokuxhumana namadivayisi amalungu omndeni wakho."
+        }
+      },
+      "backup": {
+        "title": "6. Ukugcinwa Kwemininingwane",
+        "desc": "I-virus ingakhiya noma isuse amafayela akho. Ikhophi ephephe ngempela yileyo enganhunyeziwe kukhompiyutha.",
+        "tags": {
+          "frequency": "Imvamisa",
+          "frequency_info": "Yenza ikhophi yokuphepha yezithombe namadokhumenti akho abaluleke kakhulu okungenani kanye ngenyanga.",
+          "disconnection": "Ukunqamula",
+          "disconnection_info": "Kopishela amafayela akho kudrayivu yangaphandle bese uyikhipha kukhompiyutha uma uqeda.",
+          "cloud": "Cloud",
+          "cloud_info": "Sebenzisa izinsiza ze-cloud ezine-encryption, kodwa ungathembi zona kuphela njengekhophi eyodwa."
+        }
+      }
+    }
+  }
 }

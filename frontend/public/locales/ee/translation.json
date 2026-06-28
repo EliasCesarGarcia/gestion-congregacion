@@ -25,9 +25,63 @@
   "device_mobile": "Kaƒomɔ",
   "device_pc": "Kɔmpiuta",
 
-  "lang_es": "Spaniagbe", "lang_en": "Eŋlisigbe", "lang_de": "Germaniagbe", "lang_fr": "Fransigbe", "lang_pt": "Portugaliagbe", "lang_it": "Italiagbe", "lang_nl": "Hollandgbe", "lang_ru": "Rusiagbe", "lang_el": "Greekgbe", "lang_ja": "Japangbe", "lang_zh_cn": "Chinesegbe (Bɔbɔ)", "lang_ko": "Koreagbe", "lang_id": "Indonesiagbe", "lang_vi": "Vietnamgbe", "lang_sw": "Swahiligbe", "lang_af": "Afrikaansgbe", "lang_sq": "Albaniagbe", "lang_am": "Amharicgbe", "lang_ar": "Arabiagbe", "lang_he": "Hebreogbe", "lang_ca": "Catalangbe", "lang_zh_tw": "Chinesegbe (Kikin)", "lang_hr": "Croatiagbe", "lang_cs": "Czechgbe", "lang_da": "Danishgbe", "lang_ee": "Ewegbe", "lang_fi": "Finnishgbe", "lang_ht": "Haitigbe", "lang_haw": "Hawaiigbe", "lang_hi": "Hindigbe", "lang_hu": "Hungarygbe", "lang_ilo": "Ilocanogbe", "lang_jam": "Jamaicagbe", "lang_lr": "Liberiagbe", "lang_mg": "Malagasigbe", "lang_ml": "Malayalamgbe", "lang_no": "Norwaygbe", "lang_pap": "Papiamentogbe", "lang_pcm": "Pidgingbe", "lang_pl": "Polandgbe", "lang_ro": "Romaniagbe", "lang_nso": "Sepedigbe", "lang_st": "Sesothogbe", "lang_sk": "Slovakiagbe", "lang_sl": "Sloveniagbe", "lang_sv": "Swedengbe", "lang_tl": "Tagaloggbe", "lang_ta": "Tamilgbe", "lang_th": "Thaigbe", "lang_tr": "Turkeygbe", "lang_tw": "Twigbe", "lang_uk": "Ukraingbe", "lang_xh": "Xhosagbe", "lang_zu": "Zulugbe", "lang_gn": "Guaranigbe", "lang_qu": "Quechuagbe",
+  "lang_es": "Spaniagbe",
+  "lang_en": "Eŋlisigbe",
+  "lang_de": "Germaniagbe",
+  "lang_fr": "Fransigbe",
+  "lang_pt": "Portugaliagbe",
+  "lang_it": "Italiagbe",
+  "lang_nl": "Hollandgbe",
+  "lang_ru": "Rusiagbe",
+  "lang_el": "Greekgbe",
+  "lang_ja": "Japangbe",
+  "lang_zh_cn": "Chinesegbe (Bɔbɔ)",
+  "lang_ko": "Koreagbe",
+  "lang_id": "Indonesiagbe",
+  "lang_vi": "Vietnamgbe",
+  "lang_sw": "Swahiligbe",
+  "lang_af": "Afrikaansgbe",
+  "lang_sq": "Albaniagbe",
+  "lang_am": "Amharicgbe",
+  "lang_ar": "Arabiagbe",
+  "lang_he": "Hebreogbe",
+  "lang_ca": "Catalangbe",
+  "lang_zh_tw": "Chinesegbe (Kikin)",
+  "lang_hr": "Croatiagbe",
+  "lang_cs": "Czechgbe",
+  "lang_da": "Danishgbe",
+  "lang_ee": "Ewegbe",
+  "lang_fi": "Finnishgbe",
+  "lang_ht": "Haitigbe",
+  "lang_haw": "Hawaiigbe",
+  "lang_hi": "Hindigbe",
+  "lang_hu": "Hungarygbe",
+  "lang_ilo": "Ilocanogbe",
+  "lang_jam": "Jamaicagbe",
+  "lang_lr": "Liberiagbe",
+  "lang_mg": "Malagasigbe",
+  "lang_ml": "Malayalamgbe",
+  "lang_no": "Norwaygbe",
+  "lang_pap": "Papiamentogbe",
+  "lang_pcm": "Pidgingbe",
+  "lang_pl": "Polandgbe",
+  "lang_ro": "Romaniagbe",
+  "lang_nso": "Sepedigbe",
+  "lang_st": "Sesothogbe",
+  "lang_sk": "Slovakiagbe",
+  "lang_sl": "Sloveniagbe",
+  "lang_sv": "Swedengbe",
+  "lang_tl": "Tagaloggbe",
+  "lang_ta": "Tamilgbe",
+  "lang_th": "Thaigbe",
+  "lang_tr": "Turkeygbe",
+  "lang_tw": "Twigbe",
+  "lang_uk": "Ukraingbe",
+  "lang_xh": "Xhosagbe",
+  "lang_zu": "Zulugbe",
+  "lang_gn": "Guaranigbe",
+  "lang_qu": "Quechuagbe",
 
-  
   "greeting_morning": "Ŋdi,",
   "greeting_afternoon": "Ŋdɔ,",
   "greeting_night": "Fiɛyi,",
@@ -65,7 +119,6 @@
   "footer_title": "TUTUÐOÐO TEOKRATIKTƆ LE NUTOME",
   "footer_use": "Hame Kadodo Dɔwɔwɔ",
   "footer_terms": "Dɔwɔwɔ Ŋuti Seɖoɖowo",
-
 
   "profile_title": "Kɔnta Dzikpɔkpɔ",
   "profile_personal_id": "Wò Ŋutɔ Wò ID",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Agbalẽŋlɔla",
   "profile_pub_help_or": "alo",
   "profile_pub_help_service": "Subɔsubɔdɔzikpɔla",
-  "profile_pub_help_suffix": "le wò hamɛa me."
+  "profile_pub_help_suffix": "le wò hamɛa me.",
 
-
+  "security": {
+    "seo": {
+      "title": "Dedienɔnɔ ƒe aɖaŋuɖoɖowo | Nutome Dzikpɔkpɔ",
+      "desc": "Mɔfiame tso mɔ̃ɖaŋununya me dedienɔnɔ kple nyatakakawo ŋu na hamea."
+    },
+    "header_title": "Dedienɔnɔ ƒe aɖaŋuɖoɖowo",
+    "back": "Trɔ yi megbe",
+    "revision": "Numetoto mamlɛtɔ",
+    "recent": "Vatitina",
+    "hero_title": "Wò nuteƒewɔwɔe nye",
+    "hero_highlight": "míaƒe dɔ vevitɔ.",
+    "hero_sub": "Kɔnu veviwo tsɔ kpɔ wò amenyanya kple wò ŋutɔ wò nyatakakawo ta.",
+    "db_alert": "Gbeƒãɖeɖe kpata",
+    "accept_btn": "Mese egɔme eye matrɔ ayi megbe",
+    "tips": {
+      "estafas": {
+        "title": "1. Kaƒomɔ̃ dzi amebaba",
+        "desc": "Mɔ̃ɖaŋununya me nusiwo nye alakpa ate ŋu asrɔ̃ gbe kple ŋkumɛ siwo nènya tsɔ afi wò nyatakakawo alo wò ga.",
+        "tags": {
+          "prevention": "Xexeta",
+          "prevention_info": "Ne wole wò kpam be nàna ga alo nyatakaka vevi aɖewo: tɔ, bu tame, eye nàkpɔ egbɔ be enye nyateƒe.",
+          "verification": "Numetoto",
+          "verification_info": "Tsi dzeɖoɖoa eye nàŋutɔ nàƒo ka na amea to mɔ si nènya be enye dedie dzi.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Mɔ̃ɖaŋununya si tsɔna amewo ƒe amenyanya fiana to alakpa me. Mègaka ɖe nusi nèkpɔ alo nèse to mɔ̃ dzi dzi o."
+        }
+      },
+      "physical": {
+        "title": "2. Wò kaƒomɔ̃ dedienɔnɔ",
+        "desc": "Wò kaƒomɔ̃e nye safui vevitɔ. Kaƒomɔ̃ si dzi lɔk mele o la le abe ʋɔtru si woʋu ɖi na wò agbe me nyawo katã ene.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Wɔ FaceID alo asibi-de-dzesi lɔk. Edzea mɔ wu lɔk bubu si amewo ate ŋu akpɔ ne wole megbe na wò.",
+          "updates": "Yeyeɖoɖo",
+          "updates_info": "Mègagbe 'Gbegbe yeye' ƒe gbedasiwo o; zi geɖe la, woatsɔ nu yeyeawo axe dedienɔnɔ ƒe do siwo woɖo fiae.",
+          "encryption": "Encryption",
+          "encryption_info": "Kpɔ egbɔ be disk-encryption le dɔ wɔm be wò nyatakakawo kple nɔnɔmetatawo naxɔ dedienɔnɔ tso fiafiwo si me."
+        }
+      },
+      "keys": {
+        "title": "3. Safuinu sesẽwo",
+        "desc": "Mègazã nyatakaka siwo nya kpɔna bɔbɔe o. Amegbetɔwo ƒe dzesi gbɔdzɔgbɔdzɔwo alo safuinu siwo wozãna le teƒe geɖe lae na amewo ate ŋu awɔ nuvẽ amewo.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Wɔ mɔ-eve-dzi-dzizizi ɖe wò akɔntawo katã ŋu. Eye nye dedienɔnɔ ƒe nu vevi evelia.",
+          "robustness": "Sesẽnyenye",
+          "robustness_info": "Zã nya legbeɖeƒewo tsɔ wu nya kpuiwo. Akpɔɖeŋu: 'Dziƒo-Blɔ-2026!' nyo wu 'peter123' sɔgbɔ.",
+          "passphrases": "Nya sesẽwo",
+          "passphrases_info": "Nya legbee sesẽwo sesẽ na kaƒomɔ̃ dzi nuvẽwɔlawo be woagblẽ wo me."
+        }
+      },
+      "phishing": {
+        "title": "4. Ameɖulawo ƒe dzesiwo",
+        "desc": "Nuvẽwɔlawo wɔna abe ɖe wonye kpekpeɖeŋunalawo alo gadzraɖoƒewo ene tsɔ afi wò nyatakakawo to vɔvɔ̃ alo kpatawɔwɔ me.",
+        "tags": {
+          "urgency": "Kpatawɔwɔ",
+          "urgency_info": "Ne gbedasia gblɔ be 'Woatsi wò akɔnta le gaƒoƒo 1 me ne mèzi edzi o' la, ke amebabae wònye godoo.",
+          "links": "Links",
+          "links_info": "Kpɔ URL la ŋu nyuie. Amebaɖalawo zãna ŋkɔ siwo sɔ kple 'google.com' abe 'g00gle.net' ene.",
+          "files": "Nyatakakadzraɖoƒewo",
+          "files_info": "Mègagbugbɔ nyatakaka siwo mèkpɔ mɔ na o la ʋu o, vevietɔ ne woti gbe ɖe .ZIP, .EXE, alo .BAT dzi."
+        }
+      },
+      "family": {
+        "title": "5. Ðeviwo ƒe domenyinu",
+        "desc": "Ðeviwo menya nu tso mɔɖaɖawo ŋu o. Fia wo be nusi nètsɔ de internet dzi la nɔna afima tegbee.",
+        "tags": {
+          "identity": "Amenyanya",
+          "identity_info": "Mègagblɔ nyatakaka veviwo le nɔnɔmetatawo me o, abe sukuwu alo afisi nèle tututu ene.",
+          "strangers": "Amadzrowo",
+          "strangers_info": "Se vevi na ɖeviwo: 'Ne mènya wo ŋutɔ le agbe me o la, menye xɔlɔ̃ nyateƒetɔwoe wonye o'.",
+          "privacy": "Amenyanya",
+          "privacy_info": "Lé ŋku ɖe wò ƒometɔwo ƒe internet dzi dedienɔnɔ ƒe ɖoɖowo ŋu edziedzi."
+        }
+      },
+      "backup": {
+        "title": "6. Nyatakakawo dzraɖo",
+        "desc": "Dɔlele (virus) ate ŋu axe mɔ na wò nyatakakawo alo atsrɔ̃ wo. Mɔ nyuitɔ si dzi nàto adzra wo ɖoe nye be nàkɔ wo de mɔ̃ bubu si mèle internet dzi o la dzi.",
+        "tags": {
+          "frequency": "Edziedzi",
+          "frequency_info": "Dzra wò nɔnɔmetata kple nyatakaka veviwo ɖe teƒe bubu zi ɖeka le ɣleti me.",
+          "disconnection": "Mɔ̃titsitsi",
+          "disconnection_info": "Kɔ wò nyatakakawo ɖe external drive dzi eye nèɖee tso mɔ̃a ŋu ne nèwu enu.",
+          "cloud": "Cloud",
+          "cloud_info": "Zã cloud-dzraɖoƒe siwo me dedienɔnɔ le, gake mègaka ɖe wo ɖeka ko dzi o."
+        }
+      }
+    }
+  }
 }

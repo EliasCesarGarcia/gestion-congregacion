@@ -25,9 +25,63 @@
   "device_mobile": "Selpon",
   "device_pc": "Kompyuter",
 
-  "lang_es": "Kastila", "lang_en": "Ingles", "lang_de": "Aleman", "lang_fr": "Pranses", "lang_pt": "Portuges", "lang_it": "Italiano", "lang_nl": "Olandes", "lang_ru": "Ruso", "lang_el": "Griego", "lang_ja": "Hapon", "lang_zh_cn": "Tsino (Simple)", "lang_ko": "Koreano", "lang_id": "Indonesio", "lang_vi": "Biyetnamita", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanes", "lang_am": "Amhariko", "lang_ar": "Arabe", "lang_he": "Hebreo", "lang_ca": "Catalan", "lang_zh_tw": "Tsino (Tradisyonal)", "lang_hr": "Krowata", "lang_cs": "Tseko", "lang_da": "Danes", "lang_ee": "Ewe", "lang_fi": "Finnes", "lang_ht": "Haitian Creole", "lang_haw": "Hawayano", "lang_hi": "Hindi", "lang_hu": "Hungaro", "lang_ilo": "Ilokano", "lang_jam": "Jamaican Creole", "lang_lr": "Liberiano", "lang_mg": "Malgache", "lang_ml": "Malayalam", "lang_no": "Norwego", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polako", "lang_ro": "Romano", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Eslovako", "lang_sl": "Esloveno", "lang_sv": "Suesko", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turko", "lang_tw": "Twi", "lang_uk": "Ukraniano", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+  "lang_es": "Kastila",
+  "lang_en": "Ingles",
+  "lang_de": "Aleman",
+  "lang_fr": "Pranses",
+  "lang_pt": "Portuges",
+  "lang_it": "Italiano",
+  "lang_nl": "Olandes",
+  "lang_ru": "Ruso",
+  "lang_el": "Griego",
+  "lang_ja": "Hapon",
+  "lang_zh_cn": "Tsino (Simple)",
+  "lang_ko": "Koreano",
+  "lang_id": "Indonesio",
+  "lang_vi": "Biyetnamita",
+  "lang_sw": "Swahili",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albanes",
+  "lang_am": "Amhariko",
+  "lang_ar": "Arabe",
+  "lang_he": "Hebreo",
+  "lang_ca": "Catalan",
+  "lang_zh_tw": "Tsino (Tradisyonal)",
+  "lang_hr": "Krowata",
+  "lang_cs": "Tseko",
+  "lang_da": "Danes",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finnes",
+  "lang_ht": "Haitian Creole",
+  "lang_haw": "Hawayano",
+  "lang_hi": "Hindi",
+  "lang_hu": "Hungaro",
+  "lang_ilo": "Ilokano",
+  "lang_jam": "Jamaican Creole",
+  "lang_lr": "Liberiano",
+  "lang_mg": "Malgache",
+  "lang_ml": "Malayalam",
+  "lang_no": "Norwego",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Polako",
+  "lang_ro": "Romano",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Eslovako",
+  "lang_sl": "Esloveno",
+  "lang_sv": "Suesko",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamil",
+  "lang_th": "Thai",
+  "lang_tr": "Turko",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukraniano",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guarani",
+  "lang_qu": "Quechua",
 
-  
   "greeting_morning": "Naimbag a bigat,",
   "greeting_afternoon": "Naimbag a malem,",
   "greeting_night": "Naimbag a sardam,",
@@ -65,7 +119,6 @@
   "footer_title": "TEOKRATIKO A LOKAL A PANANGTARIPATO",
   "footer_use": "Para iti Organisasion",
   "footer_terms": "Suroten a Pagbasaan",
-
 
   "profile_title": "Panag-administrar iti Account",
   "profile_personal_id": "Personal nga ID",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Secretary Elder",
   "profile_pub_help_or": "wenno iti",
   "profile_pub_help_service": "Service Elder",
-  "profile_pub_help_suffix": "iti kongregasionyo."
+  "profile_pub_help_suffix": "iti kongregasionyo.",
 
-
+  "security": {
+    "seo": {
+      "title": "Pammagbaga iti Seguridad | Lokal a Panangmanehar",
+      "desc": "Nangato a kita ti digital a proteksion ken pammagbaga para iti pannakasalaknib ti datos ti gimong."
+    },
+    "header_title": "Pammagbaga iti Seguridad",
+    "back": "Agsubli",
+    "revision": "Maudi a rebision",
+    "recent": "Nabiit pay",
+    "hero_title": "Ti kinatarnawyo ket",
+    "hero_highlight": "prioridadmi.",
+    "hero_sub": "Napateg a kasta a kadawyan para iti panangaywan iti kinapribado ken personal nga impormasionyo.",
+    "db_alert": "Pakaammo iti Maudi a Minuto",
+    "accept_btn": "Naawatak ken agsubli",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyber Scams",
+        "desc": "Dagiti peke a digital a linaon ket mabalin a tuladenna dagiti am-ammo a timek ken rupa tapno takawenda ti impormasion wenno kuartayo.",
+        "tags": {
+          "prevention": "Panangtiped",
+          "prevention_info": "No adda mangpilit kadakayo a mangited iti kuarta wenno sensitibo a datos: agtuman, agpanunot, ken kanayon a berepikaen.",
+          "verification": "Berepikasion",
+          "verification_info": "Sardenganyo ti pannakikomunikar ken sakayo a tawagan dayta a tao babaen iti sigurado a channel.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknolohia a mangtulad iti identidad. Dikay agtalek laeng iti makitkita wenno mangngegyo iti screen."
+        }
+      },
+      "physical": {
+        "title": "2. Pisikal a Seguridad",
+        "desc": "Ti teleponoyo ti kangrunaan a tulbek. Ti aparato a saun naka-lock ket maysa nga silulukat a ridaw iti intero a pribado a biagyo.",
+        "tags": {
+          "biometry": "Biometry",
+          "biometry_info": "I-setup ti FaceID wenno Fingerprint. Sigurado daytoy ngem iti pattern a mabalin a matiktikan ti sabali a tao.",
+          "updates": "Updates",
+          "updates_info": "Dikay ibalale dagiti 'New version' a mensahe; masansan a serranda dagiti delikado a linaon ti seguridad.",
+          "encryption": "Encryption",
+          "encryption_info": "Siguraduenyo nga aktibo ti disk encryption tapno masalaknib ti files ken ladladawan manipud iti pannakatakaw."
+        }
+      },
+      "keys": {
+        "title": "3. Nabibileg a Password",
+        "desc": "Linianyo ti panagusar iti nalaka a matiktikan a datos. Kaaduan nga atake ket gapu iti nakapuy wenno naulit-ulit a password.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "I-activate ti two-step verification kadagiti amin nga account-yo. Daytoy ti kapategan a proteksion.",
+          "robustness": "Kinabileg",
+          "robustness_info": "Agusar kadagiti atiddog a phrase imbes a simple a balikas. Pagarigan: Ti 'Blue-Sky-2026!' ket nasaysayaat ngem iti 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Dagiti atiddog a phrase ket dandani saun a mabalin a mabisngay dagiti computer dagiti managdarup itatta."
+        }
+      },
+      "phishing": {
+        "title": "4. Panangtiktik iti Banniit",
+        "desc": "Agpammarang dagiti kriminal a kas technical support wenno banko tapno takawenda ti datosyo babaen iti panagbutbuteng wenno panangpilit.",
+        "tags": {
+          "urgency": "Kinaganat",
+          "urgency_info": "No ibaga ti mensahe a 'Maserraan ti account-yo iti 1 nga oras no dikay i-click', maysa daytoy a scam.",
+          "links": "Links",
+          "links_info": "Kitaenyo a naimbag ti URL. Masansan nga agusar dagiti managallilaw iti nagan a kasla 'google.com' ngem 'g00gle.net' gayam.",
+          "files": "Files",
+          "files_info": "Dikay pulos luktan dagiti di ninamnama nga attachment, nangruna no ti extension-da ket .ZIP, .EXE, wenno .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Tawid dagiti Annak",
+        "desc": "Awan pay unay ti ammon dagiti ubbing tapno matiktikanda dagiti silo. Isuroyo kadakuada a ti aniaman a mai-upload iti internet ket agtalinaed sadiay iti agnanayon.",
+        "tags": {
+          "identity": "Identidad",
+          "identity_info": "Linianyo ti mangipakita iti sensitibo a datos kadagiti ladladawan, kas iti uniform ti eskuela wenno ti ayanyo itatta.",
+          "strangers": "Gangannaet",
+          "strangers_info": "Nabalitokan a bilin para iti ubbing: 'No diyo am-ammo a personal, saanda a pudno a gayyem'.",
+          "privacy": "Pribado",
+          "privacy_info": "Kanayon a kitaen dagiti privacy settings ti social networks ken aparato dagiti kameng ti pamilia."
+        }
+      },
+      "backup": {
+        "title": "6. Pannakataginayon ti Datos",
+        "desc": "Mabalin a serraan wenno buraen ti virus dagiti files-yo. Ti kakaisuna a sigurado a kopea ket daydiay saun naka-connect iti computer.",
+        "tags": {
+          "frequency": "Frequency",
+          "frequency_info": "Ag-backup kadagiti kapatgan a ladladawan ken dokumento uray maminsan laeng iti maysa a bulan.",
+          "disconnection": "Panangisina",
+          "disconnection_info": "I-kopea dagiti files iti maysa nga external drive ken isinayo manipud iti computer kalpasan ti panagusar.",
+          "cloud": "Cloud",
+          "cloud_info": "Agusar kadagiti cloud storage services nga addaan encryption, ngem dikay agtalek laeng iti daytoy a kas kakaisuna a kopea."
+        }
+      }
+    }
+  }
 }

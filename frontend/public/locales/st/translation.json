@@ -25,9 +25,63 @@
   "device_mobile": "Founu",
   "device_pc": "Khomphutha",
 
-  "lang_es": "Sefapaniki", "lang_en": "Seesemane", "lang_de": "Sejeremane", "lang_fr": "Sefora", "lang_pt": "Sepotokisi", "lang_it": "Seitaliana", "lang_nl": "Sedatšhe", "lang_ru": "Seruša", "lang_el": "Segerika", "lang_ja": "Sejapane", "lang_zh_cn": "Sechina (Seo se nolofaditšwego)", "lang_ko": "Sekorea", "lang_id": "Seindonesia", "lang_vi": "Sevietnam", "lang_sw": "Seswahili", "lang_af": "Seafrikaanse", "lang_sq": "Sealbania", "lang_am": "Seamhariki", "lang_ar": "Searabia", "lang_he": "Sehebere", "lang_ca": "Secatalan", "lang_zh_tw": "Sechina (Se seng sa setšo)", "lang_hr": "Sekroasia", "lang_cs": "Setšheka", "lang_da": "Sedanish", "lang_ee": "Se-ewe", "lang_fi": "Sefinnish", "lang_ht": "Se-haiti", "lang_haw": "Se-hawaii", "lang_hi": "Sehindi", "lang_hu": "Sehungary", "lang_ilo": "Se-ilocano", "lang_jam": "Se-jamaica", "lang_lr": "Se-liberia", "lang_mg": "Semalgasy", "lang_ml": "Semalayalam", "lang_no": "Senorwegian", "lang_pap": "Sepapiamento", "lang_pcm": "Sepidgin", "lang_pl": "Sepolish", "lang_ro": "Seromania", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Seslovakia", "lang_sl": "Seslovenia", "lang_sv": "Sesweden", "lang_tl": "Setagalog", "lang_ta": "Setamil", "lang_th": "Sethai", "lang_tr": "Seturkish", "lang_tw": "Setwi", "lang_uk": "Seukraine", "lang_xh": "Sexhosa", "lang_zu": "Sezulu", "lang_gn": "Seguarani", "lang_qu": "Sequechua",
+  "lang_es": "Sefapaniki",
+  "lang_en": "Seesemane",
+  "lang_de": "Sejeremane",
+  "lang_fr": "Sefora",
+  "lang_pt": "Sepotokisi",
+  "lang_it": "Seitaliana",
+  "lang_nl": "Sedatšhe",
+  "lang_ru": "Seruša",
+  "lang_el": "Segerika",
+  "lang_ja": "Sejapane",
+  "lang_zh_cn": "Sechina (Seo se nolofaditšwego)",
+  "lang_ko": "Sekorea",
+  "lang_id": "Seindonesia",
+  "lang_vi": "Sevietnam",
+  "lang_sw": "Seswahili",
+  "lang_af": "Seafrikaanse",
+  "lang_sq": "Sealbania",
+  "lang_am": "Seamhariki",
+  "lang_ar": "Searabia",
+  "lang_he": "Sehebere",
+  "lang_ca": "Secatalan",
+  "lang_zh_tw": "Sechina (Se seng sa setšo)",
+  "lang_hr": "Sekroasia",
+  "lang_cs": "Setšheka",
+  "lang_da": "Sedanish",
+  "lang_ee": "Se-ewe",
+  "lang_fi": "Sefinnish",
+  "lang_ht": "Se-haiti",
+  "lang_haw": "Se-hawaii",
+  "lang_hi": "Sehindi",
+  "lang_hu": "Sehungary",
+  "lang_ilo": "Se-ilocano",
+  "lang_jam": "Se-jamaica",
+  "lang_lr": "Se-liberia",
+  "lang_mg": "Semalgasy",
+  "lang_ml": "Semalayalam",
+  "lang_no": "Senorwegian",
+  "lang_pap": "Sepapiamento",
+  "lang_pcm": "Sepidgin",
+  "lang_pl": "Sepolish",
+  "lang_ro": "Seromania",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Seslovakia",
+  "lang_sl": "Seslovenia",
+  "lang_sv": "Sesweden",
+  "lang_tl": "Setagalog",
+  "lang_ta": "Setamil",
+  "lang_th": "Sethai",
+  "lang_tr": "Seturkish",
+  "lang_tw": "Setwi",
+  "lang_uk": "Seukraine",
+  "lang_xh": "Sexhosa",
+  "lang_zu": "Sezulu",
+  "lang_gn": "Seguarani",
+  "lang_qu": "Sequechua",
 
-  
   "greeting_morning": "Mmoro,",
   "greeting_afternoon": "Dumela,",
   "greeting_night": "Fonane,",
@@ -66,7 +120,6 @@
   "footer_use": "Tiriso ya Phuthego",
   "footer_terms": "Melao ya Tiriso",
 
-  
   "profile_title": "Tsamaiso ea Akhaonto",
   "profile_personal_id": "ID ea Motho",
   "profile_active_user": "Mosebelisi ea sebetsang",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Mongoli oa phuthego",
   "profile_pub_help_or": "kapa",
   "profile_pub_help_service": "Molebeli oa tšebeletso",
-  "profile_pub_help_suffix": "phuthehong ea heno."
+  "profile_pub_help_suffix": "phuthehong ea heno.",
 
-
+  "security": {
+    "seo": {
+      "title": "Dikeletso tsa Tshireletso | Tsamaiso ya Lehae",
+      "desc": "Tataiso e tsoetseng pele ea tshireletso ea dijithale le datha bakeng sa phutheho."
+    },
+    "header_title": "Dikeletso tsa Tshireletso",
+    "back": "Morao",
+    "revision": "Tlhahlobo ea ho qetela",
+    "recent": "Haufinyane",
+    "hero_title": "Botšepehi ba hau ke",
+    "hero_highlight": "ntho ea rona ea pele.",
+    "hero_sub": "Mekhoa ea bohlokwa bakeng sa ho hlokomela boinotši ba hau le lintlha tsa hau.",
+    "db_alert": "Tsebiso ea Motsotso oa ho Qetela",
+    "accept_btn": "Ke utloisisitse mme ke khutlele morao",
+    "tips": {
+      "estafas": {
+        "title": "1. Boqhekanyetsi ba Inthanete",
+        "desc": "Litaba tsa bohata tsa dijithale li ka etsisa mantsoe le lifahleho tse tsebahalang ho utsoa lintlha kapa chelete ea hau.",
+        "tags": {
+          "prevention": "Thibelo",
+          "prevention_info": "Ha u potlakisetsoa ho fana ka chelete kapa datha ea sephiri: emisa, nahana, 'me u netefatse kamehla.",
+          "verification": "Tiiso",
+          "verification_info": "Khaotsa puisano 'me u letsetse motho eo u mo tsebang ka tsela e sireletsehileng.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Theknoloji ea ho etsisa motho. Se ke oa tšepa feela se u se bonang kapa u se utloang skrineng."
+        }
+      },
+      "physical": {
+        "title": "2. Tshireletso ea Sello-thekeng",
+        "desc": "Mohala oa hau ke senotlolo sa bohlokwa. Sesebediswa se sa notleloang ke monyako o bulehileng bophelong ba hau ba sephiri.",
+        "tags": {
+          "biometry": "Biometrika",
+          "biometry_info": "Seta FaceID kapa menoana. Ho sireletsehile ho feta mokhoa oo motho a ka o bonang holim'a lehetla la hao.",
+          "updates": "Lintlafatso",
+          "updates_info": "U se ke ua hlokomoloha melaetsa ea 'Mofuta o mocha'; hangata e koala likheo tse kotsi tsa tshireletso.",
+          "encryption": "Encryption",
+          "encryption_info": "Netefatsa hore tshireletso ea diske e ea sebetsa ho sireletsa difaele le linepe tsa hau ho masholu."
+        }
+      },
+      "keys": {
+        "title": "3. Dinotlolo tse Matla",
+        "desc": "Qoba ho sebelisa datha e totobetseng. Litlhaselo tse ngata li etsahala ka baka la liphasewete tse fokolang.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Bulela netefatso ea mehato e 'meli liakhaonteng tsohle tsa hau. Ke tsela ea bohlokwa ea tshireletso.",
+          "robustness": "Ho Tia",
+          "robustness_info": "Sebelisa dipolelo tse telele ho e-na le mantsoe a bonolo. Mohlala: 'Blue-Sky-2026!' e betere ho feta 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Dipolelo tse telele li thata haholo hore likhomphutha tsa masholu li li pshatle kajeno."
+        }
+      },
+      "phishing": {
+        "title": "4. Ho lemoha Molaba",
+        "desc": "Masholu a itira eka ke batho ba thuso ea mahlale kapa libanka ho utsoa datha ea hau ka ho u tšosa.",
+        "tags": {
+          "urgency": "Potlako",
+          "urgency_info": "Haeba molaetsa o re 'Akhaonto ea hau e tla koaloa ka mor'a hora e 1', ruri ke boqhekanyetsi.",
+          "links": "Links",
+          "links_info": "Hlahloba URL hantle. Baqhekanyetsi ba sebelisa mabitso a tšoanang joalo ka 'g00gle.net' ho e-na le 'google.com'.",
+          "files": "Difaele",
+          "files_info": "Le ka mohla u se ke ua bula li-attachment tseo u sa li lebellang, haholo haeba li na le .ZIP, .EXE, kapa .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Lefa la Bana",
+        "desc": "Bana ha ba na bohlale ba ho lemoha mamina. Ba rute hore se kentsoeng inthaneteng se lula moo ka ho sa feleng.",
+        "tags": {
+          "identity": "Boitsebiso",
+          "identity_info": "Qoba ho ntšha datha ea sephiri linepeng tsa phatlalatsa, joalo ka liunifomo tsa sekolo kapa moo u leng teng.",
+          "strangers": "Baeti",
+          "strangers_info": "Molao oa khauta ho bana: 'Haeba u sa ba tsebe ka ho ba bona, hase metsoalle ea nnete'.",
+          "privacy": "Boinotši",
+          "privacy_info": "Hlahloba nako le nako litlhophiso tsa boinotši tsa metsoalle ea lelapa la hau inthaneteng."
+        }
+      },
+      "backup": {
+        "title": "6. Ho Boloka Datha",
+        "desc": "Vaerase e ka notlela kapa ea hlakola difaele tsa hau. Khopi e sireletsehileng ruri ke e sa kopanngoang le khomphutha.",
+        "tags": {
+          "frequency": "Khafetsa",
+          "frequency_info": "Etsa khopi ea tshireletso ea linepe le litokomane tsa bohlokwa bonyane hang ka khoeli.",
+          "disconnection": "Ho kgaola",
+          "disconnection_info": "Kopisa difaele tsa hau moraleng oa ka ntle 'me u o ntše khomphutheng ha u qetile.",
+          "cloud": "Cloud",
+          "cloud_info": "Sebelisa litšebeletso tsa polokelo ea maru tse nang le tshireletso, empa u se ke oa tšepa tsona feela."
+        }
+      }
+    }
+  }
 }

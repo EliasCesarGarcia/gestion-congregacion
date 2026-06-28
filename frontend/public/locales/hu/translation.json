@@ -25,9 +25,63 @@
   "device_mobile": "Mobil",
   "device_pc": "Számítógép",
 
-  "lang_es": "Spanyol", "lang_en": "Angol", "lang_de": "Német", "lang_fr": "Francia", "lang_pt": "Portugál", "lang_it": "Olasz", "lang_nl": "Holland", "lang_ru": "Orosz", "lang_el": "Görög", "lang_ja": "Japán", "lang_zh_cn": "Kínai (Egyszerűsített)", "lang_ko": "Koreai", "lang_id": "Indonéz", "lang_vi": "Vietnámi", "lang_sw": "Szuahéli", "lang_af": "Afrikaans", "lang_sq": "Albán", "lang_am": "Amhara", "lang_ar": "Arab", "lang_he": "Héber", "lang_ca": "Katalán", "lang_zh_tw": "Kínai (Hagyományos)", "lang_hr": "Horvát", "lang_cs": "Cseh", "lang_da": "Dán", "lang_ee": "Ewe", "lang_fi": "Finn", "lang_ht": "Haiti kreol", "lang_haw": "Havaian", "lang_hi": "Hindi", "lang_hu": "Magyar", "lang_ilo": "Iloko", "lang_jam": "Jamaikai kreol", "lang_lr": "Libériai", "lang_mg": "Malagaszi", "lang_ml": "Malajálam", "lang_no": "Norvég", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Lengyel", "lang_ro": "Román", "lang_nso": "Sepedi", "lang_st": "Sotho", "lang_sk": "Szlovák", "lang_sl": "Szlovén", "lang_sv": "Svéd", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Török", "lang_tw": "Twi", "lang_uk": "Ukrán", "lang_xh": "Xhosza", "lang_zu": "Zulu", "lang_gn": "Guaraní", "lang_qu": "Bolíviai kecsua",
+  "lang_es": "Spanyol",
+  "lang_en": "Angol",
+  "lang_de": "Német",
+  "lang_fr": "Francia",
+  "lang_pt": "Portugál",
+  "lang_it": "Olasz",
+  "lang_nl": "Holland",
+  "lang_ru": "Orosz",
+  "lang_el": "Görög",
+  "lang_ja": "Japán",
+  "lang_zh_cn": "Kínai (Egyszerűsített)",
+  "lang_ko": "Koreai",
+  "lang_id": "Indonéz",
+  "lang_vi": "Vietnámi",
+  "lang_sw": "Szuahéli",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albán",
+  "lang_am": "Amhara",
+  "lang_ar": "Arab",
+  "lang_he": "Héber",
+  "lang_ca": "Katalán",
+  "lang_zh_tw": "Kínai (Hagyományos)",
+  "lang_hr": "Horvát",
+  "lang_cs": "Cseh",
+  "lang_da": "Dán",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finn",
+  "lang_ht": "Haiti kreol",
+  "lang_haw": "Havaian",
+  "lang_hi": "Hindi",
+  "lang_hu": "Magyar",
+  "lang_ilo": "Iloko",
+  "lang_jam": "Jamaikai kreol",
+  "lang_lr": "Libériai",
+  "lang_mg": "Malagaszi",
+  "lang_ml": "Malajálam",
+  "lang_no": "Norvég",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Lengyel",
+  "lang_ro": "Román",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sotho",
+  "lang_sk": "Szlovák",
+  "lang_sl": "Szlovén",
+  "lang_sv": "Svéd",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamil",
+  "lang_th": "Thai",
+  "lang_tr": "Török",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrán",
+  "lang_xh": "Xhosza",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guaraní",
+  "lang_qu": "Bolíviai kecsua",
 
-  
   "greeting_morning": "Jó reggelt,",
   "greeting_afternoon": "Jó napot,",
   "greeting_night": "Jó estét,",
@@ -65,7 +119,6 @@
   "footer_title": "TEOKRATIKUS HELYI KEZELÉS",
   "footer_use": "Intézményi használatra",
   "footer_terms": "Felhasználási feltételek",
-
 
   "profile_title": "Fiókkezelés",
   "profile_personal_id": "Személyi azonosító",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "titkár vénjétől",
   "profile_pub_help_or": "vagy a",
   "profile_pub_help_service": "szolgálati felvigyázó vénjétől",
-  "profile_pub_help_suffix": "."
+  "profile_pub_help_suffix": ".",
 
-
+  "security": {
+    "seo": {
+      "title": "Biztonsági tippek | Helyi kezelés",
+      "desc": "Speciális digitális védelmi és adatvédelmi útmutató a gyülekezet számára."
+    },
+    "header_title": "Biztonsági tippek",
+    "back": "Vissza",
+    "revision": "Utolsó módosítás",
+    "recent": "Legutóbbi",
+    "hero_title": "Az Ön integritása",
+    "hero_highlight": "a mi prioritásunk.",
+    "hero_sub": "Alapvető szokások a magánélete és személyes adatai védelme érdekében.",
+    "db_alert": "Utolsó pillanatnyi értesítés",
+    "accept_btn": "Megértettem és vissza",
+    "tips": {
+      "estafas": {
+        "title": "1. Kiberátverések",
+        "desc": "A hamis digitális tartalmak ismert hangokat és arcokat utánozhatnak az adatai vagy pénze ellopása érdekében.",
+        "tags": {
+          "prevention": "Megelőzés",
+          "prevention_info": "Ha sürgetik, hogy adjon pénzt vagy érzékeny adatokat: álljon meg, gondolkodjon, és mindig ellenőrizze.",
+          "verification": "Ellenőrzés",
+          "verification_info": "Szakítsa meg a kommunikációt, és hívja fel az illetőt egy ismert biztonságos csatornán.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Identitásklónozási technológia. Ne bízzon csak abban, amit a képernyőn lát vagy hall."
+        }
+      },
+      "physical": {
+        "title": "2. Fizikai védelem",
+        "desc": "A telefonja a főkulcs. Egy zár nélküli eszköz nyitott ajtó a teljes magánéletéhez.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Állítson be FaceID-t vagy ujjlenyomatot. Sokkal biztonságosabb, mint egy minta, amit valaki elleshet a válla felett.",
+          "updates": "Frissítések",
+          "updates_info": "Ne hagyja figyelmen kívül az 'Új verzió' üzeneteket; ezek gyakran a nemrég felfedezett kritikus biztonsági réseket zárják be.",
+          "encryption": "Titkosítás",
+          "encryption_info": "Győződjön meg arról, hogy a lemeztitkosítás aktív, hogy megvédje fájljait és fotóit az esetleges fizikai lopástól."
+        }
+      },
+      "keys": {
+        "title": "3. Erős jelszavak",
+        "desc": "Kerülje a nyilvánvaló adatok használatát. A legtöbb támadás a gyenge vagy több oldalon ismételt jelszavak miatt történik.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktiválja a kétlépcsős azonosítást minden fiókján. Ez a legfontosabb második védelmi réteg.",
+          "robustness": "Robusztusság",
+          "robustness_info": "Használjon hosszú kifejezéseket egyszerű szavak helyett. Példa: A 'Kek-Eg-2026!' sokkal jobb, mint a 'peter123'.",
+          "passphrases": "Jelszómondatok",
+          "passphrases_info": "A hosszú mondatokat szinte lehetetlen feltörni a mai támadó számítógépekkel."
+        }
+      },
+      "phishing": {
+        "title": "4. A horog felismerése",
+        "desc": "A bűnözők technikai ügyfélszolgálatnak vagy banknak adják ki magukat, hogy félelemkeltéssel vagy sürgetéssel ellopják adatait.",
+        "tags": {
+          "urgency": "Sürgősség",
+          "urgency_info": "Ha az üzenet azt mondja: 'A fiókja 1 órán belül bezárul, ha nem kattint', az szinte biztosan átverés.",
+          "links": "Linkek",
+          "links_info": "Gondosan ellenőrizze az URL-t. A csalók gyakran hasonló neveket használnak, mint a 'g00gle.net' a 'google.com' helyett.",
+          "files": "Fájlok",
+          "files_info": "Soha ne nyisson meg váratlan mellékleteket, különösen ha .ZIP, .EXE vagy .BAT kiterjesztésűek."
+        }
+      },
+      "family": {
+        "title": "5. A gyermekek biztonsága",
+        "desc": "A gyerekekből hiányzik a gyanakvás a csapdák felismeréséhez. Tanítsa meg nekik, hogy ami felkerül az internetre, az örökre ott marad.",
+        "tags": {
+          "identity": "Személyazonosság",
+          "identity_info": "Kerülje az érzékeny adatok felfedését a nyilvános fotókon, például iskolai egyenruhákat vagy valós idejű tartózkodási helyet.",
+          "strangers": "Idegenek",
+          "strangers_info": "Aranyszabály kiskorúaknak: 'Ha nem ismered őket személyesen, akkor nem igazi barátok'.",
+          "privacy": "Adatvédelem",
+          "privacy_info": "Rendszeresen ellenőrizze családtagjai közösségi hálózatainak és eszközeinek adatvédelmi beállításait."
+        }
+      },
+      "backup": {
+        "title": "6. Adatmentés",
+        "desc": "Egy vírus zárolhatja vagy törölheti fájljait. Az egyetlen valóban biztonságos másolat az, amely fizikailag le van választva.",
+        "tags": {
+          "frequency": "Gyakoriság",
+          "frequency_info": "Havonta legalább egyszer készítsen biztonsági mentést legértékesebb fotóiról és dokumentumairól.",
+          "disconnection": "Leválasztás",
+          "disconnection_info": "Másolja fájljait egy külső meghajtóra, és ami a legfontosabb, a végén fizikailag válassza le a számítógépről.",
+          "cloud": "Felhő",
+          "cloud_info": "Használjon titkosított felhőalapú tárolási szolgáltatásokat, de soha ne hagyatkozzon kizárólag ezekre."
+        }
+      }
+    }
+  }
 }

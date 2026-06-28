@@ -25,9 +25,63 @@
   "device_mobile": "Mobile",
   "device_pc": "Kompyuter",
 
-  "lang_es": "Espanyol", "lang_en": "Ingles", "lang_de": "Aleman", "lang_fr": "Pranses", "lang_pt": "Portuges", "lang_it": "Italyano", "lang_nl": "Olandes", "lang_ru": "Ruso", "lang_el": "Griyego", "lang_ja": "Hapon", "lang_zh_cn": "Tsino (Simple)", "lang_ko": "Koreano", "lang_id": "Indonesiyo", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabe", "lang_he": "Hebreo", "lang_ca": "Catalan", "lang_zh_tw": "Tsino (Tradisyunal)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Creole", "lang_lr": "Liberian English", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+  "lang_es": "Espanyol",
+  "lang_en": "Ingles",
+  "lang_de": "Aleman",
+  "lang_fr": "Pranses",
+  "lang_pt": "Portuges",
+  "lang_it": "Italyano",
+  "lang_nl": "Olandes",
+  "lang_ru": "Ruso",
+  "lang_el": "Griyego",
+  "lang_ja": "Hapon",
+  "lang_zh_cn": "Tsino (Simple)",
+  "lang_ko": "Koreano",
+  "lang_id": "Indonesiyo",
+  "lang_vi": "Vietnamese",
+  "lang_sw": "Swahili",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albanian",
+  "lang_am": "Amharic",
+  "lang_ar": "Arabe",
+  "lang_he": "Hebreo",
+  "lang_ca": "Catalan",
+  "lang_zh_tw": "Tsino (Tradisyunal)",
+  "lang_hr": "Croatian",
+  "lang_cs": "Czech",
+  "lang_da": "Danish",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finnish",
+  "lang_ht": "Haitian Creole",
+  "lang_haw": "Hawaiian",
+  "lang_hi": "Hindi",
+  "lang_hu": "Hungarian",
+  "lang_ilo": "Ilocano",
+  "lang_jam": "Jamaican Creole",
+  "lang_lr": "Liberian English",
+  "lang_mg": "Malagasy",
+  "lang_ml": "Malayalam",
+  "lang_no": "Norwegian",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Polish",
+  "lang_ro": "Romanian",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Slovak",
+  "lang_sl": "Slovenian",
+  "lang_sv": "Swedish",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamil",
+  "lang_th": "Thai",
+  "lang_tr": "Turkish",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrainian",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guarani",
+  "lang_qu": "Quechua",
 
-  
   "greeting_morning": "Magandang umaga,",
   "greeting_afternoon": "Magandang hapon,",
   "greeting_night": "Magandang gabi,",
@@ -65,7 +119,6 @@
   "footer_title": "TEOKRATIKONG LOKAL NA PAMAMAHALA",
   "footer_use": "Pang-institusyong Paggamit",
   "footer_terms": "Mga Tuntunin sa Paggamit",
-
 
   "profile_title": "Pangangasiwa ng Account",
   "profile_personal_id": "Personal na ID",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Sekretaryo",
   "profile_pub_help_or": "o sa",
   "profile_pub_help_service": "Tagapangasiwa sa paglilingkod",
-  "profile_pub_help_suffix": "ng iyong kongregasyon."
+  "profile_pub_help_suffix": "ng iyong kongregasyon.",
 
-
+  "security": {
+    "seo": {
+      "title": "Mga Tip sa Seguridad | Lokal na Pamamahala",
+      "desc": "Gabay sa advanced na digital shielding at proteksyon ng data para sa kongregasyon."
+    },
+    "header_title": "Mga Tip sa Seguridad",
+    "back": "Bumalik",
+    "revision": "Huling rebisyon",
+    "recent": "Kamakailan",
+    "hero_title": "Ang iyong integridad ay",
+    "hero_highlight": "aming prayoridad.",
+    "hero_sub": "Mahahalagang gawi para sa pangangalaga ng iyong privacy at personal na impormasyon.",
+    "db_alert": "Patalastas sa Huling Minuto",
+    "accept_btn": "Naintindihan at bumalik",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyber Scams",
+        "desc": "Ang mga pekeng digital content ay maaaring gumaya sa mga kilalang boses at mukha para nakawin ang iyong impormasyon o pera.",
+        "tags": {
+          "prevention": "Pag-iwas",
+          "prevention_info": "Kung minamadali kang magbigay ng pera o sensitibong data: huminto, mag-isip, at laging mag-verify.",
+          "verification": "Beripikasyon",
+          "verification_info": "Tapusin ang komunikasyon at tawagan ang tao mismo sa pamamagitan ng kilalang secure na channel.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknolohiya ng pag-clone ng identidad. Huwag magtiwala sa nakikita o naririnig mo lang sa screen."
+        }
+      },
+      "physical": {
+        "title": "2. Pisikal na Seguridad",
+        "desc": "Ang iyong telepono ang master key. Ang device na walang lock ay isang bukas na pinto sa iyong buong pribadong buhay.",
+        "tags": {
+          "biometry": "Biometry",
+          "biometry_info": "I-set up ang FaceID o Fingerprint. Mas ligtas ito kaysa sa pattern na maaaring masilip ng iba sa iyong balikat.",
+          "updates": "Mga Update",
+          "updates_info": "Huwag balewalain ang mga mensaheng 'Bagong bersyon'; madalas nilang inaayos ang mga kritikal na butas sa seguridad.",
+          "encryption": "Encryption",
+          "encryption_info": "Siguraduhing aktibo ang disk encryption para protektahan ang iyong mga file at larawan mula sa posibleng pisikal na pagnanakaw."
+        }
+      },
+      "keys": {
+        "title": "3. Matitibay na Password",
+        "desc": "Iwasan ang paggamit ng madaling hulaang data. Karamihan sa mga atake ay nangyayari dahil sa mahihinang password.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "I-activate ang two-step verification sa lahat ng iyong account. Ito ang pinakamahalagang layer ng proteksyon.",
+          "robustness": "Katatagan",
+          "robustness_info": "Gumamit ng mahabang phrase sa halip na simpleng salita. Halimbawa: Ang 'Asul-na-Langit-2026!' ay mas mahusay kaysa sa 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Ang mahahabang phrase ay halos imposibleng ma-crack ng mga computer ng mga attacker ngayon."
+        }
+      },
+      "phishing": {
+        "title": "4. Pag-detect sa Pain",
+        "desc": "Nagpapanggap ang mga kriminal bilang technical support o bangko para nakawin ang iyong data sa pamamagitan ng pananakot.",
+        "tags": {
+          "urgency": "Pagmamadali",
+          "urgency_info": "Kung ang mensahe ay nagsasabing 'Isasara ang account mo sa loob ng 1 oras kung hindi ka mag-click', halos siguradong scam ito.",
+          "links": "Mga Link",
+          "links_info": "Suriing mabuti ang URL. Ang mga scammer ay madalas gumamit ng mga pangalang katulad ng 'g00gle.net' sa halip na 'google.com'.",
+          "files": "Mga File",
+          "files_info": "Huwag kailanman magbubukas ng mga hindi inaasahang attachment, lalo na kung ang mga ito ay .ZIP, .EXE, o .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Pamana sa mga Bata",
+        "desc": "Kulang ang mga bata sa karanasan para makita ang mga bitag. Ituro sa kanila na ang mga naka-upload sa internet ay mananatili roon habambuhay.",
+        "tags": {
+          "identity": "Identidad",
+          "identity_info": "Iwasan ang pagpapakita ng sensitibong data sa mga pampublikong larawan, gaya ng uniform sa eskwelahan o real-time na lokasyon.",
+          "strangers": "Mga Dayuhan",
+          "strangers_info": "Gintong tuntunin para sa mga bata: 'Kung hindi mo sila kilala nang personal, hindi sila tunay na kaibigan'.",
+          "privacy": "Privacy",
+          "privacy_info": "Paminsan-minsang suriin ang privacy settings ng social networks at devices ng mga miyembro ng iyong pamilya."
+        }
+      },
+      "backup": {
+        "title": "6. Pagpapanatili ng Data",
+        "desc": "Maaaring i-lock o burahin ng virus ang iyong mga file. Ang tanging ligtas na kopya ay ang pisikal na naka-disconnect.",
+        "tags": {
+          "frequency": "Dalas",
+          "frequency_info": "Mag-backup ng iyong pinakamahahalagang larawan at dokumento kahit man lang minsan sa isang buwan.",
+          "disconnection": "Pag-disconnect",
+          "disconnection_info": "Kopyahin ang iyong mga file sa isang external drive at, pinaka-importante, i-disconnect ito nang pisikal sa computer pagkatapos.",
+          "cloud": "Cloud",
+          "cloud_info": "Gumamit ng mga cloud storage service na may encryption, ngunit huwag lamang umasa sa mga ito bilang iisang kopya."
+        }
+      }
+    }
+  }
 }

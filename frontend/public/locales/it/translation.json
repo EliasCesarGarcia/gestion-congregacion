@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Quechua boliviano",
 
-
   "greeting_morning": "Buongiorno,",
   "greeting_afternoon": "Buon pomeriggio,",
   "greeting_night": "Buonasera,",
@@ -120,7 +119,6 @@
   "footer_title": "GESTIONE LOCALE TEOCRATICA",
   "footer_use": "Uso Istituzionale",
   "footer_terms": "Condizioni d'Uso",
-
 
   "profile_title": "Amministrazione Account",
   "profile_personal_id": "ID Personale",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Segretario",
   "profile_pub_help_or": "o al",
   "profile_pub_help_service": "Sorvegliante del servizio",
-  "profile_pub_help_suffix": "della tua congregazione."
+  "profile_pub_help_suffix": "della tua congregazione.",
 
-
+  "security": {
+    "seo": {
+      "title": "Consigli di Sicurezza | Gestione Locale",
+      "desc": "Guida avanzata alla protezione dei dati e schermatura digitale per la congregazione."
+    },
+    "header_title": "Consigli di Sicurezza",
+    "back": "Indietro",
+    "revision": "Ultima revisione",
+    "recent": "Recente",
+    "hero_title": "La tua integrità è",
+    "hero_highlight": "la nostra priorità.",
+    "hero_sub": "Abitudini essenziali per la cura della tua privacy e delle tue informazioni personali.",
+    "db_alert": "Avviso dell'Ultimo Minuto",
+    "accept_btn": "Capito e torna indietro",
+    "tips": {
+      "estafas": {
+        "title": "1. Truffe Informatiche",
+        "desc": "I contenuti digitali falsi possono imitare voci e volti noti per rubare informazioni o denaro.",
+        "tags": {
+          "prevention": "Prevenzione",
+          "prevention_info": "Se ricevi pressioni per fornire denaro o dati sensibili: fermati, pensa e verifica sempre.",
+          "verification": "Verifica",
+          "verification_info": "Interrompi la comunicazione e chiama tu stesso la persona tramite un canale sicuro noto.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Tecnologia di clonazione dell'identità. Non fidarti solo di ciò che vedi o senti attraverso uno schermo."
+        }
+      },
+      "physical": {
+        "title": "2. Perimetro Fisico",
+        "desc": "Il tuo telefono è la chiave principale. Un dispositivo senza blocco è una porta aperta su tutta la tua vita privata.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Imposta FaceID o Impronta Digitale. È molto più sicuro di una sequenza che qualcuno potrebbe spiarti alle spalle.",
+          "updates": "Aggiornamenti",
+          "updates_info": "Non ignorare i messaggi 'Nuova versione'; spesso risolvono falle critiche di sicurezza scoperte di recente.",
+          "encryption": "Crittografia",
+          "encryption_info": "Assicurati che la crittografia del disco sia attiva per proteggere i tuoi file e le tue foto da potenziali furti fisici."
+        }
+      },
+      "keys": {
+        "title": "3. Password ad Alto Impatto",
+        "desc": "Evita di usare dati ovvi. La maggior parte degli attacchi avviene a causa di password deboli o ripetute su più siti.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Attiva la verifica in due passaggi su tutti i tuoi account. È il secondo livello di protezione più importante.",
+          "robustness": "Robustezza",
+          "robustness_info": "Usa frasi lunghe invece di parole semplici. Esempio: 'Cielo-Blu-2026!' è esponenzialmente migliore di 'pietro123'.",
+          "passphrases": "Passphrase",
+          "passphrases_info": "Le frasi lunghe sono quasi impossibili da violare per i computer degli odierni hacker."
+        }
+      },
+      "phishing": {
+        "title": "4. Rilevare l'Esca",
+        "desc": "I criminali fingono di essere il supporto tecnico o la banca per rubare i tuoi dati attraverso la paura o l'urgenza eccessiva.",
+        "tags": {
+          "urgency": "Urgenza",
+          "urgency_info": "Se il messaggio dice 'Il tuo account chiuderà tra 1 ora se non clicchi', è quasi certamente una truffa.",
+          "links": "Link",
+          "links_info": "Controlla attentamente l'URL. I truffatori spesso usano nomi simili come 'g00gle.net' invece di 'google.com'.",
+          "files": "File",
+          "files_info": "Non aprire mai allegati imprevisti, specialmente se hanno estensioni come .ZIP, .EXE o .BAT."
+        }
+      },
+      "family": {
+        "title": "5. L'Eredità dei Bambini",
+        "desc": "I bambini non hanno la malizia per rilevare le trappole. Insegna loro che ciò che viene caricato su Internet resta lì per sempre.",
+        "tags": {
+          "identity": "Identità",
+          "identity_info": "Evita di rivelare dati sensibili in foto pubbliche, come divise scolastiche, loghi aziendali o posizioni in tempo reale.",
+          "strangers": "Sconosciuti",
+          "strangers_info": "Regola d'oro per i minori: 'Se non li conosci fisicamente di persona, non sono veri amici'.",
+          "privacy": "Privacy",
+          "privacy_info": "Controlla periodicamente le impostazioni sulla privacy dei social network e dei dispositivi dei tuoi familiari."
+        }
+      },
+      "backup": {
+        "title": "6. Sopravvivenza dei Dati",
+        "desc": "Un virus può bloccare o eliminare i tuoi file. L'unica copia veramente sicura è quella scollegata fisicamente.",
+        "tags": {
+          "frequency": "Frequenza",
+          "frequency_info": "Esegui il backup delle foto e dei documenti più preziosi almeno una volta al mese.",
+          "disconnection": "Disconnessione",
+          "disconnection_info": "Copia i tuoi file su un disco esterno e, cosa più importante, scollegalo fisicamente dal computer al termine.",
+          "cloud": "Cloud",
+          "cloud_info": "Usa servizi di archiviazione cloud con crittografia, ma non fare mai affidamento solo su di essi come unica copia."
+        }
+      }
+    }
+  }
 }

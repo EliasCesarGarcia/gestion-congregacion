@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Bolivian Quechua",
 
-  
   "greeting_morning": "Goeiemôre,",
   "greeting_afternoon": "Goeiemiddag,",
   "greeting_night": "Goeienaand,",
@@ -120,7 +119,6 @@
   "footer_title": "TEOKRATIESE PLAASLIKE BESTUUR",
   "footer_use": "Institusionele Gebruik",
   "footer_terms": "Gebruiksvoorwaardes",
-
 
   "profile_title": "Rekeningadministrasie",
   "profile_personal_id": "Persoonlike ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Sekretaris-ouerling",
   "profile_pub_help_or": "of die",
   "profile_pub_help_service": "Diensouerling",
-  "profile_pub_help_suffix": "van jou gemeente."
+  "profile_pub_help_suffix": "van jou gemeente.",
 
-
+  "security": {
+    "seo": {
+      "title": "Sekuriteitswenke | Plaaslike Bestuur",
+      "desc": "Gevorderde digitale beskerming en databeskermingsgids vir die gemeente."
+    },
+    "header_title": "Sekuriteitswenke",
+    "back": "Terug",
+    "revision": "Laaste hersiening",
+    "recent": "Onlangs",
+    "hero_title": "Jou integriteit is",
+    "hero_highlight": "ons prioriteit.",
+    "hero_sub": "Noodsaaklike gewoontes vir die versorging van jou privaatheid en persoonlike inligting.",
+    "db_alert": "Laaste Minuut Kennisgewing",
+    "accept_btn": "Verstaan en gaan terug",
+    "tips": {
+      "estafas": {
+        "title": "1. Kuberkulstery",
+        "desc": "Vals digitale inhoud kan bekende stemme en gesigte naboots om jou inligting of geld te steel.",
+        "tags": {
+          "prevention": "Voorkoming",
+          "prevention_info": "As jy gejaag word om geld of sensitiewe data te verskaf: stop, dink, en verifieer altyd.",
+          "verification": "Verifikasie",
+          "verification_info": "Beëindig die kommunikasie en bel die persoon self deur 'n bekende veilige kanaal.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Identiteitsklonings-tegnologie. Moenie net vertrou wat jy op 'n skerm sien of hoor nie."
+        }
+      },
+      "physical": {
+        "title": "2. Fisiese Omtrek",
+        "desc": "Jou foon is die moedersleutel. 'n Toestel sonder 'n slot is 'n oop deur na jou hele privaatlewe.",
+        "tags": {
+          "biometry": "Biometrie",
+          "biometry_info": "Stel FaceID of Vingerafdruk in. Dit is baie veiliger as 'n patroon wat iemand oor jou skouer kan sien.",
+          "updates": "Opdaterings",
+          "updates_info": "Moenie 'Nuwe weergawe'-boodskappe ignoreer nie; hulle maak dikwels kritieke sekuriteitsgate toe.",
+          "encryption": "Enkripsie",
+          "encryption_info": "Maak seker skyf-enkripsie is aktief om jou lêers en foto's teen moontlike fisiese diefstal te beskerm."
+        }
+      },
+      "keys": {
+        "title": "3. Hoë-impak Sleutels",
+        "desc": "Vermy die gebruik van ooglopende data. Die meeste aanvalle gebeur as gevolg van swak wagwoorde.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktiveer tweestap-verifikasie op al jou rekeninge. Dit is die belangrikste tweede laag beskerming.",
+          "robustness": "Robuustheid",
+          "robustness_info": "Gebruik lang frases in plaas van eenvoudige woorde. Voorbeeld: 'Blou-Hemel-2026!' is baie beter as 'pieter123'.",
+          "passphrases": "Wagfrases",
+          "passphrases_info": "Lang frases is amper onmoontlik vir vandag se aanval-rekenaars om te kraak."
+        }
+      },
+      "phishing": {
+        "title": "4. Bespeur die Hoek",
+        "desc": "Kriminele gee voor hulle is tegniese ondersteuning of banke om jou data deur vrees of dringendheid te steel.",
+        "tags": {
+          "urgency": "Dringendheid",
+          "urgency_info": "As die boodskap sê 'Jou rekening sluit in 1 uur as jy nie klik nie', is dit amper sekerlik 'n skelmstreek.",
+          "links": "Skakels",
+          "links_info": "Gaan die URL noukeurig na. Skelms gebruik dikwels soortgelyke name so 'g00gle.net' in plaas van 'google.com'.",
+          "files": "Lêers",
+          "files_info": "Moet nooit onverwagte aanhegsels oopmaak nie, veral as hulle uitbreidings soos .ZIP, .EXE, of .BAT het."
+        }
+      },
+      "family": {
+        "title": "5. Kinders se Erfenis",
+        "desc": "Kinders kort die deursigtigheid om strikke te bespeur. Leer hulle dat wat op die internet gelaai word, vir altyd daar bly.",
+        "tags": {
+          "identity": "Identiteit",
+          "identity_info": "Vermy die onthulling van sensitiewe data op foto's, soos skooluniforms, maatskappylogo's of intydse liggings.",
+          "strangers": "Vreemdelinge",
+          "strangers_info": "Goue reël vir minderjariges: 'As jy hulle nie fisies in persoon ken nie, is hulle nie 'n regte vriend nie'.",
+          "privacy": "Privaatheid",
+          "privacy_info": "Hersien gereeld die privaatheidstellings van jou familielede se sosiale netwerke en toestelle."
+        }
+      },
+      "backup": {
+        "title": "6. Data-oorlewing",
+        "desc": "'n Virus kan jou lêers sluit of uitvee. Die enigste werklik veilige kopie is een wat fisies ontkoppel is.",
+        "tags": {
+          "frequency": "Frekwensie",
+          "frequency_info": "Maak ten minste een keer per maand 'n rugsteun van jou waardevolste foto's en dokumente.",
+          "disconnection": "Ontkoppeling",
+          "disconnection_info": "Kopieer jou lêers na 'n eksterne skyf en, belangrikste, ontkoppel dit fisies van die rekenaar wanneer jy klaar is.",
+          "cloud": "Wolk",
+          "cloud_info": "Gebruik wolkdienste met enkripsie, maar moenie net daarop staatmaak as 'n enkele kopie nie."
+        }
+      }
+    }
+  }
 }

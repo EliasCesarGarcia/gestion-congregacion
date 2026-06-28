@@ -25,9 +25,63 @@
   "device_mobile": "Finday",
   "device_pc": "Siansa",
 
-  "lang_es": "Espanyola", "lang_en": "Anglisy", "lang_de": "Alemanina", "lang_fr": "Frantsay", "lang_pt": "Portogey", "lang_it": "Italianina", "lang_nl": "Holandey", "lang_ru": "Rosianina", "lang_el": "Grika", "lang_ja": "Japoney", "lang_zh_cn": "Sinoa (tsotra)", "lang_ko": "Koreana", "lang_id": "Indonezianina", "lang_vi": "Vietnamiana", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albaney", "lang_am": "Amharika", "lang_ar": "Arabo", "lang_he": "Hebreo", "lang_ca": "Katalana", "lang_zh_tw": "Sinoa (nentim-paharazana)", "lang_hr": "Kroaty", "lang_cs": "Tseka", "lang_da": "Daney", "lang_ee": "Ewe", "lang_fi": "Finandey", "lang_ht": "Haitiana", "lang_haw": "Hawaiiana", "lang_hi": "Hindi", "lang_hu": "Hongroà", "lang_ilo": "Ilocano", "lang_jam": "Jamaikana", "lang_lr": "Liberiana", "lang_mg": "Malagasy", "lang_ml": "Malayalama", "lang_no": "Norvezyana", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Poloney", "lang_ro": "Romaniana", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovakia", "lang_sl": "Slovenia", "lang_sv": "Soedy", "lang_tl": "Tagalog", "lang_ta": "Tamila", "lang_th": "Thai", "lang_tr": "Turki", "lang_tw": "Twi", "lang_uk": "Okrainiana", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+  "lang_es": "Espanyola",
+  "lang_en": "Anglisy",
+  "lang_de": "Alemanina",
+  "lang_fr": "Frantsay",
+  "lang_pt": "Portogey",
+  "lang_it": "Italianina",
+  "lang_nl": "Holandey",
+  "lang_ru": "Rosianina",
+  "lang_el": "Grika",
+  "lang_ja": "Japoney",
+  "lang_zh_cn": "Sinoa (tsotra)",
+  "lang_ko": "Koreana",
+  "lang_id": "Indonezianina",
+  "lang_vi": "Vietnamiana",
+  "lang_sw": "Swahili",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albaney",
+  "lang_am": "Amharika",
+  "lang_ar": "Arabo",
+  "lang_he": "Hebreo",
+  "lang_ca": "Katalana",
+  "lang_zh_tw": "Sinoa (nentim-paharazana)",
+  "lang_hr": "Kroaty",
+  "lang_cs": "Tseka",
+  "lang_da": "Daney",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finandey",
+  "lang_ht": "Haitiana",
+  "lang_haw": "Hawaiiana",
+  "lang_hi": "Hindi",
+  "lang_hu": "Hongroà",
+  "lang_ilo": "Ilocano",
+  "lang_jam": "Jamaikana",
+  "lang_lr": "Liberiana",
+  "lang_mg": "Malagasy",
+  "lang_ml": "Malayalama",
+  "lang_no": "Norvezyana",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Poloney",
+  "lang_ro": "Romaniana",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Slovakia",
+  "lang_sl": "Slovenia",
+  "lang_sv": "Soedy",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamila",
+  "lang_th": "Thai",
+  "lang_tr": "Turki",
+  "lang_tw": "Twi",
+  "lang_uk": "Okrainiana",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guarani",
+  "lang_qu": "Quechua",
 
-  
   "greeting_morning": "Manao ahoana, ara-baovao,",
   "greeting_afternoon": "Manao ahoana,",
   "greeting_night": "Tafandria mandry,",
@@ -65,7 +119,6 @@
   "footer_title": "FITANTANANA IORANA TEOKRATIKA",
   "footer_use": "Ampiasain'ny Fikambanana",
   "footer_terms": "Fepetra Fampiasana",
-
 
   "profile_title": "Fitantanana ny Kaonty",
   "profile_personal_id": "ID Manokana",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Anti-panahy mpitandrina ny taratasy",
   "profile_pub_help_or": "na ny",
   "profile_pub_help_service": "Anti-panahy mpiandraikitra ny fanompoana",
-  "profile_pub_help_suffix": "ao amin'ny fiangonanao."
+  "profile_pub_help_suffix": "ao amin'ny fiangonanao.",
 
-
+  "security": {
+    "seo": {
+      "title": "Soso-kevitra momba ny Fiarovana | Fitantanana Ifotony",
+      "desc": "Torolàlana momba ny fiarovana ara-nomery sy ny angon-drakitra ho an'ny fiangonana."
+    },
+    "header_title": "Soso-kevitra momba ny Fiarovana",
+    "back": "Hiverina",
+    "revision": "Fanitsiana farany",
+    "recent": "Vao haingana",
+    "hero_title": "Ny fahamendrehanao no",
+    "hero_highlight": "laharam-pahamehanay.",
+    "hero_sub": "Fahazarana tena ilaina amin'ny fiarovana ny fiainanao manokana sy ny mombamomba anao.",
+    "db_alert": "Fampandrenesana farany",
+    "accept_btn": "Azo sary ka hiverina",
+    "tips": {
+      "estafas": {
+        "title": "1. Fisolokiana amin'ny Internet",
+        "desc": "Mety hanahaka feo na tarehin'olona fantatrao ny fisolokiana ara-nomery mba hangalarana vola na angon-drakitra.",
+        "tags": {
+          "prevention": "Fisorohana",
+          "prevention_info": "Raha terena hanome vola na mombamomba saro-pady ianao: mijanòna, mieritrereta, ary hamarino foana.",
+          "verification": "Fanamarinana",
+          "verification_info": "Tapaho ny fifandraisana ary antsoy amin'ny alalan'ny laharana fantatrao fa azo antoka ilay olona.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknolojia fakana ny maha-izy ny hafa. Aza matoky izay hita na re amin'ny efijery fotsiny."
+        }
+      },
+      "physical": {
+        "title": "2. Fiarovana ny Fitaovana",
+        "desc": "Ny findainao no lakile lehibe. Varavarana mivoha ho an'ny fiainanao manokana ny fitaovana tsy misy hidiny.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Ampiasao ny FaceID na ny dian-tanana. Azo antoka kokoa noho ny sary hita maso izany.",
+          "updates": "Fanavaozana",
+          "updates_info": "Aza tsinontsinoavina ny hafatra 'Version vaovao'; matetika izy ireny no manamboatra lavaka amin'ny fiarovana.",
+          "encryption": "Enkripsi",
+          "encryption_info": "Hamarino tsara fa mandeha ny enkripsi mba hiarovana ny sary sy ny rakitrao raha misy halatra."
+        }
+      },
+      "keys": {
+        "title": "3. Teny miafina matanjaka",
+        "desc": "Sorohy ny fampiasana drakitra mora fantatra. Avy amin'ny teny miafina malemy ny ankamaroan'ny fanafihana.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Ampiasao ny fanamarinana indroa mianaka amin'ny kaontinao rehetra. Izy io no fiarovana lehibe indrindra.",
+          "robustness": "Hatanjaka",
+          "robustness_info": "Mampiasà fehezanteny lava fa tsy teny tsotra fotsiny. Ohatra: Ny 'Lanitra-Manga-2026!' dia tsara lavitra noho ny 'peter123'.",
+          "passphrases": "Fehezanteny miafina",
+          "passphrases_info": "Saika tsy ho vaky mihitsy ny fehezanteny lava ho an'ny solosaina mpanafika ankehitriny."
+        }
+      },
+      "phishing": {
+        "title": "4. Famantarana ny fandrika",
+        "desc": "Manao ho mpanolotsaina ara-teknika na banky ny mpanao ratsy mba hangalarana ny mombamomba anao amin'ny fampitahorana.",
+        "tags": {
+          "urgency": "Hamehana",
+          "urgency_info": "Raha milaza ny hafatra fa 'Hakatona ao anatin'ny adiny 1 ny kaontinao', dia fisolokiana izany matetika.",
+          "links": "Rohy",
+          "links_info": "Jereo tsara ny URL. Mampiasa anarana mitovitovy ny mpisoloky, ohatra 'g00gle.net' fa tsy 'google.com'.",
+          "files": "Rakitra",
+          "files_info": "Aza manokatra rakitra tsy nampoizina mihitsy, indrindra raha miafara amin'ny .ZIP, .EXE, na .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Ho an'ny ankizy",
+        "desc": "Tsy mahay mamantatra fandrika ny ankizy. Ampianaro izy ireo fa izay alefa amin'ny Internet dia hijanona ao foana.",
+        "tags": {
+          "identity": "Maha-izy",
+          "identity_info": "Sorohy ny famoahana mombamomba saro-pady amin'ny sary, toy ny fanamiana sekoly na ny toerana misy anao.",
+          "strangers": "Olona tsy fantatra",
+          "strangers_info": "Fitsipika volamena: 'Raha tsy fantatrao mivantana izy, dia tsy tena namana izy'.",
+          "privacy": "Tsiambaratelo",
+          "privacy_info": "Jereo matetika ny firafitry ny tsiambaratelo amin'ny tambajotra sosialin'ny fianakavianao."
+        }
+      },
+      "backup": {
+        "title": "6. Fitahirizana angona",
+        "desc": "Afaka manidy na mamafa ny rakitrao ny viriosy. Ny dika mitovy tena azo antoka dia ilay tsy mifandray amin'ny solosaina.",
+        "tags": {
+          "frequency": "Matetika",
+          "frequency_info": "Tehirizo any amin'ny toerana hafa ny sary sy ny taratasy sarobidy indray mandeha isam-bolana farafahakeliny.",
+          "disconnection": "Fanapahana",
+          "disconnection_info": "Adikao amin'ny kapila ivelany (external drive) ny rakitrao ary esory miala amin'ny solosaina izany rehefa vita.",
+          "cloud": "Cloud",
+          "cloud_info": "Ampiasao ny tahiry an-tsary (cloud) misy fiarovana, nefa aza ianteherana ho izy irery izany."
+        }
+      }
+    }
+  }
 }

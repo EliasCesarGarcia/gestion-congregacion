@@ -25,9 +25,63 @@
   "device_mobile": "Karurimay",
   "device_pc": "Antañiqiq",
 
-  "lang_es": "Kastilla simi", "lang_en": "Inlis simi", "lang_de": "Aliman simi", "lang_fr": "Fransis simi", "lang_pt": "Purtugis simi", "lang_it": "Italyanu simi", "lang_nl": "Ulandis simi", "lang_ru": "Rus simi", "lang_el": "Griyu simi", "lang_ja": "Nipun simi", "lang_zh_cn": "Chinu simi (Sula)", "lang_ko": "Kuriya simi", "lang_id": "Indunisya simi", "lang_vi": "Wiyetnam simi", "lang_sw": "Swahili simi", "lang_af": "Afrikaans simi", "lang_sq": "Albanya simi", "lang_am": "Amhara simi", "lang_ar": "Arabya simi", "lang_he": "Hebreo simi", "lang_ca": "Katalan simi", "lang_zh_tw": "Chinu simi (Kikin)", "lang_hr": "Krowasya simi", "lang_cs": "Cheko simi", "lang_da": "Danis simi", "lang_ee": "Ewe simi", "lang_fi": "Finis simi", "lang_ht": "Hayiti simi", "lang_haw": "Hawai simi", "lang_hi": "Hindi simi", "lang_hu": "Hungarya simi", "lang_ilo": "Ilocano simi", "lang_jam": "Hamayka simi", "lang_lr": "Liberya simi", "lang_mg": "Madagaskar simi", "lang_ml": "Malayalam simi", "lang_no": "Norwega simi", "lang_pap": "Papiamento simi", "lang_pcm": "Pidgin simi", "lang_pl": "Polonya simi", "lang_ro": "Rumanya simi", "lang_nso": "Sepedi simi", "lang_st": "Sesotho simi", "lang_sk": "Slowakya simi", "lang_sl": "Slowenya simi", "lang_sv": "Suwisya simi", "lang_tl": "Tagalo simi", "lang_ta": "Tamil simi", "lang_th": "Taylandya simi", "lang_tr": "Turkiya simi", "lang_tw": "Twi simi", "lang_uk": "Ukranis simi", "lang_xh": "Xhosa simi", "lang_zu": "Zulu simi", "lang_gn": "Warani simi", "lang_qu": "Runasimi",
+  "lang_es": "Kastilla simi",
+  "lang_en": "Inlis simi",
+  "lang_de": "Aliman simi",
+  "lang_fr": "Fransis simi",
+  "lang_pt": "Purtugis simi",
+  "lang_it": "Italyanu simi",
+  "lang_nl": "Ulandis simi",
+  "lang_ru": "Rus simi",
+  "lang_el": "Griyu simi",
+  "lang_ja": "Nipun simi",
+  "lang_zh_cn": "Chinu simi (Sula)",
+  "lang_ko": "Kuriya simi",
+  "lang_id": "Indunisya simi",
+  "lang_vi": "Wiyetnam simi",
+  "lang_sw": "Swahili simi",
+  "lang_af": "Afrikaans simi",
+  "lang_sq": "Albanya simi",
+  "lang_am": "Amhara simi",
+  "lang_ar": "Arabya simi",
+  "lang_he": "Hebreo simi",
+  "lang_ca": "Katalan simi",
+  "lang_zh_tw": "Chinu simi (Kikin)",
+  "lang_hr": "Krowasya simi",
+  "lang_cs": "Cheko simi",
+  "lang_da": "Danis simi",
+  "lang_ee": "Ewe simi",
+  "lang_fi": "Finis simi",
+  "lang_ht": "Hayiti simi",
+  "lang_haw": "Hawai simi",
+  "lang_hi": "Hindi simi",
+  "lang_hu": "Hungarya simi",
+  "lang_ilo": "Ilocano simi",
+  "lang_jam": "Hamayka simi",
+  "lang_lr": "Liberya simi",
+  "lang_mg": "Madagaskar simi",
+  "lang_ml": "Malayalam simi",
+  "lang_no": "Norwega simi",
+  "lang_pap": "Papiamento simi",
+  "lang_pcm": "Pidgin simi",
+  "lang_pl": "Polonya simi",
+  "lang_ro": "Rumanya simi",
+  "lang_nso": "Sepedi simi",
+  "lang_st": "Sesotho simi",
+  "lang_sk": "Slowakya simi",
+  "lang_sl": "Slowenya simi",
+  "lang_sv": "Suwisya simi",
+  "lang_tl": "Tagalo simi",
+  "lang_ta": "Tamil simi",
+  "lang_th": "Taylandya simi",
+  "lang_tr": "Turkiya simi",
+  "lang_tw": "Twi simi",
+  "lang_uk": "Ukranis simi",
+  "lang_xh": "Xhosa simi",
+  "lang_zu": "Zulu simi",
+  "lang_gn": "Warani simi",
+  "lang_qu": "Runasimi",
 
-  
   "greeting_morning": "Allin p'unchay,",
   "greeting_afternoon": "Allin sukhayay,",
   "greeting_night": "Allin tuta,",
@@ -65,7 +119,6 @@
   "footer_title": "KAMACHINA LIKACHASQA TEOCRÁTICA",
   "footer_use": "T'aqapaq Kamachiy",
   "footer_terms": "Kamachina Mubuykuna",
-
 
   "profile_title": "Akawntuta Kamachiy",
   "profile_personal_id": "ID Teéva",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Anciano Secretario-man",
   "profile_pub_help_or": "chayri kay",
   "profile_pub_help_service": "Anciano de Servicio-man",
-  "profile_pub_help_suffix": "tantakuyniykimanta."
+  "profile_pub_help_suffix": "tantakuyniykimanta.",
 
-
+  "security": {
+    "seo": {
+      "title": "Allin Jark’akuy Paqtachaykuna | Kaymanta Kamachiy",
+      "desc": "Antañiqiqpi jark’akuy, congregacionmanta imaymana waqaychay kamachiy."
+    },
+    "header_title": "Allin Jark’akuy Paqtachaykuna",
+    "back": "Kutipuy",
+    "revision": "Qhipa qhawariy",
+    "recent": "Kunanlla",
+    "hero_title": "Allin runa kayniykiqa",
+    "hero_highlight": "ñawpaqpi waqaychanayku.",
+    "hero_sub": "Sapa p'unchay kawsayniykita waqaychanaykipaq, ama pimanpas willanaykipaq.",
+    "db_alert": "Usqhaylla willay",
+    "accept_btn": "Entiendeniña, kutipuy",
+    "tips": {
+      "estafas": {
+        "title": "1. Antañiqiqmanta suwakuy",
+        "desc": "Lulla ruraykunaqa riqsisqa runakunaq kunkanta, uyamatapas qhawachisunkiku, qullqiykita imaymanaykitapas suwananpaq.",
+        "tags": {
+          "prevention": "Jark’akuy",
+          "prevention_info": "Usqhaylla qullqiykita, imaymanaykitapas mañasuspaykiqa: sayay, sumaqta yuyaymanay, chantaqa tapurikuy.",
+          "verification": "Chiqanchay",
+          "verification_info": "Usqhaylla chay parlayta t'inkiy, chanta chay runaman waqyay riqsisqa teléfonoman.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Runata kikinchay lula ruray. Ama iñiychu rikusqallaykiman, uyarillasqallaykimanpas."
+        }
+      },
+      "physical": {
+        "title": "2. Celularyki jark’ay",
+        "desc": "Celularykiqa llaviykichis jina. Mana llayisqa celularykiqa punku kichasqa jina sapa p'unchay kawsayniykiman.",
+        "tags": {
+          "biometry": "Biometría",
+          "biometry_info": "Uyaykita, ruk'anaykitapas churay celularyki llawinaykipaq. Kayqa aswan allin, mana pipas riqunanpaq.",
+          "updates": "Kunanchanapaq",
+          "updates_info": "Ama 'New version' niqtaqa wasanchaychu; kaykunawanmi jark’akuykuna aswan allin kanku.",
+          "encryption": "Encryption",
+          "encryption_info": "Antañiqiqpi encryption nisqata sumaqta qhawariy, suwakuna mana fotoykikunata, imaymanaykitapas riqunanpaq."
+        }
+      },
+      "keys": {
+        "title": "3. Muerte llawikuna",
+        "desc": "Ama teléfonoykiman llawita churaychu riqsisqa imaymanawanqa. Suwakunaqa mana allin llawikuna kaqtinmi suwakunku.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Iskay llawiwan llawiy sapa mayman yaykunaykipaqpas. Kayqa aswan allin jark’akuy.",
+          "robustness": "Muerte kay",
+          "robustness_info": "Pari p'unchay puku parlaykunata churay llawi jina. Techapyrã: 'Blue-Sky-2026!' aswan allin 'peter123' nisqamantaqa.",
+          "passphrases": "Llawi parlaykuna",
+          "passphrases_info": "Puku parlaykunaqa antañiqiq suwakunapaqqa ancha sasa p'akiy."
+        }
+      },
+      "phishing": {
+        "title": "4. Anzuelota riqsiy",
+        "desc": "Suwakunaqa 'técnico kani' nispa, 'bancomanta kani' nispa manchachisuspa suwasunkiku.",
+        "tags": {
+          "urgency": "Usqhaylla",
+          "urgency_info": "Willaqkuna 'panta usqhaylla ñit'iy' niqtinqa, wasanchay, suwaqchá kashan.",
+          "links": "Links",
+          "links_info": "URL nisqata sumaqta qhawariy. Suwakunaqa sutikunata kikinchanku, techapyrã 'g00gle.net' churanku 'google.com' rantinpi.",
+          "files": "Imaymanakuna",
+          "files_info": "Mana riqsisqa kaqkunataqa ama kichiychu, astawanraq .ZIP, .EXE, chayri .BAT niqtinqa."
+        }
+      },
+      "family": {
+        "title": "5. Wawakunata yachachiy",
+        "desc": "Wawakunaqa mana suwakunata riqsiyta atinkuchu. Yachachiy: internetman churakuqqa wiñaypaq chaypi kanqa.",
+        "tags": {
+          "identity": "Runayman kay",
+          "identity_info": "Ama fotoykikunapi escuelayki uniformeta, trabajoykita, tiyakusqaykitapas qhawachiychu.",
+          "strangers": "Mana riqsisqakuna",
+          "strangers_info": "Wawakunapaq kamachiy: 'Mana riqsisqayki runaqa mana amigoykichu'.",
+          "privacy": "Sapaq kay",
+          "privacy_info": "Sapa kuti familaykiq celularynkuta, internetman yaykusqankutapas qhawariy."
+        }
+      },
+      "backup": {
+        "title": "6. Waqaychasqa imaymanaykuna",
+        "desc": "Virukunaqa imaymanaykitapas chinkachinman. Antañiqiqmanta urqhutaqlla waqaychayqa aswan allin.",
+        "tags": {
+          "frequency": "Sapa kuti",
+          "frequency_info": "Sapa killa fotoykikunata, qillqasqaykikunata waqaychay.",
+          "disconnection": "Urqhupuy",
+          "disconnection_info": "Lliw imaymanaykita ukhu 'disco externo' nisqaman churay, chanta antañiqiqmanta urqhupuy.",
+          "cloud": "Cloud",
+          "cloud_info": "Cloud storage nisqata jark’akuywan churay, nitaj chayllapi waqaychaychu."
+        }
+      }
+    }
+  }
 }

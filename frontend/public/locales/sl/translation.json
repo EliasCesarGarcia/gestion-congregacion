@@ -25,9 +25,63 @@
   "device_mobile": "Mobilnik",
   "device_pc": "Računalnik",
 
-  "lang_es": "Španščina", "lang_en": "Angleščina", "lang_de": "Nemščina", "lang_fr": "Francoščina", "lang_pt": "Portugalščina", "lang_it": "Italijanščina", "lang_nl": "Nizozemščina", "lang_ru": "Ruščina", "lang_el": "Grščina", "lang_ja": "Japonščina", "lang_zh_cn": "Poenostavljena kitajščina", "lang_ko": "Korejščina", "lang_id": "Indonezijščina", "lang_vi": "Vietnamščina", "lang_sw": "Svahili", "lang_af": "Afrikanščina", "lang_sq": "Albanščina", "lang_am": "Amharščina", "lang_ar": "Arabščina", "lang_he": "Hebrejščina", "lang_ca": "Katalonščina", "lang_zh_tw": "Tradicionalna kitajščina", "lang_hr": "Hrvaščina", "lang_cs": "Češčina", "lang_da": "Danščina", "lang_ee": "Evejščina", "lang_fi": "Finščina", "lang_ht": "Haitijska kreolščina", "lang_haw": "Havajščina", "lang_hi": "Hindujščina", "lang_hu": "Madžarščina", "lang_ilo": "Ilokanščina", "lang_jam": "Jamajška kreolščina", "lang_lr": "Liberijščina", "lang_mg": "Malgaščina", "lang_ml": "Malajalamščina", "lang_no": "Norveščina", "lang_pap": "Papiamento", "lang_pcm": "Pidžin", "lang_pl": "Poljščina", "lang_ro": "Romunščina", "lang_nso": "Severni sotho", "lang_st": "Sesoto", "lang_sk": "Slovaščina", "lang_sl": "Slovenščina", "lang_sv": "Švedščina", "lang_tl": "Tagalog", "lang_ta": "Tamilščina", "lang_th": "Tajščina", "lang_tr": "Turščina", "lang_tw": "Twi", "lang_uk": "Ukrajinščina", "lang_xh": "Xhosa", "lang_zu": "Zulujščina", "lang_gn": "Gvaranijščina", "lang_qu": "Bolivijska kečuanščina",
+  "lang_es": "Španščina",
+  "lang_en": "Angleščina",
+  "lang_de": "Nemščina",
+  "lang_fr": "Francoščina",
+  "lang_pt": "Portugalščina",
+  "lang_it": "Italijanščina",
+  "lang_nl": "Nizozemščina",
+  "lang_ru": "Ruščina",
+  "lang_el": "Grščina",
+  "lang_ja": "Japonščina",
+  "lang_zh_cn": "Poenostavljena kitajščina",
+  "lang_ko": "Korejščina",
+  "lang_id": "Indonezijščina",
+  "lang_vi": "Vietnamščina",
+  "lang_sw": "Svahili",
+  "lang_af": "Afrikanščina",
+  "lang_sq": "Albanščina",
+  "lang_am": "Amharščina",
+  "lang_ar": "Arabščina",
+  "lang_he": "Hebrejščina",
+  "lang_ca": "Katalonščina",
+  "lang_zh_tw": "Tradicionalna kitajščina",
+  "lang_hr": "Hrvaščina",
+  "lang_cs": "Češčina",
+  "lang_da": "Danščina",
+  "lang_ee": "Evejščina",
+  "lang_fi": "Finščina",
+  "lang_ht": "Haitijska kreolščina",
+  "lang_haw": "Havajščina",
+  "lang_hi": "Hindujščina",
+  "lang_hu": "Madžarščina",
+  "lang_ilo": "Ilokanščina",
+  "lang_jam": "Jamajška kreolščina",
+  "lang_lr": "Liberijščina",
+  "lang_mg": "Malgaščina",
+  "lang_ml": "Malajalamščina",
+  "lang_no": "Norveščina",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidžin",
+  "lang_pl": "Poljščina",
+  "lang_ro": "Romunščina",
+  "lang_nso": "Severni sotho",
+  "lang_st": "Sesoto",
+  "lang_sk": "Slovaščina",
+  "lang_sl": "Slovenščina",
+  "lang_sv": "Švedščina",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamilščina",
+  "lang_th": "Tajščina",
+  "lang_tr": "Turščina",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrajinščina",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulujščina",
+  "lang_gn": "Gvaranijščina",
+  "lang_qu": "Bolivijska kečuanščina",
 
-  
   "greeting_morning": "Dobro jutro,",
   "greeting_afternoon": "Dober dan,",
   "greeting_night": "Dober večer,",
@@ -65,7 +119,6 @@
   "footer_title": "TEOKRATIČNO LOKALNO UPRAVLJANJE",
   "footer_use": "Uradna uporaba",
   "footer_terms": "Pogoji uporabe",
-
 
   "profile_title": "Upravljanje računa",
   "profile_personal_id": "Osebni ID",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "starešino tajnika",
   "profile_pub_help_or": "ali",
   "profile_pub_help_service": "službenega nadzornika",
-  "profile_pub_help_suffix": "vaše skupščine."
+  "profile_pub_help_suffix": "vaše skupščine.",
 
-
+  "security": {
+    "seo": {
+      "title": "Varnostni nasveti | Lokalno upravljanje",
+      "desc": "Vodnik za napredno digitalno zaščito in varovanje podatkov za občino."
+    },
+    "header_title": "Varnostni nasveti",
+    "back": "Nazaj",
+    "revision": "Zadnja revizija",
+    "recent": "Nedavno",
+    "hero_title": "Vaša integriteta je",
+    "hero_highlight": "naša prioriteta.",
+    "hero_sub": "Bistvene navade za skrb za vašo zasebnost in osebne podatke.",
+    "db_alert": "Obvestilo v zadnjem trenutku",
+    "accept_btn": "Razumem in nazaj",
+    "tips": {
+      "estafas": {
+        "title": "1. Spletne prevare",
+        "desc": "Ponarejena digitalna vsebina lahko posnema znane glasove in obraze, da bi ukradla vaše podatke ali denar.",
+        "tags": {
+          "prevention": "Preventiva",
+          "prevention_info": "Če vas priganjajo k posredovanju denarja ali občutljivih podatkov: ustavite se, premislite in vedno preverite.",
+          "verification": "Preverjanje",
+          "verification_info": "Prekinite komunikacijo in sami pokličite osebo prek znane varne poti.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Tehnologija kloniranja identitete. Ne zaupajte le temu, kar vidite ali slišite prek zaslona."
+        }
+      },
+      "physical": {
+        "title": "2. Fizična varnost",
+        "desc": "Vaš telefon je glavni ključ. Naprava brez zaklepanja so odprta vrata v celotno vaše zasebno življenje.",
+        "tags": {
+          "biometry": "Biometrija",
+          "biometry_info": "Nastavite FaceID ali prstni odtis. Je veliko varnejše od vzorca, ki bi ga nekdo lahko opazoval čez vaše ramo.",
+          "updates": "Posodobitve",
+          "updates_info": "Ne prezrite sporočil o 'Novi različici'; pogosto odpravljajo kritične varnostne pomanjkljivosti.",
+          "encryption": "Šifriranje",
+          "encryption_info": "Poskrbite, da je šifriranje diska aktivno, da zaščitite svoje datoteke in fotografije pred morebitno fizično krajo."
+        }
+      },
+      "keys": {
+        "title": "3. Močna gesla",
+        "desc": "Izogibajte se uporabi očitnih podatkov. Večina napadov se zgodi zaradi šibkih ali ponavljajočih se gesel.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktivirajte dvostopenjsko preverjanje na vseh svojih računih. To je najpomembnejša druga plast zaščite.",
+          "robustness": "Robustnost",
+          "robustness_info": "Namesto preprostih besed uporabljajte dolge fraze. Primer: 'Modro-Nebo-2026!' je veliko boljše kot 'peter123'.",
+          "passphrases": "Geselne fraze",
+          "passphrases_info": "Dolge fraze je današnjim računalnikom napadalcev skoraj nemogoče zlomiti."
+        }
+      },
+      "phishing": {
+        "title": "4. Prepoznavanje trnka",
+        "desc": "Kriminalci se pretvarjajo, da so tehnična podpora ali banke, da bi ukradli vaše podatke s strahom ali nujnostjo.",
+        "tags": {
+          "urgency": "Nujnost",
+          "urgency_info": "Če sporočilo pravi 'Vaš račun bo zaprt čez 1 uro, če ne kliknete', je to skoraj zagotovo prevara.",
+          "links": "Povezave",
+          "links_info": "Skrbno preverite URL. Prevaranti pogosto uporabljajo podobna imena, kot je 'g00gle.net' namesto 'google.com'.",
+          "files": "Datoteke",
+          "files_info": "Nikoli ne odpirajte nepričakovanih prilog, zlasti če imajo končnice, kot so .ZIP, .EXE ali .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Zapuščina otrok",
+        "desc": "Otroci nimajo izkušenj za prepoznavanje pasti. Naučite jih, da tisto, kar je objavljeno na spletu, tam ostane za vedno.",
+        "tags": {
+          "identity": "Identiteta",
+          "identity_info": "Izogibajte se razkritju občutljivih podatkov na javnih fotografijah, kot so šolske uniforme ali lokacija v realnem času.",
+          "strangers": "Neznanci",
+          "strangers_info": "Zlato pravilo za mladoletnike: 'Če jih ne poznaš osebno, niso pravi prijatelji'.",
+          "privacy": "Zasebnost",
+          "privacy_info": "Občasno preverite nastavitve zasebnosti družbenih omrežij in naprav svojih družinskih članov."
+        }
+      },
+      "backup": {
+        "title": "6. Preživetje podatkov",
+        "desc": "Virus lahko zaklene ali izbriše vaše datoteke. Edina res varna kopija je tista, ki je fizično odklopljena.",
+        "tags": {
+          "frequency": "Pogostost",
+          "frequency_info": "Varnostno kopirajte svoje najdragocenejše fotografije in dokumente vsaj enkrat mesečno.",
+          "disconnection": "Odklop",
+          "disconnection_info": "Kopirajte datoteke na zunanji pogon in ga po končanem delu fizično odklopite iz računalnika.",
+          "cloud": "Oblak",
+          "cloud_info": "Uporabljajte storitve shranjevanja v oblaku s šifriranjem, vendar se nikoli ne zanašajte nanje kot na edino kopijo."
+        }
+      }
+    }
+  }
 }

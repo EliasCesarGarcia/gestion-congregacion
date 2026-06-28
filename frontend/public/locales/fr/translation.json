@@ -82,7 +82,6 @@
   "lang_gn": "Guarani",
   "lang_qu": "Quechua bolivien",
 
-  
   "greeting_morning": "Bonjour,",
   "greeting_afternoon": "Bon après-midi,",
   "greeting_night": "Bonsoir,",
@@ -120,7 +119,6 @@
   "footer_title": "GESTION LOCALE THÉOCRATIQUE",
   "footer_use": "Usage Institutionnel",
   "footer_terms": "Conditions d'Utilisation",
-
 
   "profile_title": "Administration du compte",
   "profile_personal_id": "ID personnel",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Secrétaire",
   "profile_pub_help_or": "ou au",
   "profile_pub_help_service": "Responsable du service",
-  "profile_pub_help_suffix": "de votre congrégation."
+  "profile_pub_help_suffix": "de votre congrégation.",
 
-  
+  "security": {
+    "seo": {
+      "title": "Conseils de sécurité | Gestion Locale",
+      "desc": "Guide de blindage numérique avancé et de protection des données pour la congrégation."
+    },
+    "header_title": "Conseils de sécurité",
+    "back": "Retour",
+    "revision": "Dernière révision",
+    "recent": "Récent",
+    "hero_title": "Votre intégrité est",
+    "hero_highlight": "notre priorité.",
+    "hero_sub": "Habitudes essentielles pour le soin de votre vie privée et de vos informations personnelles.",
+    "db_alert": "Avis de dernière minute",
+    "accept_btn": "Compris et retour",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyber-escroqueries",
+        "desc": "Le contenu numérique falsifié peut imiter des voix et des visages connus pour voler vos informations ou votre argent.",
+        "tags": {
+          "prevention": "Prévention",
+          "prevention_info": "Si l'on vous presse de fournir de l'argent ou des données sensibles : arrêtez-vous, réfléchissez et vérifiez toujours.",
+          "verification": "Vérification",
+          "verification_info": "Mettez fin à la communication et appelez la personne vous-même via un canal sécurisé connu.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Technologie de clonage d'identité. Ne vous fiez pas uniquement à ce que vous voyez ou entendez à travers un écran."
+        }
+      },
+      "physical": {
+        "title": "2. Périmètre physique",
+        "desc": "Votre téléphone est la clé maîtresse. Un appareil sans verrouillage est une porte ouverte sur toute votre vie privée.",
+        "tags": {
+          "biometry": "Biométrie",
+          "biometry_info": "Configurez FaceID ou l'empreinte digitale. C'est bien plus sûr qu'un schéma que quelqu'un pourrait espionner par-dessus votre épaule.",
+          "updates": "Mises à jour",
+          "updates_info": "N'ignorez pas les messages 'Nouvelle version' ; ils comblent souvent des failles de sécurité critiques découvertes récemment.",
+          "encryption": "Chiffrement",
+          "encryption_info": "Assurez-vous que le chiffrement du disque est actif pour protéger vos fichiers et photos contre un éventuel vol physique."
+        }
+      },
+      "keys": {
+        "title": "3. Mots de passe à fort impact",
+        "desc": "Évitez d'utiliser des données évidentes. La plupart des attaques surviennent à cause de mots de passe faibles ou répétés sur plusieurs sites.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Activez la vérification en deux étapes sur tous vos comptes. C'est la deuxième couche de protection la plus importante.",
+          "robustness": "Robustesse",
+          "robustness_info": "Utilisez des phrases longues au lieu de mots simples. Exemple : 'Ciel-Bleu-2026!' est exponentiellement meilleur que 'pierre123'.",
+          "passphrases": "Phrases de passe",
+          "passphrases_info": "Les phrases longues sont presque impossibles à craquer pour les ordinateurs des attaquants d'aujourd'hui."
+        }
+      },
+      "phishing": {
+        "title": "4. Détecter l'hameçon",
+        "desc": "Les criminels se font passer pour un support technique ou des banques pour voler vos données par la peur ou l'urgence excessive.",
+        "tags": {
+          "urgency": "Urgence",
+          "urgency_info": "Si le message dit 'Votre compte fermera dans 1 heure si vous ne cliquez pas', c'est presque certainement une escroquerie.",
+          "links": "Liens",
+          "links_info": "Vérifiez attentivement l'URL. Les escrocs utilisent souvent des noms similaires comme 'g00gle.net' au lieu de 'google.com'.",
+          "files": "Fichiers",
+          "files_info": "N'ouvrez jamais de pièces jointes inattendues, surtout si elles ont des extensions comme .ZIP, .EXE ou .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Héritage des enfants",
+        "desc": "Les enfants n'ont pas la malveillance pour détecter les pièges. Enseignez-leur que ce qui est mis sur internet y reste pour toujours.",
+        "tags": {
+          "identity": "Identité",
+          "identity_info": "Évitez de révéler des données sensibles sur les photos publiques, comme les uniformes scolaires, les logos d'entreprise ou les lieux en temps réel.",
+          "strangers": "Inconnus",
+          "strangers_info": "Règle d'or pour les mineurs : 'Si vous ne les connaissez pas physiquement en personne, ce ne sont pas de vrais amis'.",
+          "privacy": "Confidentialité",
+          "privacy_info": "Examinez périodiquement les paramètres de confidentialité des réseaux sociaux et des appareils des membres de votre famille."
+        }
+      },
+      "backup": {
+        "title": "6. Survie des données",
+        "desc": "Un virus peut verrouiller ou supprimer vos fichiers. La seule copie vraiment sûre est celle qui est déconnectée physiquement.",
+        "tags": {
+          "frequency": "Fréquence",
+          "frequency_info": "Sauvegardez vos photos et documents les plus précieux au moins une fois par mois.",
+          "disconnection": "Déconnexion",
+          "disconnection_info": "Copiez vos fichiers sur un disque externe et, surtout, déconnectez-le physiquement de l'ordinateur une fois terminé.",
+          "cloud": "Cloud",
+          "cloud_info": "Utilisez des services de stockage cloud avec chiffrement, mais ne comptez jamais uniquement sur eux comme copie unique."
+        }
+      }
+    }
+  }
 }

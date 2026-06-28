@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Boliviansk quechua",
 
-  
   "greeting_morning": "Godmorgen,",
   "greeting_afternoon": "Goddag,",
   "greeting_night": "Godaften,",
@@ -120,7 +119,6 @@
   "footer_title": "TEOKRATISK LOKAL ADMINISTRATION",
   "footer_use": "Institutionel brug",
   "footer_terms": "Vilkår for anvendelse",
-
 
   "profile_title": "Kontoadministration",
   "profile_personal_id": "Personligt ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "ældste-sekretæren",
   "profile_pub_help_or": "eller",
   "profile_pub_help_service": "tjenestetilsynsmanden",
-  "profile_pub_help_suffix": "i din menighed."
+  "profile_pub_help_suffix": "i din menighed.",
 
-
+  "security": {
+    "seo": {
+      "title": "Sikkerhedstips | Lokal ledelse",
+      "desc": "Vejledning i avanceret digital afskærmning og databeskyttelse for menigheden."
+    },
+    "header_title": "Sikkerhedstips",
+    "back": "Tilbage",
+    "revision": "Sidste revision",
+    "recent": "Seneste",
+    "hero_title": "Din integritet er",
+    "hero_highlight": "vores prioritet.",
+    "hero_sub": "Essentielle vaner til beskyttelse af dit privatliv og dine personlige oplysninger.",
+    "db_alert": "Sidste øjebliks meddelelse",
+    "accept_btn": "Forstået og gå tilbage",
+    "tips": {
+      "estafas": {
+        "title": "1. Cybersvindel",
+        "desc": "Falsk digitalt indhold kan efterligne kendte stemmer og ansigter for at stjæle dine oplysninger eller penge.",
+        "tags": {
+          "prevention": "Forebyggelse",
+          "prevention_info": "Hvis du bliver presset til at give penge eller følsomme data: stop op, tænk dig om, og bekræft altid.",
+          "verification": "Verificering",
+          "verification_info": "Afbryd kommunikationen og ring selv til personen via en kendt sikker kanal.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknologi til identitetskloning. Stol ikke kun på det, du ser eller hører gennem en skærm."
+        }
+      },
+      "physical": {
+        "title": "2. Fysisk perimeter",
+        "desc": "Din telefon er hovednøglen. En enhed uden lås er en åben dør til hele dit privatliv.",
+        "tags": {
+          "biometry": "Biometri",
+          "biometry_info": "Opsæt FaceID eller fingeraftryk. Det er meget sikrere end et mønster, som nogen kan spionere over din skulder.",
+          "updates": "Opdateringer",
+          "updates_info": "Ignorer ikke 'Ny version'-meddelelser; de lukker ofte kritiske sikkerhedshuller, der er opdaget for nylig.",
+          "encryption": "Kryptering",
+          "encryption_info": "Sørg for, at diskkryptering er aktiv for at beskytte dine filer og fotos mod potentielt fysisk tyveri."
+        }
+      },
+      "keys": {
+        "title": "3. Stærke adgangskoder",
+        "desc": "Undgå at bruge indlysende data. De fleste angreb sker på grund af svage adgangskoder eller genbrug på tværs af sider.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktiver totrinsbekræftelse på alle dine konti. Det er det vigtigste andet lag af beskyttelse.",
+          "robustness": "Robusthed",
+          "robustness_info": "Brug lange sætninger i stedet for enkle ord. Eksempel: 'Blå-Himmel-2026!' er eksponentielt bedre end 'peter123'.",
+          "passphrases": "Adgangssætninger",
+          "passphrases_info": "Lange sætninger er næsten umulige for nutidens angribercomputere at knække."
+        }
+      },
+      "phishing": {
+        "title": "4. Genkend krogen",
+        "desc": "Kriminelle lader som om, de er teknisk support eller banker for at stjæle dine data gennem frygt eller hastværk.",
+        "tags": {
+          "urgency": "Hastværk",
+          "urgency_info": "Hvis meddelelsen siger 'Din konto lukker om 1 time, hvis du ikke klikker', er det næsten helt sikkert svindel.",
+          "links": "Links",
+          "links_info": "Tjek URL'en omhyggeligt. Svindlere bruger ofte lignende navne som 'g00gle.net' i stedet for 'google.com'.",
+          "files": "Filer",
+          "files_info": "Åbn aldrig uventede vedhæftede filer, især hvis de har filendelser som .ZIP, .EXE eller .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Børnenes eftermæle",
+        "desc": "Børn mangler erfaring til at opdage fælder. Lær dem, at det, der lægges på internettet, bliver der for altid.",
+        "tags": {
+          "identity": "Identitet",
+          "identity_info": "Undgå at afsløre følsomme data på offentlige fotos, såsom skoleuniformer eller realtidslokationer.",
+          "strangers": "Fremmede",
+          "strangers_info": "Gylden regel for mindreårige: 'Hvis du ikke kender dem fysisk personligt, er de ikke en rigtig ven'.",
+          "privacy": "Privatliv",
+          "privacy_info": "Gennemgå med jævne mellemrum privatlivsindstillingerne på dine familiemedlemmers sociale netværk og enheder."
+        }
+      },
+      "backup": {
+        "title": "6. Dataoverlevelse",
+        "desc": "En virus kan låse eller slette dine filer. Den eneste virkelig sikre kopi er den, der er fysisk afbrudt.",
+        "tags": {
+          "frequency": "Frekvens",
+          "frequency_info": "Tag backup af dine mest værdifulde fotos og dokumenter mindst en gang om måneden.",
+          "disconnection": "Afbrydelse",
+          "disconnection_info": "Kopier dine filer til et eksternt drev og, vigtigst af alt, afbryd det fysisk fra computeren, når du er færdig.",
+          "cloud": "Skyen",
+          "cloud_info": "Brug cloud-lagringstjenester med kryptering, men stol aldrig udelukkende på dem som en enkelt kopi."
+        }
+      }
+    }
+  }
 }

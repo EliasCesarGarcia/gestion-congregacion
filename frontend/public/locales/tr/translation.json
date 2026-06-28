@@ -82,7 +82,6 @@
   "lang_gn": "Guaranice",
   "lang_qu": "Bolivya Keçuvası",
 
-  
   "greeting_morning": "Günaydın,",
   "greeting_afternoon": "Tünaydın / İyi günler,",
   "greeting_night": "İyi akşamlar,",
@@ -120,7 +119,6 @@
   "footer_title": "TEOKRATİK YEREL YÖNETİM",
   "footer_use": "Kurumsal Kullanım",
   "footer_terms": "Kullanım Koşulları",
-
 
   "profile_title": "Hesap Yönetimi",
   "profile_personal_id": "Kişisel Kimlik",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Yazman İhtiyar",
   "profile_pub_help_or": "veya",
   "profile_pub_help_service": "Hizmet Gözetmeni İhtiyar",
-  "profile_pub_help_suffix": "."
+  "profile_pub_help_suffix": ".",
 
-
+  "security": {
+    "seo": {
+      "title": "Güvenlik İpuçları | Yerel Yönetim",
+      "desc": "Cemaat için gelişmiş dijital koruma ve veri güvenliği kılavuzu."
+    },
+    "header_title": "Güvenlik İpuçları",
+    "back": "Geri",
+    "revision": "Son revizyon",
+    "recent": "Son",
+    "hero_title": "Dürüstlüğünüz",
+    "hero_highlight": "önceliğimizdir.",
+    "hero_sub": "Gizliliğinizin ve kişisel bilgilerinizin korunması için temel alışkanlıklar.",
+    "db_alert": "Son Dakika Bildirimi",
+    "accept_btn": "Anlaşıldı ve geri dön",
+    "tips": {
+      "estafas": {
+        "title": "1. Siber Dolandırıcılık",
+        "desc": "Sahte dijital içerikler, bilgilerinizi veya paranızı çalmak için tanıdık sesleri ve yüzleri taklit edebilir.",
+        "tags": {
+          "prevention": "Önleme",
+          "prevention_info": "Para veya hassas veri sağlamanız için acele ettiriliyorsanız: durun, düşünün ve her zaman doğrulayın.",
+          "verification": "Doğrulama",
+          "verification_info": "İletişimi sonlandırın ve kişiyi bilinen güvenli bir kanal üzerinden kendiniz arayın.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Kimlik kopyalama teknolojisi. Ekranda gördüğünüz veya duyduğunuz her şeye güvenmeyin."
+        }
+      },
+      "physical": {
+        "title": "2. Fiziksel Güvenlik",
+        "desc": "Telefonunuz ana anahtardır. Kilidi olmayan bir cihaz, tüm özel hayatınıza açılan bir kapıdır.",
+        "tags": {
+          "biometry": "Biyometri",
+          "biometry_info": "FaceID veya Parmak İzi ayarlayın. Birinin omzunuzun üzerinden görebileceği bir desenden çok daha güvenlidir.",
+          "updates": "Güncellemeler",
+          "updates_info": "'Yeni sürüm' mesajlarını görmezden gelmeyin; bunlar genellikle yeni keşfedilen kritik güvenlik açıklarını kapatır.",
+          "encryption": "Şifreleme",
+          "encryption_info": "Dosyalarınızı ve fotoğraflarınızı fiziksel hırsızlıktan korumak için disk şifrelemenin aktif olduğundan emin olun."
+        }
+      },
+      "keys": {
+        "title": "3. Güçlü Parolalar",
+        "desc": "Belirgin veriler kullanmaktan kaçının. Çoğu saldırı, zayıf veya birden fazla sitede tekrarlanan parolalar nedeniyle gerçekleşir.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Tüm hesaplarınızda iki adımlı doğrulamayı etkinleştirin. Bu, en önemli ikinci koruma katmanıdır.",
+          "robustness": "Dayanıklılık",
+          "robustness_info": "Basit kelimeler yerine uzun ifadeler kullanın. Örnek: 'Mavi-Gokyuzu-2026!' parolas 'peter123'ten kat kat iyidir.",
+          "passphrases": "Parola ifadeleri",
+          "passphrases_info": "Uzun ifadelerin günümüz saldırgan bilgisayarları tarafından kırılması neredeyse imkansızdır."
+        }
+      },
+      "phishing": {
+        "title": "4. Oltayı Fark Etmek",
+        "desc": "Suçlular, korku veya aşırı aciliyet yoluyla verilerinizi çalmak için teknik destek veya banka gibi davranırlar.",
+        "tags": {
+          "urgency": "Aciliyet",
+          "urgency_info": "Mesajda 'Tıklamazsanız hesabınız 1 saat içinde kapanacak' yazıyorsa, bu neredeyse kesinlikle bir dolandırıcılıktır.",
+          "links": "Bağlantılar",
+          "links_info": "URL'yi dikkatlice kontrol edin. Dolandırıcılar genellikle 'google.com' yerine 'g00gle.net' gibi benzer isimler kullanır.",
+          "files": "Dosyalar",
+          "files_info": "Beklenmedik ekleri asla açmayın, özellikle .ZIP, .EXE veya .BAT uzantılılarsa."
+        }
+      },
+      "family": {
+        "title": "5. Çocukların Güvenliği",
+        "desc": "Çocuklar tuzakları fark edecek deneyime sahip olmayabilir. Onlara internete yüklenenlerin sonsuza dek orada kaldığını öğretin.",
+        "tags": {
+          "identity": "Kimlik",
+          "identity_info": "Okul üniformaları veya gerçek zamanlı konumlar gibi hassas verileri halka açık fotoğraflarda paylaşmaktan kaçının.",
+          "strangers": "Yabancılar",
+          "strangers_info": "Küçükler için altın kural: 'Onları gerçek hayatta tanımıyorsan, onlar gerçek arkadaş değildir'.",
+          "privacy": "Gizlilik",
+          "privacy_info": "Aile üyelerinizin sosyal ağlarının ve cihazlarının gizlilik ayarlarını periyodik olarak gözden geçirin."
+        }
+      },
+      "backup": {
+        "title": "6. Veri Yedekleme",
+        "desc": "Bir virüs dosyalarınızı kilitleyebilir veya silebilir. Gerçekten güvenli olan tek kopya, fiziksel olarak bağlantısı kesilmiş olandır.",
+        "tags": {
+          "frequency": "Sıklık",
+          "frequency_info": "En değerli fotoğraflarınızı ve belgelerinizi ayda en az bir kez yedekleyin.",
+          "disconnection": "Bağlantıyı kesme",
+          "disconnection_info": "Dosyalarınızı harici bir diske kopyalayın ve işiniz bittiğinde diski bilgisayardan fiziksel olarak çıkarın.",
+          "cloud": "Bulut",
+          "cloud_info": "Şifrelemeli bulut depolama hizmetlerini kullanın, ancak asla tek kopya olarak yalnızca onlara güvenmeyin."
+        }
+      }
+    }
+  }
 }

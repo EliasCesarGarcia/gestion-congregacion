@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Quechua bolivià",
 
-  
   "greeting_morning": "Bon dia,",
   "greeting_afternoon": "Bona tarda,",
   "greeting_night": "Bona nit,",
@@ -120,7 +119,6 @@
   "footer_title": "GESTIÓ LOCAL TEOCRÀTICA",
   "footer_use": "Ús Institucional",
   "footer_terms": "Condicions d'Ús",
-
 
   "profile_title": "Administració del compte",
   "profile_personal_id": "ID personal",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "l'Ancià secretari",
   "profile_pub_help_or": "o a",
   "profile_pub_help_service": "l'Ancià de servei",
-  "profile_pub_help_suffix": "de la teva congregació."
+  "profile_pub_help_suffix": "de la teva congregació.",
 
-
+  "security": {
+    "seo": {
+      "title": "Consells de seguretat | Gestió Local",
+      "desc": "Guia de blindatge digital avançat i protecció de dades per a la congregació."
+    },
+    "header_title": "Consells de seguretat",
+    "back": "Enrere",
+    "revision": "Última revisió",
+    "recent": "Recent",
+    "hero_title": "La teva integritat és",
+    "hero_highlight": "la nostra prioritat.",
+    "hero_sub": "Hàbits essencials per a la cura de la teva privadesa i informació personal.",
+    "db_alert": "Avís d'última hora",
+    "accept_btn": "Entès i torna",
+    "tips": {
+      "estafas": {
+        "title": "1. Estafes ciber",
+        "desc": "El contingut digital fals pot imitar veus i cares conegudes per robar la teva informació o els teus diners.",
+        "tags": {
+          "prevention": "Prevenció",
+          "prevention_info": "Si et pressionen per donar diners o dades sensibles: atura't, pensa i verifica sempre.",
+          "verification": "Verificació",
+          "verification_info": "Finalitza la comunicació i truca tu mateix a la persona a través d'un canal segur conegut.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Tecnologia de clonació d'identitat. No confiïs només en el que veus o sents a través d'una pantalla."
+        }
+      },
+      "physical": {
+        "title": "2. Perímetre físic",
+        "desc": "El teu telèfon és la clau mestra. Un dispositiu sense bloqueig és una porta oberta a tota la teva vida privada.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Configura FaceID o Empremta. És molt més segur que un patró que algú podria espiar per sobre la teva espatlla.",
+          "updates": "Actualitzacions",
+          "updates_info": "No ignoris els missatges de 'Nova versió'; sovint tanquen forats de seguretat crítics descoberts recentment.",
+          "encryption": "Xifratge",
+          "encryption_info": "Assegura't que el xifratge de disc estigui actiu per protegir els teus fitxers i fotos d'un possible robatori físic."
+        }
+      },
+      "keys": {
+        "title": "3. Claus d'alt impacte",
+        "desc": "Evita l'ús de dades òbvies. La majoria d'atacs passen per contrasenyes febles o repetides en diversos llocs.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Activa la verificació en dos passos en tots els teus comptes. És la segona capa de blindatge més important.",
+          "robustness": "Robustesa",
+          "robustness_info": "Utilitza frases llargues en comptes de paraules simples. Exemple: 'Cel-Blau-2026!' és millor que 'pere123'.",
+          "passphrases": "Frases de pas",
+          "passphrases_info": "Les frases llargues són gairebé impossibles de desxifrar per als ordinadors atacants d'avui dia."
+        }
+      },
+      "phishing": {
+        "title": "4. Detectar l'anzu",
+        "desc": "Els criminals es fan passar per suport tècnic o bancs per robar les teves dades mitjançant la por o la urgència.",
+        "tags": {
+          "urgency": "Urgència",
+          "urgency_info": "Si el missatge diu 'El teu compte tancarà en 1 hora si no fas clic', és gairebé segur una estafa.",
+          "links": "Links",
+          "links_info": "Revisa l'URL amb cura. Els estafadors solen usar noms similars com 'g00gle.net' en lloc de 'google.com'.",
+          "files": "Fitxers",
+          "files_info": "Mai obris fitxers adjunts inesperats, especialment si tenen extensions com .ZIP, .EXE o .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Llegat dels infants",
+        "desc": "Els nens no tenen la malícia per detectar trampes. Ensenya'ls que el que es puja a internet es queda allà per sempre.",
+        "tags": {
+          "identity": "Identitat",
+          "identity_info": "Evita revelar dades sensibles en fotos públiques, com uniformes escolars, logos d'empresa o ubicacions en temps real.",
+          "strangers": "Desconeguts",
+          "strangers_info": "Regla d'or per a menors: 'Si no els coneixes físicament en persona, no són amics de veritat'.",
+          "privacy": "Privadesa",
+          "privacy_info": "Revisa periòdicament la configuració de privadesa de les xarxes socials i dispositius de la teva família."
+        }
+      },
+      "backup": {
+        "title": "6. Supervivència de dades",
+        "desc": "Un virus pot bloquejar o esborrar els teus fitxers. L'única còpia realment segura és la que està desconnectada físicament.",
+        "tags": {
+          "frequency": "Freqüència",
+          "frequency_info": "Fes una còpia de seguretat de les teves fotos i documents més valuosos almenys una vegada al mes.",
+          "disconnection": "Desconnexió",
+          "disconnection_info": "Copia els teus fitxers en un disc extern i, sobretot, desconnecta'l físicament de l'ordinador en acabar.",
+          "cloud": "Núvol",
+          "cloud_info": "Utilitza serveis d'emmagatzematge al núvol amb xifratge, però mai confiïs només en ells com a única còpia."
+        }
+      }
+    }
+  }
 }

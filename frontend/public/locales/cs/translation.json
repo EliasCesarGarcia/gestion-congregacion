@@ -25,9 +25,63 @@
   "device_mobile": "Mobilní telefon",
   "device_pc": "Počítač",
 
-  "lang_es": "Španělština", "lang_en": "Angličtina", "lang_de": "Němčina", "lang_fr": "Francouzština", "lang_pt": "Portugalština", "lang_it": "Italština", "lang_nl": "Nizozemština", "lang_ru": "Ruština", "lang_el": "Řečtina", "lang_ja": "Japonština", "lang_zh_cn": "Zjednodušená čínština", "lang_ko": "Korejština", "lang_id": "Indonéština", "lang_vi": "Vietnamština", "lang_sw": "Svahilština", "lang_af": "Afrikánština", "lang_sq": "Albánština", "lang_am": "Amharština", "lang_ar": "Arabština", "lang_he": "Hebrejština", "lang_ca": "Katalánština", "lang_zh_tw": "Tradiční čínština", "lang_hr": "Chorvatština", "lang_cs": "Čeština", "lang_da": "Dánština", "lang_ee": "Eveština", "lang_fi": "Finština", "lang_ht": "Haitská kreolština", "lang_haw": "Havajština", "lang_hi": "Hindština", "lang_hu": "Maďarština", "lang_ilo": "Ilokánština", "lang_jam": "Jamajská kreolština", "lang_lr": "Liberijština", "lang_mg": "Malgaština", "lang_ml": "Malayalamština", "lang_no": "Norština", "lang_pap": "Papiamento", "lang_pcm": "Nigerijský pidžin", "lang_pl": "Polština", "lang_ro": "Rumunština", "lang_nso": "Severní sothoština", "lang_st": "Sothoština", "lang_sk": "Slovenština", "lang_sl": "Slovinština", "lang_sv": "Švédština", "lang_tl": "Tagalog", "lang_ta": "Tamilština", "lang_th": "Thajština", "lang_tr": "Turečtina", "lang_tw": "Twi", "lang_uk": "Ukrajinština", "lang_xh": "Xhoština", "lang_zu": "Zuluština", "lang_gn": "Guaranština", "lang_qu": "Kečuánština",
+  "lang_es": "Španělština",
+  "lang_en": "Angličtina",
+  "lang_de": "Němčina",
+  "lang_fr": "Francouzština",
+  "lang_pt": "Portugalština",
+  "lang_it": "Italština",
+  "lang_nl": "Nizozemština",
+  "lang_ru": "Ruština",
+  "lang_el": "Řečtina",
+  "lang_ja": "Japonština",
+  "lang_zh_cn": "Zjednodušená čínština",
+  "lang_ko": "Korejština",
+  "lang_id": "Indonéština",
+  "lang_vi": "Vietnamština",
+  "lang_sw": "Svahilština",
+  "lang_af": "Afrikánština",
+  "lang_sq": "Albánština",
+  "lang_am": "Amharština",
+  "lang_ar": "Arabština",
+  "lang_he": "Hebrejština",
+  "lang_ca": "Katalánština",
+  "lang_zh_tw": "Tradiční čínština",
+  "lang_hr": "Chorvatština",
+  "lang_cs": "Čeština",
+  "lang_da": "Dánština",
+  "lang_ee": "Eveština",
+  "lang_fi": "Finština",
+  "lang_ht": "Haitská kreolština",
+  "lang_haw": "Havajština",
+  "lang_hi": "Hindština",
+  "lang_hu": "Maďarština",
+  "lang_ilo": "Ilokánština",
+  "lang_jam": "Jamajská kreolština",
+  "lang_lr": "Liberijština",
+  "lang_mg": "Malgaština",
+  "lang_ml": "Malayalamština",
+  "lang_no": "Norština",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Nigerijský pidžin",
+  "lang_pl": "Polština",
+  "lang_ro": "Rumunština",
+  "lang_nso": "Severní sothoština",
+  "lang_st": "Sothoština",
+  "lang_sk": "Slovenština",
+  "lang_sl": "Slovinština",
+  "lang_sv": "Švédština",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamilština",
+  "lang_th": "Thajština",
+  "lang_tr": "Turečtina",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrajinština",
+  "lang_xh": "Xhoština",
+  "lang_zu": "Zuluština",
+  "lang_gn": "Guaranština",
+  "lang_qu": "Kečuánština",
 
-  
   "greeting_morning": "Dobré ráno,",
   "greeting_afternoon": "Dobré odpoledne,",
   "greeting_night": "Dobrý večer,",
@@ -65,8 +119,7 @@
   "footer_title": "TEOKRATICKÁ MÍSTNÍ SPRÁVA",
   "footer_use": "Institucionální použití",
   "footer_terms": "Podmínky použití",
- 
-  
+
   "profile_title": "Správa účtu",
   "profile_personal_id": "Osobní ID",
   "profile_active_user": "Aktivní uživatel",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "staršího tajemníka",
   "profile_pub_help_or": "nebo",
   "profile_pub_help_service": "staršího pro službu",
-  "profile_pub_help_suffix": "vašeho sboru."
+  "profile_pub_help_suffix": "vašeho sboru.",
 
-
+  "security": {
+    "seo": {
+      "title": "Bezpečnostní tipy | Místní správa",
+      "desc": "Průvodce pokročilou digitální ochranou a zabezpečením dat pro sbor."
+    },
+    "header_title": "Bezpečnostní tipy",
+    "back": "Zpět",
+    "revision": "Poslední revize",
+    "recent": "Nedávné",
+    "hero_title": "Vaše integrita je",
+    "hero_highlight": "naší prioritou.",
+    "hero_sub": "Základní návyky pro péči o vaše soukromí a osobní údaje.",
+    "db_alert": "Oznámení na poslední chvíli",
+    "accept_btn": "Rozumím a zpět",
+    "tips": {
+      "estafas": {
+        "title": "1. Kybernetické podvody",
+        "desc": "Falešný digitální obsah může napodobovat známé hlasy a tváře, aby ukradl vaše informace nebo peníze.",
+        "tags": {
+          "prevention": "Prevence",
+          "prevention_info": "Pokud na vás někdo spěchá, abyste poskytli peníze nebo citlivé údaje: zastavte se, přemýšlejte a vždy ověřujte.",
+          "verification": "Ověření",
+          "verification_info": "Ukončete komunikaci a dotyčné osobě zavolejte sami prostřednictvím známého zabezpečeného kanálu.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Technologie klonování identity. Nevěřte jen tomu, co vidíte nebo slyšíte přes obrazovku."
+        }
+      },
+      "physical": {
+        "title": "2. Fyzický perimetr",
+        "desc": "Váš telefon je hlavní klíč. Zařízení bez zámku jsou otevřené dveře do celého vašeho soukromého života.",
+        "tags": {
+          "biometry": "Biometrie",
+          "biometry_info": "Nastavte si FaceID nebo otisk prstu. Je to mnohem bezpečnější než gesto, které by mohl někdo odkoukat přes rameno.",
+          "updates": "Aktualizace",
+          "updates_info": "Neignorujte zprávy o 'Nové verzi'; často uzavírají kritické bezpečnostní díry objevené v poslední době.",
+          "encryption": "Šifrování",
+          "encryption_info": "Ujistěte se, že je aktivní šifrování disku, abyste ochránili své soubory a fotografie před potenciální fyzickou krádeží."
+        }
+      },
+      "keys": {
+        "title": "3. Silná hesla",
+        "desc": "Vyhněte se používání zřejmých údajů. K většině útoků dochází kvůli slabým nebo opakovaným heslům.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktivujte dvoufázové ověření u všech svých účtů. Je to nejdůležitější druhá vrstva ochrany.",
+          "robustness": "Robustnost",
+          "robustness_info": "Místo jednoduchých slov používejte dlouhé fráze. Příklad: 'Modre-Nebe-2026!' je exponenciálně lepší než 'petr123'.",
+          "passphrases": "Heslové fráze",
+          "passphrases_info": "Dlouhé fráze jsou pro dnešní počítače útočníků téměř nemožné prolomit."
+        }
+      },
+      "phishing": {
+        "title": "4. Rozpoznání háčku",
+        "desc": "Zločinci předstírají, že jsou technická podpora nebo banky, aby ukradli vaše data prostřednictvím strachu nebo naléhavosti.",
+        "tags": {
+          "urgency": "Naléhavost",
+          "urgency_info": "Pokud zpráva říká 'Váš účet bude za 1 hodinu uzavřen, pokud nekliknete', je to téměř jistě podvod.",
+          "links": "Odkazy",
+          "links_info": "Pečlivě zkontrolujte URL. Podvodníci často používají podobné názvy jako 'g00gle.net' místo 'google.com'.",
+          "files": "Soubory",
+          "files_info": "Nikdy neotevírejte neočekávané přílohy, zejména pokud mají přípony jako .ZIP, .EXE nebo .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Odkaz dětem",
+        "desc": "Dětem chybí ostražitost k rozpoznání pastí. Naučte je, že to, co se nahraje na internet, tam zůstane navždy.",
+        "tags": {
+          "identity": "Identita",
+          "identity_info": "Vyvarujte se prozrazování citlivých údajů na veřejných fotografiích, jako jsou školní uniformy nebo poloha v reálném čase.",
+          "strangers": "Cizí lidé",
+          "strangers_info": "Zlaté pravidlo pro nezletilé: 'Pokud je neznáš osobně, nejsou to skuteční přátelé'.",
+          "privacy": "Soukromí",
+          "privacy_info": "Pravidelně kontrolujte nastavení soukromí sociálních sítí a zařízení členů své rodiny."
+        }
+      },
+      "backup": {
+        "title": "6. Přežití dat",
+        "desc": "Virus může vaše soubory uzamknout nebo smazat. Jediná skutečně bezpečná kopie je ta, která je fyzicky odpojená.",
+        "tags": {
+          "frequency": "Frekvence",
+          "frequency_info": "Zálohujte své nejcennější fotografie a dokumenty alespovň jednou měsíčně.",
+          "disconnection": "Odpojení",
+          "disconnection_info": "Zkopírujte soubory na externí disk a hlavně ho po dokončení fyzicky odpojte od počítače.",
+          "cloud": "Cloud",
+          "cloud_info": "Používejte cloudová úložiště s šifrováním, ale nikdy na ně nespoléhejte jako na jedinou kopii."
+        }
+      }
+    }
+  }
 }

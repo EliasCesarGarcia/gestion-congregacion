@@ -25,9 +25,63 @@
   "device_mobile": "Phone",
   "device_pc": "Computer",
 
-  "lang_es": "Spanish", "lang_en": "English", "lang_de": "German", "lang_fr": "French", "lang_pt": "Portuguese", "lang_it": "Italian", "lang_nl": "Dutch", "lang_ru": "Russian", "lang_el": "Greek", "lang_ja": "Japanese", "lang_zh_cn": "Chinese (Simple)", "lang_ko": "Korean", "lang_id": "Indonesian", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabic", "lang_he": "Hebrew", "lang_ca": "Catalan", "lang_zh_tw": "Chinese (Tradition)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Patois", "lang_lr": "Liberian English", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Naijá", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+  "lang_es": "Spanish",
+  "lang_en": "English",
+  "lang_de": "German",
+  "lang_fr": "French",
+  "lang_pt": "Portuguese",
+  "lang_it": "Italian",
+  "lang_nl": "Dutch",
+  "lang_ru": "Russian",
+  "lang_el": "Greek",
+  "lang_ja": "Japanese",
+  "lang_zh_cn": "Chinese (Simple)",
+  "lang_ko": "Korean",
+  "lang_id": "Indonesian",
+  "lang_vi": "Vietnamese",
+  "lang_sw": "Swahili",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albanian",
+  "lang_am": "Amharic",
+  "lang_ar": "Arabic",
+  "lang_he": "Hebrew",
+  "lang_ca": "Catalan",
+  "lang_zh_tw": "Chinese (Tradition)",
+  "lang_hr": "Croatian",
+  "lang_cs": "Czech",
+  "lang_da": "Danish",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finnish",
+  "lang_ht": "Haitian Creole",
+  "lang_haw": "Hawaiian",
+  "lang_hi": "Hindi",
+  "lang_hu": "Hungarian",
+  "lang_ilo": "Ilocano",
+  "lang_jam": "Jamaican Patois",
+  "lang_lr": "Liberian English",
+  "lang_mg": "Malagasy",
+  "lang_ml": "Malayalam",
+  "lang_no": "Norwegian",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Naijá",
+  "lang_pl": "Polish",
+  "lang_ro": "Romanian",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Slovak",
+  "lang_sl": "Slovenian",
+  "lang_sv": "Swedish",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamil",
+  "lang_th": "Thai",
+  "lang_tr": "Turkish",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrainian",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guarani",
+  "lang_qu": "Quechua",
 
-  
   "greeting_morning": "Good morning,",
   "greeting_afternoon": "Good afternoon,",
   "greeting_night": "Good evening,",
@@ -65,7 +119,6 @@
   "footer_title": "THEOCRATIC LOCAL MANAGEMENT",
   "footer_use": "For Congregation Use",
   "footer_terms": "How to Use Am",
-
 
   "profile_title": "Account Management",
   "profile_personal_id": "Personal ID",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Secretary Elder",
   "profile_pub_help_or": "or the",
   "profile_pub_help_service": "Service Elder",
-  "profile_pub_help_suffix": "for your congregation."
+  "profile_pub_help_suffix": "for your congregation.",
 
-
+  "security": {
+    "seo": {
+      "title": "Security Advice | Local Management",
+      "desc": "Better digital protection and data safe guide for the congregation."
+    },
+    "header_title": "Security Advice",
+    "back": "Go Back",
+    "revision": "Last check",
+    "recent": "New one",
+    "hero_title": "As you be straight person,",
+    "hero_highlight": "na our main focus.",
+    "hero_sub": "Important things to do to protect your private business and personal info.",
+    "db_alert": "Quick Notice",
+    "accept_btn": "I don hear, go back",
+    "tips": {
+      "estafas": {
+        "title": "1. Computer Wayo",
+        "desc": "Fake things for internet fit act like people you know to teif your money or your news.",
+        "tags": {
+          "prevention": "To Stop am",
+          "prevention_info": "If they dey rush you make you give money or deep news: wait, think, and check am well-well.",
+          "verification": "Check am",
+          "verification_info": "Cut the call and call the person yourself for the number wey you get for them.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Technology wey they dey take clone person face and voice. No believe everything you see for screen."
+        }
+      },
+      "physical": {
+        "title": "2. Your Phone Safety",
+        "desc": "Your phone na your master key. If e no get lock, anybody fit enter your private life.",
+        "tags": {
+          "biometry": "Biometry",
+          "biometry_info": "Set FaceID or Fingerprint. E better pass pattern wey person fit see as you dey draw am.",
+          "updates": "Updates",
+          "updates_info": "No ignore 'New version' messages; e dey help block bad holes for the system.",
+          "encryption": "Encryption",
+          "encryption_info": "Make sure your disk encryption dey work to protect your photos from people wey fit thief the phone."
+        }
+      },
+      "keys": {
+        "title": "3. Strong Passwords",
+        "desc": "No use simple numbers or names. Many hackers dey get in because of weak password.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Put two-step check for all your accounts. Na the best way to lock your door tight.",
+          "robustness": "Strong one",
+          "robustness_info": "Use long sentence instead of small word. Example: 'Blue-Sky-2026!' better pass 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Long sentences hard well-well for hacker computer to break for this our time."
+        }
+      },
+      "phishing": {
+        "title": "4. Catching the Hook",
+        "desc": "Bad people dey act like they be from bank or tech support to thief your data through fear.",
+        "tags": {
+          "urgency": "Hurry-Hurry",
+          "urgency_info": "If the message talk say 'Your account go close in 1 hour', know say na wayo be that.",
+          "links": "Links",
+          "links_info": "Check the link well. Scammers dey use names like 'g00gle.net' instead of 'google.com'.",
+          "files": "Files",
+          "files_info": "No ever open things wey they send you if you no expect am, like .ZIP or .EXE files."
+        }
+      },
+      "family": {
+        "title": "5. For the Children",
+        "desc": "Children no too sabi traps. Teach them say anything wey dem post for internet dey there forever.",
+        "tags": {
+          "identity": "Identity",
+          "identity_info": "No show school uniforms or where you dey for photos wey everybody fit see.",
+          "strangers": "Strangers",
+          "strangers_info": "Rule for pikin: 'If you never see dem eye-to-eye for real life, dem no be real friend'.",
+          "privacy": "Privacy",
+          "privacy_info": "Dey check the privacy settings for your family members phones and Facebook every time."
+        }
+      },
+      "backup": {
+        "title": "6. Keeping your Data",
+        "desc": "Virus fit lock or delete your files. The only safe way na to get copy wey no connect to anything.",
+        "tags": {
+          "frequency": "How many times",
+          "frequency_info": "Save your important photos and papers at least once every month.",
+          "disconnection": "Unplugging",
+          "disconnection_info": "Copy your files to external drive and pull am out from computer when you finish.",
+          "cloud": "Cloud",
+          "cloud_info": "Use cloud storage wey get security, but no let am be your only copy."
+        }
+      }
+    }
+  }
 }

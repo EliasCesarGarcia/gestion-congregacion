@@ -25,9 +25,63 @@
   "device_mobile": "Pumbyry",
   "device_pc": "Mohendaha",
 
-  "lang_es": "Karaiñe'ẽ", "lang_en": "Inglesñe'ẽ", "lang_de": "Alemañañe'ẽ", "lang_fr": "Fransiañe'ẽ", "lang_pt": "Portuguéñe'ẽ", "lang_it": "Italiañe'ẽ", "lang_nl": "Holandañe'ẽ", "lang_ru": "Rusiañe'ẽ", "lang_el": "Griekonye'ẽ", "lang_ja": "Hapoñe'ẽ", "lang_zh_cn": "Chinoñe'ẽ sa'i", "lang_ko": "Koreañe'ẽ", "lang_id": "Indonesiañe'ẽ", "lang_vi": "Vietnamñe'ẽ", "lang_sw": "Suahiliñe'ẽ", "lang_af": "Afrikaansñe'ẽ", "lang_sq": "Albaniañe'ẽ", "lang_am": "Amharañe'ẽ", "lang_ar": "Arabeñe'ẽ", "lang_he": "Hebreoñe'ẽ", "lang_ca": "Katalãñe'ẽ", "lang_zh_tw": "Chinoñe'ẽ tee", "lang_hr": "Kroasiañe'ẽ", "lang_cs": "Chekoñe'ẽ", "lang_da": "Daneñe'ẽ", "lang_ee": "Eweñe'ẽ", "lang_fi": "Finlandiañe'ẽ", "lang_ht": "Haitiñe'ẽ", "lang_haw": "Hawaiñe'ẽ", "lang_hi": "Hindiñe'ẽ", "lang_hu": "Hungariañe'ẽ", "lang_ilo": "Ilokoñe'ẽ", "lang_jam": "Jamaikañe'ẽ", "lang_lr": "Liberiañe'ẽ", "lang_mg": "Madagaskarñe'ẽ", "lang_ml": "Malajalamñe'ẽ", "lang_no": "Noruegañe'ẽ", "lang_pap": "Papiamentoñe'ẽ", "lang_pcm": "Pidginñe'ẽ", "lang_pl": "Poloniañe'ẽ", "lang_ro": "Romaniañe'ẽ", "lang_nso": "Sepediñe'ẽ", "lang_st": "Sesothoñe'ẽ", "lang_sk": "Slovakiañe'ẽ", "lang_sl": "Sloveniañe'ẽ", "lang_sv": "Suesiañe'ẽ", "lang_tl": "Tagaloñe'ẽ", "lang_ta": "Tamilñe'ẽ", "lang_th": "Tailandiañe'ẽ", "lang_tr": "Turkiañe'ẽ", "lang_tw": "Twiñe'ẽ", "lang_uk": "Ukraniañe'ẽ", "lang_xh": "Xhosañe'ẽ", "lang_zu": "Zuluñe'ẽ", "lang_gn": "Avañe'ẽ", "lang_qu": "Kichuañe'ẽ",
+  "lang_es": "Karaiñe'ẽ",
+  "lang_en": "Inglesñe'ẽ",
+  "lang_de": "Alemañañe'ẽ",
+  "lang_fr": "Fransiañe'ẽ",
+  "lang_pt": "Portuguéñe'ẽ",
+  "lang_it": "Italiañe'ẽ",
+  "lang_nl": "Holandañe'ẽ",
+  "lang_ru": "Rusiañe'ẽ",
+  "lang_el": "Griekonye'ẽ",
+  "lang_ja": "Hapoñe'ẽ",
+  "lang_zh_cn": "Chinoñe'ẽ sa'i",
+  "lang_ko": "Koreañe'ẽ",
+  "lang_id": "Indonesiañe'ẽ",
+  "lang_vi": "Vietnamñe'ẽ",
+  "lang_sw": "Suahiliñe'ẽ",
+  "lang_af": "Afrikaansñe'ẽ",
+  "lang_sq": "Albaniañe'ẽ",
+  "lang_am": "Amharañe'ẽ",
+  "lang_ar": "Arabeñe'ẽ",
+  "lang_he": "Hebreoñe'ẽ",
+  "lang_ca": "Katalãñe'ẽ",
+  "lang_zh_tw": "Chinoñe'ẽ tee",
+  "lang_hr": "Kroasiañe'ẽ",
+  "lang_cs": "Chekoñe'ẽ",
+  "lang_da": "Daneñe'ẽ",
+  "lang_ee": "Eweñe'ẽ",
+  "lang_fi": "Finlandiañe'ẽ",
+  "lang_ht": "Haitiñe'ẽ",
+  "lang_haw": "Hawaiñe'ẽ",
+  "lang_hi": "Hindiñe'ẽ",
+  "lang_hu": "Hungariañe'ẽ",
+  "lang_ilo": "Ilokoñe'ẽ",
+  "lang_jam": "Jamaikañe'ẽ",
+  "lang_lr": "Liberiañe'ẽ",
+  "lang_mg": "Madagaskarñe'ẽ",
+  "lang_ml": "Malajalamñe'ẽ",
+  "lang_no": "Noruegañe'ẽ",
+  "lang_pap": "Papiamentoñe'ẽ",
+  "lang_pcm": "Pidginñe'ẽ",
+  "lang_pl": "Poloniañe'ẽ",
+  "lang_ro": "Romaniañe'ẽ",
+  "lang_nso": "Sepediñe'ẽ",
+  "lang_st": "Sesothoñe'ẽ",
+  "lang_sk": "Slovakiañe'ẽ",
+  "lang_sl": "Sloveniañe'ẽ",
+  "lang_sv": "Suesiañe'ẽ",
+  "lang_tl": "Tagaloñe'ẽ",
+  "lang_ta": "Tamilñe'ẽ",
+  "lang_th": "Tailandiañe'ẽ",
+  "lang_tr": "Turkiañe'ẽ",
+  "lang_tw": "Twiñe'ẽ",
+  "lang_uk": "Ukraniañe'ẽ",
+  "lang_xh": "Xhosañe'ẽ",
+  "lang_zu": "Zuluñe'ẽ",
+  "lang_gn": "Avañe'ẽ",
+  "lang_qu": "Kichuañe'ẽ",
 
-  
   "greeting_morning": "Mba'éichapa ndepyhare,",
   "greeting_afternoon": "Tandeka'aru porãite,",
   "greeting_night": "Ka'aru porã,",
@@ -65,7 +119,6 @@
   "footer_title": "SÃMBYHYKUÉRA TEOCRÁTICA",
   "footer_use": "Mbohekopykuéra Aty",
   "footer_terms": "Mbohekopy Kuatiahakuéra",
-
 
   "profile_title": "Ñangareko Kuenta rehe",
   "profile_personal_id": "ID Teéva",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Anciano Secretario-pe",
   "profile_pub_help_or": "téra pe",
   "profile_pub_help_service": "Anciano de Servicio-pe",
-  "profile_pub_help_suffix": "ne tupaoguápe."
+  "profile_pub_help_suffix": "ne tupaoguápe.",
 
-
+  "security": {
+    "seo": {
+      "title": "Marandu Ñangarekorã | Ñangareko He'iháicha",
+      "desc": "Guía ñangareko mburuvichakuérape g̃uarã ñanduti ha datha rehegua."
+    },
+    "header_title": "Marandu Ñangarekorã",
+    "back": "Jejevy",
+    "revision": "Ñehesa'ỹijo paha",
+    "recent": "Ko'ág̃agua",
+    "hero_title": "Nde rekojoja niko",
+    "hero_highlight": "ore mba'e tenondegua.",
+    "hero_sub": "Jepokuaa porã oñeñangareko hag̃ua ne remiñemi ha marandu nde rehegua.",
+    "db_alert": "Marandu Paha",
+    "accept_btn": "Aikuaáma ha ajere",
+    "tips": {
+      "estafas": {
+        "title": "1. Monda Ñanduti rupi",
+        "desc": "Marandu ijapúva ikatu omoha'anga ambue tapicha ha'e nunga hova ha iñe'ẽ remonda hag̃ua marandu térã pirapire.",
+        "tags": {
+          "prevention": "Mboyveguare",
+          "prevention_info": "Ojejerurérõ ndéve pirapire térã marandu remiñemi pya'e: epyta, epensa ha ehecha raẽ añetépasara'e.",
+          "verification": "Jehecha",
+          "verification_info": "Emboty pe ñomongeta ha ehenói nde voi upe tapichápe peteĩ tembipuru reroviáva rupi.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Mba'e'apokuaa ombohekóva tapichakuéra hova ha iñe'ẽ. Ani rerovia oimeraẽ mba'e rehecháva térã rehendúva ta'angambyry rupi."
+        }
+      },
+      "physical": {
+        "title": "2. Pumbyry Ñangareko",
+        "desc": "Ne pumbyry ha'e pe mbotaha tenondegua. Peteĩ tembipuru ojepe'áva hokẽ ojepe'áva ne remiñemíme g̃uarã.",
+        "tags": {
+          "biometry": "Biometría",
+          "biometry_info": "Emoĩ FaceID térã nde po pýra. Ipy'aguapyve peteĩ sã mbohaságui ikatu ojehecha nde ati'y ári.",
+          "updates": "Mbopyahu",
+          "updates_info": "Ani reheja rehasa umi marandu 'mbopyahu'; upéva omoĩ jepive joko oñembyaive hag̃uágui.",
+          "encryption": "Ñemihápe",
+          "encryption_info": "Ehecha oĩpa hína pe ñemihápe (encryption) oñangareko hag̃ua ne ra'anga ha kuatiakuérare monda jave."
+        }
+      },
+      "keys": {
+        "title": "3. Mbotaha mbarete",
+        "desc": "Ani reipuru marandu ojekuaa reíva. Hetave monda oiko mbotaha (password) kangy térã ojeipurúva heta hendápe.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Emyasãi pe jehecha mokõi jey (two-step verification) opaite ne akãontépe. Ha'e pe joko mbaretevéva.",
+          "robustness": "Mbaretekue",
+          "robustness_info": "Eipuru ñe'ẽ joaju puku ñe'ẽ mbyky rangue. Techapyrã: 'Blue-Sky-2026!' iporãve 'peter123'-gui.",
+          "passphrases": "Ñe'ẽ joaju puku",
+          "passphrases_info": "Umi ñe'ẽ joaju puku hasyite umi monda kɔmputadórape g̃uarã oipe'a hag̃ua."
+        }
+      },
+      "phishing": {
+        "title": "4. Pinda Jehecha",
+        "desc": "Mondaha oñembo-técnico térã oñembo-banco remonda hag̃ua marandu kyhyje térã 'pya'e' rupive.",
+        "tags": {
+          "urgency": "Pya'e",
+          "urgency_info": "Pe marandu he'írõ: 'Ne akãonte oñembotýta peteĩ aravo (1 hour) mboyve remyakasãirõ', katuete ha'e monda.",
+          "links": "Links",
+          "links_info": "Ehecha porã pe URL. Mondahakuéra oipuru téra ha'e nungáva, techapyrã 'g00gle.net' 'google.com' rangue.",
+          "files": "Mba'e'eta",
+          "files_info": "Ani reipe'a mba'eve oúva ndéve ha reme'ẽi haguére pa'ũ, tenondeite oúva .ZIP, .EXE térã .BAT-pe."
+        }
+      },
+      "family": {
+        "title": "5. Mitãnguéra Ñeñangareko",
+        "desc": "Mitãnguéra ndohechái hína umi ñuhã. Embo'e chupekuéra opa mba'e ojeupíva ñandutíme opytaha upépe tapiaite g̃uarã.",
+        "tags": {
+          "identity": "Reindy",
+          "identity_info": "Ani reheja ojekuaa marandu remiñemi ta'angakuérape, taha'e ao mbo'ehaogua térã nde rekoha ko'ág̃agua.",
+          "strangers": "Tapicha ojekuaa'ỹva",
+          "strangers_info": "Mitãnguérape g̃uarã: 'Ndereikuaáirõ chupekuéra hovaite rupi, ndaha'éi angirũ añetete'.",
+          "privacy": "Remiñemi",
+          "privacy_info": "Ehecha jey jey ne ñemoñare ñanduti ha tembipurukuéra ñangareko."
+        }
+      },
+      "backup": {
+        "title": "6. Marandu Ñeñongatu",
+        "desc": "Peteĩ virus ikatu omboty térã oipe'apa ne mba'e'eta. Pe kopia añete ha'e pe oĩva oka gotyo kɔmputadórágui.",
+        "tags": {
+          "frequency": "Jey jey",
+          "frequency_info": "Ejapo ne ra'anga ha kuatiakuéra ñongatu (backup) peteĩ jey mbohapypo árape.",
+          "disconnection": "Jeipe'a",
+          "disconnection_info": "Embohasa ne mba'e'eta peteĩ disco externo-pe ha upéi eipe'a kɔmputadórágui.",
+          "cloud": "Cloud",
+          "cloud_info": "Eipuru cloud storage orekóva ñangareko (encryption), upéva rangue ani rejerovia upe kopia añetereínte."
+        }
+      }
+    }
+  }
 }

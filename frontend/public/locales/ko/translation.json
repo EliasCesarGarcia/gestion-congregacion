@@ -82,7 +82,6 @@
   "lang_gn": "과라니어",
   "lang_qu": "볼리비ア 케추아어",
 
-  
   "greeting_morning": "좋은 아침입니다,",
   "greeting_afternoon": "안녕하세요,",
   "greeting_night": "편안한 밤 되세요,",
@@ -120,7 +119,6 @@
   "footer_title": "신정적 지역 관리",
   "footer_use": "조직 내 사용",
   "footer_terms": "이용 약관",
-
 
   "profile_title": "계정 관리",
   "profile_personal_id": "개인 ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "서기 장로",
   "profile_pub_help_or": "또는",
   "profile_pub_help_service": "봉사 감독 장로",
-  "profile_pub_help_suffix": ""
+  "profile_pub_help_suffix": "",
 
-
+"security": {
+    "seo": {
+      "title": "보안 팁 | 지역 관리",
+      "desc": "회중을 위한 고급 디지털 보안 및 데이터 보호 가이드."
+    },
+    "header_title": "보안 팁",
+    "back": "뒤로",
+    "revision": "최종 수정",
+    "recent": "최근",
+    "hero_title": "귀하의 무결성은",
+    "hero_highlight": "우리의 우선순위입니다.",
+    "hero_sub": "개인 정보 및 프라이버시 보호를 위한 필수 습관.",
+    "db_alert": "긴급 공지",
+    "accept_btn": "이해함 및 돌아가기",
+    "tips": {
+      "estafas": {
+        "title": "1. 사이버 사기",
+        "desc": "가짜 디지털 콘텐츠는 지인의 목소리와 얼굴을 흉내 내어 정보나 돈을 훔칠 수 있습니다.",
+        "tags": {
+          "prevention": "예방",
+          "prevention_info": "돈이나 민감한 데이터를 서둘러 제공해야 한다면, 멈추고 생각하고 항상 확인하십시오.",
+          "verification": "확인",
+          "verification_info": "통화를 종료하고 알고 있는 안전한 채널을 통해 본인에게 직접 전화하십시오.",
+          "deepfake": "딥페이크",
+          "deepfake_info": "신원 복제 기술. 화면을 통해 보고 듣는 것만 믿지 마십시오."
+        }
+      },
+      "physical": {
+        "title": "2. 물리적 경계",
+        "desc": "휴대전화는 마스터 키입니다. 잠금 장치가 없는 기기는 사생활 전체로 통하는 열린 문과 같습니다.",
+        "tags": {
+          "biometry": "생체 인증",
+          "biometry_info": "FaceID나 지문 인식을 설정하십시오. 누군가 훔쳐볼 수 있는 패턴 방식보다 훨씬 안전합니다.",
+          "updates": "업데이트",
+          "updates_info": "'새 버전' 메시지를 무시하지 마십시오. 최근 발견된 중대한 보안 허점을 해결하는 경우가 많습니다.",
+          "encryption": "암호화",
+          "encryption_info": "물리적 도난으로부터 파일과 사진을 보호하기 위해 디스크 암호화가 활성화되어 있는지 확인하십시오."
+        }
+      },
+      "keys": {
+        "title": "3. 강력한 암호",
+        "desc": "뻔한 데이터는 피하십시오. 대부분의 공격은 약한 암호나 여러 사이트에서 반복되는 암호 때문에 발생합니다.",
+        "tags": {
+          "2fa": "2단계 인증",
+          "2fa_info": "모든 계정에 2단계 인증을 활성화하십시오. 이는 가장 중요한 두 번째 보호 계층입니다.",
+          "robustness": "강력함",
+          "robustness_info": "단순한 단어 대신 긴 구문을 사용하십시오. 예: 'Blue-Sky-2026!'은 'peter123'보다 기하급수적으로 안전합니다.",
+          "passphrases": "암호 구문",
+          "passphrases_info": "긴 구문은 오늘날의 해킹 컴퓨터로도 해독하기가 거의 불가능합니다."
+        }
+      },
+      "phishing": {
+        "title": "4. 미끼 감지",
+        "desc": "범죄자들은 공포심이나 시급함을 조장하여 기술 지원이나 은행을 사칭해 데이터를 훔칩니다.",
+        "tags": {
+          "urgency": "시급성",
+          "urgency_info": "'클릭하지 않으면 1시간 이내에 계정이 폐쇄됩니다'라는 메시지는 거의 확실히 사기입니다.",
+          "links": "링크",
+          "links_info": "URL을 주의 깊게 확인하십시오. 사기꾼들은 'google.com' 대신 'g00gle.net'과 같이 유사한 이름을 사용합니다.",
+          "files": "파일",
+          "files_info": "예상치 못한 첨부 파일, 특히 .ZIP, .EXE, .BAT 확장자를 가진 파일은 절대 열지 마십시오."
+        }
+      },
+      "family": {
+        "title": "5. 자녀를 위한 교육",
+        "desc": "아이들은 함정을 감지할 통찰력이 부족합니다. 인터넷에 올린 것은 영원히 남는다는 점을 가르치십시오.",
+        "tags": {
+          "identity": "신원",
+          "identity_info": "공개된 사진에서 교복, 회사 로고, 실시간 위치 등 민감한 정보를 노출하지 마십시오.",
+          "strangers": "낯선 사람",
+          "strangers_info": "미성년자를 위한 황금률: '직접 만나본 적이 없는 사람은 진짜 친구가 아니다'.",
+          "privacy": "프라이버시",
+          "privacy_info": "가족들의 소셜 네트워크와 기기의 개인정보 설정을 정기적으로 검토하십시오."
+        }
+      },
+      "backup": {
+        "title": "6. 데이터 백업",
+        "desc": "바이러스는 파일을 잠그거나 삭제할 수 있습니다. 진정으로 안전한 복사본은 물리적으로 분리된 것뿐입니다.",
+        "tags": {
+          "frequency": "주기",
+          "frequency_info": "가장 소중한 사진과 문서는 적어도 한 달에 한 번 백업하십시오.",
+          "disconnection": "연결 해제",
+          "disconnection_info": "외부 드라이브에 파일을 복사하고, 가장 중요한 것은 완료 후 컴퓨터에서 물리적으로 분리하는 것입니다.",
+          "cloud": "클라우드",
+          "cloud_info": "암호화 기능이 있는 클라우드 서비스를 사용하되, 이를 유일한 복사본으로 의존하지 마십시오."
+        }
+      }
+    }
+  }
 }

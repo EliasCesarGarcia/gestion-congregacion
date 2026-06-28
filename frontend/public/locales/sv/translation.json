@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Boliviansk quechua",
 
-  
   "greeting_morning": "God morgon,",
   "greeting_afternoon": "God dag,",
   "greeting_night": "God kväll,",
@@ -120,7 +119,6 @@
   "footer_title": "TEOKRATISK LOKAL ADMINISTRATION",
   "footer_use": "Institutionell användning",
   "footer_terms": "Användarvillkor",
-
 
   "profile_title": "Kontohantering",
   "profile_personal_id": "Personligt ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "sekreteraren",
   "profile_pub_help_or": "eller",
   "profile_pub_help_service": "tillsyningsmannen för tjänsten",
-  "profile_pub_help_suffix": "i din församling."
+  "profile_pub_help_suffix": "i din församling.",
 
-  
+  "security": {
+    "seo": {
+      "title": "Säkerhetstips | Lokal förvaltning",
+      "desc": "Guide för avancerat digitalt skydd och dataskydd för församlingen."
+    },
+    "header_title": "Säkerhetstips",
+    "back": "Tillbaka",
+    "revision": "Senaste revidering",
+    "recent": "Senaste",
+    "hero_title": "Din integritet är",
+    "hero_highlight": "vår prioritet.",
+    "hero_sub": "Viktiga vanor för att skydda din integritet och personliga information.",
+    "db_alert": "Sista minuten-meddelande",
+    "accept_btn": "Uppfattat och gå tillbaka",
+    "tips": {
+      "estafas": {
+        "title": "1. Cybersvindel",
+        "desc": "Falskt digitalt innehåll kan efterlikna kända röster och ansikten för att stjäla din information eller dina pengar.",
+        "tags": {
+          "prevention": "Förebyggande",
+          "prevention_info": "Om du blir pressad att ge pengar eller känsliga data: stanna upp, tänk efter och verifiera alltid.",
+          "verification": "Verifiering",
+          "verification_info": "Avsluta kommunikationen och ring personen själv via en känd säker kanal.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknik för identitetskloning. Lita inte bara på det du ser eller hör via en skärm."
+        }
+      },
+      "physical": {
+        "title": "2. Fysisk perimeter",
+        "desc": "Din telefon är huvudnyckeln. En enhet utan lås är en öppen dörr till hela ditt privatliv.",
+        "tags": {
+          "biometry": "Biometri",
+          "biometry_info": "Ställ in FaceID eller fingeravtryck. Det är mycket säkrare än ett mönster som någon kan tjuvkika på över din axel.",
+          "updates": "Uppdateringar",
+          "updates_info": "Ignorera inte 'Ny version'-meddelanden; de täpper ofta till kritiska säkerhetshål som nyligen upptäckts.",
+          "encryption": "Kryptering",
+          "encryption_info": "Se till att diskkryptering är aktiv för att skydda dina filer och foton från potentiell fysisk stöld."
+        }
+      },
+      "keys": {
+        "title": "3. Starka lösenord",
+        "desc": "Undvik att använda uppenbara data. De flesta attacker sker på grund av svaga lösenord eller återanvändning på flera sidor.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktivera tvåstegsverifiering på alla dina konton. Det är det viktigaste andra lagret av skydd.",
+          "robustness": "Robusthet",
+          "robustness_info": "Använd långa fraser istället för enkla ord. Exempel: 'Blå-Himmel-2026!' är betydligt bättre än 'peter123'.",
+          "passphrases": "Lösenordsfraser",
+          "passphrases_info": "Långa fraser är nästan omöjliga för dagens angripar-datorer att knäcka."
+        }
+      },
+      "phishing": {
+        "title": "4. Känna igen kroken",
+        "desc": "Kriminella utger sig för att vara teknisk support eller banker för att stjäla dina data genom rädsla eller brådska.",
+        "tags": {
+          "urgency": "Brådska",
+          "urgency_info": "Om meddelandet säger 'Ditt konto stängs om 1 timme om du inte klickar', är det nästan helt säkert ett bedrägeri.",
+          "links": "Länkar",
+          "links_info": "Kontrollera URL-adressen noga. Bedragare använder ofta liknande namn som 'g00gle.net' istället for 'google.com'.",
+          "files": "Filer",
+          "files_info": "Öppna aldrig oväntade bilagor, särskilt om de har filtillägg som .ZIP, .EXE eller .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Barnens arv",
+        "desc": "Barn saknar erfarenhet att upptäcka fällor. Lär dem att det som laddas upp på internet stannar där för alltid.",
+        "tags": {
+          "identity": "Identitet",
+          "identity_info": "Undvik att avslöja känsliga data på offentliga bilder, som skoluniformer, företagslogotyper eller realtidsplatser.",
+          "strangers": "Främlingar",
+          "strangers_info": "Gyllene regel för minderåriga: 'Om du inte känner dem fysiskt personligen är de inte en riktig vän'.",
+          "privacy": "Integritet",
+          "privacy_info": "Se regelbundet över integritetsinställningarna på dina familjemedlemmars sociala nätverk och enheter."
+        }
+      },
+      "backup": {
+        "title": "6. Dataöverlevnad",
+        "desc": "Ett virus kan låsa eller radera dina filer. Den enda verkligt säkra kopian är den som är fysiskt bortkopplad.",
+        "tags": {
+          "frequency": "Frekvens",
+          "frequency_info": "Säkerhetskopiera dina mest värdefulla foton och dokument minst en gång i månaden.",
+          "disconnection": "Bortkoppling",
+          "disconnection_info": "Kopiera dina filer till en extern disk och, viktigast av allt, koppla bort den fysiskt från datorn när du är klar.",
+          "cloud": "Molnet",
+          "cloud_info": "Använd molntjänster med kryptering, men lita aldrig enbart på dem som enda kopia."
+        }
+      }
+    }
+  }
 }

@@ -25,9 +25,63 @@
   "device_mobile": "Fon",
   "device_pc": "Computer",
 
-  "lang_es": "Spanish", "lang_en": "English", "lang_de": "German", "lang_fr": "French", "lang_pt": "Portuguese", "lang_it": "Italian", "lang_nl": "Dutch", "lang_ru": "Russian", "lang_el": "Greek", "lang_ja": "Japanese", "lang_zh_cn": "Chinese (Simplify)", "lang_ko": "Korean", "lang_id": "Indonesian", "lang_vi": "Vietnamese", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albanian", "lang_am": "Amharic", "lang_ar": "Arabic", "lang_he": "Hebrew", "lang_ca": "Catalan", "lang_zh_tw": "Chinese (Tradition)", "lang_hr": "Croatian", "lang_cs": "Czech", "lang_da": "Danish", "lang_ee": "Ewe", "lang_fi": "Finnish", "lang_ht": "Haitian Creole", "lang_haw": "Hawaiian", "lang_hi": "Hindi", "lang_hu": "Hungarian", "lang_ilo": "Ilocano", "lang_jam": "Jamaican Patois", "lang_lr": "Liberian", "lang_mg": "Malagasy", "lang_ml": "Malayalam", "lang_no": "Norwegian", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polish", "lang_ro": "Romanian", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovak", "lang_sl": "Slovenian", "lang_sv": "Swedish", "lang_tl": "Tagalog", "lang_ta": "Tamil", "lang_th": "Thai", "lang_tr": "Turkish", "lang_tw": "Twi", "lang_uk": "Ukrainian", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua",
+  "lang_es": "Spanish",
+  "lang_en": "English",
+  "lang_de": "German",
+  "lang_fr": "French",
+  "lang_pt": "Portuguese",
+  "lang_it": "Italian",
+  "lang_nl": "Dutch",
+  "lang_ru": "Russian",
+  "lang_el": "Greek",
+  "lang_ja": "Japanese",
+  "lang_zh_cn": "Chinese (Simplify)",
+  "lang_ko": "Korean",
+  "lang_id": "Indonesian",
+  "lang_vi": "Vietnamese",
+  "lang_sw": "Swahili",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albanian",
+  "lang_am": "Amharic",
+  "lang_ar": "Arabic",
+  "lang_he": "Hebrew",
+  "lang_ca": "Catalan",
+  "lang_zh_tw": "Chinese (Tradition)",
+  "lang_hr": "Croatian",
+  "lang_cs": "Czech",
+  "lang_da": "Danish",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finnish",
+  "lang_ht": "Haitian Creole",
+  "lang_haw": "Hawaiian",
+  "lang_hi": "Hindi",
+  "lang_hu": "Hungarian",
+  "lang_ilo": "Ilocano",
+  "lang_jam": "Jamaican Patois",
+  "lang_lr": "Liberian",
+  "lang_mg": "Malagasy",
+  "lang_ml": "Malayalam",
+  "lang_no": "Norwegian",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Polish",
+  "lang_ro": "Romanian",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Slovak",
+  "lang_sl": "Slovenian",
+  "lang_sv": "Swedish",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamil",
+  "lang_th": "Thai",
+  "lang_tr": "Turkish",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrainian",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guarani",
+  "lang_qu": "Quechua",
 
-  
   "greeting_morning": "Good mawnin,",
   "greeting_afternoon": "Good evening (aftanoon),",
   "greeting_night": "Good night,",
@@ -65,7 +119,6 @@
   "footer_title": "THEOCRATIC LOCAL MAANIJMENT",
   "footer_use": "Institutional Use",
   "footer_terms": "Terms of Use",
-
 
   "profile_title": "Akount Administration",
   "profile_personal_id": "Personal ID",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Secretary Elder",
   "profile_pub_help_or": "ar di",
   "profile_pub_help_service": "Service Elder",
-  "profile_pub_help_suffix": "inna yuh congregation."
+  "profile_pub_help_suffix": "inna yuh congregation.",
 
-
+  "security": {
+    "seo": {
+      "title": "Security Tip dem | Local Management",
+      "desc": "Advanced digital shielding and data protection guide fi di congregation."
+    },
+    "header_title": "Security Tip dem",
+    "back": "Back",
+    "revision": "Last revision",
+    "recent": "Recent",
+    "hero_title": "Yuh integrity a",
+    "hero_highlight": "wi priority.",
+    "hero_sub": "Essential habit dem fi tek care a yuh privacy an' personal information.",
+    "db_alert": "Last Minute Notice",
+    "accept_btn": "Understand an' go back",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyber Scam dem",
+        "desc": "Fake digital content can gwan like dem a people yuh know fi tief yuh info or yuh money.",
+        "tags": {
+          "prevention": "Prevention",
+          "prevention_info": "If dem a rush yuh fi gi dem money or sensitive data: stop, tink, an' always check it out.",
+          "verification": "Verification",
+          "verification_info": "Cut di communication an' call di person yuhself pon a secure line yuh know.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Technology fi clone identity. Nuh trust everyting yuh see or hear pon a screen."
+        }
+      },
+      "physical": {
+        "title": "2. Physical Perimeter",
+        "desc": "Yuh phone a di master key. A phone widout lock a like a open door to yuh private life.",
+        "tags": {
+          "biometry": "Biometry",
+          "biometry_info": "Set up FaceID or Fingerprint. It safer dan a pattern weh somebody can spy ova yuh shoulder.",
+          "updates": "Update dem",
+          "updates_info": "Nuh ignore 'New version' message dem; dem usually fix security hole dem weh jus' find.",
+          "encryption": "Encryption",
+          "encryption_info": "Make sure disk encryption deh on fi protect yuh file dem from tief."
+        }
+      },
+      "keys": {
+        "title": "3. High-Impact Key dem",
+        "desc": "Nuh use easy data. Most attack happen cause a weak password or when yuh use di same one everywhere.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Activate two-step verification pon all yuh account. A di most important layer a protection.",
+          "robustness": "Robustness",
+          "robustness_info": "Use long phrase 'stead a simple word. Example: 'Blue-Sky-2026!' way betta dan 'peter123'.",
+          "passphrases": "Passphrase dem",
+          "passphrases_info": "Long phrase dem almost impossible fi hacker computer crack dem nowadays."
+        }
+      },
+      "phishing": {
+        "title": "4. Spot di Hook",
+        "desc": "Criminal gwan like dem a tech support or bank fi tief yuh data tru fear or urgency.",
+        "tags": {
+          "urgency": "Urgency",
+          "urgency_info": "If di message seh 'Yuh account a go close inna 1 hour', it a probably a scam.",
+          "links": "Link dem",
+          "links_info": "Check di URL good. Scammer use name weh look similar like 'g00gle.net' 'stead a 'google.com'.",
+          "files": "File dem",
+          "files_info": "Neva open attachment weh yuh nuh expect, especially dem weh end inna .ZIP, .EXE, or .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Pickney Legacy",
+        "desc": "Pickney nuh always see di trap dem. Teach dem seh weh go pon internet stay deh fi eva.",
+        "tags": {
+          "identity": "Identity",
+          "identity_info": "Nuh show sensitive data inna public photo, like school uniform or company logo.",
+          "strangers": "Stranger dem",
+          "strangers_info": "Golden rule fi pickney: 'If yuh nuh know dem inna real life, dem a nuh real frien'.",
+          "privacy": "Privacy",
+          "privacy_info": "Check di privacy setting dem pon yuh family social network an' device dem regular."
+        }
+      },
+      "backup": {
+        "title": "6. Data Survival",
+        "desc": "Virus can lock or delete yuh file dem. Di only safe copy a di one weh nuh connect to nutten.",
+        "tags": {
+          "frequency": "Frequency",
+          "frequency_info": "Back up yuh photo an' document dem at least once a mont'.",
+          "disconnection": "Disconnection",
+          "disconnection_info": "Copy yuh file dem to a drive an' unplug it from di computer when yuh finish.",
+          "cloud": "Cloud",
+          "cloud_info": "Use cloud service wid encryption, but nuh rely pon it as yuh only copy."
+        }
+      }
+    }
+  }
 }

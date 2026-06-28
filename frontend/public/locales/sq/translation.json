@@ -25,9 +25,63 @@
   "device_mobile": "Celular",
   "device_pc": "Kompjuter",
 
-  "lang_es": "Spanjisht", "lang_en": "Anglisht", "lang_de": "Gjermanisht", "lang_fr": "Frëngjisht", "lang_pt": "Portugezisht", "lang_it": "Italisht", "lang_nl": "Holandisht", "lang_ru": "Rusisht", "lang_el": "Greqisht", "lang_ja": "Japonisht", "lang_zh_cn": "Kinezisht (e thjeshtuar)", "lang_ko": "Koreanisht", "lang_id": "Indonezisht", "lang_vi": "Vietnamisht", "lang_sw": "Suahilisht", "lang_af": "Afrikaans", "lang_sq": "Albanisht", "lang_am": "Amharisht", "lang_ar": "Arabisht", "lang_he": "Hebraisht", "lang_ca": "Katalanisht", "lang_zh_tw": "Kinezisht (tradicionale)", "lang_hr": "Kroatisht", "lang_cs": "Çekisht", "lang_da": "Danisht", "lang_ee": "Ewe", "lang_fi": "Finandisht", "lang_ht": "Kreole haitiane", "lang_haw": "Havajisht", "lang_hi": "Hindisht", "lang_hu": "Hungarisht", "lang_ilo": "Ilokano", "lang_jam": "Kreole xhamajkane", "lang_lr": "Liberiane", "lang_mg": "Madagaskare", "lang_ml": "Malajalamisht", "lang_no": "Norvegjisht", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Polonisht", "lang_ro": "Rumanisht", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Sllovakisht", "lang_sl": "Sllovenisht", "lang_sv": "Suedisht", "lang_tl": "Tagalog", "lang_ta": "Tamilisht", "lang_th": "Tajlandisht", "lang_tr": "Turqisht", "lang_tw": "Twi", "lang_uk": "Ukrainisht", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guaranisht", "lang_qu": "Kexhua boliviane",
+  "lang_es": "Spanjisht",
+  "lang_en": "Anglisht",
+  "lang_de": "Gjermanisht",
+  "lang_fr": "Frëngjisht",
+  "lang_pt": "Portugezisht",
+  "lang_it": "Italisht",
+  "lang_nl": "Holandisht",
+  "lang_ru": "Rusisht",
+  "lang_el": "Greqisht",
+  "lang_ja": "Japonisht",
+  "lang_zh_cn": "Kinezisht (e thjeshtuar)",
+  "lang_ko": "Koreanisht",
+  "lang_id": "Indonezisht",
+  "lang_vi": "Vietnamisht",
+  "lang_sw": "Suahilisht",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albanisht",
+  "lang_am": "Amharisht",
+  "lang_ar": "Arabisht",
+  "lang_he": "Hebraisht",
+  "lang_ca": "Katalanisht",
+  "lang_zh_tw": "Kinezisht (tradicionale)",
+  "lang_hr": "Kroatisht",
+  "lang_cs": "Çekisht",
+  "lang_da": "Danisht",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finandisht",
+  "lang_ht": "Kreole haitiane",
+  "lang_haw": "Havajisht",
+  "lang_hi": "Hindisht",
+  "lang_hu": "Hungarisht",
+  "lang_ilo": "Ilokano",
+  "lang_jam": "Kreole xhamajkane",
+  "lang_lr": "Liberiane",
+  "lang_mg": "Madagaskare",
+  "lang_ml": "Malajalamisht",
+  "lang_no": "Norvegjisht",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Polonisht",
+  "lang_ro": "Rumanisht",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Sllovakisht",
+  "lang_sl": "Sllovenisht",
+  "lang_sv": "Suedisht",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamilisht",
+  "lang_th": "Tajlandisht",
+  "lang_tr": "Turqisht",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukrainisht",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guaranisht",
+  "lang_qu": "Kexhua boliviane",
 
-  
   "greeting_morning": "Mirëmëngjes,",
   "greeting_afternoon": "Mirëdita,",
   "greeting_night": "Mirëmbrëma,",
@@ -65,7 +119,6 @@
   "footer_title": "ADMINISTRIMI LOKAL TEOKRATIK",
   "footer_use": "Përdorim Institucional",
   "footer_terms": "Kushtet e Përdorimit",
-
 
   "profile_title": "Administrimi i Llogarisë",
   "profile_personal_id": "ID Personale",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Plakut sekretar",
   "profile_pub_help_or": "ose",
   "profile_pub_help_service": "Plakut të shërbimit",
-  "profile_pub_help_suffix": "të kongregacionit tuaj."
+  "profile_pub_help_suffix": "të kongregacionit tuaj.",
 
-
+  "security": {
+    "seo": {
+      "title": "Këshilla Sigurie | Menaxhimi Lokal",
+      "desc": "Udhëzues i avancuar për mbrojtjen dixhitale dhe të dhënave për kongregacionin."
+    },
+    "header_title": "Këshilla Sigurie",
+    "back": "Mbrapa",
+    "revision": "Rishikimi i fundit",
+    "recent": "Së fundmi",
+    "hero_title": "Integriteti juaj është",
+    "hero_highlight": "prioriteti ynë.",
+    "hero_sub": "Zakonet thelbësore për kujdesin e privatësisë dhe informacionit tuaj personal.",
+    "db_alert": "Njoftim i Minutës së Fundit",
+    "accept_btn": "Kuptova dhe kthehu",
+    "tips": {
+      "estafas": {
+        "title": "1. Mashtrimet Kibernetike",
+        "desc": "Përmbajtja dixhitale false mund të imitojë zëra dhe fytyra të njohura për të vjedhur informacionin ose paratë tuaja.",
+        "tags": {
+          "prevention": "Parandalimi",
+          "prevention_info": "Nëse ju bëhet presion për të dhënë para ose të dhëna të ndjeshme: ndaloni, mendoni dhe gjithmonë verifikoni.",
+          "verification": "Verifikimi",
+          "verification_info": "Ndërprisni komunikimin dhe telefononi personin vetë përmes një kanali të sigurt të njohur.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknologjia e klonimit të identitetit. Mos besoni vetëm atë që shihni ose dëgjoni përmes një ekrani."
+        }
+      },
+      "physical": {
+        "title": "2. Perimetri Fizik",
+        "desc": "Telefoni juaj është çelësi kryesor. Një pajisje pa kyçje është një derë e hapur për të gjithë jetën tuaj private.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Caktoni FaceID ose Gjurmë Gishti. Është shumë më e sigurt se një model që dikush mund ta shohë mbi supin tuaj.",
+          "updates": "Përditësimet",
+          "updates_info": "Mos i injoroni mesazhet 'Version i ri'; ato shpesh mbyllin vrimat kritike të sigurisë të zbuluara kohët e fundit.",
+          "encryption": "Enkriptimi",
+          "encryption_info": "Sigurohuni që enkriptimi i diskut të jetë aktiv për të mbrojtur skedarët dhe fotot tuaja nga vjedhjet fizike."
+        }
+      },
+      "keys": {
+        "title": "3. Fjalëkalimet me Ndikim të Lartë",
+        "desc": "Shmangni përdorimin e të dhënave të qarta. Shumica e sulmeve ndodhin për shkak të fjalëkalimeve të dobëta ose të përsëritura.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktivizoni verifikimin me dy hapa në të gjitha llogaritë tuaja. Është shtresa e dytë më e rëndësishme mbrojtëse.",
+          "robustness": "Robustësia",
+          "robustness_info": "Përdorni fraza të gjata në vend të fjalëve të thjeshta. Shembull: 'Qielli-Kaltër-2026!' është shumë më mirë se 'peter123'.",
+          "passphrases": "Fraza kalimi",
+          "passphrases_info": "Frazat e gjata janë pothuajse të pamundura për t'u thyer nga kompjuterët e sulmuesve të sotëm."
+        }
+      },
+      "phishing": {
+        "title": "4. Zbulimi i Grepit",
+        "desc": "Kriminelët pretendojnë se janë mbështetje teknike ose banka për të vjedhur të dhënat tuaja përmes frikës ose urgjencës.",
+        "tags": {
+          "urgency": "Urgjenca",
+          "urgency_info": "Nëse mesazhi thotë 'Llogaria juaj do të mbyllet për 1 orë nëse nuk klikoni', është pothuajse e sigurt një mashtrim.",
+          "links": "Linqet",
+          "links_info": "Kontrolloni URL-në me kujdes. Mashtruesit shpesh përdorin emra të ngjashëm si 'g00gle.net' në vend të 'google.com'.",
+          "files": "Skedarët",
+          "files_info": "Kurrë mos hapni bashkëngjitje të papritura, veçanërisht nëse kanë prapashtesa si .ZIP, .EXE, ose .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Trashëgimia e Fëmijëve",
+        "desc": "Fëmijëve u mungon malicja për të zbuluar kurthet. Mësojuni atyre se ajo që ngarkohet në internet mbetet atje përgjithmonë.",
+        "tags": {
+          "identity": "Identiteti",
+          "identity_info": "Shmangni zbulimin e të dhënave të ndjeshme në foto publike, si uniformat e shkollës apo lokacionet në kohë reale.",
+          "strangers": "Të huajt",
+          "strangers_info": "Rregulla e artë për të miturit: 'Nëse nuk i njihni fizikisht personalisht, ata nuk janë miq të vërtetë'.",
+          "privacy": "Privatësia",
+          "privacy_info": "Rishikoni periodikisht cilësimet e privatësisë së rrjeteve sociale dhe pajisjeve të anëtarëve të familjes suaj."
+        }
+      },
+      "backup": {
+        "title": "6. Mbijetesa e të Dhënave",
+        "desc": "Një virus mund të kyçë ose fshijë skedarët tuaj. E vetmja kopje vërtet e sigurt është ajo që është e shkëputur fizikisht.",
+        "tags": {
+          "frequency": "Frekuenca",
+          "frequency_info": "Bëni kopje rezervë të fotove dhe dokumenteve tuaja më të vlefshme të paktën një herë në muaj.",
+          "disconnection": "Shkëputja",
+          "disconnection_info": "Kopjoni skedarët tuaj në një disk të jashtëm dhe, më e rëndësishmja, shkëputeni fizikisht nga kompjuteri kur të keni mbaruar.",
+          "cloud": "Cloud",
+          "cloud_info": "Përdorni shërbimet e ruajtjes në cloud me enkriptim, por kurrë mos u mbështetni vetëm tek ato si kopje e vetme."
+        }
+      }
+    }
+  }
 }

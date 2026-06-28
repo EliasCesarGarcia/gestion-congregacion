@@ -21,7 +21,7 @@
   "time_afternoon": "Sore",
   "time_morning": "Pagi",
   "time_night": "Malam",
-   "lang_search": "Cari bahasa...",
+  "lang_search": "Cari bahasa...",
   "device_mobile": "Ponsel",
   "device_pc": "PC",
 
@@ -82,7 +82,6 @@
   "lang_gn": "Guarani",
   "lang_qu": "Quechua Bolivia",
 
-  
   "greeting_morning": "Selamat pagi,",
   "greeting_afternoon": "Selamat siang,",
   "greeting_night": "Selamat malam,",
@@ -120,7 +119,6 @@
   "footer_title": "MANAJEMEN LOKAL TEOKRATIS",
   "footer_use": "Penggunaan Institusional",
   "footer_terms": "Syarat Penggunaan",
-
 
   "profile_title": "Administrasi Akun",
   "profile_personal_id": "ID Personal",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Penatua Sekretaris",
   "profile_pub_help_or": "atau",
   "profile_pub_help_service": "Penatua Dinas",
-  "profile_pub_help_suffix": "di sidang Anda."
+  "profile_pub_help_suffix": "di sidang Anda.",
 
-
+  "security": {
+    "seo": {
+      "title": "Tips Keamanan | Manajemen Lokal",
+      "desc": "Panduan pelindung digital tingkat lanjut dan perlindungan data untuk jemaat."
+    },
+    "header_title": "Tips Keamanan",
+    "back": "Kembali",
+    "revision": "Revisi terakhir",
+    "recent": "Terbaru",
+    "hero_title": "Integritas Anda adalah",
+    "hero_highlight": "prioritas kami.",
+    "hero_sub": "Kebiasaan penting untuk menjaga privasi dan informasi pribadi Anda.",
+    "db_alert": "Pemberitahuan Menit Terakhir",
+    "accept_btn": "Mengerti dan kembali",
+    "tips": {
+      "estafas": {
+        "title": "1. Penipuan Siber",
+        "desc": "Konten digital palsu dapat meniru suara dan wajah yang dikenal untuk mencuri informasi atau uang Anda.",
+        "tags": {
+          "prevention": "Pencegahan",
+          "prevention_info": "Jika Anda didesak untuk memberikan uang atau data sensitif: berhenti, pikirkan, dan selalu verifikasi.",
+          "verification": "Verifikasi",
+          "verification_info": "Akhiri komunikasi dan hubungi sendiri orang tersebut melalui saluran aman yang dikenal.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknologi kloning identitas. Jangan percaya hanya pada apa yang Anda lihat atau dengar melalui layar."
+        }
+      },
+      "physical": {
+        "title": "2. Perimeter Fisik",
+        "desc": "Ponsel Anda adalah kunci utama. Perangkat tanpa kunci adalah pintu terbuka bagi seluruh kehidupan pribadi Anda.",
+        "tags": {
+          "biometry": "Biometri",
+          "biometry_info": "Atur FaceID atau Sidik Jari. Ini jauh lebih aman daripada pola yang bisa diintip orang lain di bahu Anda.",
+          "updates": "Pembaruan",
+          "updates_info": "Jangan abaikan pesan 'Versi baru'; pesan tersebut sering kali menutup celah keamanan kritis yang baru ditemukan.",
+          "encryption": "Enkripsi",
+          "encryption_info": "Pastikan enkripsi disk aktif untuk melindungi file dan foto Anda dari potensi pencurian fisik."
+        }
+      },
+      "keys": {
+        "title": "3. Kunci Berdampak Tinggi",
+        "desc": "Hindari menggunakan data yang sudah jelas. Sebagian besar serangan terjadi karena kata sandi yang lemah atau diulang di banyak situs.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktifkan verifikasi dua langkah pada semua akun Anda. Ini adalah lapisan pelindung kedua yang paling penting.",
+          "robustness": "Ketangguhan",
+          "robustness_info": "Gunakan frasa panjang alih-alih kata-kata sederhana. Contoh: 'Langit-Biru-2026!' jauh lebih baik daripada 'budi123'.",
+          "passphrases": "Frasa Sandi",
+          "passphrases_info": "Frasa panjang hampir mustahil untuk dipecahkan oleh komputer penyerang saat ini."
+        }
+      },
+      "phishing": {
+        "title": "4. Mendeteksi Kail",
+        "desc": "Penjahat berpura-pura menjadi dukungan teknis atau bank untuk mencuri data Anda melalui rasa takut atau urgensi yang berlebihan.",
+        "tags": {
+          "urgency": "Urgensi",
+          "urgency_info": "Jika pesan mengatakan 'Akun Anda akan ditutup dalam 1 jam jika tidak diklik', itu hampir pasti penipuan.",
+          "links": "Tautan",
+          "links_info": "Periksa URL dengan teliti. Penipu sering menggunakan nama serupa seperti 'g00gle.net' alih-alih 'google.com'.",
+          "files": "File",
+          "files_info": "Jangan pernah membuka lampiran yang tidak terduga, terutama jika memiliki ekstensi seperti .ZIP, .EXE, atau .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Warisan Anak-anak",
+        "desc": "Anak-anak kurang memiliki kewaspadaan untuk mendeteksi jebakan. Ajari mereka bahwa apa yang diunggah ke internet tetap ada di sana selamanya.",
+        "tags": {
+          "identity": "Identitas",
+          "identity_info": "Hindari mengungkapkan data sensitif dalam foto publik, seperti seragam sekolah, logo perusahaan, atau lokasi waktu nyata.",
+          "strangers": "Orang Asing",
+          "strangers_info": "Aturan emas untuk anak di bawah umur: 'Jika Anda tidak mengenal mereka secara fisik, mereka bukan teman sejati'.",
+          "privacy": "Privasi",
+          "privacy_info": "Tinjau secara berkala pengaturan privasi jaringan sosial dan perangkat anggota keluarga Anda."
+        }
+      },
+      "backup": {
+        "title": "6. Kelangsungan Data",
+        "desc": "Virus dapat mengunci atau menghapus file Anda. Satu-satunya salinan yang benar-benar aman adalah yang terputus secara fisik.",
+        "tags": {
+          "frequency": "Frekuensi",
+          "frequency_info": "Cadangkan foto dan dokumen Anda yang paling berharga setidaknya sebulan sekali.",
+          "disconnection": "Pemutusan",
+          "disconnection_info": "Salin file Anda ke drive eksternal dan, yang paling penting, putuskan sambungan secara fisik dari komputer setelah selesai.",
+          "cloud": "Cloud",
+          "cloud_info": "Gunakan layanan penyimpanan cloud dengan enkripsi, namun jangan pernah hanya mengandalkannya sebagai satu-satunya salinan."
+        }
+      }
+    }
+  }
 }

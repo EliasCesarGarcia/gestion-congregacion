@@ -25,9 +25,63 @@
   "device_mobile": "Segotlane",
   "device_pc": "Khomphutha",
 
-  "lang_es": "Sefapaniki", "lang_en": "Seisimane", "lang_de": "Sejeremane", "lang_fr": "Sefora", "lang_pt": "Sepotokisi", "lang_it": "Seitaliana", "lang_nl": "Sedatšhe", "lang_ru": "Seruša", "lang_el": "Segerika", "lang_ja": "Sejapane", "lang_zh_cn": "Sechina (Seo se nolofaditšwego)", "lang_ko": "Sekorea", "lang_id": "Seindonesia", "lang_vi": "Sevietnam", "lang_sw": "Seswahili", "lang_af": "Seafrikaanse", "lang_sq": "Sealbania", "lang_am": "Seamhariki", "lang_ar": "Searabia", "lang_he": "Sehebere", "lang_ca": "Secatalan", "lang_zh_tw": "Sechina (Se seng sa setšo)", "lang_hr": "Sekroasia", "lang_cs": "Setšheka", "lang_da": "Sedanish", "lang_ee": "Se-ewe", "lang_fi": "Sefinnish", "lang_ht": "Se-haiti", "lang_haw": "Se-hawaii", "lang_hi": "Sehindi", "lang_hu": "Sehungary", "lang_ilo": "Se-ilocano", "lang_jam": "Se-jamaica", "lang_lr": "Se-liberia", "lang_mg": "Semalgasy", "lang_ml": "Semalayalam", "lang_no": "Senorwegian", "lang_pap": "Sepapiamento", "lang_pcm": "Sepidgin", "lang_pl": "Sepolish", "lang_ro": "Seromania", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Seslovakia", "lang_sl": "Seslovenia", "lang_sv": "Sesweden", "lang_tl": "Setagalog", "lang_ta": "Setamil", "lang_th": "Sethai", "lang_tr": "Seturkish", "lang_tw": "Setwi", "lang_uk": "Seukraine", "lang_xh": "Sexhosa", "lang_zu": "Sezulu", "lang_gn": "Seguarani", "lang_qu": "Sequechua",
+  "lang_es": "Sefapaniki",
+  "lang_en": "Seisimane",
+  "lang_de": "Sejeremane",
+  "lang_fr": "Sefora",
+  "lang_pt": "Sepotokisi",
+  "lang_it": "Seitaliana",
+  "lang_nl": "Sedatšhe",
+  "lang_ru": "Seruša",
+  "lang_el": "Segerika",
+  "lang_ja": "Sejapane",
+  "lang_zh_cn": "Sechina (Seo se nolofaditšwego)",
+  "lang_ko": "Sekorea",
+  "lang_id": "Seindonesia",
+  "lang_vi": "Sevietnam",
+  "lang_sw": "Seswahili",
+  "lang_af": "Seafrikaanse",
+  "lang_sq": "Sealbania",
+  "lang_am": "Seamhariki",
+  "lang_ar": "Searabia",
+  "lang_he": "Sehebere",
+  "lang_ca": "Secatalan",
+  "lang_zh_tw": "Sechina (Se seng sa setšo)",
+  "lang_hr": "Sekroasia",
+  "lang_cs": "Setšheka",
+  "lang_da": "Sedanish",
+  "lang_ee": "Se-ewe",
+  "lang_fi": "Sefinnish",
+  "lang_ht": "Se-haiti",
+  "lang_haw": "Se-hawaii",
+  "lang_hi": "Sehindi",
+  "lang_hu": "Sehungary",
+  "lang_ilo": "Se-ilocano",
+  "lang_jam": "Se-jamaica",
+  "lang_lr": "Se-liberia",
+  "lang_mg": "Semalgasy",
+  "lang_ml": "Semalayalam",
+  "lang_no": "Senorwegian",
+  "lang_pap": "Sepapiamento",
+  "lang_pcm": "Sepidgin",
+  "lang_pl": "Sepolish",
+  "lang_ro": "Seromania",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Seslovakia",
+  "lang_sl": "Seslovenia",
+  "lang_sv": "Sesweden",
+  "lang_tl": "Setagalog",
+  "lang_ta": "Setamil",
+  "lang_th": "Sethai",
+  "lang_tr": "Seturkish",
+  "lang_tw": "Setwi",
+  "lang_uk": "Seukraine",
+  "lang_xh": "Sexhosa",
+  "lang_zu": "Sezulu",
+  "lang_gn": "Seguarani",
+  "lang_qu": "Sequechua",
 
-  
   "greeting_morning": "Mmorong,",
   "greeting_afternoon": "Dumela,",
   "greeting_night": "Fonaneng,",
@@ -65,7 +119,6 @@
   "footer_title": "TSHEDIPEDISO YA MOLETSHE TEOKRATIKI",
   "footer_use": "Tiriso ya Phuthego",
   "footer_terms": "Melao ya Tiriso",
-
 
   "profile_title": "Bolaodi bwa Akhaonto",
   "profile_personal_id": "ID ya Motho",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Mogolo wa mongwaledi",
   "profile_pub_help_or": "goba",
   "profile_pub_help_service": "Mogolo wa tirelo",
-  "profile_pub_help_suffix": "wa phuthego ya geno."
+  "profile_pub_help_suffix": "wa phuthego ya geno.",
 
-
+  "security": {
+    "seo": {
+      "title": "Keletšo tša Tšhireletšo | Taolo ya Selegae",
+      "desc": "Tlhahlo ya tšhireletšo ya datha le tšhireletšo ya digidale bakeng sa phuthego."
+    },
+    "header_title": "Keletšo tša Tšhireletšo",
+    "back": "Gomela morago",
+    "revision": "Peakanyo ya mafelelo",
+    "recent": "Tša morago bjale",
+    "hero_title": "Go botega ga gago ke",
+    "hero_highlight": "selo sa pele go rena.",
+    "hero_sub": "Mekgwa ye bohlokwa bakeng sa go hlokomela bosephiri le tshedimošo ya gago.",
+    "db_alert": "Tsebišo ya Nakwana",
+    "accept_btn": "Ke kwešišitše gomme ke boela morago",
+    "tips": {
+      "estafas": {
+        "title": "1. Bofori bja Inthanete",
+        "desc": "Dilo tša go hlama tša digidale di ka ekiša mantšu le difahlego tšeo o di tsebago go utswa tshedimošo goba tšhelete ya gago.",
+        "tags": {
+          "prevention": "Thibelo",
+          "prevention_info": "Ge o gapeletšwa go ntšha tšhelete goba datha ya sephiri: ema, o nagane, gomme o netefatše ka mehla.",
+          "verification": "Netefatšo",
+          "verification_info": "Kgaola poledišano gomme o bitše motho yoo ka bowena ka tsela yeo o e tsebago yeo e šireletšegilego.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Theknolotši ya go ekiša motho. O se ke wa tshepa fela seo o se bonago goba o se kwago skrineng."
+        }
+      },
+      "physical": {
+        "title": "2. Tšhireletšo ya Phisikhala",
+        "desc": "Mohala wa gago ke senotlelo sa bohlokwa. Sedirišwa seo se se nago senotlelo ke mojako o bulegilego bophelong bja gago.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Hlama FaceID goba monwana. Go šireletšegile kudu go feta mokgwa wo motho a ka o bonago ka godimo ga legetla la gago.",
+          "updates": "Dintšhafatšo",
+          "updates_info": "O se ke wa hlokomologa melaetša ya 'Mofuta wo mofsa'; gantsi e tswalela mapharo a kotsi a tšhireletšo.",
+          "encryption": "Encryption",
+          "encryption_info": "Netefatša gore tšhireletšo ya diske e a šoma go šireletša difaele le dinepe tša gago go bohodu."
+        }
+      },
+      "keys": {
+        "title": "3. Dinotlelo tše Matla",
+        "desc": "Phema go diriša datha yeo e tsebegago gabonolo. Dithaselo tše ntši di direga ka baka la diphasewete tšeo di fokolago.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Bulela netefatšo ya dikgato tše pedi diakhaonteng tša gago ka moka. Ke tsela ye bohlokwa ya tšhireletšo.",
+          "robustness": "Go Tia",
+          "robustness_info": "Diriša mafelo a matelele go e na le mantšu a bonolo. Mohlala: 'Blue-Sky-2026!' e kaone kudu go feta 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Mafelo a matelele a tloga a le thata gore dikhomphutha tša disenyi di a pshatle lehono."
+        }
+      },
+      "phishing": {
+        "title": "4. Go lemoga Segwagwa",
+        "desc": "Disenyi di itira eka ke batho ba thušo ya sethekniki goba dipanka go utswa datha ya gago ka go go tšhoša.",
+        "tags": {
+          "urgency": "Potlako",
+          "urgency_info": "Ge molaetša o re 'Akhaonto ya gago e tlo tswalelwa ka morago ga iri e 1', gona ke bofori.",
+          "links": "Dinkhanyane",
+          "links_info": "Lekola URL gabotse. Bafori gantsi ba diriša maina a go swana le 'g00gle.net' go e na le 'google.com'.",
+          "files": "Difaele",
+          "files_info": "O se ke wa bula difaele tšeo o sa di letelago, kudu ge di na le mafelelo a go swana le .ZIP, .EXE, goba .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Bohwa bja Bana",
+        "desc": "Bana ga ba na bohlale bja go lemoga mamina. Ba rute gore seo se laolwago inthaneteng se dula moo ka go sa felego.",
+        "tags": {
+          "identity": "Boitšhupo",
+          "identity_info": "Phema go ntšha datha ya sephiri dinepeng tša batho bohle, go swana le diaparo tša sekolo goba lefelo leo o lego go lona.",
+          "strangers": "Bafaladi",
+          "strangers_info": "Molao wa gauta go bana: 'Ge o sa ba tsebe ka go ba bona sefahlego ka sefahlego, ga se bagwera ba nnete'.",
+          "privacy": "Bosephiri",
+          "privacy_info": "Lekola nako le nako dipeakanyo tša bosephiri tša metswalle ya lapa la gago le didirišwa tša bona."
+        }
+      },
+      "backup": {
+        "title": "6. Go Poloka Datha",
+        "desc": "Baerase e ka notlela goba ya hlakola difaele tša gago. Khopi e tee fela yeo e šireletšegilego ke yeo e sa kopanywago le khomphutha.",
+        "tags": {
+          "frequency": "Kgafetšakgafetša",
+          "frequency_info": "Dira khopi ya tšhireletšo ya dinepe le ditokumente tša bohlokwa ga tee ka kgwedi.",
+          "disconnection": "Go kgaola",
+          "disconnection_info": "Kopišetša difaele tša gago moraleng wa ka ntle gomme o o ntšhe khomphutheng ge o feditše.",
+          "cloud": "Cloud",
+          "cloud_info": "Diriša ditirelo tša go poloka tša maru tšeo di nago le tšhireletšo, eupša o se ke wa tshepa tšona fela."
+        }
+      }
+    }
+  }
 }

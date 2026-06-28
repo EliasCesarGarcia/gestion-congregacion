@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Boliviaans Quechua",
 
-  
   "greeting_morning": "Goedemorgen,",
   "greeting_afternoon": "Goedemiddag,",
   "greeting_night": "Goedenavond,",
@@ -120,7 +119,6 @@
   "footer_title": "THEOCRATISCH LOKAAL BEHEER",
   "footer_use": "Institutioneel Gebruik",
   "footer_terms": "Gebruiksvoorwaarden",
-
 
   "profile_title": "Accountbeheer",
   "profile_personal_id": "Persoonlijk ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Secretaris",
   "profile_pub_help_or": "of de",
   "profile_pub_help_service": "Dienstopziener",
-  "profile_pub_help_suffix": "van uw gemeente."
+  "profile_pub_help_suffix": "van uw gemeente.",
 
-
+  "security": {
+    "seo": {
+      "title": "Beveiligingstips | Lokaal Beheer",
+      "desc": "Geavanceerde gids voor digitale afscherming en gegevensbescherming voor de gemeente."
+    },
+    "header_title": "Beveiligingstips",
+    "back": "Terug",
+    "revision": "Laatste herziening",
+    "recent": "Recent",
+    "hero_title": "Uw integriteit is",
+    "hero_highlight": "onze prioriteit.",
+    "hero_sub": "Essentiële gewoonten voor de zorg voor uw privacy en persoonlijke informatie.",
+    "db_alert": "Laatste Nieuws",
+    "accept_btn": "Begrepen en terug",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyberoplichting",
+        "desc": "Valse digitale inhoud kan bekende stemmen en gezichten nabootsen om uw informatie of geld te stelen.",
+        "tags": {
+          "prevention": "Preventie",
+          "prevention_info": "Als u onder druk wordt gezet om geld of gevoelige gegevens te verstrekken: stop, denk na en verifieer altijd.",
+          "verification": "Verificatie",
+          "verification_info": "Beëindig de communicatie en bel de persoon zelf via een bekend veilig kanaal.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Identiteitscloontechnologie. Vertrouw niet alleen op wat u via een scherm ziet of hoort."
+        }
+      },
+      "physical": {
+        "title": "2. Fysieke Omtrek",
+        "desc": "Uw telefoon is de hoofdsleutel. Een apparaat zonder vergrendeling is een open deur naar uw hele privéleven.",
+        "tags": {
+          "biometry": "Biometrie",
+          "biometry_info": "Stel FaceID of vingerafdruk in. Het is veel veiliger dan een patroon dat iemand over uw schouder kan afkijken.",
+          "updates": "Updates",
+          "updates_info": "Negeer 'Nieuwe versie'-berichten niet; ze dichten vaak kritieke beveiligingslekken die onlangs zijn ontdekt.",
+          "encryption": "Encryptie",
+          "encryption_info": "Zorg ervoor dat schijfversleuteling actief is om uw bestanden en foto's te beschermen tegen mogelijke fysieke diefstal."
+        }
+      },
+      "keys": {
+        "title": "3. Krachtige Wachtwoorden",
+        "desc": "Vermijd het gebruik van voor de hand liggende gegevens. De meeste aanvallen gebeuren door zwakke of herhaalde wachtwoorden.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Activeer tweestapsverificatie op al uw accounts. Het is de belangrijkste tweede beschermingslaag.",
+          "robustness": "Robuustheid",
+          "robustness_info": "Gebruik lange zinnen in plaats van simpele woorden. Voorbeeld: 'Blauwe-Lucht-2026!' is vele malen beter dan 'pieter123'.",
+          "passphrases": "Wachtzinnen",
+          "passphrases_info": "Lange zinnen zijn voor de huidige computers van aanvallers bijna onmogelijk te kraken."
+        }
+      },
+      "phishing": {
+        "title": "4. De Haak Detecteren",
+        "desc": "Criminelen doen zich voor als technische ondersteuning of banken om uw gegevens te stelen via angst of extreme urgentie.",
+        "tags": {
+          "urgency": "Urgentie",
+          "urgency_info": "Als het bericht zegt 'Uw account wordt over 1 uur gesloten als u niet klikt', is het vrijwel zeker oplichting.",
+          "links": "Links",
+          "links_info": "Controleer de URL zorgvuldig. Oplichters gebruiken vaak vergelijkbare namen zoals 'g00gle.net' in plaats van 'google.com'.",
+          "files": "Bestanden",
+          "files_info": "Open nooit onverwachte bijlagen, vooral niet als ze extensies hebben zoals .ZIP, .EXE of .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Erfenis van Kinderen",
+        "desc": "Kinderen missen de sluwheid om vallen te detecteren. Leer hen dat wat op internet wordt geüpload, daar voor altijd blijft.",
+        "tags": {
+          "identity": "Identiteit",
+          "identity_info": "Vermijd het onthullen van gevoelige gegevens op openbare foto's, zoals schooluniformen, bedrijfslogo's of realtime locaties.",
+          "strangers": "Vreemden",
+          "strangers_info": "Gouden regel voor minderjarigen: 'Als je ze niet fysiek in persoon kent, zijn ze geen echte vriend'.",
+          "privacy": "Privacy",
+          "privacy_info": "Controleer regelmatig de privacyinstellingen van de sociale netwerken en apparaten van uw gezinsleden."
+        }
+      },
+      "backup": {
+        "title": "6. Overleving van Gegevens",
+        "desc": "Een virus kan uw bestanden vergrendelen of verwijderen. De enige echt veilige kopie is de kopie die fysiek is losgekoppeld.",
+        "tags": {
+          "frequency": "Frequentie",
+          "frequency_info": "Maak minstens één keer per maand een back-up van uw meest waardevolle foto's en documenten.",
+          "disconnection": "Ontkoppeling",
+          "disconnection_info": "Kopieer uw bestanden naar een externe schijf en koppel deze na afloop fysiek los van de computer.",
+          "cloud": "Cloud",
+          "cloud_info": "Gebruik cloudopslagdiensten met encryptie, maar vertrouw er nooit alleen op als enige kopie."
+        }
+      }
+    }
+  }
 }

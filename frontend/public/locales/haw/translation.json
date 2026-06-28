@@ -25,9 +25,63 @@
   "device_mobile": "Kelepona",
   "device_pc": "Kamepiula",
 
-  "lang_es": "Paniolo", "lang_en": "Pelekānia", "lang_de": "Kelemānia", "lang_fr": "Palani", "lang_pt": "Pukikī", "lang_it": "Ikalia", "lang_nl": "Hōlani", "lang_ru": "Rusia", "lang_el": "Helene", "lang_ja": "Iapana", "lang_zh_cn": "Pākē (Māmā)", "lang_ko": "Kōlea", "lang_id": "Inidonesia", "lang_vi": "Wiekanama", "lang_sw": "Suahili", "lang_af": "Aferikana", "lang_sq": "Alebania", "lang_am": "Amehalika", "lang_ar": "Arabia", "lang_he": "Hebela", "lang_ca": "Katalana", "lang_zh_tw": "Pākē (Kuʻuna)", "lang_hr": "Koloasia", "lang_cs": "Teka", "lang_da": "Denemaka", "lang_ee": "Ewe", "lang_fi": "Pinilana", "lang_ht": "Haiki", "lang_haw": "Hawaiʻi", "lang_hi": "Hini", "lang_hu": "Hunakalia", "lang_ilo": "Iloko", "lang_jam": "Iamaika", "lang_lr": "Liberia", "lang_mg": "Malagasi", "lang_ml": "Malaialama", "lang_no": "Norewai", "lang_pap": "Papiameto", "lang_pcm": "Pikina", "lang_pl": "Poloka", "lang_ro": "Romania", "lang_nso": "Sepedi", "lang_st": "Sesoto", "lang_sk": "Solowakia", "lang_sl": "Solowenia", "lang_sv": "Kuekene", "lang_tl": "Takaloka", "lang_ta": "Kamila", "lang_th": "Tailani", "lang_tr": "Tureke", "lang_tw": "Twi", "lang_uk": "Ukelena", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Ualani", "lang_qu": "Ketiua",
+  "lang_es": "Paniolo",
+  "lang_en": "Pelekānia",
+  "lang_de": "Kelemānia",
+  "lang_fr": "Palani",
+  "lang_pt": "Pukikī",
+  "lang_it": "Ikalia",
+  "lang_nl": "Hōlani",
+  "lang_ru": "Rusia",
+  "lang_el": "Helene",
+  "lang_ja": "Iapana",
+  "lang_zh_cn": "Pākē (Māmā)",
+  "lang_ko": "Kōlea",
+  "lang_id": "Inidonesia",
+  "lang_vi": "Wiekanama",
+  "lang_sw": "Suahili",
+  "lang_af": "Aferikana",
+  "lang_sq": "Alebania",
+  "lang_am": "Amehalika",
+  "lang_ar": "Arabia",
+  "lang_he": "Hebela",
+  "lang_ca": "Katalana",
+  "lang_zh_tw": "Pākē (Kuʻuna)",
+  "lang_hr": "Koloasia",
+  "lang_cs": "Teka",
+  "lang_da": "Denemaka",
+  "lang_ee": "Ewe",
+  "lang_fi": "Pinilana",
+  "lang_ht": "Haiki",
+  "lang_haw": "Hawaiʻi",
+  "lang_hi": "Hini",
+  "lang_hu": "Hunakalia",
+  "lang_ilo": "Iloko",
+  "lang_jam": "Iamaika",
+  "lang_lr": "Liberia",
+  "lang_mg": "Malagasi",
+  "lang_ml": "Malaialama",
+  "lang_no": "Norewai",
+  "lang_pap": "Papiameto",
+  "lang_pcm": "Pikina",
+  "lang_pl": "Poloka",
+  "lang_ro": "Romania",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesoto",
+  "lang_sk": "Solowakia",
+  "lang_sl": "Solowenia",
+  "lang_sv": "Kuekene",
+  "lang_tl": "Takaloka",
+  "lang_ta": "Kamila",
+  "lang_th": "Tailani",
+  "lang_tr": "Tureke",
+  "lang_tw": "Twi",
+  "lang_uk": "Ukelena",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Ualani",
+  "lang_qu": "Ketiua",
 
-  
   "greeting_morning": "Aloha kakahiaka,",
   "greeting_afternoon": "Aloha ʻauinalā,",
   "greeting_night": "Aloha ahiahi,",
@@ -65,7 +119,6 @@
   "footer_title": "MĀLAMA LOKAL TEYOKRATIKA",
   "footer_use": "No ka Hui Wale Nō",
   "footer_terms": "Nā Rula o ka Hana",
-
 
   "profile_title": "Hoʻoponopono Moʻokāki",
   "profile_personal_id": "ID Pūpū",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "Lunaluna Kākau ʻōlelo",
   "profile_pub_help_or": "a i ʻole ka",
   "profile_pub_help_service": "Lunaluna Hana",
-  "profile_pub_help_suffix": "o kou hālāwai."
+  "profile_pub_help_suffix": "o kou hālāwai.",
 
-
+  "security": {
+    "seo": {
+      "title": "Nā Manaʻo Palekana | Hoʻoponopono Kūloko",
+      "desc": "He alakaʻi no ka pale kikohoʻe kiʻekiʻe a me ka palekana ʻikepili no ke anaina."
+    },
+    "header_title": "Nā Manaʻo Palekana",
+    "back": "Hoʻi",
+    "revision": "Loiloi hope",
+    "recent": "Hou",
+    "hero_title": "ʻO kou kūpaʻa",
+    "hero_highlight": "kā mākou mea nui.",
+    "hero_sub": "Nā maʻamau koʻikoʻi no ka mālama ʻana i kou pilikino a me kāu ʻike pilikino.",
+    "db_alert": "Hoʻolaha koke",
+    "accept_btn": "Maopopo a hoʻi",
+    "tips": {
+      "estafas": {
+        "title": "1. ʻAlunu Kikohoʻe",
+        "desc": "Hiki i nā mea kikohoʻe hoʻopunipuni ke hoʻohālikelike i nā leo a me nā maka i ʻike ʻia no ka ʻaihue ʻana i kāu ʻike a kālā paha.",
+        "tags": {
+          "prevention": "Ke Keʻakeʻa",
+          "prevention_info": "Inā hoʻoikaika ʻia ʻoe e hāʻawi i ke kālā a i ʻole ka ʻikepili koʻikoʻi: kū, noʻonoʻo, a hōʻoia mau.",
+          "verification": "Ka Hōʻoia",
+          "verification_info": "Hoʻopau i ke kamaʻilio ʻana a kelepona pono i ke kanaka ma o kahi ala palekana i ʻike ʻia.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "ʻenehana hoʻopunipuni i ke ʻano o ke kanaka. Mai hilinaʻi wale i ka mea āu e ʻike ai a lohe ai paha ma ka pakuhi."
+        }
+      },
+      "physical": {
+        "title": "2. Ka Pale Kūlohelohe",
+        "desc": "ʻO kāu kelepona ke kī nui. ʻO kahi hāmeʻa me ka laka ʻole, he puka hāmama ia i kou ola pilikino holoʻokoʻa.",
+        "tags": {
+          "biometry": "Biometry",
+          "biometry_info": "Hoʻonohonoho i ka FaceID a i ʻole Fingerprint. ʻOi aku ka palekana ma mua o kahi kumu i hiki i kekahi ke nānā malu ma luna o kou poʻohiwi.",
+          "updates": "Nā Hou",
+          "updates_info": "Mai mālama ʻole i nā memo 'Mana hou'; pani pinepine lākou i nā puka palekana koʻikoʻi i loaʻa koke iho nei.",
+          "encryption": "Encryption",
+          "encryption_info": "E hōʻoia i ka hana o ka disk encryption e pale i kāu mau waihona a me nā kiʻi mai ka ʻaihue kino ʻia."
+        }
+      },
+      "keys": {
+        "title": "3. Nā Kī Paʻa",
+        "desc": "E pale i ka hoʻohana ʻana i ka ʻikepili maopopo. ʻO ka hapa nui o nā hoʻouka kaua ma muli o nā huaʻōlelo huna nāwaliwali.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Hoʻā i ka hōʻoia ʻelua ʻanuʻu ma kāu mau moʻokāki a pau. ʻO ia ka papa pale ʻelua koʻikoʻi loa.",
+          "robustness": "Ka Paʻa",
+          "robustness_info": "E hoʻohana i nā māmala ʻōlelo lōʻihi ma mua o nā huaʻōlelo maʻalahi. Laʻana: ʻOi aku ka maikaʻi o 'Lani-Polu-2026!' ma mua o 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Aneane hiki ʻole i nā lolouila o kēia wā ke wehe i nā māmala ʻōlelo lōʻihi."
+        }
+      },
+      "phishing": {
+        "title": "4. Ka ʻIke ʻana i ka Makau",
+        "desc": "Hoʻohālikelike ka poʻe lawehala i ke kākoʻo ʻenehana a panakō paha e ʻaihue i kāu ʻikepili ma o ka makaʻu a i ʻole ke koʻikoʻi nui.",
+        "tags": {
+          "urgency": "Ke Koʻikoʻi",
+          "urgency_info": "Inā ʻōlelo ka memo 'E pani ʻia kāu moʻokāki i loko o ka hola 1 inā ʻaʻole ʻoe e kaomi', he hana hoʻopunipuni nō ia.",
+          "links": "Nā loulou",
+          "links_info": "E nānā pono i ka URL. Hoʻohana pinepine ka poʻe hoʻopunipuni i nā inoa like e like me 'g00gle.net' ma kahi o 'google.com'.",
+          "files": "Waihona",
+          "files_info": "Mai wehe i nā mea i hoʻopili ʻia i manaʻo ʻole ʻia, keu hoʻi inā he .ZIP, .EXE, a i ʻole .BAT ko lākou hopena."
+        }
+      },
+      "family": {
+        "title": "5. Ka Hoʻoilina a nā Keiki",
+        "desc": " অভā i nā keiki ka maʻalea e ʻike ai i nā pakū. E aʻo iā lākou, ʻo ka mea i hoʻoili ʻia i ka pūnaewele, e waiho mau ana ma laila.",
+        "tags": {
+          "identity": "ʻO wai ʻoe",
+          "identity_info": "E pale i ka hōʻike ʻana i ka ʻikepili koʻikoʻi i nā kiʻi lehulehu, e like me nā lole kula a i ʻole kahi e noho ai i kēlā manawa.",
+          "strangers": "Malihini",
+          "strangers_info": "Kānāwai gula no nā kamaliʻi: 'Inā ʻaʻole ʻoe i ʻike kino iā lākou, ʻaʻole lākou he hoaaloha ʻoiaʻiʻo'.",
+          "privacy": "Pilikino",
+          "privacy_info": "E loiloi pinepine i nā hoʻonohonoho pilikino o nā pūnaewele kaiapuni a me nā hāmeʻa o kou ʻohana."
+        }
+      },
+      "backup": {
+        "title": "6. Ola o ka ʻIkepili",
+        "desc": "Hiki i ka polokalamu ʻino ke laka a holoi paha i kāu mau waihona. ʻO ka mea palekana wale nō, ʻo ia ka mea i wehe kino ʻia.",
+        "tags": {
+          "frequency": "Pinepine",
+          "frequency_info": "E hana i kope mālama o kāu mau kiʻi a me nā palapala koʻikoʻi i hoʻokahi manawa i ka mahina.",
+          "disconnection": "Wehe",
+          "disconnection_info": "E kope i kāu mau waihona i kahi pāpaʻa waho a, ʻo ka mea nui loa, e wehe kino iā ia mai ka lolouila ke pau.",
+          "cloud": "Cloud",
+          "cloud_info": "E hoʻohana i nā lawelawe cloud me ka encryption, akā mai hilinaʻi wale i kēlā me he kope hoʻokahi wale nō."
+        }
+      }
+    }
+  }
 }

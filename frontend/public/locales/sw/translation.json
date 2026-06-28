@@ -82,7 +82,6 @@
   "lang_gn": "Kiguarani",
   "lang_qu": "Kiquechua cha Bolivia",
 
-  
   "greeting_morning": "Habari za asubuhi,",
   "greeting_afternoon": "Habari za mchana,",
   "greeting_night": "Habari za jioni,",
@@ -120,7 +119,6 @@
   "footer_title": "USIMAMIZI WA KITEOKRASI WA MAHALI",
   "footer_use": "Matumizi ya Kiasasi",
   "footer_terms": "Masharti ya Matumizi",
-
 
   "profile_title": "Usimamizi wa Akaunti",
   "profile_personal_id": "ID ya Kibinafsi",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "Mzee Katibu",
   "profile_pub_help_or": "au",
   "profile_pub_help_service": "Mzee wa Utumishi",
-  "profile_pub_help_suffix": "wa kutaniko lenu."
+  "profile_pub_help_suffix": "wa kutaniko lenu.",
 
-
+  "security": {
+    "seo": {
+      "title": "Vidokezo vya Usalama | Usimamizi wa Ndani",
+      "desc": "Mwongozo wa hali ya juu wa ulinzi wa kidijitali na data kwa ajili ya kutaniko."
+    },
+    "header_title": "Vidokezo vya Usalama",
+    "back": "Rudi",
+    "revision": "Mapitio ya mwisho",
+    "recent": "Hivi karibuni",
+    "hero_title": "Uadilifu wako ni",
+    "hero_highlight": "kipaumbele chetu.",
+    "hero_sub": "Tabia muhimu kwa ajili ya utunzaji wa faragha yako na taarifa za kibinafsi.",
+    "db_alert": "Ilani ya Dakika ya Mwisho",
+    "accept_btn": "Nimeelewa na rudi",
+    "tips": {
+      "estafas": {
+        "title": "1. Utapeli wa Mtandaoni",
+        "desc": "Maudhui ya kidijitali ya bandia yanaweza kuiga sauti na nyuso zinazojulikana ili kuiba taarifa au pesa zako.",
+        "tags": {
+          "prevention": "Kinga",
+          "prevention_info": "Ukihimizwa kutoa pesa au data nyeti: simama, fikiria, na thibitisha kila wakati.",
+          "verification": "Uthibitishaji",
+          "verification_info": "Katisha mawasiliano na mpigie mtu huyo mwenyewe kupitia njia salama inayojulikana.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Teknolojia ya kuiga utambulisho. Usiamini kile unachokiona au kukisikia kupitia skrini pekee."
+        }
+      },
+      "physical": {
+        "title": "2. Mzunguko wa Kimwili",
+        "desc": "Simu yako ni ufunguo mkuu. Kifaa kisicho na kufuli ni mlango wazi wa maisha yako yote ya faragha.",
+        "tags": {
+          "biometry": "Biometri",
+          "biometry_info": "Weka FaceID au Alama ya Kidole. Ni salama zaidi kuliko mchoro ambao mtu anaweza kuuona juu ya bega lako.",
+          "updates": "Masasisho",
+          "updates_info": "Usipuuze ujumbe wa 'Toleo jipya'; mara nyingi hurekebisha mapungufu makubwa ya usalama yaliyogunduliwa hivi karibuni.",
+          "encryption": "Usimbaji",
+          "encryption_info": "Hakikisha usimbaji wa diski umewashwa ili kulinda faili na picha zako dhidi ya wizi wa kimwili."
+        }
+      },
+      "keys": {
+        "title": "3. Nywila Zenye Nguvu",
+        "desc": "Epuka kutumia data zilizo wazi. Mashambulizi mengi hutokea kwa sababu ya nywila dhaifu au zinazotumiwa kwenye tovuti nyingi.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Washa uthibitishaji wa hatua mbili kwenye akaunti zako zote. Ni safu ya pili muhimu zaidi ya ulinzi.",
+          "robustness": "Uimara",
+          "robustness_info": "Tumia misemo mirefu badala ya maneno rahisi. Mfano: 'Anga-Bluu-2026!' ni bora zaidi kuliko 'peter123'.",
+          "passphrases": "Misemo ya siri",
+          "passphrases_info": "Misemo mirefu ni vigumu sana kwa kompyuta za washambuliaji wa leo kuivunja."
+        }
+      },
+      "phishing": {
+        "title": "4. Kugundua Ndoano",
+        "desc": "Wahalifu hujifanya kuwa wasaidizi wa kiufundi au benki ili kuiba data zako kupitia hofu au haraka iliyopitiliza.",
+        "tags": {
+          "urgency": "Haraka",
+          "urgency_info": "Ikiwa ujumbe unasema 'Akaunti yako itafungwa baada ya saa 1 usipobonyeza', karibu hakika ni utapeli.",
+          "links": "Viungo",
+          "links_info": "Angalia URL kwa makini. Matapeli mara nyingi hutumia majina yanayofanana kama 'g00gle.net' badala ya 'google.com'.",
+          "files": "Faili",
+          "files_info": "Usifungue kamwe viambatisho usivyotegemea, hasa vikiwa na viambishi kama .ZIP, .EXE, au .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Urithi wa Watoto",
+        "desc": "Watoto hawana ujanja wa kugundua mitego. Wafundishe kwamba kinachowekwa mtandaoni kinabaki huko milele.",
+        "tags": {
+          "identity": "Utambulisho",
+          "identity_info": "Epuka kufichua data nyeti kwenye picha za umma, kama vile sare za shule, nembo za kampuni, au maeneo ya wakati halisi.",
+          "strangers": "Wageni",
+          "strangers_info": "Sheria ya dhahabu kwa watoto: 'Ikiwa huwajui ana kwa ana, wao si rafiki wa kweli'.",
+          "privacy": "Faragha",
+          "privacy_info": "Kagua mara kwa mara mipangilio ya faragha ya mitandao ya kijamii na vifaa vya wanafamilia wako."
+        }
+      },
+      "backup": {
+        "title": "6. Uhifadhi wa Data",
+        "desc": "Virusi vinaweza kufunga au kufuta faili zako. Nakala pekee salama kweli ni ile iliyotenganishwa kimwili.",
+        "tags": {
+          "frequency": "Marudio",
+          "frequency_info": "Hifadhi nakala ya picha na nyaraka zako muhimu angalau mara moja kwa mwezi.",
+          "disconnection": "Kutenganisha",
+          "disconnection_info": "Nakili faili zako kwenye diski ya nje na, muhimu zaidi, itenganishe kimwili na kompyuta ukimaliza.",
+          "cloud": "Cloud",
+          "cloud_info": "Tumia huduma za uhifadhi wa wingu zenye usimbaji, lakini usizitegemee kama nakala pekee."
+        }
+      }
+    }
+  }
 }

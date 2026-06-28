@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Keczua boliwijski",
 
-  
   "greeting_morning": "Dzień dobry (rano),",
   "greeting_afternoon": "Dzień dobry,",
   "greeting_night": "Dobry wieczór,",
@@ -120,7 +119,6 @@
   "footer_title": "TEOKRATYCZNE LOKALNE ZARZĄDZANIE",
   "footer_use": "Użytek Instytucjonalny",
   "footer_terms": "Warunki korzystania",
-
 
   "profile_title": "Zarządzanie kontem",
   "profile_personal_id": "Osobisty identyfikator",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "sekretarza zboru",
   "profile_pub_help_or": "lub",
   "profile_pub_help_service": "nadzorcę służby",
-  "profile_pub_help_suffix": "w Twoim zborze."
+  "profile_pub_help_suffix": "w Twoim zborze.",
 
-
+  "security": {
+    "seo": {
+      "title": "Wskazówki bezpieczeństwa | Zarządzanie lokalne",
+      "desc": "Zaawansowany przewodnik po ochronie cyfrowej i danych dla zboru."
+    },
+    "header_title": "Wskazówki bezpieczeństwa",
+    "back": "Wstecz",
+    "revision": "Ostatnia rewizja",
+    "recent": "Ostatnie",
+    "hero_title": "Twoja uczciwość jest",
+    "hero_highlight": "naszym priorytetem.",
+    "hero_sub": "Niezbędne nawyki w trosce o Twoją prywatność i dane osobowe.",
+    "db_alert": "Powiadomienie z ostatniej chwili",
+    "accept_btn": "Zrozumiałem, wróć",
+    "tips": {
+      "estafas": {
+        "title": "1. Cyberoszustwa",
+        "desc": "Fałszywe treści cyfrowe mogą naśladować znane głosy i twarze, aby ukraść Twoje informacje lub pieniądze.",
+        "tags": {
+          "prevention": "Prewencja",
+          "prevention_info": "Jeśli jesteś ponaglany do przekazania pieniędzy lub danych: zatrzymaj się, pomyśl i zawsze weryfikuj.",
+          "verification": "Weryfikacja",
+          "verification_info": "Zakończ komunikację i sam zadzwoń do danej osoby znanym, bezpiecznym kanałem.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Technologia klonowania tożsamości. Nie ufaj tylko temu, co widzisz lub słyszysz na ekranie."
+        }
+      },
+      "physical": {
+        "title": "2. Obwód fizyczny",
+        "desc": "Twój telefon to główny klucz. Urządzenie bez blokady to otwarte drzwi do całego Twojego życia prywatnego.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Skonfiguruj FaceID lub odcisk palca. Jest to znacznie bezpieczniejsze niż wzór, który ktoś mógłby podejrzeć przez ramię.",
+          "updates": "Aktualizacje",
+          "updates_info": "Nie ignoruj komunikatów o 'Nowej wersji'; często naprawiają one krytyczne luki w zabezpieczeniach.",
+          "encryption": "Szyfrowanie",
+          "encryption_info": "Upewnij się, że szyfrowanie dysku jest aktywne, aby chronić pliki i zdjęcia przed kradzieżą fizyczną."
+        }
+      },
+      "keys": {
+        "title": "3. Silne hasła",
+        "desc": "Unikaj używania oczywistych danych. Większość ataków wynika ze słabych lub powtarzających się haseł.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktywuj weryfikację dwuetapową na wszystkich kontach. To najważniejsza druga warstwa ochrony.",
+          "robustness": "Solidność",
+          "robustness_info": "Używaj długich fraz zamiast prostych słów. Przykład: 'Niebieskie-Niebo-2026!' jest o wiele lepsze niż 'piotr123'.",
+          "passphrases": "Hasła-frazy",
+          "passphrases_info": "Długie frazy są prawie niemożliwe do złamania dla dzisiejszych komputerów hakerskich."
+        }
+      },
+      "phishing": {
+        "title": "4. Rozpoznaj haczyk",
+        "desc": "Przestępcy podszywają się pod wsparcie techniczne lub banki, aby ukraść dane poprzez strach lub pośpiech.",
+        "tags": {
+          "urgency": "Pilność",
+          "urgency_info": "Jeśli wiadomość mówi 'Twoje konto zostanie zamknięte za 1 godzinę', to prawie na pewno oszustwo.",
+          "links": "Linki",
+          "links_info": "Dokładnie sprawdź adres URL. Oszuści używają podobnych nazw, jak 'g00gle.net' zamiast 'google.com'.",
+          "files": "Pliki",
+          "files_info": "Nigdy nie otwieraj nieoczekiwanych załączników, zwłaszcza z rozszerzeniami .ZIP, .EXE lub .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Bezpieczeństwo dzieci",
+        "desc": "Dzieciom brakuje doświadczenia w wykrywaniu pułapek. Naucz je, że to, co trafi do sieci, zostaje tam na zawsze.",
+        "tags": {
+          "identity": "Tożsamość",
+          "identity_info": "Unikaj ujawniania wrażliwych danych na zdjęciach, jak mundurek szkolny czy lokalizacja w czasie rzeczywistym.",
+          "strangers": "Obcy",
+          "strangers_info": "Złota zasada dla nieletnich: 'Jeśli nie znasz kogoś osobiście, nie jest on prawdziwym przyjacielem'.",
+          "privacy": "Prywatność",
+          "privacy_info": "Okresowo sprawdzaj ustawienia prywatności w mediach społecznościowych i na urządzeniach członków rodziny."
+        }
+      },
+      "backup": {
+        "title": "6. Przetrwanie danych",
+        "desc": "Wirus może zablokować lub usunąć Twoje pliki. Jedyna bezpieczna kopia to ta odłączona fizycznie.",
+        "tags": {
+          "frequency": "Częstotliwość",
+          "frequency_info": "Rób kopię zapasową najważniejszych zdjęć i dokumentów przynajmniej raz w miesiącu.",
+          "disconnection": "Odłączenie",
+          "disconnection_info": "Kopiuj pliki na dysk zewnętrzny i, co najważniejsze, odłącz go fizycznie od komputera po zakończeniu.",
+          "cloud": "Chmura",
+          "cloud_info": "Korzystaj z usług chmurowych z szyfrowaniem, ale nigdy nie polegaj na nich jako na jedynej kopii."
+        }
+      }
+    }
+  }
 }

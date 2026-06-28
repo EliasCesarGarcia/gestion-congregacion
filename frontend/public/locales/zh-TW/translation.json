@@ -82,7 +82,6 @@
   "lang_gn": "瓜拉尼語",
   "lang_qu": "玻利維亞克丘亞語",
 
-  
   "greeting_morning": "早上好，",
   "greeting_afternoon": "下午好，",
   "greeting_night": "晚上好，",
@@ -120,7 +119,6 @@
   "footer_title": "神治地方管理",
   "footer_use": "機構內部使用",
   "footer_terms": "使用條款",
-
 
   "profile_title": "帳戶管理",
   "profile_personal_id": "個人ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "秘書",
   "profile_pub_help_or": "或",
   "profile_pub_help_service": "服務監督",
-  "profile_pub_help_suffix": "的幫助。"
+  "profile_pub_help_suffix": "的幫助。",
 
-
+  "security": {
+    "seo": {
+      "title": "安全提示 | 本地管理",
+      "desc": "會眾高級數位屏蔽與數據保護指南。"
+    },
+    "header_title": "安全提示",
+    "back": "返回",
+    "revision": "最後修訂",
+    "recent": "最近",
+    "hero_title": "您的誠信是",
+    "hero_highlight": "我們的重中之重。",
+    "hero_sub": "保護隱私和個人資訊的基本習慣。",
+    "db_alert": "最後時刻通知",
+    "accept_btn": "明白並返回",
+    "tips": {
+      "estafas": {
+        "title": "1. 網路詐騙",
+        "desc": "虛假數位內容可以模仿熟悉的聲音和面孔來竊取您的資訊或金錢。",
+        "tags": {
+          "prevention": "預防",
+          "prevention_info": "如果有人催促您提供資金或敏感數據：停下來，思考，並始終核實。",
+          "verification": "核實",
+          "verification_info": "終止交流，並通過已知的安全管道親自給對方打電話。",
+          "deepfake": "深度偽造",
+          "deepfake_info": "身份克隆技術。不要僅僅相信你在螢幕上看到或聽到的內容。"
+        }
+      },
+      "physical": {
+        "title": "2. 物理周界",
+        "desc": "手機是萬能鑰匙。沒有鎖屏的設備是通向你整個私生活的大門。",
+        "tags": {
+          "biometry": "生物識別",
+          "biometry_info": "設置面部識別或指紋。這比別人可能在背後偷看的圖形鎖要安全得多。",
+          "updates": "更新",
+          "updates_info": "不要忽略「新版本」訊息；它們通常會修復最近發現的關鍵安全漏洞。",
+          "encryption": "加密",
+          "encryption_info": "確保啟用磁碟加密，以保護您的文件和照片免受潛在的物理盜竊。"
+        }
+      },
+      "keys": {
+        "title": "3. 高強度金鑰",
+        "desc": "避免使用顯而易見的數據。大多數攻擊是由於密碼薄弱或在多個網站重複使用引起的。",
+        "tags": {
+          "2fa": "雙重身份驗證",
+          "2fa_info": "在所有帳戶上激活兩步驗證。這是最重要的第二層防護。",
+          "robustness": "穩固性",
+          "robustness_info": "使用長短語代替簡單的單詞。例如：「Blue-Sky-2026!」比「peter123」強億倍。",
+          "passphrases": "密碼短語",
+          "passphrases_info": "長短語幾乎不可能被當今攻擊者的計算機破解。"
+        }
+      },
+      "phishing": {
+        "title": "4. 識別鉤子",
+        "desc": "犯罪分子冒充技術支持或銀行，通過恐懼或過度緊迫感來竊取您的數據。",
+        "tags": {
+          "urgency": "緊急性",
+          "urgency_info": "如果訊息說「如果不點擊，您的帳戶將在1小時內關閉」，那幾乎可以肯定是詐騙。",
+          "links": "連結",
+          "links_info": "仔細檢查 URL。騙子經常使用類似的名稱，如「g00gle.net」而不是「google.com」。",
+          "files": "文件",
+          "files_info": "切勿打開意外的附件，尤其是後綴名為 .ZIP、.EXE 或 .BAT 的文件。"
+        }
+      },
+      "family": {
+        "title": "5. 孩子的遺產",
+        "desc": "孩子缺乏辨別陷阱的警惕性。教導他們，上傳到網路的東西會永遠留在那裡。",
+        "tags": {
+          "identity": "身份",
+          "identity_info": "避免在公開照片中透露敏感數據，如校服、公司標誌或即時位置。",
+          "strangers": "陌生人",
+          "strangers_info": "未成年人的金科玉律：「如果你沒有在線下親見過他們，他們就不是真正的朋友」。",
+          "privacy": "隱私",
+          "privacy_info": "定期檢查家人的社交網路和設備的隱私設置。"
+        }
+      },
+      "backup": {
+        "title": "6. 數據生存",
+        "desc": "病毒可以鎖定或刪除您的文件。唯一真正安全的副本是物理斷開連接的備份。",
+        "tags": {
+          "frequency": "頻率",
+          "frequency_info": "每月至少備份一次最重要的照片和文檔。",
+          "disconnection": "斷開連接",
+          "disconnection_info": "將文件複製到外部驅動器，最重要的是，完成後將其從計算機上物理拔除。",
+          "cloud": "雲端",
+          "cloud_info": "使用帶加密功能的雲存儲服務，但絕不要僅將其作為唯一副本。"
+        }
+      }
+    }
+  }
 }

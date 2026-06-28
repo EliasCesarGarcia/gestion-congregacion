@@ -82,7 +82,6 @@
   "lang_gn": "Guaraní",
   "lang_qu": "Bolivijski Quechua",
 
-  
   "greeting_morning": "Dobro jutro,",
   "greeting_afternoon": "Dobar dan,",
   "greeting_night": "Dobro večer,",
@@ -120,7 +119,6 @@
   "footer_title": "TEOKRATSKO LOKALNO UPRAVLJANJE",
   "footer_use": "Institucionalna uporaba",
   "footer_terms": "Uvjeti uporabe",
-
 
   "profile_title": "Upravljanje računom",
   "profile_personal_id": "Osobni ID",
@@ -191,7 +189,95 @@
   "profile_pub_help_sec": "starješine tajnika",
   "profile_pub_help_or": "ili",
   "profile_pub_help_service": "starješine voditelja službe",
-  "profile_pub_help_suffix": "vaše skupštine."
+  "profile_pub_help_suffix": "vaše skupštine.",
 
-
+  "security": {
+    "seo": {
+      "title": "Sigurnosni savjeti | Lokalna uprava",
+      "desc": "Vodič za naprednu digitalnu zaštitu i sigurnost podataka za skupštinu."
+    },
+    "header_title": "Sigurnosni savjeti",
+    "back": "Natrag",
+    "revision": "Zadnja izmjena",
+    "recent": "Nedavno",
+    "hero_title": "Vaš integritet je",
+    "hero_highlight": "naš prioritet.",
+    "hero_sub": "Osnovne navike za brigu o vašoj privatnosti i osobnim podacima.",
+    "db_alert": "Obavijest u zadnji tren",
+    "accept_btn": "Razumijem i vrati se",
+    "tips": {
+      "estafas": {
+        "title": "1. Kibernetičke prijevare",
+        "desc": "Lažni digitalni sadržaj može oponašati poznate glasove i lica kako bi ukrao vaše podatke ili novac.",
+        "tags": {
+          "prevention": "Prevencija",
+          "prevention_info": "Ako vas požuruju da date novac ili osjetljive podatke: stanite, razmislite i uvijek provjerite.",
+          "verification": "Provjera",
+          "verification_info": "Prekinite komunikaciju i sami nazovite osobu putem poznatog sigurnog kanala.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Tehnologija kloniranja identiteta. Ne vjerujte samo onome što vidite ili čujete putem ekrana."
+        }
+      },
+      "physical": {
+        "title": "2. Fizički perimetar",
+        "desc": "Vaš telefon je glavni ključ. Uređaj bez zaključavanja su otvorena vrata cijelom vašem privatnom životu.",
+        "tags": {
+          "biometry": "Biometrija",
+          "biometry_info": "Postavite FaceID ili otisak prsta. Mnogo je sigurnije od uzorka koji bi vam netko mogao špijunirati preko ramena.",
+          "updates": "Ažuriranja",
+          "updates_info": "Ne ignorirajte poruke o 'Novoj verziji'; one često zatvaraju kritične sigurnosne propuste otkrivene nedavno.",
+          "encryption": "Enkripcija",
+          "encryption_info": "Provjerite je li enkripcija diska aktivna kako biste zaštitili svoje datoteke i fotografije od potencijalne fizičke krađe."
+        }
+      },
+      "keys": {
+        "title": "3. Lozinke visokog utjecaja",
+        "desc": "Izbjegavajte korištenje očiglednih podataka. Većina napada događa se zbog slabih lozinki ili onih koje se ponavljaju.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Aktivirajte provjeru u dva koraka na svim svojim računima. To je najvažniji drugi sloj zaštite.",
+          "robustness": "Robusnost",
+          "robustness_info": "Koristite duge fraze umjesto jednostavnih riječi. Primjer: 'Plavo-Nebo-2026!' je eksponencijalno bolje od 'petar123'.",
+          "passphrases": "Lozinke-fraze",
+          "passphrases_info": "Duge fraze gotovo je nemoguće probiti današnjim računalima napadača."
+        }
+      },
+      "phishing": {
+        "title": "4. Otkrivanje udice",
+        "desc": "Kriminalci se pretvaraju da su tehnička podrška ili banke kako bi ukrali vaše podatke kroz strah ili pretjeranu hitnost.",
+        "tags": {
+          "urgency": "Hitnost",
+          "urgency_info": "Ako poruka kaže 'Vaš račun će se zatvoriti za 1 sat ako ne kliknete', gotovo je sigurno riječ o prijevari.",
+          "links": "Poveznice",
+          "links_info": "Pažljivo provjerite URL. Prevaranti često koriste slična imena poput 'g00gle.net' umjesto 'google.com'.",
+          "files": "Datoteke",
+          "files_info": "Nikada ne otvarajte neočekivane privitke, osobito ako imaju nastavke poput .ZIP, .EXE ili .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Nasljeđe djece",
+        "desc": "Djeci nedostaje opreza za otkrivanje zamki. Naučite ih da ono što se objavi na internetu tamo ostaje zauvijek.",
+        "tags": {
+          "identity": "Identitet",
+          "identity_info": "Izbjegavajte otkrivanje osjetljivih podataka na javnim fotografijama, poput školskih uniformi ili lokacija u stvarnom vremenu.",
+          "strangers": "Stranci",
+          "strangers_info": "Zlatno pravilo za maloljetnike: 'Ako ih ne poznaješ fizički osobno, oni nisu pravi prijatelji'.",
+          "privacy": "Privatnost",
+          "privacy_info": "Povremeno pregledajte postavke privatnosti društvenih mreža i uređaja članova vaše obitelji."
+        }
+      },
+      "backup": {
+        "title": "6. Opstanak podataka",
+        "desc": "Virus može zaključati ili izbrisati vaše datoteke. Jedina uistinu sigurna kopija je ona koja je fizički isključena.",
+        "tags": {
+          "frequency": "Učestalost",
+          "frequency_info": "Napravite sigurnosnu kopiju svojih najvrjednijih fotografija i dokumenata barem jednom mjesečno.",
+          "disconnection": "Isključivanje",
+          "disconnection_info": "Kopirajte datoteke na vanjski disk i, što je najvažnije, fizički ga odspojite s računala kada završite.",
+          "cloud": "Oblak",
+          "cloud_info": "Koristite usluge pohrane u oblaku s enkripcijom, ali nikada se ne oslanjajte isključivo na njih kao na jedinu kopiju."
+        }
+      }
+    }
+  }
 }

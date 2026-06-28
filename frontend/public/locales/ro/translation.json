@@ -25,9 +25,63 @@
   "device_mobile": "Mobil",
   "device_pc": "PC",
 
-  "lang_es": "Spaniolă", "lang_en": "Engleză", "lang_de": "Germană", "lang_fr": "Franceză", "lang_pt": "Portugheză", "lang_it": "Italiană", "lang_nl": "Olandeză", "lang_ru": "Rusă", "lang_el": "Greacă", "lang_ja": "Japoneză", "lang_zh_cn": "Chineză (Simplificată)", "lang_ko": "Coreeană", "lang_id": "Indoneziană", "lang_vi": "Vietnameză", "lang_sw": "Swahili", "lang_af": "Afrikaans", "lang_sq": "Albaneză", "lang_am": "Amharică", "lang_ar": "Arabă", "lang_he": "Ebraică", "lang_ca": "Catalană", "lang_zh_tw": "Chineză (Tradițională)", "lang_hr": "Croată", "lang_cs": "Cehă", "lang_da": "Daneză", "lang_ee": "Ewe", "lang_fi": "Finlandeză", "lang_ht": "Creolă haitiană", "lang_haw": "Hawaiiană", "lang_hi": "Hindi", "lang_hu": "Maghiară", "lang_ilo": "Ilocano", "lang_jam": "Creolă jamaicană", "lang_lr": "Liberiană", "lang_mg": "Malgasă", "lang_ml": "Malayalam", "lang_no": "Norvegiană", "lang_pap": "Papiamento", "lang_pcm": "Pidgin", "lang_pl": "Poloneză", "lang_ro": "Română", "lang_nso": "Sepedi", "lang_st": "Sesotho", "lang_sk": "Slovacă", "lang_sl": "Slovenă", "lang_sv": "Suedeză", "lang_tl": "Tagalog", "lang_ta": "Tamilă", "lang_th": "Thailandeză", "lang_tr": "Turcă", "lang_tw": "Twi", "lang_uk": "Ucraineană", "lang_xh": "Xhosa", "lang_zu": "Zulu", "lang_gn": "Guarani", "lang_qu": "Quechua boliviană",
+  "lang_es": "Spaniolă",
+  "lang_en": "Engleză",
+  "lang_de": "Germană",
+  "lang_fr": "Franceză",
+  "lang_pt": "Portugheză",
+  "lang_it": "Italiană",
+  "lang_nl": "Olandeză",
+  "lang_ru": "Rusă",
+  "lang_el": "Greacă",
+  "lang_ja": "Japoneză",
+  "lang_zh_cn": "Chineză (Simplificată)",
+  "lang_ko": "Coreeană",
+  "lang_id": "Indoneziană",
+  "lang_vi": "Vietnameză",
+  "lang_sw": "Swahili",
+  "lang_af": "Afrikaans",
+  "lang_sq": "Albaneză",
+  "lang_am": "Amharică",
+  "lang_ar": "Arabă",
+  "lang_he": "Ebraică",
+  "lang_ca": "Catalană",
+  "lang_zh_tw": "Chineză (Tradițională)",
+  "lang_hr": "Croată",
+  "lang_cs": "Cehă",
+  "lang_da": "Daneză",
+  "lang_ee": "Ewe",
+  "lang_fi": "Finlandeză",
+  "lang_ht": "Creolă haitiană",
+  "lang_haw": "Hawaiiană",
+  "lang_hi": "Hindi",
+  "lang_hu": "Maghiară",
+  "lang_ilo": "Ilocano",
+  "lang_jam": "Creolă jamaicană",
+  "lang_lr": "Liberiană",
+  "lang_mg": "Malgasă",
+  "lang_ml": "Malayalam",
+  "lang_no": "Norvegiană",
+  "lang_pap": "Papiamento",
+  "lang_pcm": "Pidgin",
+  "lang_pl": "Poloneză",
+  "lang_ro": "Română",
+  "lang_nso": "Sepedi",
+  "lang_st": "Sesotho",
+  "lang_sk": "Slovacă",
+  "lang_sl": "Slovenă",
+  "lang_sv": "Suedeză",
+  "lang_tl": "Tagalog",
+  "lang_ta": "Tamilă",
+  "lang_th": "Thailandeză",
+  "lang_tr": "Turcă",
+  "lang_tw": "Twi",
+  "lang_uk": "Ucraineană",
+  "lang_xh": "Xhosa",
+  "lang_zu": "Zulu",
+  "lang_gn": "Guarani",
+  "lang_qu": "Quechua boliviană",
 
-  
   "greeting_morning": "Bună dimineața,",
   "greeting_afternoon": "Bună ziua,",
   "greeting_night": "Bună seara,",
@@ -65,7 +119,6 @@
   "footer_title": "ADMINISTRARE LOCALĂ TEOCRATICĂ",
   "footer_use": "Uz Instituțional",
   "footer_terms": "Condiții de Utilizare",
-
 
   "profile_title": "Administrare cont",
   "profile_personal_id": "ID personal",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "bătrânul secretar",
   "profile_pub_help_or": "sau de la",
   "profile_pub_help_service": "bătrânul cu serviciul",
-  "profile_pub_help_suffix": "din congregația ta."
+  "profile_pub_help_suffix": "din congregația ta.",
 
-
+  "security": {
+    "seo": {
+      "title": "Sfaturi de securitate | Management Local",
+      "desc": "Ghid avansat de protecție digitală și a datelor pentru congregație."
+    },
+    "header_title": "Sfaturi de securitate",
+    "back": "Înapoi",
+    "revision": "Ultima revizuire",
+    "recent": "Recent",
+    "hero_title": "Integritatea ta este",
+    "hero_highlight": "prioritatea noastră.",
+    "hero_sub": "Obiceiuri esențiale pentru protejarea confidențialității și a informațiilor personale.",
+    "db_alert": "Notificare de ultim moment",
+    "accept_btn": "Am înțeles și merg înapoi",
+    "tips": {
+      "estafas": {
+        "title": "1. Escrocherii cibernetice",
+        "desc": "Conținutul digital fals poate imita voci și fețe cunoscute pentru a-ți fura informațiile sau banii.",
+        "tags": {
+          "prevention": "Prevenție",
+          "prevention_info": "Dacă ești grăbit să oferi bani sau date sensibile: oprește-te, gândește-te și verifică întotdeauna.",
+          "verification": "Verificare",
+          "verification_info": "Încheie comunicarea și sună tu persoana respectivă printr-un canal sigur cunoscut.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Tehnologie de clonare a identității. Nu te încrede doar în ceea ce vezi sau auzi prin ecran."
+        }
+      },
+      "physical": {
+        "title": "2. Perimetrul fizic",
+        "desc": "Telefonul tău este cheia principală. Un dispozitiv fără blocare este o poartă deschisă către întreaga viață privată.",
+        "tags": {
+          "biometry": "Biometrie",
+          "biometry_info": "Configurează FaceID sau Amprenta. Este mult mai sigur decât un model pe care cineva l-ar putea spiona peste umăr.",
+          "updates": "Actualizări",
+          "updates_info": "Nu ignora mesajele 'Versiune nouă'; acestea repară adesea breșe critice de securitate descoperite recent.",
+          "encryption": "Criptare",
+          "encryption_info": "Asigură-te că criptarea discului este activă pentru a-ți proteja fișierele și fotografiile de un eventual furt fizic."
+        }
+      },
+      "keys": {
+        "title": "3. Parole puternice",
+        "desc": "Evită utilizarea datelor evidente. Majoritatea atacurilor au loc din cauza parolelor slabe sau repetate pe mai multe site-uri.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Activează verificarea în doi pași pe toate conturile. Este cel mai important al doilea strat de protecție.",
+          "robustness": "Robusteză",
+          "robustness_info": "Folosește fraze lungi în locul cuvintelor simple. Exemplu: 'Cer-Albastru-2026!' este mult mai bună decât 'petre123'.",
+          "passphrases": "Fraze de acces",
+          "passphrases_info": "Frazele lungi sunt aproape imposibil de spart de către computerele atacatorilor de astăzi."
+        }
+      },
+      "phishing": {
+        "title": "4. Detectarea cârligului",
+        "desc": "Criminalii pretind că sunt suport tehnic sau bănci pentru a-ți fura datele prin frică sau urgență excesivă.",
+        "tags": {
+          "urgency": "Urgență",
+          "urgency_info": "Dacă mesajul spune 'Contul tău se va închide în 1 oră dacă nu dai click', este aproape sigur o escrocherie.",
+          "links": "Link-uri",
+          "links_info": "Verifică URL-ul cu atenție. Escrocii folosesc adesea nume similare precum 'g00gle.net' în loc de 'google.com'.",
+          "files": "Fișiere",
+          "files_info": "Nu deschide niciodată atașamente neașteptate, mai ales dacă au extensii precum .ZIP, .EXE sau .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Moștenirea copiilor",
+        "desc": "Copiilor le lipsește viclenia pentru a detecta capcanele. Învață-i că ceea ce este încărcat pe internet rămâne acolo pentru totdeauna.",
+        "tags": {
+          "identity": "Identitate",
+          "identity_info": "Evită dezvăluirea datelor sensibile în fotografii publice, cum ar fi uniformele școlare sau locațiile în timp real.",
+          "strangers": "Străini",
+          "strangers_info": "Regula de aur pentru minori: 'Dacă nu îi cunoști fizic în persoană, nu sunt prieteni adevărați'.",
+          "privacy": "Confidențialitate",
+          "privacy_info": "Revizuiește periodic setările de confidențialitate ale rețelelor sociale și ale dispozitivelor membrilor familiei."
+        }
+      },
+      "backup": {
+        "title": "6. Supraviețuirea datelor",
+        "desc": "Un virus îți poate bloca sau șterge fișierele. Singura copie cu adevărat sigură este cea deconectată fizic.",
+        "tags": {
+          "frequency": "Frecvență",
+          "frequency_info": "Fă o copie de rezervă a celor mai valoroase fotografii și documente cel puțin o dată pe lună.",
+          "disconnection": "Deconectare",
+          "disconnection_info": "Copiază fișierele pe un hard extern și, cel mai important, deconectează-l fizic de la computer când ai terminat.",
+          "cloud": "Cloud",
+          "cloud_info": "Folosește servicii de stocare în cloud cu criptare, dar nu te baza niciodată doar pe ele ca singură copie."
+        }
+      }
+    }
+  }
 }

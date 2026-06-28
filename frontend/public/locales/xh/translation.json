@@ -25,9 +25,63 @@
   "device_mobile": "Fowuni",
   "device_pc": "Ikhompyutha",
 
-  "lang_es": "iSpanish", "lang_en": "iEnglish", "lang_de": "iGerman", "lang_fr": "iFrench", "lang_pt": "iPortuguese", "lang_it": "iItalian", "lang_nl": "iDutch", "lang_ru": "iRussian", "lang_el": "iGreek", "lang_ja": "iJapanese", "lang_zh_cn": "iChinese (eLula)", "lang_ko": "iKorean", "lang_id": "iIndonesian", "lang_vi": "iVietnamese", "lang_sw": "isiSwahili", "lang_af": "isiAfrikaans", "lang_sq": "isiAlbanian", "lang_am": "isiAmharic", "lang_ar": "isiArabic", "lang_he": "isiHebrew", "lang_ca": "isiCatalan", "lang_zh_tw": "iChinese (yeSiko)", "lang_hr": "isiCroatian", "lang_cs": "isiCzech", "lang_da": "isiDanish", "lang_ee": "isiEwe", "lang_fi": "isiFinnish", "lang_ht": "isiHaitian", "lang_haw": "isiHawaiian", "lang_hi": "isiHindi", "lang_hu": "isiHungarian", "lang_ilo": "isiIlocano", "lang_jam": "isiJamaican", "lang_lr": "isiLiberian", "lang_mg": "isiMalagasy", "lang_ml": "isiMalayalam", "lang_no": "isiNorwegian", "lang_pap": "isiPapiamento", "lang_pcm": "isiPidgin", "lang_pl": "isiPolish", "lang_ro": "isiRomanian", "lang_nso": "isiSepedi", "lang_st": "isiSesotho", "lang_sk": "isiSlovak", "lang_sl": "isiSlovenian", "lang_sv": "isiSwedish", "lang_tl": "isiTagalog", "lang_ta": "isiTamil", "lang_th": "isiThai", "lang_tr": "isiTurkish", "lang_tw": "isiTwi", "lang_uk": "isiUkrainian", "lang_xh": "isiXhosa", "lang_zu": "isiZulu", "lang_gn": "isiGuarani", "lang_qu": "isiQuechua",
+  "lang_es": "iSpanish",
+  "lang_en": "iEnglish",
+  "lang_de": "iGerman",
+  "lang_fr": "iFrench",
+  "lang_pt": "iPortuguese",
+  "lang_it": "iItalian",
+  "lang_nl": "iDutch",
+  "lang_ru": "iRussian",
+  "lang_el": "iGreek",
+  "lang_ja": "iJapanese",
+  "lang_zh_cn": "iChinese (eLula)",
+  "lang_ko": "iKorean",
+  "lang_id": "iIndonesian",
+  "lang_vi": "iVietnamese",
+  "lang_sw": "isiSwahili",
+  "lang_af": "isiAfrikaans",
+  "lang_sq": "isiAlbanian",
+  "lang_am": "isiAmharic",
+  "lang_ar": "isiArabic",
+  "lang_he": "isiHebrew",
+  "lang_ca": "isiCatalan",
+  "lang_zh_tw": "iChinese (yeSiko)",
+  "lang_hr": "isiCroatian",
+  "lang_cs": "isiCzech",
+  "lang_da": "isiDanish",
+  "lang_ee": "isiEwe",
+  "lang_fi": "isiFinnish",
+  "lang_ht": "isiHaitian",
+  "lang_haw": "isiHawaiian",
+  "lang_hi": "isiHindi",
+  "lang_hu": "isiHungarian",
+  "lang_ilo": "isiIlocano",
+  "lang_jam": "isiJamaican",
+  "lang_lr": "isiLiberian",
+  "lang_mg": "isiMalagasy",
+  "lang_ml": "isiMalayalam",
+  "lang_no": "isiNorwegian",
+  "lang_pap": "isiPapiamento",
+  "lang_pcm": "isiPidgin",
+  "lang_pl": "isiPolish",
+  "lang_ro": "isiRomanian",
+  "lang_nso": "isiSepedi",
+  "lang_st": "isiSesotho",
+  "lang_sk": "isiSlovak",
+  "lang_sl": "isiSlovenian",
+  "lang_sv": "isiSwedish",
+  "lang_tl": "isiTagalog",
+  "lang_ta": "isiTamil",
+  "lang_th": "isiThai",
+  "lang_tr": "isiTurkish",
+  "lang_tw": "isiTwi",
+  "lang_uk": "isiUkrainian",
+  "lang_xh": "isiXhosa",
+  "lang_zu": "isiZulu",
+  "lang_gn": "isiGuarani",
+  "lang_qu": "isiQuechua",
 
-  
   "greeting_morning": "Molo,",
   "greeting_afternoon": "Molo (emva kwemini),",
   "greeting_night": "Rhafu,",
@@ -65,7 +119,6 @@
   "footer_title": "ULAWULO LWEBANDLA LWE-TEOKRATIKI",
   "footer_use": "Ukusetyenziswa kwebandla",
   "footer_terms": "Imigaqo yokusetyenziswa",
-
 
   "profile_title": "Ulawulo lwe-Akhawunti",
   "profile_personal_id": "ID yoMntu",
@@ -136,7 +189,95 @@
   "profile_pub_help_sec": "mdala unobhala",
   "profile_pub_help_or": "okanye",
   "profile_pub_help_service": "mdala wenkonzo",
-  "profile_pub_help_suffix": "webandla lenu."
+  "profile_pub_help_suffix": "webandla lenu.",
 
-
+  "security": {
+    "seo": {
+      "title": "Iingcebiso zoKhuseleko | Ulawulo lweNgingqi",
+      "desc": "Isikhokelo sokukhuselwa kwedatha kunye nokhuselo lwedijithali lwebandla."
+    },
+    "header_title": "Iingcebiso zoKhuseleko",
+    "back": "Buyela umva",
+    "revision": "Uhlolo lokugqibela",
+    "recent": "Kutshanje",
+    "hero_title": "Ukunyaniseka kwakho",
+    "hero_highlight": "yinto ephambili kuthi.",
+    "hero_sub": "Imikhwa ebalulekileyo yokukhusela imfihlo yakho kunye neenkcukacha zakho.",
+    "db_alert": "Isaziso somzuzu wokugqibela",
+    "accept_btn": "Kuviwe kwaye buyela umva",
+    "tips": {
+      "estafas": {
+        "title": "1. Ubuqhophololo be-Intanethi",
+        "desc": "Iziqulatho zedijithali ezingeyonyani zinokuxelisa amazwi kunye nobuso obaziwayo ukuba bumele iinkcukacha zakho okanye imali yakho.",
+        "tags": {
+          "prevention": "Uthintelo",
+          "prevention_info": "Ukuba unyanzeliswa ukuba unike imali okanye iinkcukacha eziyimfihlo: nqumama, cinga, kwaye uhlale uqinisekisa.",
+          "verification": "Uqinisekiso",
+          "verification_info": "Yinqumle imbalelwano uze uzifonele ngokwakho loo mntu usebenzisa indlela ekhuselekileyo neyaziwayo.",
+          "deepfake": "Deepfake",
+          "deepfake_info": "Itekhnoloji yokulinganisa umntu. Ungathembi kuphela oko ukubonayo okanye ukuvayo kwiscreen."
+        }
+      },
+      "physical": {
+        "title": "2. Ukhuseleko lweFowuni",
+        "desc": "Ifowuni yakho sisitshixo esikhulu. Isixhobo esingenalo utshixo lwesikrini luyingango evulekileyo kubomi bakho obuyimfihlo.",
+        "tags": {
+          "biometry": "Biometria",
+          "biometry_info": "Misela ubuso (FaceID) okanye umnwe. Ikhuselekile kakhulu kune-pattern enokubonwa ngumntu egxalabeni lakho.",
+          "updates": "Uhlaziyo",
+          "updates_info": "Ungayityesheli imiyalezo 'yohlelo olutsha'; badla ngokulungisa iimpazamo zokhuseleko ezifunyenwe mva nje.",
+          "encryption": "Encryption",
+          "encryption_info": "Qinisekisa ukuba ukhuseleko lwe-disk luyasebenza ukukhusela iifayile kunye neefoto zakho kubusela."
+        }
+      },
+      "keys": {
+        "title": "3. Amagama ayimfihlo anamandla",
+        "desc": "Phephela ukusebenzisa iinkcukacha ezaziwayo lula. Uninzi lohlaselo lwenzeka ngenxa ye-password ebuthathaka.",
+        "tags": {
+          "2fa": "2FA",
+          "2fa_info": "Vula uqinisekiso lwamanyathelo amabini kuzo zonke ii-akhawunti zakho. Lulwaleko lokhuseleko olubaluleke kakhulu.",
+          "robustness": "Ukomela",
+          "robustness_info": "Sebenzisa amabinzana amade endaweni yamagama alula. Umzekelo: 'Blue-Sky-2026!' ungcono kakhulu kune 'peter123'.",
+          "passphrases": "Passphrases",
+          "passphrases_info": "Amabinzana amade kunzima kakhulu kwiikhompyutha zabatshabalalisi ukuba bawanqamle namhlanje."
+        }
+      },
+      "phishing": {
+        "title": "4. Ukubona iGwegwe",
+        "desc": "Izigebenga zenza ngathi zivela kwi-bank okanye kwi-technical support ukuze zibe iinkcukacha zakho ngokukoyikisa.",
+        "tags": {
+          "urgency": "Ungxamiseko",
+          "urgency_info": "Ukuba umyalezo uthi 'I-akhawunti yakho iza kuvalwa kwiyure enye', ngokuqinisekileyo bubuqhophololo.",
+          "links": "Amakhonkco",
+          "links_info": "Jonga i-URL ngononophelo. Abaqhophololi badla ngokusebenzisa amagama afana ne 'g00gle.net' endaweni ye 'google.com'.",
+          "files": "Iifayile",
+          "files_info": "Ungaze uvule iifayile ongazilindelanga, ngakumbi ukuba zineziphelo ezinje ngo .ZIP, .EXE, okanye .BAT."
+        }
+      },
+      "family": {
+        "title": "5. Ilifa laBantwana",
+        "desc": "Abantwana abanalo ubulumko bokubona imigibe. Bafundise ukuba into efakwe kwi-intanethi ihlala apho ngonaphakade.",
+        "tags": {
+          "identity": "Isazisi",
+          "identity_info": "Phephela ukukhupha iinkcukacha eziyimfihlo kwiifoto zoluntu, njenge-uniform yesikolo okanye indawo okuyo.",
+          "strangers": "Abasemzini",
+          "strangers_info": "Umthetho wegolide kubantwana: 'Ukuba awubazi ngenkangeleko, asingobahlobo bokwenene'.",
+          "privacy": "Imfihlo",
+          "privacy_info": "Hlola rhoqo useto lwemfihlo lwe-social media kunye nezixhobo zamalungu osapho lwakho."
+        }
+      },
+      "backup": {
+        "title": "6. Ukugcinwa kweDatha",
+        "desc": "I-virus inokutshixa okanye icime iifayile zakho. Ikopi ekhuselekileyo ngokwenene yileyo ingadityaniswanga kwikhompyutha.",
+        "tags": {
+          "frequency": "Rhoqo",
+          "frequency_info": "Yenza ikopi yokhuseleko yeefoto zakho kunye namaxwebhu abalulekileyo kube kanye ngenyanga.",
+          "disconnection": "Ukuqhawula",
+          "disconnection_info": "Khuphela iifayile zakho kwi-external drive uze uyikhuphe kwikhompyutha xa ugqibile.",
+          "cloud": "Cloud",
+          "cloud_info": "Sebenzisa iinkonzo ze-cloud ezinokhuseleko, kodwa ungathembeli kuzo kuphela njengekopi enye."
+        }
+      }
+    }
+  }
 }
