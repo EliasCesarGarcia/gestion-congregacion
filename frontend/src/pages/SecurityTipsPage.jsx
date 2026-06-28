@@ -379,15 +379,18 @@ function SecurityTipsPage() {
             <span>{t("security.back", "Volver")}</span>
           </Motion.button>
 
-          <h1 className="text-sm sm:text-base font-medium tracking-[0.15em] uppercase text-jw-accent">
-            {t("security.header_title", "Consejos de Seguridad")}
-          </h1>
+          {/* Contenedor de textos: Columna en móvil, contenido separado en PC */}
+          <div className="flex flex-col items-start flex-1 ml-4 sm:ml-0 sm:contents">
+            <h1 className="text-[11px] sm:text-base font-medium tracking-[0.12em] sm:tracking-[0.15em] uppercase text-jw-accent">
+              {t("security.header_title", "Consejos de Seguridad")}
+            </h1>
 
-          {/* Subtexto: Última revisión automática y multi-idioma */}
-          <p className="text-[10px] sm:text-xs text-jw-accent font-normal uppercase tracking-widest mt-0.5 opacity-90">
-            {t("security.revision", "Última revisión")}:{" "}
-            {formatDate(dbInfo.updated_at)}
-          </p>
+            <p className="text-[8px] sm:text-xs text-jw-accent font-normal uppercase tracking-widest opacity-90">
+              {t("security.revision", "Última revisión")}:{" "}
+              {formatDate(dbInfo.updated_at)}
+            </p>
+          </div>
+
         </div>
       </header>
 

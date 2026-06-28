@@ -238,7 +238,7 @@
           "2fa_info": "Activa la verificación en dos pasos en todas tus cuentas. Es el segundo muro de blindaje más importante.",
           "robustness": "Robustez",
           "robustness_info": "Usa frases largas en lugar de palabras. Ejemplo: 'Ciel0-Azul-2026!' es exponencialmente mejor que 'pedro123'.",
-          "passphrases": "Passphrases",
+          "passphrases": "Contraseñas",
           "passphrases_info": "Las frases largas son casi imposibles de descifrar para las computadoras de los atacantes actuales."
         }
       },
