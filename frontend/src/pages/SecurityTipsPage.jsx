@@ -182,7 +182,14 @@ function SecurityTipsPage() {
   const formatDate = (dateStr) => {
     if (!dateStr) return t("security.recent", "Reciente");
     try {
-      return new Date(dateStr).toLocaleDateString(i18n.language, {
+      // Reemplazamos guiones por barras y quitamos milisegundos para compatibilidad total con móviles
+      const validDateStr = dateStr.replace(/-/g, "/").replace(/T.+/, "");
+      const dateObj = new Date(validDateStr);
+
+      // Si la fecha sigue siendo inválida tras el intento de limpieza
+      if (isNaN(dateObj.getTime())) return t("security.recent", "Reciente");
+
+      return dateObj.toLocaleDateString(i18n.language, {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -354,7 +361,8 @@ function SecurityTipsPage() {
 
       {/* HEADER INDUSTRIAL */}
       <header className="relative z-10 backdrop-blur-xl bg-jw-navy/90 border-b border-white/10 text-white shadow-xl">
-        <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        {/* CAMBIO: Se cambia h-14 por min-h-[3.5rem] y se añade py-2 para que no se corte en móvil */}
+        <div className="max-w-6xl mx-auto px-4 min-h-[3.5rem] py-2 flex items-center justify-between gap-2">
           <Motion.button
             whileHover="animateChevron" // Disparador para los hijos
             onClick={handleBack}
@@ -379,18 +387,19 @@ function SecurityTipsPage() {
             <span>{t("security.back", "Volver")}</span>
           </Motion.button>
 
-          {/* Contenedor de textos: Columna en móvil, contenido separado en PC */}
-          <div className="flex flex-col items-start flex-1 ml-4 sm:ml-0 sm:contents">
-            <h1 className="text-[11px] sm:text-base font-medium tracking-[0.12em] sm:tracking-[0.15em] uppercase text-jw-accent">
+          {/* Contenedor de textos: Ajustado para que el texto sea visible y se alinee a la derecha en móvil */}
+          <div className="flex flex-col items-end sm:items-start flex-1 text-right sm:text-left">
+            <h1 className="text-[10px] sm:text-base font-medium tracking-[0.12em] uppercase text-jw-accent leading-tight">
               {t("security.header_title", "Consejos de Seguridad")}
             </h1>
 
-            <p className="text-[8px] sm:text-xs text-jw-accent font-normal uppercase tracking-widest opacity-90">
+            <p className="text-[9px] sm:text-xs text-jw-accent font-normal uppercase tracking-widest opacity-90 leading-tight">
               {t("security.revision", "Última revisión")}:{" "}
-              {formatDate(dbInfo.updated_at)}
+              <span className="inline-block">
+                {formatDate(dbInfo.updated_at)}
+              </span>
             </p>
           </div>
-
         </div>
       </header>
 
