@@ -36,13 +36,16 @@ import {
  */
 const InteractiveTag = ({ label, info, index }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
 
-  // Detectamos si es un botón de la columna derecha en móvil (índices 1, 3, 5...)
-  const isRightColumnMobile = index % 2 !== 0;
+  // En LTR, la columna derecha es index impar. 
+  // En RTL, la columna izquierda (la que desborda) es index impar.
+  const isEdgeColumnMobile = index % 2 !== 0;
 
   return (
     <div
-      className="relative"
+      className={`relative ${isHovered ? "z-[200]" : "z-10"}`} // Elevamos el tag individual
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => setIsHovered(!isHovered)}
@@ -62,16 +65,15 @@ const InteractiveTag = ({ label, info, index }) => {
             exit={{ opacity: 0, y: -5 }}
             transition={{ duration: 0.2 }}
             /* 
-               EXPLICACIÓN DE LA LÓGICA NIVEL DIOS:
-               1. absolute left-0: SIEMPRE alinea el inicio del texto con el inicio del botón.
-               2. sm:w-[450px]: En PC, el ancho es fijo y amplio hacia la derecha.
-               3. w-[calc(100vw-120px)]: En la primera columna de móvil, ocupa casi todo el ancho.
-               4. isRightColumnMobile ? 'w-[calc(50vw-20px)]' : ... : Si el botón está a la derecha,
-                  limitamos su ancho para que no choque con el borde del celular.
+               EXPLICACIÓN:
+               1. isRTL ? 'right-0' : 'left-0': Alinea el cartel al borde correcto según el idioma.
+               2. w-[calc(85vw)]: Ancho generoso para la columna principal.
+               3. w-[calc(46vw)]: Ancho restrictivo para la columna que pega al borde del móvil.
             */
-            className={`absolute top-full left-0 mt-1 p-4 bg-jw-navy border-t-2 border-t-jw-accent shadow-[0_20px_50px_rgba(0,0,0,0.6)] z-[150] pointer-events-none
-              ${isRightColumnMobile ? "w-[calc(46vw)]" : "w-[calc(85vw)]"} 
-              sm:w-[450px]`}
+            className={`absolute top-full mt-1 p-4 bg-jw-navy border-t-2 border-t-jw-accent shadow-[0_30px_60px_rgba(0,0,0,0.8)] pointer-events-none
+              ${isRTL ? "right-0 text-right" : "left-0 text-left"} 
+              ${isEdgeColumnMobile ? "w-[calc(46vw)]" : "w-[calc(85vw)]"} 
+              sm:w-[450px] z-[210]`}
           >
             <p className="text-[13px] sm:text-[15px] text-white font-medium leading-relaxed normal-case whitespace-normal">
               {info}
@@ -127,6 +129,11 @@ const SecurityTipCard = ({ tip, index }) => {
         damping: 20, // Amortiguación
         duration: 0.8,
       }}
+      /* 
+         CLAVE: 'relative z-10' por defecto, pero 'hover:z-[100]' y 'focus-within:z-[100]'.
+         Esto asegura que la tarjeta actual SIEMPRE esté por encima de las siguientes 
+         cuando el usuario hace clic en un tag.
+      */
       className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-0 items-stretch mb-16 relative group hover:z-[100] focus-within:z-[100] transition-all`}
     >
       {/* 1. La caja se queda quieta (div estándar) */}
@@ -158,7 +165,12 @@ const SecurityTipCard = ({ tip, index }) => {
           {tip.description}
         </p>
 
-        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 sm:gap-5 justify-start relative">
+         {/* 
+            Contenedor de tags: 
+            Añadimos 'isolate' para crear un nuevo contexto de apilamiento local 
+            pero permitiendo que el z-index superior se respete.
+        */}
+        <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-3 sm:gap-5 justify-start relative z-20">
           {tip.tags?.map((tag, i) => (
             <InteractiveTag
               key={i}
@@ -362,7 +374,7 @@ function SecurityTipsPage() {
       {/* HEADER INDUSTRIAL */}
       <header className="relative z-10 backdrop-blur-xl bg-jw-navy/90 border-b border-white/10 text-white shadow-xl">
         {/* CAMBIO: Se cambia h-14 por min-h-[3.5rem] y se añade py-2 para que no se corte en móvil */}
-        <div className="max-w-6xl mx-auto px-4 min-h-[3.5rem] py-2 flex items-center justify-between gap-2">
+        <div className="max-w-6xl mx-auto px-4 min-h-[3.5rem] py-2 flex items-center justify-between gap-5">
           <Motion.button
             whileHover="animateChevron" // Disparador para los hijos
             onClick={handleBack}
@@ -389,7 +401,7 @@ function SecurityTipsPage() {
 
           {/* Contenedor de textos: Ajustado para que el texto sea visible y se alinee a la derecha en móvil */}
           <div className="flex flex-col items-end sm:items-start flex-1 text-right sm:text-left">
-            <h1 className="text-[10px] sm:text-base font-medium tracking-[0.12em] uppercase text-jw-accent leading-tight">
+            <h1 className="text-sm sm:text-2xl font-medium tracking-[0.12em] uppercase text-jw-accent leading-tight">
               {t("security.header_title", "Consejos de Seguridad")}
             </h1>
 
