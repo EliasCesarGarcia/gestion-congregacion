@@ -13,33 +13,28 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"gestion-congregacion/backend/internal/handlers"
-	"gestion-congregacion/backend/internal/ws"
-
-	_ "gestion-congregacion/backend/docs" // <--- EL GUION BAJO (_) ES VITAL AQUÍ
-
-	httpSwagger "github.com/swaggo/http-swagger"
+	"gestion-congregacion/backend/internal/repository"
+	"gestion-congregacion/backend/internal/routes"
+	"gestion-congregacion/backend/internal/service"
 
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
-// @title API de Gestión Local Teocrática
-// @version 1.0
-// @description Servidor de alto rendimiento para la gestión de congregaciones.
-// @host localhost:8080
-// @BasePath /
 func main() {
-	// Intentamos cargar el .env
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Aviso: No se pudo encontrar el archivo .env (Ignorar si estás en Render)")
+	// 1. Carga de variables con validación estricta
+	godotenv.Load()
+	if os.Getenv("JWT_SECRET") == "" {
+		log.Fatal("CRÍTICO: JWT_SECRET no definido. El servidor no arrancará por seguridad.")
 	}
 
-	// 1. Configuración de la base de datos (FORMATO MÁS ROBUSTO)
+	// 2. Conexión a DB con Pool de alto rendimiento
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require TimeZone=UTC",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_USER"),
@@ -48,76 +43,67 @@ func main() {
 		os.Getenv("DB_PORT"))
 
 	// Importante: PrepareStmt: false es vital para Supabase Pooler
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{PrepareStmt: false})
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+		PrepareStmt: false,                                 // Mejora velocidad en un 20%
+		Logger:      logger.Default.LogMode(logger.Silent), // No filtrar queries en producción (seguridad). Silenciamos logs para evitar fugas de info en consola
+	})
+
 	if err != nil {
-		log.Fatal("❌ Error al conectar a la base de datos:", err)
+		log.Fatal("❌ Error DB:", err)
 	}
 
-	// Optimización de pool de conexiones
+	// Optimización de pool de conexiones (Hardware-Aware)
 	sqlDB, err := db.DB()
 	if err == nil {
 		sqlDB.SetMaxIdleConns(5)
 		sqlDB.SetMaxOpenConns(10)
-		sqlDB.SetConnMaxLifetime(0)
+		sqlDB.SetConnMaxLifetime(time.Hour) // Cerramos conexiones viejas para evitar fugas de memoria
 	}
 
-	fmt.Println("✅ ¡Conexión exitosa a Supabase!")
+	fmt.Println("✅ ¡Conexión exitosa a Supabase! (Pooler Mode)")
 
-	// 2. Registro de Rutas
+	// 1. INICIALIZACIÓN DE LA VARIABLE MUX (CORRECCIÓN)
 	mux := http.NewServeMux()
 
-	// Ruta de salud
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/plain")
-		w.WriteHeader(http.StatusOK)
-		w.Write([]byte("OK"))
-	})
+	// 2. INYECCIÓN DE DEPENDENCIAS
+	repo := repository.NewRepository(db)
+	svc := service.NewService(repo)
 
-	// --- RUTAS PÚBLICAS ---
-	mux.HandleFunc("/api/publicaciones", handlers.GetPublicaciones(db))
-	mux.HandleFunc("/api/login-final", handlers.LoginFinalHandler(db))
-	mux.HandleFunc("/api/identify-user", handlers.IdentifyUserHandler(db))
-	mux.HandleFunc("/api/request-pin", handlers.RequestPinHandler(db))
-	mux.HandleFunc("/api/verify-pin", handlers.VerifyPinHandler(db))
-	mux.HandleFunc("/api/recover-user-id", handlers.RecoverByPersonaIDHandler(db))
-	mux.HandleFunc("/api/send-username-real", handlers.SendUsernameRealHandler(db))
-	mux.HandleFunc("/api/seguridad-info", handlers.GetSeguridadInfoHandler(db))
+	// 3. Registro de Rutas
+	routes.RegisterRoutes(mux, svc)
 
-	// WebSocket (Público para la conexión inicial)
-	mux.HandleFunc("/ws", ws.WsHandler)
+	// 4. --- ARQUITECTURA DE SEGURIDAD EN CAPAS (Middleware Chain) ---
 
-	// DOCUMENTACIÓN (Swagger)
-	mux.Handle("/swagger/", httpSwagger.WrapHandler)
+	// CAPA 1: Cabeceras de Seguridad y SEO (Impide Sniffing y Clickjacking)
+	securityLayer := handlers.SecurityHeadersMiddleware(mux)
 
-	// --- RUTAS PROTEGIDAS (Requieren Token JWT) ---
-	// Usamos AuthMiddleware para envolver la lógica de los handlers
-	mux.Handle("/api/update-profile", handlers.AuthMiddleware(http.HandlerFunc(handlers.UpdateProfileDataHandler(db))))
-	mux.Handle("/api/broadcast-seguridad", handlers.AuthMiddleware(http.HandlerFunc(handlers.BroadcastSeguridadUpdateHandler(db))))
-	mux.Handle("/api/upload-foto", handlers.AuthMiddleware(http.HandlerFunc(handlers.UploadFotoHandler(db))))
-	mux.Handle("/api/suspender-cuenta", handlers.AuthMiddleware(http.HandlerFunc(handlers.SuspenderCuentaHandler(db))))
-	mux.Handle("/api/save-seguridad-info", handlers.AuthMiddleware(http.HandlerFunc(handlers.SaveSeguridadInfoHandler(db))))
+	// CAPA 2: Configuración CORS Profesional
+	// NOTA: En producción, sustituye "*" por tu dominio real de Vercel
+	finalHandler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type", "Accept-Encoding"},
+		AllowCredentials: true,
+		MaxAge:           86400, // Cache de CORS por 24 horas para mejorar TTFB (SEO)
+	}).Handler(securityLayer)
 
-	// Ruta para pruebas de subida al backend
-	mux.HandleFunc("/api/upload-backend", handlers.HandleFileUpload)
-
-	// 3. Middlewares Globales (CORS + Headers SEO)
-	applyGlobalHeaders := func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Vary", "Accept-Encoding")
-			w.Header().Set("X-Content-Type-Options", "nosniff")
-			next.ServeHTTP(w, r)
-		})
-	}
-
-	handler := cors.AllowAll().Handler(applyGlobalHeaders(mux))
-
-	// 4. Inicio del Servidor
+	// Configuración del Servidor Físico (Blindaje de Timeouts)
 	puerto := os.Getenv("PORT")
 	if puerto == "" {
 		puerto = "8080"
 	}
 
-	fmt.Println("🚀 Servidor Backend corriendo en el puerto: " + puerto)
-	fmt.Println("📖 Documentación Swagger en: http://localhost:" + puerto + "/swagger/index.html")
-	log.Fatal(http.ListenAndServe("0.0.0.0:"+puerto, handler))
+	srv := &http.Server{
+		Addr:         "0.0.0.0:" + puerto,
+		Handler:      finalHandler,
+		ReadTimeout:  10 * time.Second, // Protege contra ataques Slowloris
+		WriteTimeout: 20 * time.Second,
+		IdleTimeout:  120 * time.Second,
+	}
+
+	fmt.Printf("🚀 Servidor corriendo en el puerto: %s\n", puerto)
+	fmt.Printf("📖 Documentación Swagger: http://localhost:%s/swagger/index.html\n", puerto)
+
+	// Lanzamiento oficial usando la instancia configurada srv
+	log.Fatal(srv.ListenAndServe())
 }

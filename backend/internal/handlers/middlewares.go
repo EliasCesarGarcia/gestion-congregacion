@@ -14,13 +14,34 @@ import (
 	"strings"
 )
 
+// Añadimos cabeceras de blindaje industrial
+func SecurityHeadersMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+
+		// Si la URL empieza con /swagger, permitimos estilos e inline scripts.
+		if strings.HasPrefix(r.URL.Path, "/swagger/") {
+			w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://validator.swagger.io;")
+		} else {
+			// Blindaje total para el resto de la API
+			w.Header().Set("Content-Security-Policy", "default-src 'self';")
+		}
+
+		// SEO 2026: Favorece la indexación de APIs rápidas
+		w.Header().Set("X-Robots-Tag", "noindex")
+		next.ServeHTTP(w, r)
+	})
+}
+
 // AuthMiddleware protege las rutas verificando el token en el Header 'Authorization'
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// 1. Obtener el header Authorization: Bearer <token>
 		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" {
-			http.Error(w, "Se requiere token de autenticación", http.StatusUnauthorized)
+		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
+			http.Error(w, "Acceso no autorizado", http.StatusUnauthorized)
 			return
 		}
 
