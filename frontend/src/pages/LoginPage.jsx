@@ -57,6 +57,34 @@ function LoginPage() {
     confirmPass: "",
   });
 
+  /**
+   * --- CAPTCHA TURNSTILE (SEGURIDAD) ---
+   * Registramos el script de Cloudflare y la función de retorno
+   * para validar que el usuario es un humano antes de permitir el login.
+   */
+  const [turnstileToken, setTurnstileToken] = useState("");
+
+  useEffect(() => {
+    // Definimos la función en el objeto window para que Cloudflare la encuentre
+    window.onTurnstileSuccess = (token) => {
+      setTurnstileToken(token);
+    };
+
+    // Cargamos el script de Cloudflare dinámicamente si no existe
+    if (!document.querySelector('script[src*="turnstile"]')) {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    return () => {
+      // Limpiamos la función al desmontar el componente
+      delete window.onTurnstileSuccess;
+    };
+  }, []);
+
   // Efecto de seguridad: Si ya hay sesión activa, redirigir al Dashboard de inmediato
   useEffect(() => {
     if (user) window.location.href = "/";
@@ -157,10 +185,11 @@ function LoginPage() {
       const res = await axios.post("/api/login-final", {
         username: inputs.username,
         password: inputs.password,
+        turnstile_token: turnstileToken,
       });
 
       login(res.data); // Inyecta sesión en AppContext
-    } catch (err) {
+    } catch {
       setErrorMsg("El usuario y/o contraseña no es correcto.");
     } finally {
       setLoading(false);
@@ -194,7 +223,7 @@ function LoginPage() {
         congregacion: inputs.numero_cong || "SISTEMA",
       });
       setStep("verify_pin");
-    } catch (err) {
+    } catch {
       setErrorMsg("Los datos ingresados no existen en el sistema.");
     } finally {
       setLoading(false);
@@ -251,7 +280,6 @@ function LoginPage() {
       <div className="absolute inset-0 bg-jw-navy/40 backdrop-blur-3xl"></div>
 
       <div className="bg-white w-full max-w-[340px] rounded-[2rem] shadow-2xl overflow-hidden relative z-10 border border-white/40 animate-in zoom-in duration-300">
-        
         {/* Cabecera institucional de seguridad */}
         <div className="p-4 bg-jw-navy text-white text-center border-b-4 border-jw-blue">
           <Lock className="mx-auto mb-2 w-5 h-5 text-jw-accent" />
@@ -261,7 +289,6 @@ function LoginPage() {
         </div>
 
         <div className="p-6">
-          
           {/* --- VISTA 1: LOGIN (ACCESO ESTÁNDAR) --- */}
           {step === "login" && (
             <div className="space-y-4 animate-in fade-in">
@@ -295,14 +322,23 @@ function LoginPage() {
                   {errorMsg}
                 </p>
               )}
+
+              {/* WIDGET DE CAPTCHA (Turnstile) */}
+              <div
+                className="cf-turnstile"
+                data-sitekey="0x4AAAAAAD0Bx-U3gMoKixPe" // Pega aquí tu SITE KEY (la pública)
+                data-callback="onTurnstileSuccess"
+              ></div>
+
               <button
                 onClick={handleLoginDirect}
-                disabled={loading}
+                // Se deshabilita si está cargando O si el captcha no se ha resuelto
+                disabled={loading || !turnstileToken} 
                 className="w-full bg-jw-blue text-white py-4 rounded-2xl font-bold text-xs tracking-widest uppercase shadow-lg disabled:opacity-30"
               >
                 Entrar
               </button>
-              
+
               {/* Enlaces de recuperación */}
               <div className="text-center pt-1 space-y-2 text-[11px] text-gray-500 font-bold uppercase tracking-tighter cursor-pointer italic">
                 <p
