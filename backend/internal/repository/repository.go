@@ -9,6 +9,7 @@ package repository
 
 import (
 	"gestion-congregacion/backend/internal/models"
+	"gestion-congregacion/backend/internal/monitor"
 	"time"
 
 	"gorm.io/gorm"
@@ -28,35 +29,37 @@ func NewRepository(db *gorm.DB) *Repository {
 // Corregido: Se añade .Error al final de cada consulta
 // GetUserForLogin contiene tu query original con todos los campos para el Frontend
 func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
-	var u models.Usuario
+    var u models.Usuario
+    
+    // Intento 1: Administradores
+    err := r.db.Table("core_usuarios").
+        Select(`core_usuarios.*, core_personas.apellido_nombre as nombre_completo, core_personas.url_imagen as foto_url, core_personas.email, core_personas.contacto, core_personas.estado, core_congregaciones.nombre as congregacion_nombre, core_congregaciones.numero_congregacion, core_congregaciones.zona_horaria, core_congregaciones.region, core_congregaciones.pais, core_congregaciones.provincia_estado as provincia, core_congregaciones.partido, core_congregaciones.ciudad, core_congregaciones.direccion`).
+        Joins("JOIN core_personas ON core_personas.id = core_usuarios.persona_id").
+        Joins("JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
+        Where("LOWER(core_usuarios.username_temp) = ? AND core_personas.estado = 'ALTA'", username).First(&u).Error
 
-	// Intento 1: Administradores
-	err := r.db.Table("core_usuarios").
-		Select(`core_usuarios.*, core_personas.apellido_nombre as nombre_completo, 
-	                core_personas.url_imagen as foto_url, core_personas.email, core_personas.contacto, 
-                core_personas.estado, core_congregaciones.nombre as congregacion_nombre, 
-                core_congregaciones.numero_congregacion, core_congregaciones.zona_horaria,
-                core_congregaciones.region, core_congregaciones.pais, 
-                core_congregaciones.provincia_estado as provincia, core_congregaciones.partido,
-                core_congregaciones.ciudad, core_congregaciones.direccion`).
-		Joins("JOIN core_personas ON core_personas.id = core_usuarios.persona_id").
-		Joins("JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
-		Where("LOWER(core_usuarios.username_temp) = ? AND core_personas.estado = 'ALTA'", username).First(&u).Error
+    if err != nil {
+        // Si el error NO es "No encontrado", es un error de conexión/base de datos
+        if err.Error() != "record not found" {
+            monitor.TripCircuit() // <--- PROTECCIÓN ACTIVA: Avisamos al monitor
+            return nil, err
+        }
 
-	if err != nil {
-		// Intento 2: Persona normal
-		err = r.db.Table("core_personas").
-			Select(`core_personas.id as persona_id, core_personas.apellido_nombre as nombre_completo, 
-                    core_personas.email, core_personas.contacto, core_personas.url_imagen as foto_url, 
-                    core_personas.username_temp, core_personas.password_hash, core_personas.estado, 
-                    core_congregaciones.nombre as congregacion_nombre, core_congregaciones.numero_congregacion,
-                    core_congregaciones.zona_horaria, core_congregaciones.region, core_congregaciones.pais,
-                    core_congregaciones.provincia_estado as provincia, core_congregaciones.partido,
-                    core_congregaciones.ciudad, core_congregaciones.direccion`).
-			Joins("JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
-			Where("LOWER(core_personas.username_temp) = ? AND core_personas.estado = 'ALTA'", username).First(&u).Error
-	}
-	return &u, err
+        // Intento 2: Persona normal
+        err = r.db.Table("core_personas").
+            Select(`core_personas.id as persona_id, core_personas.apellido_nombre as nombre_completo, core_personas.email, core_personas.contacto, core_personas.url_imagen as foto_url, core_personas.username_temp, core_personas.password_hash, core_personas.estado, core_congregaciones.nombre as congregacion_nombre, core_congregaciones.numero_congregacion, core_congregaciones.zona_horaria, core_congregaciones.region, core_congregaciones.pais, core_congregaciones.provincia_estado as provincia, core_congregaciones.partido, core_congregaciones.ciudad, core_congregaciones.direccion`).
+            Joins("JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
+            Where("LOWER(core_personas.username_temp) = ? AND core_personas.estado = 'ALTA'", username).First(&u).Error
+        
+        if err != nil && err.Error() != "record not found" {
+            monitor.TripCircuit() // <--- PROTECCIÓN ACTIVA
+            return nil, err
+        }
+    }
+
+    // Si llegamos aquí con éxito, reseteamos errores para mantener el circuito cerrado
+    monitor.ResetFailures()
+    return &u, err
 }
 
 func (r *Repository) UserExists(username string) bool {

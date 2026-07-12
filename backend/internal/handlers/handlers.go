@@ -21,8 +21,22 @@ func GetPublicaciones(s *service.Service) http.HandlerFunc {
 
 func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req struct{ Username, Password string }
+		var req struct {
+			Username       string `json:"username"`
+			Password       string `json:"password"`
+			TurnstileToken string `json:"turnstile_token"`
+		}
+
 		json.NewDecoder(r.Body).Decode(&req)
+
+		// 1. PRIMERA CAPA: Validar CAPTCHA
+		if !s.ValidarTurnstile(req.TurnstileToken) {
+			w.WriteHeader(http.StatusForbidden)
+			json.NewEncoder(w).Encode(map[string]string{"error": "Seguridad: CAPTCHA no válido"})
+			return
+		}
+
+		// 2. SEGUNDA CAPA: Autenticación normal
 		user, token, err := s.Authenticate(req.Username, req.Password)
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
@@ -57,7 +71,9 @@ func RequestPinHandler(s *service.Service) http.HandlerFunc {
 // VerifyPinHandler: Procesa la validación del PIN
 func VerifyPinHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req struct{ Pin string `json:"pin"` }
+		var req struct {
+			Pin string `json:"pin"`
+		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "Datos inválidos", 400)
 			return
@@ -130,7 +146,6 @@ func BroadcastSeguridadUpdateHandler(s *service.Service) http.HandlerFunc {
 	}
 }
 
-
 // GetSeguridadInfoHandler: Devuelve el boletín al frontend
 func GetSeguridadInfoHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -156,7 +171,7 @@ func SaveSeguridadInfoHandler(s *service.Service) http.HandlerFunc {
 		var req struct {
 			Contenido string `json:"contenido"`
 		}
-		
+
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "JSON inválido", http.StatusBadRequest)
 			return
@@ -183,7 +198,7 @@ func RecoverByPersonaIDHandler(s *service.Service) http.HandlerFunc {
 			Metodo    string `json:"metodo"`
 		}
 		json.NewDecoder(r.Body).Decode(&req)
-		
+
 		// Delegamos al servicio (Implementaremos la lógica en el siguiente paso)
 		email, err := s.RecoverAccount(req.PersonaID, req.NumCong, req.Telefono, req.Metodo)
 		if err != nil {
@@ -199,7 +214,7 @@ func SendUsernameRealHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req struct{ Email string }
 		json.NewDecoder(r.Body).Decode(&req)
-		
+
 		if err := s.SendAccessData(req.Email); err != nil {
 			http.Error(w, "Error al enviar correo", 500)
 			return

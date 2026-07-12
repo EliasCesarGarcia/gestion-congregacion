@@ -74,10 +74,18 @@ func main() {
 
 	// 4. --- ARQUITECTURA DE SEGURIDAD EN CAPAS (Middleware Chain) ---
 
-	// CAPA 1: Cabeceras de Seguridad y SEO (Impide Sniffing y Clickjacking)
-	securityLayer := handlers.SecurityHeadersMiddleware(mux)
+	// ARQUITECTURA DE SEGURIDAD EN CAPAS (Orden Crítico)
 
-	// CAPA 2: Configuración CORS Profesional
+	// Capa 1: El Escudo (Rate Limit + Blacklist) - Lo más externo posible
+	highLoadLayer := handlers.ShieldMiddleware(mux)
+
+	// Capa 2: Circuit Breaker - Detiene peticiones si el sistema falla
+	systemHealthLayer := handlers.CircuitBreakerMiddleware(highLoadLayer)
+
+	// Capa 3: Cabeceras de Seguridad
+	securityLayer := handlers.SecurityHeadersMiddleware(systemHealthLayer)
+
+	// CAPA 4: Configuración CORS Profesional
 	// NOTA: En producción, sustituye "*" por tu dominio real de Vercel
 	finalHandler := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},

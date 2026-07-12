@@ -19,6 +19,8 @@ import (
 	"os"
 	"regexp"
 	"time"
+	"net/http"
+	"encoding/json"
 
 	"gestion-congregacion/backend/internal/auth"
 	"gestion-congregacion/backend/internal/models"
@@ -185,4 +187,29 @@ func (s *Service) IdentifyUser(user string) error {
 		return nil
 	}
 	return errors.New("no encontrado")
+}
+
+/**
+ * NUEVA FUNCIÓN EN EL SERVICE
+ * ValidarTurnstile verifica el token con los servidores de Cloudflare.
+ */
+func (s *Service) ValidarTurnstile(token string) bool {
+	secretKey := os.Getenv("TURNSTILE_SECRET_KEY") // Debes ponerla en tu .env
+	
+	// Si estamos en desarrollo local, podemos saltarlo (opcional)
+	if token == "XXX" { return true }
+
+	postData := fmt.Sprintf("secret=%s&response=%s", secretKey, token)
+	resp, err := http.Post("https://challenges.cloudflare.com/turnstile/v0/siteverify", 
+		"application/x-www-form-urlencoded", 
+		strings.NewReader(postData))
+	
+	if err != nil { return false }
+	defer resp.Body.Close()
+
+	var result struct {
+		Success bool `json:"success"`
+	}
+	json.NewDecoder(resp.Body).Decode(&result)
+	return result.Success
 }
