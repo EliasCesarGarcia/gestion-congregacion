@@ -65,23 +65,46 @@ function LoginPage() {
   const [turnstileToken, setTurnstileToken] = useState("");
 
   useEffect(() => {
-    // Definimos la función en el objeto window para que Cloudflare la encuentre
+    // 1. Definimos la función global
     window.onTurnstileSuccess = (token) => {
       setTurnstileToken(token);
     };
 
-    // Cargamos el script de Cloudflare dinámicamente si no existe
-    if (!document.querySelector('script[src*="turnstile"]')) {
+    // 2. Solo cargamos el script si no existe ya en la página
+    const scriptId = "cloudflare-turnstile-script";
+    if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.id = scriptId;
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"; // Agregamos render=explicit
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
+
+      script.onload = () => {
+        // Forzamos el renderizado manual una sola vez para evitar parpadeos
+        if (window.turnstile) {
+          window.turnstile.render(".cf-turnstile", {
+            sitekey: "0x4AAAAAAD0Bx-U3gMoKixPe", // Tu Site Key
+            callback: "onTurnstileSuccess",
+          });
+        }
+      };
+    } else {
+        // Si el script ya existe (por un hot-reload de Vite), intentamos renderizar
+        if (window.turnstile) {
+            try {
+                window.turnstile.render(".cf-turnstile", {
+                    sitekey: "0x4AAAAAAD0Bx-U3gMoKixPe",
+                    callback: "onTurnstileSuccess",
+                });
+            } catch {
+                // Si ya estaba renderizado, ignoramos el error
+            }
+        }
     }
 
     return () => {
-      // Limpiamos la función al desmontar el componente
-      delete window.onTurnstileSuccess;
+      // No borramos el script ni la función para que en el siguiente renderizado no falle
     };
   }, []);
 
