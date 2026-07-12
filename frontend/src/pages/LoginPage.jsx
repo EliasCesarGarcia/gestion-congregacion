@@ -65,7 +65,7 @@ function LoginPage() {
   const [turnstileToken, setTurnstileToken] = useState("");
 
   useEffect(() => {
-    // 1. Definimos la función global
+    // Definimos la función en el objeto window para que Cloudflare la encuentre
     window.onTurnstileSuccess = (token) => {
       setTurnstileToken(token);
     };
@@ -75,12 +75,11 @@ function LoginPage() {
     if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
       script.id = scriptId;
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"; // Agregamos render=explicit
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
-
-      script.onload = () => {
+    script.onload = () => {
         // Forzamos el renderizado manual una sola vez para evitar parpadeos
         if (window.turnstile) {
           window.turnstile.render(".cf-turnstile", {
@@ -104,7 +103,8 @@ function LoginPage() {
     }
 
     return () => {
-      // No borramos el script ni la función para que en el siguiente renderizado no falle
+      // Limpiamos la función al desmontar el componente
+      delete window.onTurnstileSuccess;
     };
   }, []);
 
