@@ -62,49 +62,51 @@ function LoginPage() {
    * Registramos el script de Cloudflare y la función de retorno
    * para validar que el usuario es un humano antes de permitir el login.
    */
+  // 1. Estado para el token (Ya lo tienes, asegúrate de que esté así)
   const [turnstileToken, setTurnstileToken] = useState("");
 
+  // 2. Lógica de inicialización (Copia y pega este bloque EXACTO)
   useEffect(() => {
-    // Definimos la función en el objeto window para que Cloudflare la encuentre
-    window.onTurnstileSuccess = (token) => {
+    // Definimos la función de éxito de forma que React y Cloudflare la vean
+    const handleSuccess = (token) => {
+      console.log("✅ Captcha verificado exitosamente");
       setTurnstileToken(token);
     };
 
-    // 2. Solo cargamos el script si no existe ya en la página
-    const scriptId = "cloudflare-turnstile-script";
+    // Cargamos el script solo si no existe
+    const scriptId = "cf-turnstile-script";
     if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
       script.id = scriptId;
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
-    script.onload = () => {
-        // Forzamos el renderizado manual una sola vez para evitar parpadeos
-        if (window.turnstile) {
-          window.turnstile.render(".cf-turnstile", {
-            sitekey: "0x4AAAAAAD0Bx-U3gMoKixPe", // Tu Site Key
-            callback: "onTurnstileSuccess",
-          });
-        }
-      };
-    } else {
-        // Si el script ya existe (por un hot-reload de Vite), intentamos renderizar
-        if (window.turnstile) {
-            try {
-                window.turnstile.render(".cf-turnstile", {
-                    sitekey: "0x4AAAAAAD0Bx-U3gMoKixPe",
-                    callback: "onTurnstileSuccess",
-                });
-            } catch {
-                // Si ya estaba renderizado, ignoramos el error
-            }
-        }
     }
 
+    // Intervalo de seguridad para renderizar el widget cuando el script esté listo
+    const checkTurnstile = setInterval(() => {
+      if (window.turnstile) {
+        clearInterval(checkTurnstile);
+        window.turnstile.render(".cf-turnstile", {
+          sitekey: "0x4AAAAAAD0Bx-U3gMoKixPe", // Tu Site Key
+          callback: handleSuccess, // Pasamos la función directamente, NO como texto
+          "expired-callback": () => setTurnstileToken(""),
+          "error-callback": () => setTurnstileToken(""),
+        });
+      }
+    }, 500);
+
     return () => {
-      // Limpiamos la función al desmontar el componente
-      delete window.onTurnstileSuccess;
+      clearInterval(checkTurnstile);
+      // Opcional: Limpiar el widget al salir de la página
+      if (window.turnstile) {
+        try {
+          window.turnstile.remove();
+        } catch {
+          // Ignoramos el error si el widget ya no existe en el DOM
+        }
+      }
     };
   }, []);
 
@@ -355,11 +357,11 @@ function LoginPage() {
 
               <button
                 onClick={handleLoginDirect}
-                // Se deshabilita si está cargando O si el captcha no se ha resuelto
-                disabled={loading || !turnstileToken} 
+                // El botón solo se habilita si NO está cargando Y tenemos un token
+                disabled={loading || !turnstileToken}
                 className="w-full bg-jw-blue text-white py-4 rounded-2xl font-bold text-xs tracking-widest uppercase shadow-lg disabled:opacity-30"
               >
-                Entrar
+                {loading ? "Procesando..." : "Entrar"}
               </button>
 
               {/* Enlaces de recuperación */}
