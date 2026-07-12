@@ -15,20 +15,29 @@
 
  
 #  ==========================================================
-#   --- 1. SEGURIDAD Y SECRETOS (CRÍTICO) --- 
+#   --- 1. SEGURIDAD Y SECRETOS (BLINDAJE TOTAL) --- 
 #  ==========================================================
-#   SEO 2026: La integridad de la aplicación es un factor de posicionamiento. 
-#   La filtración de claves de Supabase o contraseñas de DB penaliza la 
-#   confiabilidad técnica del sistema.
 
-
-# .env: Contiene variables de entorno, tokens JWT y credenciales sensibles. 
-# NUNCA debe subirse a la nube (GitHub/GitLab).
+# Ignora CUALQUIER archivo .env en CUALQUIER subcarpeta
+**/.env
 .env
+.env.local
+.env.development
+.env.production
 
- 
+# Ignorar específicamente los de las subcarpetas por si acaso
+backend/.env
+frontend/.env
+
 #   ==========================================================
-#   --- 2. BACKEND (GO / SERVIDOR) --- 
+#   --- 2. DEPENDENCIAS --- 
+#   ==========================================================
+node_modules/
+**/node_modules/
+
+
+#   ==========================================================
+#   --- 3. BACKEND (GO / SERVIDOR) - BINARIOS Y COMPILADOS --- 
 #   ==========================================================
 
 
@@ -36,10 +45,15 @@
 # Solo se ignoran los ejecutables, no el código fuente (.go).
 backend/backend
 *.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+frontend/dist/
 
 
 #   ==========================================================
-#   --- 3. FRONTEND (REACT / VITE) --- 
+#   --- 4. FRONTEND (REACT / VITE) --- 
 #   ==========================================================
 
 
@@ -54,7 +68,7 @@ frontend/dist/
 
  
 #   ==========================================================
-#   --- 4. BASURA DEL SISTEMA Y HERRAMIENTAS --- 
+#   --- 5. BASURA DEL SISTEMA Y HERRAMIENTAS --- 
 #   ==========================================================
 
 
