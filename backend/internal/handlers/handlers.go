@@ -10,6 +10,8 @@ import (
 	"encoding/json"
 	"gestion-congregacion/backend/internal/service"
 	"net/http"
+
+	"log"
 )
 
 func GetPublicaciones(s *service.Service) http.HandlerFunc {
@@ -27,10 +29,17 @@ func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 			TurnstileToken string `json:"turnstile_token"`
 		}
 
-		json.NewDecoder(r.Body).Decode(&req)
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "JSON inválido", http.StatusBadRequest)
+			return
+		}
+
+		// Log de depuración (puedes borrarlo después)
+		log.Printf("Intento de login para: %s | Token recibido: %t", req.Username, req.TurnstileToken != "")
 
 		// 1. PRIMERA CAPA: Validar CAPTCHA
 		if !s.ValidarTurnstile(req.TurnstileToken) {
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusForbidden)
 			json.NewEncoder(w).Encode(map[string]string{"error": "Seguridad: CAPTCHA no válido"})
 			return
@@ -39,8 +48,9 @@ func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 		// 2. SEGUNDA CAPA: Autenticación normal
 		user, token, err := s.Authenticate(req.Username, req.Password)
 		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+			json.NewEncoder(w).Encode(map[string]string{"error": "Credenciales inválidas"})
 			return
 		}
 		json.NewEncoder(w).Encode(map[string]interface{}{"user": user, "token": token})

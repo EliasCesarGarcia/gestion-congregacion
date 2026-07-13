@@ -18,6 +18,7 @@ import (
 	"log"
 	"math/big"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"time"
@@ -50,6 +51,7 @@ func (s *Service) Authenticate(username, password string) (*models.Usuario, stri
 	// Buscamos el usuario en el repositorio
 	u, err := s.repo.GetUserForLogin(username)
 	if err != nil {
+		log.Printf("❌ LOGIN FALLIDO: El usuario '%s' no existe o no está en ALTA", username)
 		return nil, "", errors.New("el usuario o la contraseña no son correctos")
 	}
 
@@ -63,10 +65,12 @@ func (s *Service) Authenticate(username, password string) (*models.Usuario, stri
 	}
 
 	if !isValid {
+		log.Printf("❌ LOGIN FALLIDO: Contraseña incorrecta para el usuario '%s'", username)
 		return nil, "", errors.New("el usuario o la contraseña no son correctos")
 	}
 
 	token, _ := auth.GenerarJWT(u.ID)
+	log.Printf("✅ LOGIN EXITOSO: Usuario '%s' ha ingresado", username)
 	return u, token, nil
 }
 
@@ -193,23 +197,46 @@ func (s *Service) IdentifyUser(user string) error {
  * NUEVA FUNCIÓN EN EL SERVICE
  * ValidarTurnstile verifica el token con los servidores de Cloudflare.
  */
+/**
+ * ValidarTurnstile: Verifica el token con Cloudflare.
+ * Incluye logs detallados para depuración en tiempo real.
+ */
 func (s *Service) ValidarTurnstile(token string) bool {
-	secretKey := os.Getenv("TURNSTILE_SECRET_KEY") // Debes ponerla en tu .env
-	
-	// Si estamos en desarrollo local, podemos saltarlo (opcional)
-	if token == "XXX" { return true }
+	secretKey := os.Getenv("TURNSTILE_SECRET_KEY")
 
-	postData := fmt.Sprintf("secret=%s&response=%s", secretKey, token)
-	resp, err := http.Post("https://challenges.cloudflare.com/turnstile/v0/siteverify", 
-		"application/x-www-form-urlencoded", 
-		strings.NewReader(postData))
-	
-	if err != nil { return false }
+	if secretKey == "" {
+		log.Println("⚠️  ALERTA SEGURIDAD: TURNSTILE_SECRET_KEY no encontrada en .env")
+		return false
+	}
+
+	// Usamos url.Values para codificar correctamente los parámetros
+	data := url.Values{}
+	data.Set("secret", secretKey)
+	data.Set("response", token)
+
+	resp, err := http.PostForm("https://challenges.cloudflare.com/turnstile/v0/siteverify", data)
+	if err != nil {
+		log.Println("❌ ERROR de red al validar con Cloudflare:", err)
+		return false
+	}
 	defer resp.Body.Close()
 
 	var result struct {
-		Success bool `json:"success"`
+		Success    bool     `json:"success"`
+		ErrorCodes []string `json:"error-codes"`
+		Hostname   string   `json:"hostname"`
 	}
-	json.NewDecoder(resp.Body).Decode(&result)
-	return result.Success
+
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		log.Println("❌ ERROR al leer respuesta de Cloudflare:", err)
+		return false
+	}
+
+	if !result.Success {
+		log.Printf("🚫 Captcha RECHAZADO. Errores: %v | Hostname: %s", result.ErrorCodes, result.Hostname)
+		return false
+	}
+
+	log.Println("✅ Captcha VALIDADO correctamente por Cloudflare")
+	return true
 }

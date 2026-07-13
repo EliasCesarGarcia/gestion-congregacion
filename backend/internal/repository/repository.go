@@ -45,21 +45,22 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 			return nil, err
 		}
 
-		// Intento 2: Persona normal
+		// Intento 2: Persona normal  (Si el primero falló por no encontrarlo)
 		err = r.db.Table("core_personas").
 			Select(`core_personas.id as persona_id, core_personas.apellido_nombre as nombre_completo, core_personas.email, core_personas.contacto, core_personas.url_imagen as foto_url, core_personas.username_temp, core_personas.password_hash, core_personas.estado, core_congregaciones.nombre as congregacion_nombre, core_congregaciones.numero_congregacion, core_congregaciones.zona_horaria, core_congregaciones.region, core_congregaciones.pais, core_congregaciones.provincia_estado as provincia, core_congregaciones.partido, core_congregaciones.ciudad, core_congregaciones.direccion`).
 			Joins("JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
 			Where("LOWER(core_personas.username_temp) = ? AND core_personas.estado = 'ALTA'", username).First(&u).Error
 
-		if err != nil && err.Error() != "record not found" {
-			monitor.TripCircuit() // <--- PROTECCIÓN ACTIVA
-			return nil, err
+		if err != nil {
+			if err.Error() != "record not found" {
+				monitor.TripCircuit()
+			}
+			return nil, err // <--- AHORA SÍ devolvemos el error si no existe
 		}
 	}
 
-	// Si llegamos aquí con éxito, reseteamos errores para mantener el circuito cerrado
 	monitor.ResetFailures()
-	return &u, err
+	return &u, nil
 }
 
 func (r *Repository) UserExists(username string) bool {
