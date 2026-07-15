@@ -15,6 +15,7 @@
 6.  [Informe de Cambios - Innovación en Seguridad Digital y UX Élite]("informe-2026-06-21")
 7.  [Informe de Cambios - Arquitectura Élite de Backend (Go)]("informe-2026-07-10")
 8.  [Informe de Cambios - Escudo de Resiliencia y Mitigación de Bots]("informe-2026-07-11")
+9.  [Informe de Cambios - Blindaje de Grado Industrial y SEO Élite](informe-2026-07-13)
 
 ---
 
@@ -203,5 +204,37 @@ Se ha implementado una **Capa de Resiliencia Proactiva** diseñada para soportar
 *   **Clean Code (ESLint):** Corrección de variables no utilizadas (`err`) en los flujos de recuperación de cuenta y optimización de imports en el núcleo de Go.
 *   **Hardening de Red:** Ajuste de Timeouts de lectura y escritura en `main.go` para prevenir ataques de denegación de servicio de bajo nivel (Slowloris).
 
+* **Optimización de Persistencia:** Refactorización del método GetUserForLogin para garantizar el flujo de error 401/403 y evitar bloqueos en el proceso de autenticación de doble tabla (Admin/Personas).
+
 ---
 *Fin del informe del 2026-07-11.*
+
+---
+
+<a name="informe-2026-07-13"></a>
+## 🛡️ Informe de Cambios - Blindaje de Grado Industrial y SEO Élite
+
+**Fecha:** 2026-07-13
+
+Se ha completado la transición hacia una arquitectura de **Seguridad en Profundidad (Defense in Depth)**, eliminando vulnerabilidades de sesión y optimizando el perímetro para tráfico masivo.
+
+### 1. Implementación de Escudo Distribuido (Redis)
+*   **Rate Limiting con Persistencia:** Migración del sistema de control de tráfico de memoria local a **Redis (Upstash)**. Esto garantiza que los bloqueos de IP y los límites de petición persistan ante reinicios del servidor.
+*   **Global Panic Mode:** Implementación de un umbral de tráfico global (5000 req/s). Si el sistema detecta un ataque coordinado de miles de IPs, entra en modo de protección automática para preservar la disponibilidad.
+
+### 2. Seguridad de Sesión "Invisible" (HttpOnly Cookies)
+*   **Eliminación de LocalStorage:** Se eliminó el almacenamiento de Tokens JWT en el lado del cliente, mitigando al 100% el riesgo de robo de identidad mediante ataques XSS.
+*   **Cookies de Grado Bancario:** Implementación de cookies `auth_token` con banderas `HttpOnly` (invisible para JS), `Secure` (solo HTTPS) y `SameSite=None` para interoperabilidad segura entre Vercel y Render.
+*   **CORS Hardening:** Configuración estricta de orígenes permitidos mediante variables de entorno, rechazando peticiones de dominios no autorizados.
+
+### 3. Integración de Resiliencia y Mitigación
+*   **Anti-Bot Layer (Cloudflare Turnstile):** Validación obligatoria de tokens de humanidad en el Backend antes de procesar credenciales. Reducción masiva de carga de CPU ante ataques de fuerza bruta.
+*   **Sanitización Industrial:** Integración de la librería `bluemonday` en el flujo de guardado de información de seguridad, garantizando que el contenido dinámico esté libre de scripts maliciosos.
+
+### 4. SEO y Descubrimiento 2026
+*   **Estructura Sitemap.xml:** Creación del mapa de sitio dinámico para indexación prioritaria de módulos teocráticos y de seguridad.
+*   **Robots.txt:** Configuración de reglas de rastreo para proteger directorios privados (`/perfil`, `/configuracion`) del acceso de motores de búsqueda.
+*   **SEO Dinámico (Helmet):** Inyección de metadatos únicos por cada ruta protegida para mejorar la visibilidad institucional.
+
+---
+*Fin del informe del 2026-07-13. El sistema se declara ESTABLE y BLINDADO.*
