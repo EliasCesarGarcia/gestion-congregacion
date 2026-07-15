@@ -10,8 +10,9 @@ import (
 	"encoding/json"
 	"gestion-congregacion/backend/internal/service"
 	"net/http"
+	"time"
 
-	"log"
+	"github.com/microcosm-cc/bluemonday"
 )
 
 func GetPublicaciones(s *service.Service) http.HandlerFunc {
@@ -29,31 +30,36 @@ func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 			TurnstileToken string `json:"turnstile_token"`
 		}
 
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "JSON inválido", http.StatusBadRequest)
-			return
-		}
+		json.NewDecoder(r.Body).Decode(&req)
 
-		// Log de depuración (puedes borrarlo después)
-		log.Printf("Intento de login para: %s | Token recibido: %t", req.Username, req.TurnstileToken != "")
-
-		// 1. PRIMERA CAPA: Validar CAPTCHA
+		// 1. CAPTCHA
 		if !s.ValidarTurnstile(req.TurnstileToken) {
-			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusForbidden)
 			json.NewEncoder(w).Encode(map[string]string{"error": "Seguridad: CAPTCHA no válido"})
 			return
 		}
 
-		// 2. SEGUNDA CAPA: Autenticación normal
+		// 2. Autenticación
 		user, token, err := s.Authenticate(req.Username, req.Password)
 		if err != nil {
-			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusUnauthorized)
-			json.NewEncoder(w).Encode(map[string]string{"error": "Credenciales inválidas"})
+			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 			return
 		}
-		json.NewEncoder(w).Encode(map[string]interface{}{"user": user, "token": token})
+
+		// --- NIVEL DIOS: SETEO DE COOKIE HTTPONLY ---
+		http.SetCookie(w, &http.Cookie{
+			Name:     "auth_token",
+			Value:    token,
+			Expires:  time.Now().Add(24 * time.Hour),
+			HttpOnly: true,                // <--- JavaScript NO puede leerla
+			Secure:   true,                // <--- Solo viaja por HTTPS (Vercel/Render)
+			SameSite: http.SameSiteNoneMode, // <--- Necesario para que funcione entre Vercel y Render
+			Path:     "/",
+		})
+
+		// Devolvemos el usuario pero NO el token en el JSON (ya va en la cookie)
+		json.NewEncoder(w).Encode(map[string]interface{}{"user": user})
 	}
 }
 
@@ -174,28 +180,28 @@ func GetSeguridadInfoHandler(s *service.Service) http.HandlerFunc {
  * Mantiene la firma compatible con main.go (pide el servicio).
  */
 func SaveSeguridadInfoHandler(s *service.Service) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// Blindaje: No aceptamos más de 100KB para una info simple
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 102400)
-
-		var req struct {
-			Contenido string `json:"contenido"`
-		}
+		var req struct { Contenido string `json:"contenido"` }
 
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "JSON inválido", http.StatusBadRequest)
 			return
 		}
 
-		// Delegamos al servicio
-		if err := s.AddSecurityInfo(req.Contenido); err != nil {
+		// Sanitización estricta. 
+		// Solo permite formato de texto seguro, elimina <script>, <iframe> y eventos JS.
+		p := bluemonday.StrictPolicy() 
+		cleanContenido := p.Sanitize(req.Contenido)
+
+		if err := s.AddSecurityInfo(cleanContenido); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(map[string]string{"status": "success"})
-	}
+	})
 }
 
 // RecoverByPersonaIDHandler: Recupera cuenta por ID o Teléfono
@@ -240,4 +246,17 @@ func HandleFileUpload(s *service.Service) http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{"status": "ready_for_upload"})
 	}
+}
+
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	http.SetCookie(w, &http.Cookie{
+		Name:     "auth_token",
+		Value:    "",
+		Expires:  time.Unix(0, 0), // Fecha en el pasado para borrarla
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
+		Path:     "/",
+	})
+	w.WriteHeader(http.StatusOK)
 }

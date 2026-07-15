@@ -41,6 +41,8 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("/api/upload-foto", handlers.AuthMiddleware(http.HandlerFunc(handlers.UploadFotoHandler(svc))))
 	mux.Handle("/api/suspender-cuenta", handlers.AuthMiddleware(http.HandlerFunc(handlers.SuspenderCuentaHandler(svc))))
 
+    mux.HandleFunc("/api/logout", handlers.LogoutHandler)
+
 	// Administración de Seguridad
 	mux.Handle("/api/broadcast-seguridad", handlers.AuthMiddleware(http.HandlerFunc(handlers.BroadcastSeguridadUpdateHandler(svc))))
 	mux.Handle("/api/save-seguridad-info", handlers.AuthMiddleware(http.HandlerFunc(handlers.SaveSeguridadInfoHandler(svc))))

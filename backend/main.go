@@ -14,6 +14,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	"strings"
 
 	"gestion-congregacion/backend/internal/handlers"
 	"gestion-congregacion/backend/internal/repository"
@@ -28,10 +29,14 @@ import (
 )
 
 func main() {
-	// 1. Carga de variables con validación estricta
 	godotenv.Load()
-	if os.Getenv("JWT_SECRET") == "" {
-		log.Fatal("CRÍTICO: JWT_SECRET no definido. El servidor no arrancará por seguridad.")
+
+	// 1. VALIDACIÓN DE SECRETOS (Alerta 1)
+	requiredEnvs := []string{"JWT_SECRET", "DB_PASSWORD", "ALLOWED_ORIGINS", "REDIS_URL"}
+	for _, env := range requiredEnvs {
+		if os.Getenv(env) == "" {
+			log.Fatalf("CRÍTICO: Variable de entorno %s no definida.", env)
+		}
 	}
 
 	// 2. Conexión a DB con Pool de alto rendimiento
@@ -87,12 +92,15 @@ func main() {
 
 	// CAPA 4: Configuración CORS Profesional
 	// NOTA: En producción, sustituye "*" por tu dominio real de Vercel
+	// En el .env, ALLOWED_ORIGINS debe ser "https://tu-app.vercel.app"
+	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
+
 	finalHandler := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
+		AllowedOrigins:   origins, // Ya no es "*"
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Authorization", "Content-Type", "Accept-Encoding"},
 		AllowCredentials: true,
-		MaxAge:           86400, // Cache de CORS por 24 horas para mejorar TTFB (SEO)
+		MaxAge:           86400,
 	}).Handler(securityLayer)
 
 	// Configuración del Servidor Físico (Blindaje de Timeouts)

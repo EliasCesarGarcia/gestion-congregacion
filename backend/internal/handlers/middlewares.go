@@ -35,28 +35,24 @@ func SecurityHeadersMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// AuthMiddleware protege las rutas verificando el token en el Header 'Authorization'
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// 1. Obtener el header Authorization: Bearer <token>
-		authHeader := r.Header.Get("Authorization")
-		if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-			http.Error(w, "Acceso no autorizado", http.StatusUnauthorized)
+		// 1. Intentar obtener la cookie
+		cookie, err := r.Cookie("auth_token")
+		if err != nil {
+			http.Error(w, "Sesión expirada o no autorizada", http.StatusUnauthorized)
 			return
 		}
 
-		// 2. Limpiar el prefijo "Bearer "
-		tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+		tokenStr := cookie.Value
 
-		// 3. Validar el token
+		// 2. Validar el token (esto sigue igual)
 		token, err := auth.ValidarJWT(tokenStr)
 		if err != nil || !token.Valid {
-			http.Error(w, "Token inválido o expirado", http.StatusUnauthorized)
+			http.Error(w, "Token inválido", http.StatusUnauthorized)
 			return
 		}
 
-		// 4. Extraer el Usuario ID y meterlo en el contexto de la petición
-		// Esto sirve para saber quién está haciendo la petición en los handlers
 		next.ServeHTTP(w, r)
 	})
 }
