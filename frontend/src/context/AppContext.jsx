@@ -98,22 +98,27 @@ export function AppProvider({ children }) {
   }, []);
 
   // --- LÓGICA DE AUTENTICACIÓN ---
-  const logout = useCallback(() => {
-    setUser(null);
-    sessionStorage.removeItem("user_session");
-    window.location.href = "/login";
-  }, []);
+const logout = useCallback(async () => {
+    try {
+        // Le avisamos al backend que borre la cookie
+        await axios.post("/api/logout");
+    } catch {
+        console.error("Error al cerrar sesión en servidor");
+    } finally {
+        setUser(null);
+        sessionStorage.removeItem("user_session");
+        window.location.href = "/login";
+    }
+}, []);
 
-  const login = (userData) => {
-    const savedSession = sessionStorage.getItem("user_session");
-    const existingData = savedSession ? JSON.parse(savedSession) : {};
-    let finalUserData = userData?.token ? userData : { ...existingData, user: { ...existingData.user, ...userData } };
-
-    setUser(finalUserData);
-    sessionStorage.setItem("user_session", JSON.stringify(finalUserData));
-    if (finalUserData?.token) axios.defaults.headers.common["Authorization"] = `Bearer ${finalUserData.token}`;
-  };
-
+const login = (userData) => {
+    // Ya no esperamos un .token, solo el objeto user
+    const userToSave = userData.user; 
+    
+    setUser(userToSave);
+    // Guardamos solo los datos públicos del usuario, nunca el token
+    sessionStorage.setItem("user_session", JSON.stringify(userToSave));
+};
   // SEO 2026: Imágenes activas para pre-carga
   const currentImages = backgroundImagesMap[activeTheme.effect]?.[timeOfDay] || null;
 

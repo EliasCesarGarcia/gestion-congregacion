@@ -13,6 +13,7 @@
 
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 
 // --- IMPORTACIÓN DE COMPONENTES DE ESTRUCTURA (LAYOUT) ---
 import Navbar from "./components/Navbar";
@@ -97,7 +98,21 @@ function App() {
       <main className="flex-grow w-full pt-16">
         <Routes>
           {/* RUTA PÚBLICA: Acceso libre para autenticación */}
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={
+              <>
+                <Helmet>
+                  <title>Acceso al Sistema | Gestión Local Premium</title>
+                  <meta
+                    name="description"
+                    content="Inicie sesión de forma segura para acceder a la gestión de su congregación."
+                  />
+                </Helmet>
+                <LoginPage />
+              </>
+            }
+          />
 
           {/* 
               BLOQUE DE RUTAS PROTEGIDAS:
@@ -111,6 +126,13 @@ function App() {
             path="/"
             element={
               <RutaProtegida>
+                <Helmet>
+                  <title>Panel de Control | Gestión Local</title>
+                  <meta
+                    name="description"
+                    content="Tablero principal de gestión y anuncios de la congregación."
+                  />
+                </Helmet>
                 <HomePage />
               </RutaProtegida>
             }
@@ -121,6 +143,15 @@ function App() {
             path="/publicaciones"
             element={
               <RutaProtegida>
+                <Helmet>
+                  <title>
+                    Catálogo de Publicaciones | Literatura Teocrática
+                  </title>
+                  <meta
+                    name="description"
+                    content="Explore y solicite las últimas publicaciones y revistas disponibles."
+                  />
+                </Helmet>
                 <PublicacionesPage />
               </RutaProtegida>
             }
@@ -131,6 +162,13 @@ function App() {
             path="/perfil"
             element={
               <RutaProtegida>
+                <Helmet>
+                  <title>Mi Perfil | Configuración de Usuario</title>
+                  <meta
+                    name="description"
+                    content="Administre sus datos personales, seguridad y preferencias de cuenta."
+                  />
+                </Helmet>
                 <ProfilePage />
               </RutaProtegida>
             }
@@ -141,6 +179,13 @@ function App() {
             path="/seguridad-tips"
             element={
               <RutaProtegida>
+                <Helmet>
+                  <title>Centro de Seguridad Digital | Buenas Prácticas</title>
+                  <meta
+                    name="description"
+                    content="Aprenda a proteger su información personal con nuestras guías de blindaje digital."
+                  />
+                </Helmet>
                 <SecurityTipsPage />
               </RutaProtegida>
             }
@@ -151,6 +196,13 @@ function App() {
             path="/contacto"
             element={
               <RutaProtegida>
+                <Helmet>
+                  <title>Ayuda y Soporte | Contacto Institucional</title>
+                  <meta
+                    name="description"
+                    content="Póngase en contacto con los responsables para dudas o asistencia técnica."
+                  />
+                </Helmet>
                 <ContactoPage />
               </RutaProtegida>
             }
@@ -161,6 +213,13 @@ function App() {
             path="/configuracion"
             element={
               <RutaProtegida>
+                <Helmet>
+                  <title>Ajustes del Sistema | Accesibilidad y Temas</title>
+                  <meta
+                    name="description"
+                    content="Personalice su experiencia visual, tamaño de fuente y temas dinámicos."
+                  />
+                </Helmet>
                 <ConfiguracionPage />
               </RutaProtegida>
             }

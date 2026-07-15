@@ -1,34 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Página de Inicio -->
+  <!-- Página de Inicio (Prioridad Máxima) -->
   <url>
-    <loc>https://tu-dominio.com/</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://gestion-congregacion.vercel.app/</loc>
+    <lastmod>2026-07-13</lastmod>
     <priority>1.0</priority>
   </url>
 
-  <!-- Catálogo de Publicaciones -->
+  <!-- Página de Login (Importante para indexación) -->
   <url>
-    <loc>https://tu-dominio.com/publicaciones</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://gestion-congregacion.vercel.app/login</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Catálogo de Publicaciones (Valor para el usuario) -->
+  <url>
+    <loc>https://gestion-congregacion.vercel.app/publicaciones</loc>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.9</priority>
   </url>
 
-  <!-- Consejos de Seguridad (Contenido de Alta Autoridad) -->
+  <!-- Consejos de Seguridad (Contenido Educativo) -->
   <url>
-    <loc>https://tu-dominio.com/seguridad-tips</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://gestion-congregacion.vercel.app/seguridad-tips</loc>
+    <lastmod>2026-07-13</lastmod>
+    <priority>0.7</priority>
   </url>
 
   <!-- Página de Contacto -->
   <url>
-    <loc>https://tu-dominio.com/contacto</loc>
-    <lastmod>2026-02-27</lastmod>
-    <changefreq>yearly</changefreq>
+    <loc>https://gestion-congregacion.vercel.app/contacto</loc>
+    <lastmod>2026-07-13</lastmod>
     <priority>0.5</priority>
   </url>
 </urlset>
