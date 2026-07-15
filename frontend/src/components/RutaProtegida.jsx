@@ -9,7 +9,7 @@ function RutaProtegida({ children }) {
   const { user } = useContext(AppContext);
   
   // Si no hay usuario en el estado global, bloqueamos el paso.
-  // Como ahora no hay token que verificar manualmente, confiamos en el objeto 'user'.
+  // Como ahora no hay token que verificar manualmente, confiamos en el objeto 'user'...
   if (!user) {
     return <Navigate to="/login" replace />;
   }
