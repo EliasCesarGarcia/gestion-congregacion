@@ -1,10 +1,3 @@
-/*
-*
-ARCHIVO: security_shield.go
-UBICACIÓN: backend/internal/handlers/security_shield.go
-DESCRIPCIÓN: Implementación de Rate Limiting avanzado, Blacklisting dinámico
-y detección de patrones de ataque para alta disponibilidad.
-*/
 package handlers
 
 import (
@@ -13,102 +6,144 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"sync"
 	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
+
+	"bytes"
+	"encoding/json"
 )
 
 var (
 	ctxRdb = context.Background()
 	rdb    *redis.Client
+
+	localBlacklist sync.Map
+	panicMode      bool
+	panicMutex     sync.RWMutex
 )
 
 func init() {
-
-	// Forzamos la carga del .env antes de conectar a Redis
 	godotenv.Load()
-
 	redisURL := os.Getenv("REDIS_URL")
 	if redisURL == "" {
-		fmt.Println("⚠️ [ALERTA] REDIS_URL no encontrada en el .env, usando fallback local")
 		rdb = redis.NewClient(&redis.Options{Addr: "localhost:6379"})
 		return
 	}
-
-	opt, err := redis.ParseURL(redisURL)
-	if err != nil {
-		fmt.Printf("❌ [ERROR] Fallo al parsear REDIS_URL: %v\n", err)
-		return
-	}
-
+	opt, _ := redis.ParseURL(redisURL)
 	rdb = redis.NewClient(opt)
-
-	// Prueba de conexión inmediata
-	_, err = rdb.Ping(ctxRdb).Result()
-	if err != nil {
-		fmt.Printf("❌ [ERROR] No se pudo conectar a Upstash Redis: %v\n", err)
-	} else {
-		fmt.Println("✅ [ESCUDO] Conectado a Upstash Redis exitosamente")
-	}
 }
 
 const (
 	MaxRequestsPerMinute = 100
-	GlobalPanicThreshold = 5000 // Si hay más de 5000 req/s totales en el sistema
+	GlobalPanicThreshold = 1000 // 1000 IPs distintas detectadas
 )
 
 func ShieldMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// 1. OBTENCIÓN Y LIMPIEZA DE IP
-		ip := r.Header.Get("X-Forwarded-For")
-		if ip == "" {
-			// net.SplitHostPort separa la IP del puerto para que el bloqueo sea por IP real
-			host, _, err := net.SplitHostPort(r.RemoteAddr)
-			if err == nil {
-				ip = host
-			} else {
-				ip = r.RemoteAddr
-			}
+		// 1. OBTENER IP REAL (Prioriza Cloudflare)
+		ip, _, _ := net.SplitHostPort(r.RemoteAddr)
+		if cfIP := r.Header.Get("CF-Connecting-IP"); cfIP != "" {
+			ip = cfIP
+		} else if forwarded := r.Header.Get("X-Forwarded-For"); forwarded != "" {
+			ip = forwarded
 		}
 
-		// 1. Verificar Blacklist
-		blacklistKey := "blacklist:" + ip
-		isBlacklisted, _ := rdb.Exists(ctxRdb, blacklistKey).Result()
-		if isBlacklisted > 0 {
-			fmt.Printf("🚫 [BLOQUEADO] IP en Blacklist: %s\n", ip)
-			w.Header().Set("Content-Type", "application/json")
+		// 2. FILTRO DE BLACKLIST (Memoria Local + Redis)
+		if _, blocked := localBlacklist.Load(ip); blocked {
 			w.WriteHeader(http.StatusForbidden)
-			w.Write([]byte(`{"error": "Tu IP ha sido baneada por 24h"}`))
 			return
 		}
 
-		// 2. Incrementar contador
+		ctx, cancel := context.WithTimeout(context.Background(), 150*time.Millisecond)
+		defer cancel()
+
+		// 3. MODO PÁNICO GLOBAL (Filtro rápido)
+		panicMutex.RLock()
+		if panicMode {
+			panicMutex.RUnlock()
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		panicMutex.RUnlock()
+
+		// --- PASO 3: DETECCIÓN DE BOTNETS (NUEVA LÓGICA) ---
+		// Contamos cuántas IPs únicas nos han visitado en el último segundo
+		cardinalityKey := fmt.Sprintf("unique_ips:%d", time.Now().Unix())
+		rdb.PFAdd(ctx, cardinalityKey, ip)
+		rdb.Expire(ctx, cardinalityKey, 5*time.Second)
+		uniqueIPs, _ := rdb.PFCount(ctx, cardinalityKey).Result()
+
+		if uniqueIPs > GlobalPanicThreshold {
+			// ACTIVACIÓN CON IP Y CONTEO PARA EL LOG/WEBHOOK
+			activatePanicMode(ip, uniqueIPs)
+		}
+		// ----------------------------------------------------
+
+		// 4. RATE LIMIT POR IP
 		limitKey := "limit:" + ip
-		count, err := rdb.Incr(ctxRdb, limitKey).Result()
-
-		// Si Redis da error (como te pasaba antes), esta vez lo imprimiremos para saberlo
-		if err != nil {
-			fmt.Printf("❌ [ERROR REDIS] %v\n", err)
-			next.ServeHTTP(w, r)
-			return
-		}
-
-		if count == 1 {
-			rdb.Expire(ctxRdb, limitKey, time.Minute)
-		}
-
-		fmt.Printf("🛡️ [ESCUDO] IP: %s | Peticiones: %d/%d\n", ip, count, MaxRequestsPerMinute)
-
-		if count > MaxRequestsPerMinute {
-			rdb.Set(ctxRdb, blacklistKey, "true", 24*time.Hour)
-			fmt.Printf("🔥 [BANEO] Límite excedido para IP: %s\n", ip)
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusTooManyRequests)
-			w.Write([]byte(`{"error": "Demasiadas peticiones. Tu IP ha sido baneada."}`))
-			return
+		count, err := rdb.Incr(ctx, limitKey).Result()
+		if err == nil {
+			if count == 1 {
+				rdb.Expire(ctx, limitKey, time.Minute)
+			}
+			if count > MaxRequestsPerMinute {
+				rdb.Set(ctx, "blacklist:"+ip, "true", 24*time.Hour)
+				localBlacklist.Store(ip, true)
+				w.WriteHeader(http.StatusTooManyRequests)
+				return
+			}
 		}
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+// Envía la alerta visual al equipo de infraestructura
+func notifyInfraTeam(ipAtacante string, totalIPs int64) {
+	webhookURL := os.Getenv("INFRA_ALERTA_WEBHOOK")
+	if webhookURL == "" {
+		return
+	}
+
+	payload := map[string]interface{}{
+		"content": "🚨 **ALERTA DE SEGURIDAD CRÍTICA** 🚨",
+		"embeds": []map[string]interface{}{
+			{
+				"title":       "Modo Pánico Activado",
+				"description": "Se ha detectado un ataque coordinado (Botnet) y el servidor ha entrado en modo de autoprotección.",
+				"color":       15158332,
+				"fields": []map[string]interface{}{
+					{"name": "IP que disparó el umbral", "value": ipAtacante, "inline": true},
+					{"name": "IPs Únicas (ventana actual)", "value": fmt.Sprintf("%d", totalIPs), "inline": true},
+					{"name": "Acción", "value": "Tráfico global bloqueado por 30s", "inline": false},
+				},
+				"timestamp": time.Now().Format(time.RFC3339),
+			},
+		},
+	}
+
+	body, _ := json.Marshal(payload)
+	client := &http.Client{Timeout: 5 * time.Second}
+	client.Post(webhookURL, "application/json", bytes.NewBuffer(body))
+}
+
+func activatePanicMode(ipAtacante string, totalIPs int64) {
+	panicMutex.Lock()
+	if !panicMode {
+		panicMode = true
+		fmt.Printf("🚨 [ALERTA] MODO PÁNICO ACTIVADO por IP: %s (IPs únicas: %d)\n", ipAtacante, totalIPs)
+
+		go notifyInfraTeam(ipAtacante, totalIPs)
+
+		time.AfterFunc(30*time.Second, func() {
+			panicMutex.Lock()
+			panicMode = false
+			fmt.Println("✅ Modo Pánico desactivado automáticamente. Reanudando tráfico.")
+			panicMutex.Unlock()
+		})
+	}
+	panicMutex.Unlock()
 }

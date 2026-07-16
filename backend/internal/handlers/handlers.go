@@ -9,7 +9,9 @@ package handlers
 import (
 	"encoding/json"
 	"gestion-congregacion/backend/internal/service"
+	"net"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/microcosm-cc/bluemonday"
@@ -30,35 +32,49 @@ func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 			TurnstileToken string `json:"turnstile_token"`
 		}
 
-		json.NewDecoder(r.Body).Decode(&req)
-
-		// 1. CAPTCHA
-		if !s.ValidarTurnstile(req.TurnstileToken) {
-			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(map[string]string{"error": "Seguridad: CAPTCHA no válido"})
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "JSON inválido", http.StatusBadRequest)
 			return
 		}
 
-		// 2. Autenticación
-		user, token, err := s.Authenticate(req.Username, req.Password)
+		// Obtener la IP real del usuario (considerando Cloudflare)
+		ip := r.Header.Get("CF-Connecting-IP")
+		if ip == "" {
+			ip = r.Header.Get("X-Forwarded-For")
+		}
+		if ip == "" {
+			var err error
+			ip, _, err = net.SplitHostPort(r.RemoteAddr)
+			if err != nil {
+				ip = r.RemoteAddr
+			}
+		}
+
+		// Llamamos al nuevo Authenticate con IP y Token
+		user, token, err := s.Authenticate(req.Username, req.Password, req.TurnstileToken, ip)
+
 		if err != nil {
-			w.WriteHeader(http.StatusUnauthorized)
+			// Si el error contiene la palabra "SISTEMA", es un error de seguridad/captcha
+			if strings.Contains(err.Error(), "SISTEMA") {
+				w.WriteHeader(http.StatusForbidden)
+			} else {
+				w.WriteHeader(http.StatusUnauthorized)
+			}
 			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 			return
 		}
 
-		// --- NIVEL DIOS: SETEO DE COOKIE HTTPONLY ---
+		// Seteo de Cookie Segura (HttpOnly)
 		http.SetCookie(w, &http.Cookie{
 			Name:     "auth_token",
 			Value:    token,
 			Expires:  time.Now().Add(24 * time.Hour),
-			HttpOnly: true,                // <--- JavaScript NO puede leerla
-			Secure:   true,                // <--- Solo viaja por HTTPS (Vercel/Render)
-			SameSite: http.SameSiteNoneMode, // <--- Necesario para que funcione entre Vercel y Render
+			HttpOnly: true,
+			Secure:   true, // Debe ser true en producción (HTTPS)
+			SameSite: http.SameSiteNoneMode,
 			Path:     "/",
 		})
 
-		// Devolvemos el usuario pero NO el token en el JSON (ya va en la cookie)
 		json.NewEncoder(w).Encode(map[string]interface{}{"user": user})
 	}
 }
@@ -182,16 +198,18 @@ func GetSeguridadInfoHandler(s *service.Service) http.HandlerFunc {
 func SaveSeguridadInfoHandler(s *service.Service) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, 102400)
-		var req struct { Contenido string `json:"contenido"` }
+		var req struct {
+			Contenido string `json:"contenido"`
+		}
 
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, "JSON inválido", http.StatusBadRequest)
 			return
 		}
 
-		// Sanitización estricta. 
+		// Sanitización estricta.
 		// Solo permite formato de texto seguro, elimina <script>, <iframe> y eventos JS.
-		p := bluemonday.StrictPolicy() 
+		p := bluemonday.StrictPolicy()
 		cleanContenido := p.Sanitize(req.Contenido)
 
 		if err := s.AddSecurityInfo(cleanContenido); err != nil {

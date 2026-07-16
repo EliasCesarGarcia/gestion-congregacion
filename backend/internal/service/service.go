@@ -11,7 +11,7 @@ import (
 	"errors"
 	"strings"
 
-	//"context"
+	"context"
 	"crypto/rand"
 	"encoding/json"
 	"fmt"
@@ -28,34 +28,55 @@ import (
 	"gestion-congregacion/backend/internal/repository"
 	"gestion-congregacion/backend/internal/ws"
 
+	"github.com/microcosm-cc/bluemonday"
+	"github.com/redis/go-redis/v9"
 	"github.com/resend/resend-go/v2"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type Service struct {
 	repo *repository.Repository
+	rdb  *redis.Client
 }
 
-func NewService(repo *repository.Repository) *Service {
-	return &Service{repo: repo}
+func NewService(repo *repository.Repository, rdb *redis.Client) *Service {
+	return &Service{repo: repo, rdb: rdb}
 }
 
 // --- LÓGICA DE IDENTIDAD ---
 
 // Authenticate: Lógica de Login Blindada
 // Authenticate verifica las credenciales y devuelve el usuario con su token
-func (s *Service) Authenticate(username, password string) (*models.Usuario, string, error) {
-	// Sanitización de entrada
+// Authenticate: Ahora recibe el Token y la IP para el Captcha Dinámico
+func (s *Service) Authenticate(username, password, captchaToken, ip string) (*models.Usuario, string, error) {
 	username = strings.TrimSpace(strings.ToLower(username))
+	ctx := context.Background()
 
-	// Buscamos el usuario en el repositorio
+	// 1. LÓGICA DE CAPTCHA DINÁMICO
+	// Consultamos cuántas veces ha fallado esta IP en Redis
+	failedAttempts, _ := s.rdb.Get(ctx, "failed_login:"+ip).Int()
+
+	// Si falló 3 veces o más, el Captcha es OBLIGATORIO
+	if failedAttempts >= 3 {
+		if captchaToken == "" {
+			return nil, "", errors.New("SISTEMA: Comportamiento sospechoso. Resuelva el CAPTCHA.")
+		}
+		if !s.ValidarTurnstile(captchaToken) {
+			return nil, "", errors.New("SISTEMA: CAPTCHA no válido o expirado.")
+		}
+	}
+
+	// LOG DE DEBUG PARA TI:
+	log.Printf("DEBUG: Intentando login para: %s desde IP: %s", username, ip)
+
+	// 2. BUSCAR USUARIO
 	u, err := s.repo.GetUserForLogin(username)
 	if err != nil {
-		log.Printf("❌ LOGIN FALLIDO: El usuario '%s' no existe o no está en ALTA", username)
+		log.Printf("DEBUG: Error en Repo (No encontrado o no ALTA): %v", err)
 		return nil, "", errors.New("el usuario o la contraseña no son correctos")
 	}
 
-	// Validación de password con soporte para legacy (texto plano) y seguridad (bcrypt)
+	// 3. VALIDAR CONTRASEÑA
 	isValid := false
 	if strings.HasPrefix(u.PasswordHash, "$2a$") {
 		err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
@@ -65,12 +86,16 @@ func (s *Service) Authenticate(username, password string) (*models.Usuario, stri
 	}
 
 	if !isValid {
-		log.Printf("❌ LOGIN FALLIDO: Contraseña incorrecta para el usuario '%s'", username)
+		// Incrementamos fallos en Redis por 30 minutos
+		s.rdb.Incr(ctx, "failed_login:"+ip)
+		s.rdb.Expire(ctx, "failed_login:"+ip, 30*time.Minute)
 		return nil, "", errors.New("el usuario o la contraseña no son correctos")
 	}
 
+	// SI EL LOGIN ES EXITOSO: Reseteamos los fallos de esta IP
+	s.rdb.Del(ctx, "failed_login:"+ip)
+
 	token, _ := auth.GenerarJWT(u.ID)
-	log.Printf("✅ LOGIN EXITOSO: Usuario '%s' ha ingresado", username)
 	return u, token, nil
 }
 
@@ -173,9 +198,20 @@ func (s *Service) GetSecurityBulletin() (map[string]interface{}, error) {
 }
 
 func (s *Service) GetCatalog() ([]models.Publicacion, error) { return s.repo.GetPublicaciones() }
+
 func (s *Service) UpdateProfile(pID, campo, valor string) error {
-	return s.repo.UpdateProfileField(pID, campo, valor)
+	// SANITIZACIÓN INDUSTRIAL: No confiamos en lo que envíe el cliente
+	p := bluemonday.StrictPolicy()
+	cleanValue := p.Sanitize(valor)
+
+	// Bloqueo preventivo de inyección de etiquetas comunes en campos de texto
+	if strings.Contains(cleanValue, "javascript:") {
+		return errors.New("intento de inyección detectado")
+	}
+
+	return s.repo.UpdateProfileField(pID, campo, cleanValue)
 }
+
 func (s *Service) SuspendUser(pID, uID string) error { return s.repo.SuspendAccount(pID, uID) }
 
 // VerifyPin: Valida y consume el PIN (lo marca como usado)

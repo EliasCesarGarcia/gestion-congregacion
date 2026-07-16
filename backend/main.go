@@ -13,8 +13,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"time"
 	"strings"
+	"time"
 
 	"gestion-congregacion/backend/internal/handlers"
 	"gestion-congregacion/backend/internal/repository"
@@ -22,6 +22,7 @@ import (
 	"gestion-congregacion/backend/internal/service"
 
 	"github.com/joho/godotenv"
+	"github.com/redis/go-redis/v9"
 	"github.com/rs/cors"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -70,10 +71,16 @@ func main() {
 	// 1. INICIALIZACIÓN DE LA VARIABLE MUX (CORRECCIÓN)
 	mux := http.NewServeMux()
 
-	// 2. INYECCIÓN DE DEPENDENCIAS
-	repo := repository.NewRepository(db)
-	svc := service.NewService(repo)
+	// --- INICIALIZACIÓN DE SEGURIDAD ---
+	// 1. Conex
+	// ión a Redis para el Escudo de Seguridad
+	redisURL := os.Getenv("REDIS_URL")
+	opt, _ := redis.ParseURL(redisURL)
+	rdb := redis.NewClient(opt)
 
+	// 2. Inyección de Dependencias (Repository -> Service con Redis)
+	repo := repository.NewRepository(db)
+	svc := service.NewService(repo, rdb) // <--- Ahora le pasamos rdb al servicio
 	// 3. Registro de Rutas
 	routes.RegisterRoutes(mux, svc)
 
@@ -93,12 +100,14 @@ func main() {
 	// CAPA 4: Configuración CORS Profesional
 	// NOTA: En producción, sustituye "*" por tu dominio real de Vercel
 	// En el .env, ALLOWED_ORIGINS debe ser "https://tu-app.vercel.app"
-	origins := strings.Split(os.Getenv("ALLOWED_ORIGINS"), ",")
+	// Cargamos orígenes permitidos desde el ENV (ej: https://app.vercel.app,https://admin.com)
+	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
+	originsList := strings.Split(allowedOrigins, ",")
 
 	finalHandler := cors.New(cors.Options{
-		AllowedOrigins:   origins, // Ya no es "*"
+		AllowedOrigins:   originsList, // Estricto: Solo tus dominios
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Authorization", "Content-Type", "Accept-Encoding"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type", "Accept", "X-Requested-With"},
 		AllowCredentials: true,
 		MaxAge:           86400,
 	}).Handler(securityLayer)

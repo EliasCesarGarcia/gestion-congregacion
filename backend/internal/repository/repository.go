@@ -13,6 +13,8 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+
+	"context"
 )
 
 type Repository struct {
@@ -26,36 +28,68 @@ func NewRepository(db *gorm.DB) *Repository {
 // --- USUARIOS Y AUTENTICACIÓN ---
 
 // GetUserForLogin extrae los datos del usuario (Admin o Persona)
-// Corregido: Se añade .Error al final de cada consulta
-// GetUserForLogin contiene tu query original con todos los campos para el Frontend
+// Corregido: Uso de Context para evitar bloqueos y disipar el Breaker en latencia.
 func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 	var u models.Usuario
 
-	// Intento 1: Administradores
-	err := r.db.Table("core_usuarios").
-		Select(`core_usuarios.*, core_personas.apellido_nombre as nombre_completo, core_personas.url_imagen as foto_url, core_personas.email, core_personas.contacto, core_personas.estado, core_congregaciones.nombre as congregacion_nombre, core_congregaciones.numero_congregacion, core_congregaciones.zona_horaria, core_congregaciones.region, core_congregaciones.pais, core_congregaciones.provincia_estado as provincia, core_congregaciones.partido, core_congregaciones.ciudad, core_congregaciones.direccion`).
-		Joins("JOIN core_personas ON core_personas.id = core_usuarios.persona_id").
-		Joins("JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
-		Where("LOWER(core_usuarios.username_temp) = ? AND core_personas.estado = 'ALTA'", username).First(&u).Error
+	// 1. PROTECCIÓN POR LATENCIA: Si la DB tarda más de 2s, cortamos la conexión
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Intento 1: Administradores (Usamos WithContext(ctx))
+	// Intentamos buscar primero en la tabla de administradores/usuarios con acceso
+	// Cambiamos JOIN por LEFT JOIN para evitar que datos faltantes de congregación bloqueen el login
+	err := r.db.WithContext(ctx).Table("core_usuarios").
+		Select(`
+            core_usuarios.id, 
+            core_usuarios.persona_id, 
+            core_usuarios.username_temp as username, 
+            core_usuarios.password_hash, 
+            core_personas.apellido_nombre as nombre_completo, 
+            core_personas.url_imagen as foto_url, 
+            core_personas.email, 
+            core_personas.contacto, 
+            core_personas.estado, 
+            core_congregaciones.nombre as congregacion_nombre, 
+            core_congregaciones.numero_congregacion, 
+            core_congregaciones.zona_horaria
+        `).
+		Joins("LEFT JOIN core_personas ON core_personas.id = core_usuarios.persona_id").
+		Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
+		Where("LOWER(core_usuarios.username_temp) = ? AND UPPER(core_personas.estado) = 'ALTA'", username).
+		First(&u).Error
 
 	if err != nil {
-		// Si el error NO es "No encontrado", es un error de conexión/base de datos
-		if err.Error() != "record not found" {
-			monitor.TripCircuit() // <--- PROTECCIÓN ACTIVA: Avisamos al monitor
+		// Si es timeout o error de red, disparamos el breaker
+		if err != gorm.ErrRecordNotFound {
+			monitor.TripCircuit()
 			return nil, err
 		}
 
-		// Intento 2: Persona normal  (Si el primero falló por no encontrarlo)
-		err = r.db.Table("core_personas").
-			Select(`core_personas.id as persona_id, core_personas.apellido_nombre as nombre_completo, core_personas.email, core_personas.contacto, core_personas.url_imagen as foto_url, core_personas.username_temp, core_personas.password_hash, core_personas.estado, core_congregaciones.nombre as congregacion_nombre, core_congregaciones.numero_congregacion, core_congregaciones.zona_horaria, core_congregaciones.region, core_congregaciones.pais, core_congregaciones.provincia_estado as provincia, core_congregaciones.partido, core_congregaciones.ciudad, core_congregaciones.direccion`).
-			Joins("JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
-			Where("LOWER(core_personas.username_temp) = ? AND core_personas.estado = 'ALTA'", username).First(&u).Error
+		// Intento 2: Persona normal (Usamos WithContext(ctx))
+		// Si no está en core_usuarios, buscamos en core_personas (usuarios normales)
+		err = r.db.WithContext(ctx).Table("core_personas").
+			Select(`
+                core_personas.id as persona_id, 
+                core_personas.apellido_nombre as nombre_completo, 
+                core_personas.email, 
+                core_personas.contacto, 
+                core_personas.url_imagen as foto_url, 
+                core_personas.username_temp as username, 
+                core_personas.password_hash, 
+                core_personas.estado, 
+                core_congregaciones.nombre as congregacion_nombre, 
+                core_congregaciones.numero_congregacion
+            `).
+			Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
+			Where("LOWER(core_personas.username_temp) = ? AND UPPER(core_personas.estado) = 'ALTA'", username).
+			First(&u).Error
 
 		if err != nil {
-			if err.Error() != "record not found" {
+			if err != gorm.ErrRecordNotFound {
 				monitor.TripCircuit()
 			}
-			return nil, err // <--- AHORA SÍ devolvemos el error si no existe
+			return nil, err
 		}
 	}
 
@@ -177,7 +211,16 @@ func (r *Repository) GetLatestSecurityInfo() (map[string]interface{}, error) {
 		UpdatedAt time.Time
 	}
 	err := r.db.Table("core_seguridad_info").Order("updated_at desc").First(&info).Error
-	return map[string]interface{}{"contenido": info.Contenido, "updated_at": info.UpdatedAt}, err
+
+	if err != nil {
+		if err.Error() != "record not found" {
+			monitor.TripCircuit() // Solo disparamos el breaker si es un error de conexión, no si la tabla está vacía
+		}
+		return nil, err
+	}
+
+	monitor.ResetFailures()
+	return map[string]interface{}{"contenido": info.Contenido, "updated_at": info.UpdatedAt}, nil
 }
 
 // Lista de destinatarios para boletín
@@ -241,8 +284,17 @@ func (r *Repository) SaveSecurityInfo(contenido string) error {
 }
 
 // --- QUERIES DE CATÁLOGO ---
+// Busca esta función y reemplázala por esta versión:
 func (r *Repository) GetPublicaciones() ([]models.Publicacion, error) {
 	var pubs []models.Publicacion
 	err := r.db.Table("pub_catalogo").Order("orden asc").Find(&pubs).Error
-	return pubs, err
+
+	if err != nil {
+		// Si falla el catálogo, algo anda muy mal en la DB
+		monitor.TripCircuit()
+		return nil, err
+	}
+
+	monitor.ResetFailures() // Si funciona, limpiamos el contador de fallos
+	return pubs, nil
 }
