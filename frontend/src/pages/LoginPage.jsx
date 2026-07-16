@@ -204,18 +204,22 @@ function LoginPage() {
     setLoading(true);
     setErrorMsg("");
     try {
-      // Paso 1: Identificación proactiva
-      await axios.post("/api/identify-user", { username: inputs.username });
-      // Paso 2: Autenticación final y recepción de Token
       const res = await axios.post("/api/login-final", {
         username: inputs.username,
         password: inputs.password,
-        turnstile_token: turnstileToken,
+        turnstile_token: turnstileToken, // Se envía si existe
       });
 
-      login(res.data); // Inyecta sesión en AppContext
-    } catch {
-      setErrorMsg("El usuario y/o contraseña no es correcto.");
+      login(res.data);
+    } catch (err) {
+      // CAPTCHA DINÁMICO: Si el error dice que falta el captcha
+      const errorStr = err.response?.data?.error || "";
+      if (errorStr.includes("CAPTCHA")) {
+        setErrorMsg("Seguridad activada: Por favor, resuelva el CAPTCHA inferior.");
+        // Aquí podrías forzar el renderizado del widget si estuviera oculto
+      } else {
+        setErrorMsg("El usuario y/o contraseña no es correcto.");
+      }
     } finally {
       setLoading(false);
     }
@@ -358,7 +362,7 @@ function LoginPage() {
               <button
                 onClick={handleLoginDirect}
                 // El botón solo se habilita si NO está cargando Y tenemos un token
-                disabled={loading || !turnstileToken}
+                disabled={loading}
                 className="w-full bg-jw-blue text-white py-4 rounded-2xl font-bold text-xs tracking-widest uppercase shadow-lg disabled:opacity-30"
               >
                 {loading ? "Procesando..." : "Entrar"}

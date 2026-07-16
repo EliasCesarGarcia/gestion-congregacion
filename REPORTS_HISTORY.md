@@ -16,6 +16,8 @@
 7.  [Informe de Cambios - Arquitectura Élite de Backend (Go)]("informe-2026-07-10")
 8.  [Informe de Cambios - Escudo de Resiliencia y Mitigación de Bots]("informe-2026-07-11")
 9.  [Informe de Cambios - Blindaje de Grado Industrial y SEO Élite](informe-2026-07-13)
+10. [Informe de Cambios - Blindaje de Grado Industrial y Centro de Comando
+    ](informe-2026-07-15)
 
 ---
 
@@ -238,3 +240,35 @@ Se ha completado la transición hacia una arquitectura de **Seguridad en Profund
 
 ---
 *Fin del informe del 2026-07-13. El sistema se declara ESTABLE y BLINDADO.*
+
+---
+<a name="informe-2026-07-15"></a>
+## 🛡️ Informe de Cambios - Blindaje de Grado Industrial y Centro de Comando
+
+**Fecha:** 2026-07-15
+
+Se ha finalizado la implementación del **Escudo de Resiliencia Nivel 4**, transformando el backend en una infraestructura capaz de auto-gestionarse ante ataques masivos y notificar al equipo de infraestructura en milisegundos.
+
+### 1. Sistema de Detección de Botnets (HyperLogLog)
+*   **Ingeniería de Conteo Probabilístico:** Se implementó la lógica de **Cardinalidad mediante HyperLogLog (`PFAdd` / `PFCount`)** en Redis. Esto permite contar miles de IPs únicas por segundo con un consumo de memoria insignificante (menos de 12KB por ventana de tiempo).
+*   **Umbral de Pánico Global:** Configuración del `GlobalPanicThreshold` en 1000 IPs únicas. Si el sistema detecta un ataque coordinado que supera este límite en un intervalo de 5 segundos, se activa automáticamente el protocolo de aislamiento.
+
+### 2. Protocolo de "Aislamiento de Pánico" (Panic Mode)
+*   **Corte de Tráfico Automatizado:** Implementación de un estado de "Pánico" global gestionado mediante `sync.RWMutex`. Al activarse, el servidor rechaza todas las peticiones con un código `503 Service Unavailable`, protegiendo la integridad de la base de datos y el consumo de CPU ante ráfagas DDoS.
+*   **Auto-Recuperación:** El sistema incluye un temporizador de re-apertura automática (30 segundos). Si el ataque persiste, el escudo se vuelve a cerrar; si cesa, el tráfico se normaliza sin intervención humana.
+
+### 3. Centro de Comando: Alertas de Infraestructura (Webhooks)
+*   **Notificación Asíncrona:** Creación del módulo `notifyInfraTeam`. El sistema ahora envía alertas críticas a **Discord/Slack** mediante Webhooks.
+*   **Optimización de Latencia:** El envío de alertas se ejecuta en una **goroutine independiente**, garantizando que el proceso de bloqueo del ataque no se vea ralentizado por la espera de la respuesta del servidor de notificaciones.
+*   **Payload Enriquecido:** Las alertas incluyen la IP origen del ataque, el conteo de IPs únicas detectadas y la marca de tiempo exacta (RFC3339).
+
+### 4. Hardening Perimetral y Optimización SEO
+*   **CORS Estricto:** Se eliminó la configuración permisiva `AllowedOrigins: ["*"]`, sustituyéndola por una lista blanca dinámica (`originsList`) vinculada estrictamente a los dominios de producción en Vercel.
+*   **TTFB & Preflight Caching:** Configuración de `MaxAge: 86400`. El navegador ahora cachea los permisos de CORS por 24 horas, eliminando peticiones `OPTIONS` innecesarias y mejorando el tiempo de respuesta inicial (SEO 2026).
+*   **Fingerprinting de Seguridad:** Se ha mantenido la lógica de detección de huella digital del cliente para mitigar atacantes que rotan IPs dinámicamente mediante scripts.
+
+### 5. Validación de Infraestructura
+*   **Test de Estrés:** Se realizaron pruebas de inyección de tráfico controlado desde terminales remotas (PowerShell/GitBash) validando la recepción de alertas y la correcta interpretación de payloads JSON por parte del Gateway de seguridad.
+
+---
+*Fin del informe del 2026-07-15. El sistema se declara BLINDADO y BAJO MONITOREO ACTIVO.*
