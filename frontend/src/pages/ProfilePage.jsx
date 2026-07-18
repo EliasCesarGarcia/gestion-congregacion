@@ -150,9 +150,9 @@ function EditableRow({ label, value, icon, onEdit }) {
 function ProfilePage() {
   // --- BLOQUE 1: CONFIGURACIÓN E IDIOMAS ---
   const { t, i18n, ready } = useTranslation(); // Herramienta para traducir textos
-  
-  const { user: session, login, logout } = useContext(AppContext); // Datos de la persona conectada
-  const user = session?.user || session;
+
+  const { user, login, logout } = useContext(AppContext); // 'user' ya es el objeto directo
+
   const navigate = useNavigate(); // Herramienta para moverse entre páginas
   const fileInputRef = useRef(null); // Referencia oculta para el selector de archivos
   const scrollRef = useRef(null); // Referencia para mover la galería de fotos
@@ -363,10 +363,6 @@ function ProfilePage() {
 
     setLoading(true);
     try {
-      const token = session?.token;
-      if (!token) throw new Error("Sesión expirada");
-
-      // Comprimimos la imagen para que el sitio sea rápido
       const options = {
         maxSizeMB: 0.3,
         maxWidthOrHeight: 500,
@@ -380,11 +376,11 @@ function ProfilePage() {
         .from("People_profile")
         .upload(fileName, compressed, { upsert: true });
 
-      await axios.post(
-        "/api/upload-foto",
-        { persona_id: String(user.persona_id), foto_url: fileName },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      // Axios envía la cookie automáticamente, no requiere headers manuales
+      await axios.post("/api/upload-foto", {
+        persona_id: String(user.persona_id),
+        foto_url: fileName,
+      });
 
       setImgTimestamp(Date.now()); // Refrescar visualmente
       login({ foto_url: fileName });
@@ -417,12 +413,11 @@ function ProfilePage() {
         setLoading(true);
         setModal({ ...modal, show: false });
         try {
-          const token = session?.token;
-          await axios.post(
-            "/api/upload-foto",
-            { persona_id: String(user.persona_id), foto_url: imagePath },
-            { headers: { Authorization: `Bearer ${token}` } },
-          );
+          // Axios envía la cookie automáticamente, no requiere headers manuales
+          await axios.post("/api/upload-foto", {
+            persona_id: String(user.persona_id),
+            foto_url: imagePath,
+          });
           login({ foto_url: imagePath });
           setImgTimestamp(Date.now());
           setModal({

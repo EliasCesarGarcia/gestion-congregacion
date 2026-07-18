@@ -111,13 +111,17 @@ const logout = useCallback(async () => {
     }
 }, []);
 
-const login = (userData) => {
-    // Ya no esperamos un .token, solo el objeto user
-    const userToSave = userData.user; 
-    
-    setUser(userToSave);
-    // Guardamos solo los datos públicos del usuario, nunca el token
-    sessionStorage.setItem("user_session", JSON.stringify(userToSave));
+const login = (newData) => {
+    setUser(prev => {
+        // Lógica Inteligente:
+        // 1. Si newData tiene una propiedad 'user' (viene del login-final), usamos esa.
+        // 2. Si no, es una actualización parcial (como cambiar la foto), así que mezclamos lo viejo con lo nuevo.
+        const updatedUser = newData.user ? newData.user : { ...prev, ...newData };
+        
+        // Guardamos en sessionStorage para persistencia tras F5
+        sessionStorage.setItem("user_session", JSON.stringify(updatedUser));
+        return updatedUser;
+    });
 };
   // SEO 2026: Imágenes activas para pre-carga
   const currentImages = backgroundImagesMap[activeTheme.effect]?.[timeOfDay] || null;

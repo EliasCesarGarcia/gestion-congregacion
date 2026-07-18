@@ -33,11 +33,8 @@ function Navbar() {
   // --- 1. CONFIGURACIÓN, ESTADOS Y CONTEXTO ---
   const { t, i18n } = useTranslation();
 
-  // Consumo del estado global: sesión de usuario (Se remueve activeTheme para evitar no-unused-vars)
-  const { user: session, logout } = useContext(AppContext);
-
-  // Lógica de "Nesting Fix": Extrae datos si vienen anidados en .user o usa la raíz
-  const user = session?.user || session;
+  // ✅ Solo destructuramos lo que Navbar realmente utiliza
+const { user, logout } = useContext(AppContext);
 
   // NUEVO: Detección dinámica de dirección (LTR / RTL)
   const isRtl = i18n.dir

@@ -19,13 +19,13 @@ function Footer() {
   // --- 1. CONFIGURACIÓN Y ESTADOS DEL CONTEXTO ---
   const { t, i18n } = useTranslation();
 
-  // Consumimos el estado de sesión
-  const { user: session } = useContext(AppContext);
-  // Lógica de "Nesting Fix": Extrae los datos reales del usuario si vienen anidados en session.user
-  const user = session?.user || session;
+  // ✅ Solo destructuramos 'user' que es lo único que lee el Footer
+  const { user } = useContext(AppContext);
 
   // NUEVO: Detección dinámica de dirección (LTR / RTL)
-  const isRtl = i18n.dir ? i18n.dir() === "rtl" : ["ar", "he"].includes(i18n.language);
+  const isRtl = i18n.dir
+    ? i18n.dir() === "rtl"
+    : ["ar", "he"].includes(i18n.language);
 
   // Renderizado condicional: El footer solo es visible si hay un usuario autenticado
   if (!user) return null;
@@ -38,13 +38,13 @@ function Footer() {
    */
   const getRegionKey = (regionName) => {
     const map = {
-      "Asia": "region_asia",
-      "África": "region_africa",
-      "Europa": "region_europa",
+      Asia: "region_asia",
+      África: "region_africa",
+      Europa: "region_europa",
       "América del Norte": "region_north_america",
       "América Central": "region_central_america",
       "América del Sur": "region_south_america",
-      "Oceanía": "region_oceania"
+      Oceanía: "region_oceania",
     };
     return map[regionName] || "nav_undefined";
   };
@@ -60,7 +60,6 @@ function Footer() {
       dir={isRtl ? "rtl" : "ltr"}
       className="bg-jw-navy/65 backdrop-blur-sm w-full border-t border-jw-blue/30 text-jw-text-light py-2 px-2 sm:px-6 mt-auto overflow-hidden transition-colors duration-1000 relative"
     >
-
       {/* Capa de imagen estática para el Footer */}
       <div className="theme-bg-footer"></div>
 
@@ -76,10 +75,13 @@ function Footer() {
       >
         {/* --- SECCIÓN IZQUIERDA: IDENTIDAD Y LOCALIZACIÓN --- */}
         {/* En RTL, alineamos el bloque completo a la derecha (items-end text-right) */}
-        <div className={`flex flex-col ${isRtl ? 'items-end text-right' : 'items-start text-left'} min-w-0 max-w-full md:flex-1`}>
-          
+        <div
+          className={`flex flex-col ${isRtl ? "items-end text-right" : "items-start text-left"} min-w-0 max-w-full md:flex-1`}
+        >
           {/* h3 convertido en flexbox con un gap constante para evitar colapsos de texto con el paréntesis */}
-          <h3 className={`text-sm font-medium tracking-tight truncate w-full mb-1 flex items-center gap-1.5 ${isRtl ? 'justify-start' : ''}`}>
+          <h3
+            className={`text-sm font-medium tracking-tight truncate w-full mb-1 flex items-center gap-1.5 ${isRtl ? "justify-start" : ""}`}
+          >
             <span itemProp="name">
               {t("nav_congregation", "Congregación")} {user.congregacion_nombre}
             </span>
@@ -93,14 +95,16 @@ function Footer() {
             {/* DIRECCIÓN POSTAL SEMÁNTICA (Schema.org) */}
             {/* El navegador coloca el icono a la derecha de manera nativa en RTL */}
             <address
-              className={`flex items-center gap-2 text-xs opacity-80 font-light italic w-full min-w-0 not-italic ${isRtl ? 'text-right' : 'text-left'}`}
+              className={`flex items-center gap-2 text-xs opacity-80 font-light italic w-full min-w-0 not-italic ${isRtl ? "text-right" : "text-left"}`}
               itemProp="address"
               itemScope
               itemType="https://schema.org/PostalAddress"
             >
               <MapPin className="w-3.5 h-3.5 opacity-60 shrink-0" />
               {/* flex-1 permite que ocupe el espacio disponible y justify-start alinea a la derecha en RTL */}
-              <p className={`flex flex-wrap items-baseline min-w-0 flex-1 justify-start ${isRtl ? 'text-right' : 'text-left'}`}>
+              <p
+                className={`flex flex-wrap items-baseline min-w-0 flex-1 justify-start ${isRtl ? "text-right" : "text-left"}`}
+              >
                 {/* Calle: Texto + Coma (condicional) */}
                 {user.direccion && (
                   <span
@@ -150,10 +154,17 @@ function Footer() {
 
             {/* REGIÓN GEOGRÁFICA INTERNA */}
             {/* El navegador ubica el icono de la región a la derecha automáticamente en RTL */}
-            <div className={`flex items-center gap-2 text-xs text-gray-200 font-light italic w-full min-w-0 not-italic ${isRtl ? 'text-right' : 'text-left'}`}>
+            <div
+              className={`flex items-center gap-2 text-xs text-gray-200 font-light italic w-full min-w-0 not-italic ${isRtl ? "text-right" : "text-left"}`}
+            >
               <Globe className="w-3.5 h-3.5 opacity-60 shrink-0" />
-              <p className={`truncate flex-1 uppercase tracking-widest text-[0.65rem] font-normal ${isRtl ? 'text-right' : 'text-left'}`}>
-                {t("nav_region", "Región")} {user.region ? t(getRegionKey(user.region), user.region) : t("nav_undefined", "No asignada")}
+              <p
+                className={`truncate flex-1 uppercase tracking-widest text-[0.65rem] font-normal ${isRtl ? "text-right" : "text-left"}`}
+              >
+                {t("nav_region", "Región")}{" "}
+                {user.region
+                  ? t(getRegionKey(user.region), user.region)
+                  : t("nav_undefined", "No asignada")}
               </p>
             </div>
           </div>
@@ -161,7 +172,9 @@ function Footer() {
 
         {/* --- SECCIÓN DERECHA: ENLACES DE SOPORTE Y LEGAL --- */}
         {/* En RTL, alineamos este bloque a la izquierda de la pantalla para mantener la simetría */}
-        <div className={`flex flex-col ${isRtl ? 'items-start md:items-start text-left' : 'items-start md:items-end text-left md:text-right'} gap-2 max-w-full shrink-0 pt-3 sm:pt-0 border-t border-white/5 sm:border-none w-full sm:w-auto`}>
+        <div
+          className={`flex flex-col ${isRtl ? "items-start md:items-start text-left" : "items-start md:items-end text-left md:text-right"} gap-2 max-w-full shrink-0 pt-3 sm:pt-0 border-t border-white/5 sm:border-none w-full sm:w-auto`}
+        >
           {/* Enlace al Centro de Ayuda */}
           <Link
             to="/contacto"
@@ -174,12 +187,17 @@ function Footer() {
           {/* Copyright y Atribución Institucional */}
           <p className="text-[0.6rem] opacity-60 tracking-[0.2em] uppercase font-light">
             © 2026 {t("footer_title", "GESTIÓN LOCAL TEOCRÁTICA")} •{" "}
-            <span itemProp="areaServed">{t("footer_use", "Uso Institucional")}</span>
+            <span itemProp="areaServed">
+              {t("footer_use", "Uso Institucional")}
+            </span>
           </p>
 
           {/* Versión */}
           <p className="text-[0.6rem] text-gray-300 tracking-[0.2em] uppercase font-light">
-            S.G. v2.6 • <span itemProp="areaServed">{t("footer_terms", "Condiciones de Uso")}</span>
+            S.G. v2.6 •{" "}
+            <span itemProp="areaServed">
+              {t("footer_terms", "Condiciones de Uso")}
+            </span>
           </p>
         </div>
       </div>
