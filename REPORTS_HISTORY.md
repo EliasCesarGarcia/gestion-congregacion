@@ -18,7 +18,7 @@
 9.  [Informe de Cambios - Blindaje de Grado Industrial y SEO Élite](informe-2026-07-13)
 10. [Informe de Cambios - Blindaje de Grado Industrial y Centro de Comando
     ](informe-2026-07-15)
-
+11. [2026-07-17: Blindaje de Grado Industrial y Gestión de Sesión Élite](#informe-2026-07-17)
 ---
 
 <a name="informe-2026-06-15"></a>
@@ -272,3 +272,38 @@ Se ha finalizado la implementación del **Escudo de Resiliencia Nivel 4**, trans
 
 ---
 *Fin del informe del 2026-07-15. El sistema se declara BLINDADO y BAJO MONITOREO ACTIVO.*
+
+---
+<a name="informe-2026-07-17"></a>
+## 🛡️ Informe de Cambios - Blindaje de Grado Industrial y Gestión de Sesión Élite
+
+**Fecha:** 2026-07-17
+
+Se ha completado la transición al **SEGUNDO CASO** de seguridad, implementando un sistema de **Rotación de Tokens de Doble Llave** y un **Escudo de Resiliencia Proactiva**. Esta actualización elimina definitivamente el uso de LocalStorage para datos sensibles y blinda el sistema contra ataques de persistencia y agotamiento de recursos.
+
+### 1. Arquitectura de Sesión de "Doble Llave" (Seguridad Invisible)
+*   **Implementación de Cookies HttpOnly:** Se migró la gestión de identidad de `Authorization Headers` a cookies de grado bancario (`auth_token` de 15 min y `refresh_token` de 7 días). Estas son invisibles para JavaScript, mitigando al 100% el riesgo de robo de sesión vía XSS.
+*   **Refresco Automático (Silent Refresh):** Se integró un **Interceptor de Axios** en el Frontend que detecta errores 401 y solicita una renovación de llave al endpoint `/api/refresh` en segundo plano, garantizando una UX fluida sin re-autenticación constante.
+*   **Logout Quirúrgico:** El proceso de cierre de sesión ahora invalida ambas cookies en el servidor y limpia el estado global del cliente simultáneamente.
+
+### 2. Escudo de Resiliencia y Mitigación de Desastres
+*   **Circuit Breaker (Cortatrastos) Nivel 4:** Implementación de un monitor de salud que "abre el circuito" tras 5 fallos consecutivos de infraestructura (DB/Redis), protegiendo al sistema con un error `503 Service Unavailable` y auto-recuperación en 30 segundos.
+*   **Shield Middleware (Modo Pánico):** Activación de protección perimetral que detecta Botnets mediante conteo probabilístico (HyperLogLog). Si se supera el umbral de 1,000 IPs únicas por segundo, el sistema entra en aislamiento total.
+*   **Notificación de Infraestructura:** Integración de Webhooks asíncronos para alertar al equipo técnico sobre intentos de intrusión o disparos del modo pánico en tiempo real.
+
+### 3. Refactorización de Persistencia y Perfil Público
+*   **Optimización de Consultas SQL (GORM):** Se reconstruyó el método `GetUserForLogin` en el repositorio para realizar `LEFT JOINs` eficientes con la tabla de Congregaciones. Esto garantiza que el perfil del usuario incluya datos geográficos completos (Dirección, Ciudad, Región, Provincia) desde el primer acceso.
+*   **Sanitización Industrial:** Refuerzo de la capa de servicio mediante la librería `bluemonday`, asegurando que cualquier actualización de perfil pase por un filtro estricto anti-inyección de scripts.
+*   **Bcrypt Purista:** Se eliminó cualquier lógica de validación de contraseñas en texto plano. El sistema ahora solo permite hashes criptográficos Bcrypt, cumpliendo estándares internacionales de auditoría.
+
+### 4. Innovación en UX y Estado Global (React 19)
+*   **Gestión de Estado Parcial:** Se optimizó el `AppContext` para permitir actualizaciones granulares del usuario. Esto permite cambiar la foto de perfil o el idioma sin "limpiar" accidentalmente otros datos de sesión cargados.
+*   **Turnstile Dinámico:** Integración de Cloudflare Turnstile en el flujo de Login. El sistema detecta comportamiento sospechoso y exige validación humana solo cuando el `ShieldMiddleware` reporta intentos fallidos previos desde la misma IP.
+*   **Corrección de Logical Properties:** Ajuste final en `Navbar` y `Footer` para asegurar que los datos de congregación y usuario se rendericen correctamente tanto en idiomas LTR como RTL (Árabe/Hebreo), utilizando el componente `<bdi>` para el manejo de números y símbolos.
+
+### 5. Estabilización de Código y Estándares
+*   **Eliminación de Dead Code:** Limpieza de variables no utilizadas y headers manuales (`Authorization`) en `ProfilePage.jsx`, delegando la seguridad a la configuración global de `withCredentials` de Axios.
+*   **Blindaje de Timeouts:** Configuración de límites estrictos de lectura/escritura en el servidor físico (Go) para prevenir ataques de denegación de servicio de bajo nivel (Slowloris).
+
+---
+*Fin del informe del 2026-07-17. El sistema se declara EN PRODUCCIÓN, BLINDADO y OPTIMIZADO.*
