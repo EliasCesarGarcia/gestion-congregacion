@@ -8,12 +8,14 @@ package handlers
 
 import (
 	"encoding/json"
+	"gestion-congregacion/backend/internal/auth"
 	"gestion-congregacion/backend/internal/service"
 	"net"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/microcosm-cc/bluemonday"
 )
 
@@ -51,7 +53,7 @@ func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 		}
 
 		// Llamamos al nuevo Authenticate con IP y Token
-		user, token, err := s.Authenticate(req.Username, req.Password, req.TurnstileToken, ip)
+		user, accessToken, refreshToken, err := s.Authenticate(req.Username, req.Password, req.TurnstileToken, ip)
 
 		if err != nil {
 			// Si el error contiene la palabra "SISTEMA", es un error de seguridad/captcha
@@ -64,13 +66,24 @@ func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 			return
 		}
 
-		// Seteo de Cookie Segura (HttpOnly)
+		// Seteamos la Cookie de Acceso (Corta)
 		http.SetCookie(w, &http.Cookie{
 			Name:     "auth_token",
-			Value:    token,
-			Expires:  time.Now().Add(24 * time.Hour),
+			Value:    accessToken,
+			Expires:  time.Now().Add(15 * time.Minute),
 			HttpOnly: true,
-			Secure:   true, // Debe ser true en producción (HTTPS)
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
+			Path:     "/",
+		})
+
+		// Seteamos la Cookie de Refresco (Larga)
+		http.SetCookie(w, &http.Cookie{
+			Name:     "refresh_token",
+			Value:    refreshToken,
+			Expires:  time.Now().Add(7 * 24 * time.Hour),
+			HttpOnly: true,
+			Secure:   true,
 			SameSite: http.SameSiteNoneMode,
 			Path:     "/",
 		})
@@ -267,14 +280,46 @@ func HandleFileUpload(s *service.Service) http.HandlerFunc {
 }
 
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	// Borramos la de acceso
 	http.SetCookie(w, &http.Cookie{
-		Name:     "auth_token",
-		Value:    "",
-		Expires:  time.Unix(0, 0), // Fecha en el pasado para borrarla
-		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteNoneMode,
-		Path:     "/",
+		Name: "auth_token", Value: "", Path: "/", Expires: time.Unix(0, 0),
+		HttpOnly: true, Secure: true, SameSite: http.SameSiteNoneMode,
+	})
+	// Borramos la de refresco
+	http.SetCookie(w, &http.Cookie{
+		Name: "refresh_token", Value: "", Path: "/", Expires: time.Unix(0, 0),
+		HttpOnly: true, Secure: true, SameSite: http.SameSiteNoneMode,
 	})
 	w.WriteHeader(http.StatusOK)
+}
+
+func RefreshTokenHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("refresh_token")
+		if err != nil {
+			http.Error(w, "No hay llave de refresco", http.StatusUnauthorized)
+			return
+		}
+
+		token, err := auth.ValidarJWT(cookie.Value)
+		if err != nil || !token.Valid {
+			http.Error(w, "Llave de refresco inválida", http.StatusUnauthorized)
+			return
+		}
+
+		claims := token.Claims.(jwt.MapClaims)
+		userID := claims["sub"].(string)
+
+		// Generamos nueva llave corta
+		newAccess, _ := auth.GenerarAccessToken(userID)
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "auth_token",
+			Value:    newAccess,
+			Expires:  time.Now().Add(15 * time.Minute),
+			HttpOnly: true, Secure: true, SameSite: http.SameSiteNoneMode, Path: "/",
+		})
+
+		w.WriteHeader(http.StatusOK)
+	}
 }

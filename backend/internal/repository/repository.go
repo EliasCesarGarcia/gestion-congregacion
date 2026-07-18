@@ -41,7 +41,7 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 	// Cambiamos JOIN por LEFT JOIN para evitar que datos faltantes de congregación bloqueen el login
 	err := r.db.WithContext(ctx).Table("core_usuarios").
 		Select(`
-            core_usuarios.id, 
+             core_usuarios.id, 
             core_usuarios.persona_id, 
             core_usuarios.username_temp as username, 
             core_usuarios.password_hash, 
@@ -52,7 +52,13 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
             core_personas.estado, 
             core_congregaciones.nombre as congregacion_nombre, 
             core_congregaciones.numero_congregacion, 
-            core_congregaciones.zona_horaria
+            core_congregaciones.zona_horaria,
+            core_congregaciones.direccion, 
+            core_congregaciones.ciudad, 
+            core_congregaciones.partido, 
+            core_congregaciones.provincia_estado as provincia, 
+            core_congregaciones.pais, 
+            core_congregaciones.region
         `).
 		Joins("LEFT JOIN core_personas ON core_personas.id = core_usuarios.persona_id").
 		Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
@@ -79,7 +85,13 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
                 core_personas.password_hash, 
                 core_personas.estado, 
                 core_congregaciones.nombre as congregacion_nombre, 
-                core_congregaciones.numero_congregacion
+                core_congregaciones.numero_congregacion,
+                core_congregaciones.direccion, 
+                core_congregaciones.ciudad, 
+                core_congregaciones.partido, 
+                core_congregaciones.provincia_estado as provincia, 
+                core_congregaciones.pais, 
+                core_congregaciones.region
             `).
 			Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
 			Where("LOWER(core_personas.username_temp) = ? AND UPPER(core_personas.estado) = 'ALTA'", username).

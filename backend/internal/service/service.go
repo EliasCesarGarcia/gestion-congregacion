@@ -45,58 +45,54 @@ func NewService(repo *repository.Repository, rdb *redis.Client) *Service {
 
 // --- LÓGICA DE IDENTIDAD ---
 
-// Authenticate: Lógica de Login Blindada
-// Authenticate verifica las credenciales y devuelve el usuario con su token
-// Authenticate: Ahora recibe el Token y la IP para el Captcha Dinámico
-func (s *Service) Authenticate(username, password, captchaToken, ip string) (*models.Usuario, string, error) {
+// Authenticate: Lógica de Login Blindada con Sistema de Doble Llave (Refresh Tokens)
+func (s *Service) Authenticate(username, password, captchaToken, ip string) (*models.Usuario, string, string, error) {
 	username = strings.TrimSpace(strings.ToLower(username))
 	ctx := context.Background()
 
 	// 1. LÓGICA DE CAPTCHA DINÁMICO
-	// Consultamos cuántas veces ha fallado esta IP en Redis
 	failedAttempts, _ := s.rdb.Get(ctx, "failed_login:"+ip).Int()
 
-	// Si falló 3 veces o más, el Captcha es OBLIGATORIO
 	if failedAttempts >= 3 {
 		if captchaToken == "" {
-			return nil, "", errors.New("SISTEMA: Comportamiento sospechoso. Resuelva el CAPTCHA.")
+			return nil, "", "", errors.New("SISTEMA: Comportamiento sospechoso. Resuelva el CAPTCHA.")
 		}
 		if !s.ValidarTurnstile(captchaToken) {
-			return nil, "", errors.New("SISTEMA: CAPTCHA no válido o expirado.")
+			return nil, "", "", errors.New("SISTEMA: CAPTCHA no válido o expirado.")
 		}
 	}
-
-	// LOG DE DEBUG PARA TI:
-	log.Printf("DEBUG: Intentando login para: %s desde IP: %s", username, ip)
 
 	// 2. BUSCAR USUARIO
 	u, err := s.repo.GetUserForLogin(username)
 	if err != nil {
-		log.Printf("DEBUG: Error en Repo (No encontrado o no ALTA): %v", err)
-		return nil, "", errors.New("el usuario o la contraseña no son correctos")
+		return nil, "", "", errors.New("el usuario o la contraseña no son correctos")
 	}
 
-	// 3. VALIDAR CONTRASEÑA
-	isValid := false
-	if strings.HasPrefix(u.PasswordHash, "$2a$") {
-		err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
-		isValid = (err == nil)
-	} else {
-		isValid = (u.PasswordHash == password)
-	}
-
-	if !isValid {
-		// Incrementamos fallos en Redis por 30 minutos
+	// 3. VALIDAR CONTRASEÑA (BLINDAJE NIVEL DIOS: Solo Bcrypt permitido)
+	// Eliminamos el 'if/else' anterior para prohibir texto plano.
+	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
+	if err != nil {
+		// Incrementamos fallos en Redis para disparar el CAPTCHA en el próximo intento
 		s.rdb.Incr(ctx, "failed_login:"+ip)
 		s.rdb.Expire(ctx, "failed_login:"+ip, 30*time.Minute)
-		return nil, "", errors.New("el usuario o la contraseña no son correctos")
+		return nil, "", "", errors.New("el usuario o la contraseña no son correctos")
 	}
 
 	// SI EL LOGIN ES EXITOSO: Reseteamos los fallos de esta IP
 	s.rdb.Del(ctx, "failed_login:"+ip)
 
-	token, _ := auth.GenerarJWT(u.ID)
-	return u, token, nil
+	// 4. GENERACIÓN DE LLAVES (Tokens)
+	accessToken, err := auth.GenerarAccessToken(u.ID)
+	if err != nil {
+		return nil, "", "", errors.New("error al generar llave de acceso")
+	}
+
+	refreshToken, err := auth.GenerarRefreshToken(u.ID)
+	if err != nil {
+		return nil, "", "", errors.New("error al generar llave de refresco")
+	}
+
+	return u, accessToken, refreshToken, nil
 }
 
 func (s *Service) RecoverAccount(pID, num, tel, met string) (string, error) {
