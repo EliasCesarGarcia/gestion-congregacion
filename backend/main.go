@@ -101,11 +101,18 @@ func main() {
 	// NOTA: En producción, sustituye "*" por tu dominio real de Vercel
 	// En el .env, ALLOWED_ORIGINS debe ser "https://tu-app.vercel.app"
 	// Cargamos orígenes permitidos desde el ENV (ej: https://app.vercel.app,https://admin.com)
+	// 1. Obtener la variable de entorno
 	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
+
+	// 2. Si por alguna razón la variable está vacía, poner un fallback de seguridad
+	if allowedOrigins == "" {
+		allowedOrigins = "https://gestion-congregacion.vercel.app"
+	}
+
 	originsList := strings.Split(allowedOrigins, ",")
 
 	finalHandler := cors.New(cors.Options{
-		AllowedOrigins:   originsList, // Estricto: Solo tus dominios
+		AllowedOrigins:   originsList,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Authorization", "Content-Type", "Accept", "X-Requested-With"},
 		AllowCredentials: true,
