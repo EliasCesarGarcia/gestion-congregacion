@@ -272,3 +272,20 @@ func (s *Service) ValidarTurnstile(token string) bool {
 	log.Println("✅ Captcha VALIDADO correctamente por Cloudflare")
 	return true
 }
+
+func (s *Service) UpdatePasswordByUsername(username, newPassword string) error {
+    // 1. Cifrar la nueva contraseña
+    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+    if err != nil {
+        return err
+    }
+
+    // 2. Buscar al usuario para obtener su PersonaID
+    u, err := s.repo.GetUserForLogin(username)
+    if err != nil {
+        return errors.New("usuario no encontrado")
+    }
+
+    // 3. Actualizar en la base de datos usando el repositorio (página 96 del PDF)
+    return s.repo.UpdatePassword(fmt.Sprintf("%d", u.PersonaID), string(hashedPassword))
+}

@@ -34,6 +34,7 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.HandleFunc("/api/recover-user-id", handlers.RecoverByPersonaIDHandler(svc))
 	mux.HandleFunc("/api/send-username-real", handlers.SendUsernameRealHandler(svc))
 	mux.HandleFunc("/api/seguridad-info", handlers.GetSeguridadInfoHandler(svc))
+	mux.HandleFunc("/api/reset-password", handlers.ResetPasswordHandler(svc))
 
 	// --- RUTAS PROTEGIDAS (Middleware Aplicado) ---
 	// Perfil

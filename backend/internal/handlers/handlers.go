@@ -323,3 +323,23 @@ func RefreshTokenHandler(s *service.Service) http.HandlerFunc {
 		w.WriteHeader(http.StatusOK)
 	}
 }
+
+func ResetPasswordHandler(s *service.Service) http.HandlerFunc {
+    return func(w http.ResponseWriter, r *http.Request) {
+        var req struct {
+            Username    string `json:"username"`
+            NewPassword string `json:"new_password"`
+        }
+        if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+            http.Error(w, "JSON inválido", 400)
+            return
+        }
+        // Llamamos al servicio para actualizar
+        err := s.UpdatePasswordByUsername(req.Username, req.NewPassword)
+        if err != nil {
+            http.Error(w, err.Error(), 500)
+            return
+        }
+        w.WriteHeader(http.StatusOK)
+    }
+}
