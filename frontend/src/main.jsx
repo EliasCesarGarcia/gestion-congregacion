@@ -36,29 +36,24 @@ axios.defaults.baseURL = isLocal
 
 // Esta línea es la más importante. 
 // Permite que Axios incluya las cookies en cada petición automáticamente.
-axios.defaults.withCredentials = true; 
-
 // --- INTERCEPTOR PARA (REFRESCO AUTOMÁTICO) ---
-// Este bloque detecta si el token de 15 min venció y pide uno nuevo sin cerrar sesión.
 axios.interceptors.response.use(
-  (response) => response, // Si la respuesta es exitosa (200), no hace nada.
+  (response) => response, 
   async (error) => {
     const originalRequest = error.config;
 
-    // Si el servidor responde 401 (Venció el token) y no hemos intentado refrescar aún...
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Marcamos que estamos intentando el refresco
-
+    // Solo intentamos refrescar si el error es 401 Y NO es una petición de login o de refresco
+    if (
+      error.response?.status === 401 && 
+      !originalRequest._retry && 
+      !originalRequest.url.includes("/api/refresh") && 
+      !originalRequest.url.includes("/api/login-final")
+    ) {
+      originalRequest._retry = true;
       try {
-        // Llamamos al endpoint de refresco. 
-        // El Backend leerá la cookie HttpOnly 'refresh_token' automáticamente.
         await axios.post("/api/refresh");
-
-        // Si el refresco fue exitoso, re-intentamos la petición original que había fallado.
         return axios(originalRequest);
       } catch (refreshError) {
-        // Si el refresco también falla (ej: pasaron los 7 días de la llave larga), 
-        // borramos la sesión y mandamos al login.
         console.error("Sesión expirada completamente.");
         sessionStorage.removeItem("user_session");
         window.location.href = "/login";
