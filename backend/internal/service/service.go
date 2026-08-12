@@ -286,6 +286,8 @@ func (s *Service) UpdatePasswordByUsername(username, newPassword string) error {
         return fmt.Errorf("el usuario %s no existe", username)
     }
 
-    // 3. Actualizar en la base de datos usando el repositorio (página 96 del PDF)
-    return s.repo.UpdatePassword(fmt.Sprintf("%d", u.PersonaID), string(hashedPassword))
+    // 3. Actualizar usando el PersonaID (que es un int en el modelo)
+    // service.go tenga import "fmt"
+    personaIDStr := fmt.Sprintf("%d", u.PersonaID)
+    return s.repo.UpdatePassword(personaIDStr, string(hashedPassword))
 }
