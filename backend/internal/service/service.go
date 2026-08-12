@@ -283,7 +283,7 @@ func (s *Service) UpdatePasswordByUsername(username, newPassword string) error {
     // 2. Buscar al usuario para obtener su PersonaID
     u, err := s.repo.GetUserForLogin(username)
     if err != nil {
-        return errors.New("usuario no encontrado")
+        return fmt.Errorf("el usuario %s no existe", username)
     }
 
     // 3. Actualizar en la base de datos usando el repositorio (página 96 del PDF)
