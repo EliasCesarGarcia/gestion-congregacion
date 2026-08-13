@@ -37,6 +37,7 @@ axios.defaults.baseURL = isLocal
 // Esta línea es la más importante. 
 // Permite que Axios incluya las cookies en cada petición automáticamente.
 // --- INTERCEPTOR PARA (REFRESCO AUTOMÁTICO) ---
+axios.defaults.withCredentials = true; 
 axios.interceptors.response.use(
   (response) => response, 
   async (error) => {
