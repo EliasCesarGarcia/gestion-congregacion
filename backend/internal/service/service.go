@@ -55,9 +55,11 @@ func (s *Service) Authenticate(username, password, captchaToken, ip string) (*mo
 
 	if failedAttempts >= 3 {
 		if captchaToken == "" {
+			log.Printf("⚠️ LOGIN RECHAZADO: Falta Captcha para IP %s", ip)
 			return nil, "", "", errors.New("SISTEMA: Comportamiento sospechoso. Resuelva el CAPTCHA.")
 		}
 		if !s.ValidarTurnstile(captchaToken) {
+			log.Printf("⚠️ LOGIN RECHAZADO: Captcha inválido para IP %s", ip)
 			return nil, "", "", errors.New("SISTEMA: CAPTCHA no válido o expirado.")
 		}
 	}
@@ -65,6 +67,7 @@ func (s *Service) Authenticate(username, password, captchaToken, ip string) (*mo
 	// 2. BUSCAR USUARIO
 	u, err := s.repo.GetUserForLogin(username)
 	if err != nil {
+		log.Printf("⚠️ LOGIN RECHAZADO: Usuario '%s' no encontrado", username)
 		return nil, "", "", errors.New("el usuario o la contraseña no son correctos")
 	}
 
@@ -72,6 +75,7 @@ func (s *Service) Authenticate(username, password, captchaToken, ip string) (*mo
 	// Eliminamos el 'if/else' anterior para prohibir texto plano.
 	err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(password))
 	if err != nil {
+		log.Printf("⚠️ LOGIN RECHAZADO: Contraseña incorrecta para usuario '%s'", username)
 		// Incrementamos fallos en Redis para disparar el CAPTCHA en el próximo intento
 		s.rdb.Incr(ctx, "failed_login:"+ip)
 		s.rdb.Expire(ctx, "failed_login:"+ip, 30*time.Minute)
