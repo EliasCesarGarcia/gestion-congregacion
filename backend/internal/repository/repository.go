@@ -62,7 +62,7 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
         `).
 		Joins("LEFT JOIN core_personas ON core_personas.id = core_usuarios.persona_id").
 		Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
-		Where("LOWER(core_usuarios.username_temp) = ? AND UPPER(core_personas.estado) = 'ALTA'", username).
+		Where("core_usuarios.username_temp ILIKE ? AND core_personas.estado = 'ALTA'", username).
 		First(&u).Error
 
 	if err != nil {
@@ -94,7 +94,7 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
                 core_congregaciones.region
             `).
 			Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
-			Where("LOWER(core_personas.username_temp) = ? AND UPPER(core_personas.estado) = 'ALTA'", username).
+			Where("core_personas.username_temp ILIKE ? AND core_personas.estado = 'ALTA'", username).
 			First(&u).Error
 
 		if err != nil {
