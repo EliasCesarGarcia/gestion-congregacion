@@ -46,7 +46,8 @@ axios.interceptors.response.use(
     // Solo intentamos refrescar si el error es 401 Y NO es una petición de login o de refresco
     if (
       error.response?.status === 401 && 
-      !originalRequest._retry && 
+      !originalRequest._retry &&
+      originalRequest.url &&
       !originalRequest.url.includes("/api/refresh") && 
       !originalRequest.url.includes("/api/login-final")
     ) {
