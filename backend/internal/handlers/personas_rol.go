@@ -6,7 +6,8 @@
  *  - POST /api/admin/personas/rol -> { persona_id, rol_app, accion? }
  *      Solo superadmin (la ruta va dentro de SuperAdminMiddleware).
  *      accion "asignar" (por defecto) o "quitar". rol_app "publicador" quita todos.
- *  - POST /api/personas/roles/rotar -> { coordinador?, secretario?, servicio? }
+ *  - POST /api/personas/roles/rotar -> { coordinador?, secretario?, servicio?, fecha? }
+ *      fecha (AAAA-MM-DD) opcional: por defecto hoy; puede ser pasada, nunca futura.
  *      Cada valor es el id del NUEVO titular de ese rol. Solo coordinador,
  *      secretario o servicio, y solo dentro de su congregación.
  */

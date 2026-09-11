@@ -14,6 +14,7 @@ package repository
 import (
 	"errors"
 	"strings"
+	"time"
 
 	"gestion-congregacion/backend/internal/models"
 
@@ -27,6 +28,12 @@ var (
 	ErrRolNoElegible = errors.New("persona no elegible para el rol")
 	// ErrRolesIncompletos: tras el cambio algún rol quedaría vacante o repetido.
 	ErrRolesIncompletos = errors.New("roles incompletos")
+	// ErrFechaAnteriorRol: la fecha es anterior al inicio del período vigente que se cierra.
+	ErrFechaAnteriorRol = errors.New("la fecha es anterior al inicio del rol vigente")
+	// ErrFechaSolapaRol: el nuevo titular ya tuvo ese rol en un período que termina después de la fecha.
+	ErrFechaSolapaRol = errors.New("la fecha se superpone con un período anterior de la persona en ese rol")
+	// ErrFechaAnteriorAltaRol: algún nuevo titular fue dado de alta después de la fecha elegida.
+	ErrFechaAnteriorAltaRol = errors.New("la fecha es anterior al alta de una de las personas")
 )
 
 var rolesEncargado = []string{"coordinador", "secretario", "servicio"}
@@ -69,12 +76,22 @@ func recalcularRolPrincipal(tx *gorm.DB, personaID int) error {
 		WHERE id = ?::integer`, personaID, personaID).Error
 }
 
-func abrirRolPersona(tx *gorm.DB, personaID int, cong, rol, actorID string) error {
+// fechaRolParam convierte la fecha opcional en un valor para la consulta
+// (nil = NULL, y la consulta usa now()).
+func fechaRolParam(t *time.Time) interface{} {
+	if t == nil {
+		return nil
+	}
+	return *t
+}
+
+// abrirRolPersona abre el período del rol. fecha nil = ahora (now()).
+func abrirRolPersona(tx *gorm.DB, personaID int, cong, rol string, fecha interface{}, actorID string) error {
 	if err := tx.Exec(`
 		INSERT INTO core_personas_roles_historial
 			(persona_id, congregacion_id, rol, fecha_inicio, asignado_por, vigente)
-		VALUES (?::integer, ?::uuid, ?::text, now(), NULLIF(?::text,'')::integer, true)`,
-		personaID, cong, rol, actorID).Error; err != nil {
+		VALUES (?::integer, ?::uuid, ?::text, COALESCE(?::timestamptz, now()), NULLIF(?::text,'')::integer, true)`,
+		personaID, cong, rol, fecha, actorID).Error; err != nil {
 		if strings.Contains(err.Error(), "23505") {
 			return ErrRolOcupado // un índice único de la base lo frenó
 		}
@@ -144,7 +161,7 @@ func (r *Repository) CambiarRolPersona(personaID int, rol string, quitar bool, a
 			}
 			return ErrRolOcupado
 		}
-		if err := abrirRolPersona(tx, personaID, cong, rol, actorID); err != nil {
+		if err := abrirRolPersona(tx, personaID, cong, rol, nil, actorID); err != nil {
 			return err
 		}
 		if err := recalcularRolPrincipal(tx, personaID); err != nil {
@@ -164,10 +181,14 @@ func (r *Repository) CambiarRolPersona(personaID int, rol string, quitar bool, a
 // actual y se le da al nuevo (nunca queda vacante en el medio), se recalcula
 // rol_app de los afectados y al final se exige que coordinador, secretario y
 // servicio tengan cada uno exactamente un titular en ALTA. Los nuevos titulares
-// deben ser de la congregación, estar en ALTA y ser Anciano. Devuelve false si
-// no había nada que cambiar.
-func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[string]int, actorID string) (bool, error) {
+// deben ser de la congregación, estar en ALTA y ser Anciano. fecha nil = ahora;
+// si viene, es el momento del cambio (ya validada: no futura) y se exige que no
+// sea anterior al inicio del período que se cierra, al alta de los nuevos
+// titulares ni se superponga con un período anterior del nuevo titular en ese
+// rol. Devuelve false si no había nada que cambiar.
+func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[string]int, fecha *time.Time, actorID string) (bool, error) {
 	hecho := false
+	fechaSQL := fechaRolParam(fecha)
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		if err := bloquearCongregacionRoles(tx, congregacionID); err != nil {
 			return err
@@ -186,16 +207,19 @@ func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[str
 		}
 
 		type fila struct {
-			ID         int    `gorm:"column:id"`
-			Estado     string `gorm:"column:estado"`
-			Situacion2 string `gorm:"column:situacion_2"`
+			ID            int    `gorm:"column:id"`
+			Estado        string `gorm:"column:estado"`
+			Situacion2    string `gorm:"column:situacion_2"`
+			AltaPosterior bool   `gorm:"column:alta_posterior"`
 		}
 		var filas []fila
 		if err := tx.Raw(`
-			SELECT id AS id, estado AS estado, COALESCE(situacion_2, '') AS situacion_2
+			SELECT id AS id, estado AS estado, COALESCE(situacion_2, '') AS situacion_2,
+			       (fecha_alta IS NOT NULL
+			        AND fecha_alta > (COALESCE(?::timestamptz, now()) AT TIME ZONE 'UTC')::date) AS alta_posterior
 			FROM core_personas
 			WHERE id IN ? AND congregacion_id::text = ?::text
-			ORDER BY id FOR UPDATE`, ids, congregacionID).Scan(&filas).Error; err != nil {
+			ORDER BY id FOR UPDATE`, fechaSQL, ids, congregacionID).Scan(&filas).Error; err != nil {
 			return err
 		}
 		if len(filas) != len(ids) {
@@ -204,6 +228,9 @@ func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[str
 		for _, f := range filas {
 			if f.Estado != "ALTA" || f.Situacion2 != "Anciano" {
 				return ErrRolNoElegible
+			}
+			if f.AltaPosterior {
+				return ErrFechaAnteriorAltaRol
 			}
 		}
 
@@ -224,17 +251,41 @@ func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[str
 				if actuales[0] == nuevo {
 					continue // ya es el titular
 				}
+				var posteriores []int64
+				if err := tx.Raw(`
+					SELECT id FROM core_personas_roles_historial
+					WHERE congregacion_id::text = ?::text AND rol = ?::text AND vigente = true
+					  AND fecha_inicio > COALESCE(?::timestamptz, now())
+					LIMIT 1`, congregacionID, rol, fechaSQL).Scan(&posteriores).Error; err != nil {
+					return err
+				}
+				if len(posteriores) > 0 {
+					return ErrFechaAnteriorRol
+				}
 				if err := tx.Exec(`
 					UPDATE core_personas_roles_historial
-					SET vigente = false, fecha_fin = now(),
+					SET vigente = false, fecha_fin = COALESCE(?::timestamptz, now()),
 					    quitado_por = NULLIF(?::text,'')::integer
 					WHERE congregacion_id::text = ?::text AND rol = ?::text AND vigente = true`,
-					actorID, congregacionID, rol).Error; err != nil {
+					fechaSQL, actorID, congregacionID, rol).Error; err != nil {
 					return err
 				}
 				afectadas[actuales[0]] = true
 			}
-			if err := abrirRolPersona(tx, nuevo, congregacionID, rol, actorID); err != nil {
+
+			var solapes []int64
+			if err := tx.Raw(`
+				SELECT id FROM core_personas_roles_historial
+				WHERE persona_id = ?::integer AND rol = ?::text AND vigente = false
+				  AND fecha_fin > COALESCE(?::timestamptz, now())
+				LIMIT 1`, nuevo, rol, fechaSQL).Scan(&solapes).Error; err != nil {
+				return err
+			}
+			if len(solapes) > 0 {
+				return ErrFechaSolapaRol
+			}
+
+			if err := abrirRolPersona(tx, nuevo, congregacionID, rol, fechaSQL, actorID); err != nil {
 				return err
 			}
 			afectadas[nuevo] = true

@@ -38,6 +38,12 @@ func traducirErrorRol(err error) error {
 		return errDatosPersona("las personas deben estar en alta y ser Anciano para un rol de encargado")
 	case errors.Is(err, repository.ErrRolesIncompletos):
 		return errDatosPersona("después del cambio, coordinador, secretario y servicio deben quedar cada uno con una sola persona en alta")
+	case errors.Is(err, repository.ErrFechaAnteriorRol):
+		return errDatosPersona("la fecha es anterior al inicio del período vigente del rol que se reemplaza")
+	case errors.Is(err, repository.ErrFechaSolapaRol):
+		return errDatosPersona("la fecha se superpone con un período anterior de la persona en ese mismo rol")
+	case errors.Is(err, repository.ErrFechaAnteriorAltaRol):
+		return errDatosPersona("la fecha es anterior a la fecha de alta de uno de los nuevos titulares")
 	}
 	return err
 }
@@ -108,7 +114,12 @@ func (s *Service) RotarRolesPersonas(a *models.Actor, in models.RotacionRoles) e
 		return errDatosPersona("indique al menos un rol a cambiar: coordinador, secretario o servicio")
 	}
 
-	hecho, err := s.repo.RotarRolesPersonas(a.CongregacionID, titulares, a.PersonaID)
+	fecha, err := fechaHoraPersona(in.Fecha)
+	if err != nil {
+		return err
+	}
+	
+	hecho, err := s.repo.RotarRolesPersonas(a.CongregacionID, titulares, fecha, a.PersonaID)
 	if err != nil {
 		return traducirErrorRol(err)
 	}

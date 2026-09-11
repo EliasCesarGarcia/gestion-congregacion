@@ -30,9 +30,11 @@ type HistorialRolPersona struct {
 }
 
 // RotacionRoles: el NUEVO titular de cada rol que cambia (id de persona).
-// 0 = ese rol no cambia. Ejemplo: {"coordinador": 31, "servicio": 31}.
+// 0 = ese rol no cambia. Fecha (AAAA-MM-DD) es opcional: vacía = hoy; puede ser
+// pasada y nunca futura. Ejemplo: {"coordinador": 31, "servicio": 31, "fecha": "2026-11-05"}.
 type RotacionRoles struct {
-	Coordinador int `json:"coordinador"`
-	Secretario  int `json:"secretario"`
-	Servicio    int `json:"servicio"`
+	Coordinador int    `json:"coordinador"`
+	Secretario  int    `json:"secretario"`
+	Servicio    int    `json:"servicio"`
+	Fecha       string `json:"fecha"`
 }
