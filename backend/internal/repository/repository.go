@@ -15,6 +15,7 @@ import (
 	"gorm.io/gorm"
 
 	"context"
+	"log"
 )
 
 type Repository struct {
@@ -66,8 +67,9 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 		First(&u).Error
 
 	if err != nil {
-		// Si es timeout o error de red, disparamos el breaker
+				// Si es timeout o error de red, disparamos el breaker
 		if err != gorm.ErrRecordNotFound {
+			log.Printf("❌ DB error en login (consulta 1): %v", err)
 			monitor.TripCircuit()
 			return nil, err
 		}
@@ -99,6 +101,7 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 
 		if err != nil {
 			if err != gorm.ErrRecordNotFound {
+				log.Printf("❌ DB error en login (consulta 2): %v", err)
 				monitor.TripCircuit()
 			}
 			return nil, err

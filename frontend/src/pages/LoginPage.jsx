@@ -78,7 +78,9 @@ function LoginPage() {
     if (!document.getElementById(scriptId)) {
       const script = document.createElement("script");
       script.id = scriptId;
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      //script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+      script.src =
+        "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
       script.async = true;
       script.defer = true;
       document.head.appendChild(script);
@@ -212,15 +214,35 @@ function LoginPage() {
 
       login(res.data);
     } catch (err) {
-      // CAPTCHA DINÁMICO: Si el error dice que falta el captcha
+      const status = err.response?.status;
       const errorStr = err.response?.data?.error || "";
+      console.error("Login falló:", status, errorStr || err.message);
+
       if (errorStr.includes("CAPTCHA")) {
-        setErrorMsg("Seguridad activada: Por favor, resuelva el CAPTCHA inferior.");
-        // Aquí podrías forzar el renderizado del widget si estuviera oculto
-      } else {
+        setErrorMsg(
+          "Seguridad activada: Por favor, resuelva el CAPTCHA inferior.",
+        );
+      } else if (status === 401) {
         setErrorMsg("El usuario y/o contraseña no es correcto.");
+      } else if (status === 403 || status === 429) {
+        setErrorMsg(
+          "Demasiados intentos o acceso bloqueado. Espere un momento.",
+        );
+      } else if (status === 503) {
+        setErrorMsg(
+          "Servicio en protección temporal. Reintente en 30 segundos.",
+        );
+      } else {
+        setErrorMsg("No se pudo conectar con el servidor.");
       }
     } finally {
+      // El token del captcha es de un solo uso: lo reiniciamos siempre
+      setTurnstileToken("");
+      try {
+        window.turnstile?.reset();
+      } catch {
+        // Si no hay widget activo, no pasa nada
+      }
       setLoading(false);
     }
   };
@@ -353,11 +375,8 @@ function LoginPage() {
               )}
 
               {/* WIDGET DE CAPTCHA (Turnstile) */}
-              <div
-                className="cf-turnstile"
-                data-sitekey="0x4AAAAAAD0Bx-U3gMoKixPe" // Pega aquí tu SITE KEY (la pública)
-                data-callback="onTurnstileSuccess"
-              ></div>
+
+              <div className="cf-turnstile"></div>
 
               <button
                 onClick={handleLoginDirect}

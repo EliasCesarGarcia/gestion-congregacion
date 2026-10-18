@@ -49,9 +49,21 @@ func main() {
 		os.Getenv("DB_PORT"))
 
 	// Importante: PrepareStmt: false es vital para Supabase Pooler
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
-		PrepareStmt: false,                                 // Mejora velocidad en un 20%
-		Logger:      logger.Default.LogMode(logger.Silent), // No filtrar queries en producción (seguridad). Silenciamos logs para evitar fugas de info en consola
+		newLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			LogLevel:                  logger.Error, // solo muestra errores reales
+			IgnoreRecordNotFoundError: true,         // "no encontrado" no es un error
+			ParameterizedQueries:      true,         // no imprime valores (usuarios, claves) en los logs
+		},
+	)
+
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: true, // necesario con el pooler de transacciones de Supabase
+	}), &gorm.Config{
+		PrepareStmt: false,
+		Logger:      newLogger,
 	})
 
 	if err != nil {
@@ -61,9 +73,10 @@ func main() {
 	// Optimización de pool de conexiones (Hardware-Aware)
 	sqlDB, err := db.DB()
 	if err == nil {
-		sqlDB.SetMaxIdleConns(5)
-		sqlDB.SetMaxOpenConns(10)
-		sqlDB.SetConnMaxLifetime(time.Hour) // Cerramos conexiones viejas para evitar fugas de memoria
+		sqlDB.SetMaxIdleConns(2)
+		sqlDB.SetMaxOpenConns(5)
+		sqlDB.SetConnMaxLifetime(30 * time.Minute)
+		sqlDB.SetConnMaxIdleTime(1 * time.Minute) // libera conexiones que no se usan // Cerramos conexiones viejas para evitar fugas de memoria
 	}
 
 	fmt.Println("✅ ¡Conexión exitosa a Supabase! (Pooler Mode)")

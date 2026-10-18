@@ -48,7 +48,8 @@ func NewService(repo *repository.Repository, rdb *redis.Client) *Service {
 // Authenticate: Lógica de Login Blindada con Sistema de Doble Llave (Refresh Tokens)
 func (s *Service) Authenticate(username, password, captchaToken, ip string) (*models.Usuario, string, string, error) {
 	username = strings.TrimSpace(strings.ToLower(username))
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
 
 	// 1. LÓGICA DE CAPTCHA DINÁMICO
 	failedAttempts, _ := s.rdb.Get(ctx, "failed_login:"+ip).Int()
