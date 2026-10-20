@@ -17,8 +17,11 @@ import (
 	"fmt"
 	"log"
 	"math/big"
+
 	"net/http"
+	"net/mail"
 	"net/url"
+
 	"os"
 	"regexp"
 	"time"
@@ -191,7 +194,13 @@ func (s *Service) BroadcastSecurity(titulo, desc string) error {
 	return nil
 }
 
+// Foto permitida: la propia (perfil_<id>.jpg) o un avatar institucional.
+var fotoAvatarRe = regexp.MustCompile(`^/avatars/(hombres|mujeres)/(hombre|mujer)_[0-9]{1,2}\.webp$`)
+
 func (s *Service) UpdateUserFoto(personaID, url string) error {
+	if url != "perfil_"+personaID+".jpg" && !fotoAvatarRe.MatchString(url) {
+		return ErrFotoInvalida
+	}
 	fixedURL := strings.Replace(url, "PEOPLE_PROFILE", "People_profile", -1)
 	return s.repo.UpdateFoto(personaID, fixedURL)
 }
@@ -205,20 +214,65 @@ func (s *Service) GetSecurityBulletin() (map[string]interface{}, error) {
 
 func (s *Service) GetCatalog() ([]models.Publicacion, error) { return s.repo.GetPublicaciones() }
 
-func (s *Service) UpdateProfile(pID, campo, valor string) error {
-	// SANITIZACIÓN INDUSTRIAL: No confiamos en lo que envíe el cliente
-	p := bluemonday.StrictPolicy()
-	cleanValue := p.Sanitize(valor)
+var (
+	ErrCampoInvalido = errors.New("campo no permitido")
+	ErrValorInvalido = errors.New("valor no válido")
+	ErrUsernameEnUso = errors.New("el nombre de usuario ya está en uso")
+	ErrFotoInvalida  = errors.New("foto no permitida")
+)
 
-	// Bloqueo preventivo de inyección de etiquetas comunes en campos de texto
-	if strings.Contains(cleanValue, "javascript:") {
-		return errors.New("intento de inyección detectado")
-	}
-
-	return s.repo.UpdateProfileField(pID, campo, cleanValue)
+// Lista blanca: campo que manda el cliente -> columna real de la base.
+// La contraseña NO está acá: va por su propia ruta (paso 2c).
+var camposPerfil = map[string]string{
+	"username": "username_temp",
+	"email":    "email",
+	"contacto": "contacto",
 }
 
-func (s *Service) SuspendUser(pID, uID string) error { return s.repo.SuspendAccount(pID, uID) }
+var contactoRe = regexp.MustCompile(`^[0-9]{8,20}$`)
+
+func (s *Service) UpdateProfile(personaID, campo, valor string) error {
+	columna, ok := camposPerfil[campo]
+	if !ok {
+		return ErrCampoInvalido
+	}
+
+	// No confiamos en lo que envíe el cliente
+	p := bluemonday.StrictPolicy()
+	valor = strings.TrimSpace(p.Sanitize(valor))
+	if valor == "" {
+		return ErrValorInvalido
+	}
+
+	switch campo {
+	case "username":
+		valor = strings.ToLower(valor)
+		if len(valor) < 3 || len(valor) > 40 || strings.ContainsAny(valor, " \t\r\n") {
+			return ErrValorInvalido
+		}
+		ocupado, err := s.repo.UsernameTakenByOther(valor, personaID)
+		if err != nil {
+			return err
+		}
+		if ocupado {
+			return ErrUsernameEnUso
+		}
+	case "email":
+		addr, err := mail.ParseAddress(valor)
+		if err != nil || addr.Address != valor || len(valor) > 254 {
+			return ErrValorInvalido
+		}
+		valor = strings.ToLower(valor)
+	case "contacto":
+		if !contactoRe.MatchString(valor) {
+			return ErrValorInvalido
+		}
+	}
+
+	return s.repo.UpdateProfileField(personaID, columna, valor)
+}
+
+func (s *Service) SuspendUser(personaID string) error { return s.repo.SuspendAccount(personaID) }
 
 // VerifyPin: Valida y consume el PIN (lo marca como usado)
 func (s *Service) VerifyPin(pin string) error {

@@ -190,27 +190,51 @@ func (r *Repository) GetAllContactsForRecovery() ([]struct {
 
 // --- MÓDULO DE PERFIL Y SEGURIDAD ---
 
-func (r *Repository) UpdateProfileField(personaID, campo, valor string) error {
-	if campo == "username" {
+// UpdateProfileField recibe el NOMBRE DE COLUMNA ya validado por el service
+// (lista blanca). Nunca debe llamarse con un campo que venga directo del cliente.
+func (r *Repository) UpdateProfileField(personaID, columna, valor string) error {
+	if columna == "username_temp" {
 		return r.db.Transaction(func(tx *gorm.DB) error {
-			tx.Table("core_personas").Where("id = ?", personaID).Update("username_temp", valor)
+			if err := tx.Table("core_personas").Where("id = ?", personaID).Update("username_temp", valor).Error; err != nil {
+				return err
+			}
 			return tx.Table("core_usuarios").Where("persona_id = ?", personaID).Update("username_temp", valor).Error
 		})
 	}
-	return r.db.Table("core_personas").Where("id = ?", personaID).Update(campo, valor).Error
+	return r.db.Table("core_personas").Where("id = ?", personaID).Update(columna, valor).Error
+}
+
+// UsernameTakenByOther indica si otra persona ya usa ese nombre de usuario
+// (se revisan core_personas y core_usuarios, sin distinguir mayúsculas).
+func (r *Repository) UsernameTakenByOther(username, personaID string) (bool, error) {
+	var count int64
+	err := r.db.Table("core_personas").
+		Where("LOWER(username_temp) = LOWER(?) AND id::text <> ?", username, personaID).
+		Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	if count > 0 {
+		return true, nil
+	}
+	err = r.db.Table("core_usuarios").
+		Where("LOWER(username_temp) = LOWER(?) AND (persona_id IS NULL OR persona_id::text <> ?)", username, personaID).
+		Count(&count).Error
+	return count > 0, err
 }
 
 func (r *Repository) UpdateFoto(personaID, url string) error {
 	return r.db.Table("core_personas").Where("id = ?", personaID).Update("url_imagen", url).Error
 }
 
-func (r *Repository) SuspendAccount(personaID, usuarioID string) error {
+// SuspendAccount da de baja la cuenta de UNA persona. El usuario de
+// core_usuarios se busca por persona_id: el cliente ya no manda ese dato.
+func (r *Repository) SuspendAccount(personaID string) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		tx.Table("core_personas").Where("id = ?", personaID).Update("estado", "BAJA")
-		if usuarioID != "" {
-			tx.Table("core_usuarios").Where("id = ?", usuarioID).Update("estado_cuenta", "suspendida")
+		if err := tx.Table("core_personas").Where("id = ?", personaID).Update("estado", "BAJA").Error; err != nil {
+			return err
 		}
-		return nil
+		return tx.Table("core_usuarios").Where("persona_id = ?", personaID).Update("estado_cuenta", "suspendida").Error
 	})
 }
 

@@ -7,10 +7,13 @@
 package handlers
 
 import (
-	"encoding/json"
+		"encoding/json"
+	"errors"
 	"gestion-congregacion/backend/internal/auth"
 	"gestion-congregacion/backend/internal/service"
+	"log"
 	"net"
+
 	"net/http"
 	"strings"
 	"time"
@@ -135,26 +138,55 @@ func VerifyPinHandler(s *service.Service) http.HandlerFunc {
 
 func UpdateProfileDataHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req struct{ PersonaID, Campo, Valor string }
-		json.NewDecoder(r.Body).Decode(&req)
-		s.UpdateProfile(req.PersonaID, req.Campo, req.Valor)
+		r.Body = http.MaxBytesReader(w, r.Body, 4096)
+		var req struct {
+			Campo string `json:"campo"`
+			Valor string `json:"valor"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "JSON inválido", http.StatusBadRequest)
+			return
+		}
+
+		// La persona sale del token, nunca del cuerpo de la petición
+		personaID := PersonaIDFromContext(r)
+
+		if err := s.UpdateProfile(personaID, req.Campo, req.Valor); err != nil {
+			switch {
+			case errors.Is(err, service.ErrCampoInvalido), errors.Is(err, service.ErrValorInvalido):
+				http.Error(w, err.Error(), http.StatusBadRequest)
+			case errors.Is(err, service.ErrUsernameEnUso):
+				http.Error(w, err.Error(), http.StatusConflict)
+			default:
+				log.Printf("❌ update-profile (persona %s, campo %s): %v", personaID, req.Campo, err)
+				http.Error(w, "No se pudo guardar", http.StatusInternalServerError)
+			}
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 	}
 }
 
-// UploadFotoHandler: Actualiza la imagen de perfil
+// UploadFotoHandler: Actualiza la imagen de perfil de la persona del token
 func UploadFotoHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		r.Body = http.MaxBytesReader(w, r.Body, 4096)
 		var data struct {
-			PersonaID string `json:"persona_id"`
-			FotoURL   string `json:"foto_url"`
+			FotoURL string `json:"foto_url"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
 			http.Error(w, "Error", 400)
 			return
 		}
 
-		if err := s.UpdateUserFoto(data.PersonaID, data.FotoURL); err != nil {
+		personaID := PersonaIDFromContext(r)
+
+		if err := s.UpdateUserFoto(personaID, data.FotoURL); err != nil {
+			if errors.Is(err, service.ErrFotoInvalida) {
+				http.Error(w, "Foto no permitida", http.StatusBadRequest)
+				return
+			}
+			log.Printf("❌ upload-foto (persona %s): %v", personaID, err)
 			http.Error(w, "Error al guardar foto", 500)
 			return
 		}
@@ -162,11 +194,15 @@ func UploadFotoHandler(s *service.Service) http.HandlerFunc {
 	}
 }
 
+// SuspenderCuentaHandler: solo la propia cuenta (la persona sale del token)
 func SuspenderCuentaHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req struct{ PersonaID, UsuarioID string }
-		json.NewDecoder(r.Body).Decode(&req)
-		s.SuspendUser(req.PersonaID, req.UsuarioID)
+		personaID := PersonaIDFromContext(r)
+		if err := s.SuspendUser(personaID); err != nil {
+			log.Printf("❌ suspender-cuenta (persona %s): %v", personaID, err)
+			http.Error(w, "No se pudo suspender la cuenta", http.StatusInternalServerError)
+			return
+		}
 		w.WriteHeader(http.StatusOK)
 	}
 }
