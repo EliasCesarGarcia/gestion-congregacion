@@ -8,10 +8,12 @@
 package handlers
 
 import (
-	//"context"
+	"context"
 	"gestion-congregacion/backend/internal/auth"
 	"net/http"
 	"strings"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // Añadimos cabeceras de blindaje industrial
@@ -35,6 +37,17 @@ func SecurityHeadersMiddleware(next http.Handler) http.Handler {
 	})
 }
 
+type ctxKey string
+
+const personaIDKey ctxKey = "persona_id"
+
+// PersonaIDFromContext devuelve el ID de persona firmado dentro del token.
+// Los handlers protegidos deben usar ESTE valor y nunca el que mande el cliente.
+func PersonaIDFromContext(r *http.Request) string {
+	v, _ := r.Context().Value(personaIDKey).(string)
+	return v
+}
+
 func AuthMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// 1. Intentar obtener la cookie
@@ -44,15 +57,27 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		tokenStr := cookie.Value
-
-		// 2. Validar el token (esto sigue igual)
-		token, err := auth.ValidarJWT(tokenStr)
+		// 2. Validar el token
+		token, err := auth.ValidarJWT(cookie.Value)
 		if err != nil || !token.Valid {
 			http.Error(w, "Token inválido", http.StatusUnauthorized)
 			return
 		}
 
-		next.ServeHTTP(w, r)
+		// 3. Solo se acepta un token de acceso (no uno de refresco) con persona
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || claims["typ"] != "access" {
+			http.Error(w, "Token inválido", http.StatusUnauthorized)
+			return
+		}
+		personaID, _ := claims["pid"].(string)
+		if personaID == "" {
+			http.Error(w, "Token inválido", http.StatusUnauthorized)
+			return
+		}
+
+		// 4. Guardar la persona para los handlers
+		ctx := context.WithValue(r.Context(), personaIDKey, personaID)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

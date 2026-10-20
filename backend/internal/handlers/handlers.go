@@ -307,11 +307,24 @@ func RefreshTokenHandler(s *service.Service) http.HandlerFunc {
 			return
 		}
 
-		claims := token.Claims.(jwt.MapClaims)
-		userID := claims["sub"].(string)
+		claims, ok := token.Claims.(jwt.MapClaims)
+		if !ok || claims["typ"] != "refresh" {
+			http.Error(w, "Llave de refresco inválida", http.StatusUnauthorized)
+			return
+		}
+		userID, _ := claims["sub"].(string)
+		personaID, _ := claims["pid"].(string)
+		if personaID == "" {
+			http.Error(w, "Llave de refresco inválida", http.StatusUnauthorized)
+			return
+		}
 
 		// Generamos nueva llave corta
-		newAccess, _ := auth.GenerarAccessToken(userID)
+		newAccess, err := auth.GenerarAccessToken(userID, personaID)
+		if err != nil {
+			http.Error(w, "No se pudo renovar la sesión", http.StatusInternalServerError)
+			return
+		}
 
 		http.SetCookie(w, &http.Cookie{
 			Name:     "auth_token",
@@ -325,21 +338,21 @@ func RefreshTokenHandler(s *service.Service) http.HandlerFunc {
 }
 
 func ResetPasswordHandler(s *service.Service) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        var req struct {
-            Username    string `json:"username"`
-            NewPassword string `json:"new_password"`
-        }
-        if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-            http.Error(w, "JSON inválido", 400)
-            return
-        }
-        // Llamamos al servicio para actualizar
-        err := s.UpdatePasswordByUsername(req.Username, req.NewPassword)
-        if err != nil {
-            http.Error(w, err.Error(), 500)
-            return
-        }
-        w.WriteHeader(http.StatusOK)
-    }
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			Username    string `json:"username"`
+			NewPassword string `json:"new_password"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "JSON inválido", 400)
+			return
+		}
+		// Llamamos al servicio para actualizar
+		err := s.UpdatePasswordByUsername(req.Username, req.NewPassword)
+		if err != nil {
+			http.Error(w, err.Error(), 500)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	}
 }

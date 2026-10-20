@@ -87,12 +87,17 @@ func (s *Service) Authenticate(username, password, captchaToken, ip string) (*mo
 	s.rdb.Del(ctx, "failed_login:"+ip)
 
 	// 4. GENERACIÓN DE LLAVES (Tokens)
-	accessToken, err := auth.GenerarAccessToken(u.ID)
+	if u.PersonaID == 0 {
+		return nil, "", "", errors.New("error al generar llave de acceso")
+	}
+	personaID := fmt.Sprintf("%d", u.PersonaID)
+
+	accessToken, err := auth.GenerarAccessToken(u.ID, personaID)
 	if err != nil {
 		return nil, "", "", errors.New("error al generar llave de acceso")
 	}
 
-	refreshToken, err := auth.GenerarRefreshToken(u.ID)
+	refreshToken, err := auth.GenerarRefreshToken(u.ID, personaID)
 	if err != nil {
 		return nil, "", "", errors.New("error al generar llave de refresco")
 	}
@@ -279,20 +284,20 @@ func (s *Service) ValidarTurnstile(token string) bool {
 }
 
 func (s *Service) UpdatePasswordByUsername(username, newPassword string) error {
-    // 1. Cifrar la nueva contraseña
-    hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
-    if err != nil {
-        return err
-    }
+	// 1. Cifrar la nueva contraseña
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
 
-    // 2. Buscar al usuario para obtener su PersonaID
-    u, err := s.repo.GetUserForLogin(username)
-    if err != nil {
-        return fmt.Errorf("el usuario %s no existe", username)
-    }
+	// 2. Buscar al usuario para obtener su PersonaID
+	u, err := s.repo.GetUserForLogin(username)
+	if err != nil {
+		return fmt.Errorf("el usuario %s no existe", username)
+	}
 
-    // 3. Actualizar usando el PersonaID (que es un int en el modelo)
-    // service.go tenga import "fmt"
-    personaIDStr := fmt.Sprintf("%d", u.PersonaID)
-    return s.repo.UpdatePassword(personaIDStr, string(hashedPassword))
+	// 3. Actualizar usando el PersonaID (que es un int en el modelo)
+	// service.go tenga import "fmt"
+	personaIDStr := fmt.Sprintf("%d", u.PersonaID)
+	return s.repo.UpdatePassword(personaIDStr, string(hashedPassword))
 }
