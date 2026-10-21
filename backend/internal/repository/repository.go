@@ -67,7 +67,7 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 		First(&u).Error
 
 	if err != nil {
-				// Si es timeout o error de red, disparamos el breaker
+		// Si es timeout o error de red, disparamos el breaker
 		if err != gorm.ErrRecordNotFound {
 			log.Printf("❌ DB error en login (consulta 1): %v", err)
 			monitor.TripCircuit()
@@ -286,11 +286,43 @@ func (r *Repository) CreateSecurityLog(titulo, desc string) error {
 	}).Error
 }
 
+// UpdatePassword guarda el hash nuevo en las dos tablas, en una sola transacción.
 func (r *Repository) UpdatePassword(personaID string, hash string) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
-		tx.Table("core_usuarios").Where("persona_id = ?", personaID).Updates(map[string]interface{}{"password_hash": hash, "password_changed_at": time.Now()})
+		if err := tx.Table("core_usuarios").Where("persona_id = ?", personaID).Updates(map[string]interface{}{"password_hash": hash, "password_changed_at": time.Now()}).Error; err != nil {
+			return err
+		}
 		return tx.Table("core_personas").Where("id = ?", personaID).Updates(map[string]interface{}{"password_hash": hash, "password_changed_at": time.Now()}).Error
 	})
+}
+
+// GetPasswordHashByPersona devuelve el hash vigente de una persona.
+// Mismo orden que el login: primero core_usuarios y, si no está, core_personas.
+func (r *Repository) GetPasswordHashByPersona(personaID string) (string, error) {
+	var hash string
+	res := r.db.Table("core_usuarios").
+		Select("COALESCE(password_hash, '')").
+		Where("persona_id = ?", personaID).
+		Limit(1).Scan(&hash)
+	if res.Error != nil {
+		return "", res.Error
+	}
+	if res.RowsAffected > 0 && hash != "" {
+		return hash, nil
+	}
+
+	hash = ""
+	res = r.db.Table("core_personas").
+		Select("COALESCE(password_hash, '')").
+		Where("id = ?", personaID).
+		Limit(1).Scan(&hash)
+	if res.Error != nil {
+		return "", res.Error
+	}
+	if res.RowsAffected == 0 || hash == "" {
+		return "", gorm.ErrRecordNotFound
+	}
+	return hash, nil
 }
 
 // --- QUERIES DE SEGURIDAD Y PIN ---

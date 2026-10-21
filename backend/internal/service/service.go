@@ -337,21 +337,65 @@ func (s *Service) ValidarTurnstile(token string) bool {
 	return true
 }
 
-func (s *Service) UpdatePasswordByUsername(username, newPassword string) error {
-	// 1. Cifrar la nueva contraseña
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
+var (
+	ErrClaveActualIncorrecta = errors.New("la contraseña actual no es correcta")
+	ErrClaveDebil            = errors.New("la nueva contraseña no cumple los requisitos")
+	ErrDemasiadosIntentos    = errors.New("demasiados intentos, probá más tarde")
+)
+
+// claveFuerte aplica la misma regla que el frontend (isPassStrong), más el
+// máximo de 72 bytes que admite bcrypt.
+func claveFuerte(p string) bool {
+	if len(p) < 8 || len(p) > 72 {
+		return false
+	}
+	var upper, num, sym bool
+	for _, c := range p {
+		switch {
+		case c >= 'A' && c <= 'Z':
+			upper = true
+		case c >= '0' && c <= '9':
+			num = true
+		case !(c >= 'a' && c <= 'z'):
+			sym = true
+		}
+	}
+	return upper && num && sym
+}
+
+// ChangePassword cambia la contraseña de la persona del token.
+// Exige la contraseña actual y limita los intentos fallidos por persona.
+func (s *Service) ChangePassword(personaID, actual, nueva string) error {
+	// 1. La nueva clave tiene que ser fuerte y distinta de la actual
+	if !claveFuerte(nueva) || nueva == actual {
+		return ErrClaveDebil
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+
+	// 2. Límite de intentos fallidos (5 en 15 minutos)
+	key := "pwchange_fail:" + personaID
+	if n, _ := s.rdb.Get(ctx, key).Int(); n >= 5 {
+		return ErrDemasiadosIntentos
+	}
+
+	// 3. Verificar la contraseña actual con bcrypt
+	hashActual, err := s.repo.GetPasswordHashByPersona(personaID)
 	if err != nil {
 		return err
 	}
-
-	// 2. Buscar al usuario para obtener su PersonaID
-	u, err := s.repo.GetUserForLogin(username)
-	if err != nil {
-		return fmt.Errorf("el usuario %s no existe", username)
+	if bcrypt.CompareHashAndPassword([]byte(hashActual), []byte(actual)) != nil {
+		s.rdb.Incr(ctx, key)
+		s.rdb.Expire(ctx, key, 15*time.Minute)
+		return ErrClaveActualIncorrecta
 	}
+	s.rdb.Del(ctx, key)
 
-	// 3. Actualizar usando el PersonaID (que es un int en el modelo)
-	// service.go tenga import "fmt"
-	personaIDStr := fmt.Sprintf("%d", u.PersonaID)
-	return s.repo.UpdatePassword(personaIDStr, string(hashedPassword))
+	// 4. Cifrar y guardar la nueva
+	nuevoHash, err := bcrypt.GenerateFromPassword([]byte(nueva), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	return s.repo.UpdatePassword(personaID, string(nuevoHash))
 }

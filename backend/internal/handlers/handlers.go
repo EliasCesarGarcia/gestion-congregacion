@@ -373,22 +373,35 @@ func RefreshTokenHandler(s *service.Service) http.HandlerFunc {
 	}
 }
 
-func ResetPasswordHandler(s *service.Service) http.HandlerFunc {
+// ChangePasswordHandler: cambio de contraseña de la persona del token.
+// Exige la contraseña actual. Ignora cualquier usuario o persona que mande el cliente.
+func ChangePasswordHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		r.Body = http.MaxBytesReader(w, r.Body, 4096)
 		var req struct {
-			Username    string `json:"username"`
-			NewPassword string `json:"new_password"`
+			CurrentPassword string `json:"current_password"`
+			NewPassword     string `json:"new_password"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "JSON inválido", 400)
+			http.Error(w, "JSON inválido", http.StatusBadRequest)
 			return
 		}
-		// Llamamos al servicio para actualizar
-		err := s.UpdatePasswordByUsername(req.Username, req.NewPassword)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
+
+		personaID := PersonaIDFromContext(r)
+
+		err := s.ChangePassword(personaID, req.CurrentPassword, req.NewPassword)
+		switch {
+		case err == nil:
+			w.WriteHeader(http.StatusOK)
+		case errors.Is(err, service.ErrClaveActualIncorrecta):
+			http.Error(w, "Contraseña actual incorrecta", http.StatusUnauthorized)
+		case errors.Is(err, service.ErrClaveDebil):
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		case errors.Is(err, service.ErrDemasiadosIntentos):
+			http.Error(w, err.Error(), http.StatusTooManyRequests)
+		default:
+			log.Printf("❌ cambio de contraseña (persona %s): %v", personaID, err)
+			http.Error(w, "No se pudo cambiar la contraseña", http.StatusInternalServerError)
 		}
-		w.WriteHeader(http.StatusOK)
 	}
 }

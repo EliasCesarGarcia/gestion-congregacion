@@ -35,9 +35,10 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.HandleFunc("/api/send-username-real", handlers.SendUsernameRealHandler(svc))
 	mux.HandleFunc("/api/seguridad-info", handlers.GetSeguridadInfoHandler(svc))
 
-	// DESACTIVADO (2026-10-19): permitía cambiar la contraseña de cualquier usuario
-	// sin verificar PIN. Reactivar solo después de rehacer el flujo de recuperación.
-	//mux.HandleFunc("/api/reset-password", handlers.ResetPasswordHandler(svc))
+	// CAMBIO DE CONTRASEÑA (2026-10-20): exige sesión y la contraseña actual; la persona
+	// sale del token. El nombre de la ruta se mantiene porque el frontend la usa.
+	// "Olvidé mi contraseña" sigue SIN ruta hasta rehacer ese flujo.
+	mux.Handle("POST /api/reset-password", handlers.AuthMiddleware(http.HandlerFunc(handlers.ChangePasswordHandler(svc))))
 
 	// --- RUTAS PROTEGIDAS (Middleware Aplicado) ---
 	// Perfil
