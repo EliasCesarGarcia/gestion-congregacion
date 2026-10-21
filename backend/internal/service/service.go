@@ -9,6 +9,7 @@ package service
 
 import (
 	"errors"
+	"html"
 	"strings"
 
 	"context"
@@ -153,8 +154,22 @@ func (s *Service) ProcessPinRequest(email, user, cong string) error {
 	return nil
 }
 
-// BroadcastSecurity: Guarda boletín, avisa por WebSocket y envía Emails masivos
+// BroadcastSecurity: Guarda boletín, avisa por WebSocket y envía Emails masivos.
+// El texto se limpia acá: el servidor no confía en lo que manda el cliente.
 func (s *Service) BroadcastSecurity(titulo, desc string) error {
+	// 0. Limpieza y límites. StrictPolicy quita todo el HTML, queda solo texto.
+	p := bluemonday.StrictPolicy()
+	titulo = strings.TrimSpace(p.Sanitize(titulo))
+	desc = strings.TrimSpace(p.Sanitize(desc))
+	if titulo == "" || desc == "" || len(titulo) > 150 || len(desc) > 5000 {
+		return ErrValorInvalido
+	}
+
+	// El asunto del email y el aviso de pantalla son texto plano, en una sola línea
+	asunto := strings.NewReplacer("\r", " ", "\n", " ").Replace(html.UnescapeString(titulo))
+	// En el cuerpo del email, los saltos de línea se ven como saltos
+	cuerpo := strings.ReplaceAll(strings.ReplaceAll(desc, "\r", ""), "\n", "<br>")
+
 	// 1. Persistencia en base de datos
 	if err := s.repo.SaveSecurityLog(titulo, desc); err != nil {
 		return err
@@ -163,7 +178,7 @@ func (s *Service) BroadcastSecurity(titulo, desc string) error {
 	// 2. Notificación Push en tiempo real vía WebSocket
 	ws.Broadcast(map[string]string{
 		"tipo":   "ALERTA_SEGURIDAD",
-		"titulo": titulo,
+		"titulo": asunto,
 		"msg":    "Se ha publicado una nueva actualización de seguridad.",
 	})
 
@@ -177,14 +192,13 @@ func (s *Service) BroadcastSecurity(titulo, desc string) error {
 
 		client := resend.NewClient(os.Getenv("RESEND_API_KEY"))
 		for _, u := range lista {
-			// Usamos tu template profesional de aviso de seguridad
-			html := fmt.Sprintf(`<h3>Aviso de Seguridad</h3><p>Hola <b>%s</b>,</p><p>%s</p>`, u.NombreCompleto, desc)
+			cuerpoMail := fmt.Sprintf(`<h3>Aviso de Seguridad</h3><p>Hola <b>%s</b>,</p><p>%s</p>`, html.EscapeString(u.NombreCompleto), cuerpo)
 
 			params := &resend.SendEmailRequest{
 				From:    "Seguridad Local <onboarding@resend.dev>",
 				To:      []string{u.Email},
-				Subject: "⚠️ " + titulo,
-				Html:    html,
+				Subject: "⚠️ " + asunto,
+				Html:    cuerpoMail,
 			}
 			client.Emails.Send(params)
 			time.Sleep(150 * time.Millisecond) // Blindaje anti-spam

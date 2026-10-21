@@ -7,7 +7,7 @@
 package handlers
 
 import (
-		"encoding/json"
+	"encoding/json"
 	"errors"
 	"gestion-congregacion/backend/internal/auth"
 	"gestion-congregacion/backend/internal/service"
@@ -207,9 +207,10 @@ func SuspenderCuentaHandler(s *service.Service) http.HandlerFunc {
 	}
 }
 
-// BroadcastSeguridadUpdateHandler: Lanza la difusión masiva
+// BroadcastSeguridadUpdateHandler: Lanza la difusión masiva (solo superadmins)
 func BroadcastSeguridadUpdateHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		r.Body = http.MaxBytesReader(w, r.Body, 20480)
 		var req struct {
 			Titulo           string `json:"titulo"`
 			DescripcionLarga string `json:"descripcion_larga"`
@@ -219,10 +220,18 @@ func BroadcastSeguridadUpdateHandler(s *service.Service) http.HandlerFunc {
 			return
 		}
 
+		personaID := PersonaIDFromContext(r)
+
 		if err := s.BroadcastSecurity(req.Titulo, req.DescripcionLarga); err != nil {
+			if errors.Is(err, service.ErrValorInvalido) {
+				http.Error(w, "Título o descripción no válidos (máximo 150 y 5000 caracteres)", http.StatusBadRequest)
+				return
+			}
+			log.Printf("❌ broadcast-seguridad (persona %s): %v", personaID, err)
 			http.Error(w, "Error en la difusión", 500)
 			return
 		}
+		log.Printf("📣 broadcast-seguridad enviado por la persona %s", personaID)
 		w.WriteHeader(http.StatusAccepted)
 	}
 }
@@ -261,8 +270,15 @@ func SaveSeguridadInfoHandler(s *service.Service) http.HandlerFunc {
 		p := bluemonday.StrictPolicy()
 		cleanContenido := p.Sanitize(req.Contenido)
 
+		cleanContenido = strings.TrimSpace(cleanContenido)
+		if cleanContenido == "" || len(cleanContenido) > 5000 {
+			http.Error(w, "Contenido no válido", http.StatusBadRequest)
+			return
+		}
+
 		if err := s.AddSecurityInfo(cleanContenido); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Printf("❌ save-seguridad-info (persona %s): %v", PersonaIDFromContext(r), err)
+			http.Error(w, "No se pudo guardar", http.StatusInternalServerError)
 			return
 		}
 
