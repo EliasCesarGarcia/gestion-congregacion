@@ -11,3 +11,5 @@ backend/bin/
 *.dll
 *.so
 *.dylib
+
+# Sesiones

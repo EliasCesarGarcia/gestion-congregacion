@@ -80,3 +80,10 @@ frontend/dist/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#   ==========================================================
+#   --- 6. SESIONES DE CHATS CON IA CLAUDE --- 
+#   ==========================================================
+
+# Ignorar la carpeta de sesiones de Claude
+/sessions/
