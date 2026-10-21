@@ -49,7 +49,7 @@ func main() {
 		os.Getenv("DB_PORT"))
 
 	// Importante: PrepareStmt: false es vital para Supabase Pooler
-		newLogger := logger.New(
+	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
 		logger.Config{
 			LogLevel:                  logger.Error, // solo muestra errores reales

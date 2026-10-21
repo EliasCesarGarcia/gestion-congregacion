@@ -464,7 +464,10 @@ function ProfilePage() {
           valor: cleanValue,
         });
       }
-      login({ ...user, [editingField]: cleanValue });
+      // La contraseña nunca se guarda en el estado del usuario
+      if (editingField !== "password") {
+        login({ ...user, [editingField]: cleanValue });
+      }
       setModal({
         show: true,
         type: "success",

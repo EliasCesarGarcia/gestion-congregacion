@@ -48,9 +48,10 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 
 	mux.HandleFunc("/api/logout", handlers.LogoutHandler)
 
-	// Administración de Seguridad
-	mux.Handle("/api/broadcast-seguridad", handlers.AuthMiddleware(http.HandlerFunc(handlers.BroadcastSeguridadUpdateHandler(svc))))
-	mux.Handle("/api/save-seguridad-info", handlers.AuthMiddleware(http.HandlerFunc(handlers.SaveSeguridadInfoHandler(svc))))
+		// Administración de Seguridad (2026-10-21): solo superadmins.
+	// Orden: primero AuthMiddleware (valida sesión), después SuperAdminMiddleware.
+	mux.Handle("/api/broadcast-seguridad", handlers.AuthMiddleware(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.BroadcastSeguridadUpdateHandler(svc)))))
+	mux.Handle("/api/save-seguridad-info", handlers.AuthMiddleware(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.SaveSeguridadInfoHandler(svc)))))
 
 	// Utilitarios
 	mux.HandleFunc("/api/upload-backend", handlers.HandleFileUpload(svc))

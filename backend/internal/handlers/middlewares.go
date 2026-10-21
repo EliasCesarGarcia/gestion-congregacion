@@ -10,7 +10,9 @@ package handlers
 import (
 	"context"
 	"gestion-congregacion/backend/internal/auth"
+	"log"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -79,5 +81,34 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		// 4. Guardar la persona para los handlers
 		ctx := context.WithValue(r.Context(), personaIDKey, personaID)
 		next.ServeHTTP(w, r.WithContext(ctx))
+	})
+}
+
+// EsSuperAdmin indica si la persona está en la lista SUPERADMIN_PERSONA_IDS
+// (IDs separados por coma). Si la variable falta o está vacía, nadie lo es.
+func EsSuperAdmin(personaID string) bool {
+	if personaID == "" {
+		return false
+	}
+	for _, id := range strings.Split(os.Getenv("SUPERADMIN_PERSONA_IDS"), ",") {
+		if strings.TrimSpace(id) == personaID {
+			return true
+		}
+	}
+	return false
+}
+
+// SuperAdminMiddleware: deja pasar solo a los superadmins. Debe ir DENTRO de
+// AuthMiddleware, porque lee la persona que ese middleware ya validó desde el
+// token firmado.
+func SuperAdminMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		personaID := PersonaIDFromContext(r)
+		if !EsSuperAdmin(personaID) {
+			log.Printf("⚠️ ADMIN RECHAZADO: persona '%s' intentó acceder a %s", personaID, r.URL.Path)
+			http.Error(w, "No autorizado", http.StatusForbidden)
+			return
+		}
+		next.ServeHTTP(w, r)
 	})
 }
