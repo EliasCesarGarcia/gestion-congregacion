@@ -28,7 +28,6 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	// --- RUTAS PÚBLICAS ---
 	mux.HandleFunc("/api/publicaciones", handlers.GetPublicaciones(svc))
 	mux.HandleFunc("/api/login-final", handlers.LoginFinalHandler(svc))
-	mux.HandleFunc("/api/identify-user", handlers.IdentifyUserHandler(svc))
 
 	// Recuperación de cuenta CERRADA (2026-10-21) hasta rehacer el login:
 	// estas rutas filtraban emails, mandaban correos sin límite y el PIN no
@@ -40,6 +39,7 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.HandleFunc("/api/verify-pin", rutaCerrada)
 	mux.HandleFunc("/api/recover-user-id", rutaCerrada)
 	mux.HandleFunc("/api/send-username-real", rutaCerrada)
+	mux.HandleFunc("/api/identify-user", rutaCerrada)
 
 	mux.HandleFunc("/api/seguridad-info", handlers.GetSeguridadInfoHandler(svc))
 
