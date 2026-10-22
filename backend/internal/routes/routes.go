@@ -29,10 +29,18 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.HandleFunc("/api/publicaciones", handlers.GetPublicaciones(svc))
 	mux.HandleFunc("/api/login-final", handlers.LoginFinalHandler(svc))
 	mux.HandleFunc("/api/identify-user", handlers.IdentifyUserHandler(svc))
-	mux.HandleFunc("/api/request-pin", handlers.RequestPinHandler(svc))
-	mux.HandleFunc("/api/verify-pin", handlers.VerifyPinHandler(svc))
-	mux.HandleFunc("/api/recover-user-id", handlers.RecoverByPersonaIDHandler(svc))
-	mux.HandleFunc("/api/send-username-real", handlers.SendUsernameRealHandler(svc))
+
+	// Recuperación de cuenta CERRADA (2026-10-21) hasta rehacer el login:
+	// estas rutas filtraban emails, mandaban correos sin límite y el PIN no
+	// estaba atado a ninguna cuenta. Se reabren con el flujo nuevo.
+	rutaCerrada := func(w http.ResponseWriter, r *http.Request) {
+		http.Error(w, "Función temporalmente deshabilitada", http.StatusServiceUnavailable)
+	}
+	mux.HandleFunc("/api/request-pin", rutaCerrada)
+	mux.HandleFunc("/api/verify-pin", rutaCerrada)
+	mux.HandleFunc("/api/recover-user-id", rutaCerrada)
+	mux.HandleFunc("/api/send-username-real", rutaCerrada)
+
 	mux.HandleFunc("/api/seguridad-info", handlers.GetSeguridadInfoHandler(svc))
 
 	// CAMBIO DE CONTRASEÑA (2026-10-20): exige sesión y la contraseña actual; la persona
