@@ -9,6 +9,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -88,8 +89,19 @@ func main() {
 	// 1. Conex
 	// ión a Redis para el Escudo de Seguridad
 	redisURL := os.Getenv("REDIS_URL")
-	opt, _ := redis.ParseURL(redisURL)
+	opt, errRedis := redis.ParseURL(redisURL)
+	if errRedis != nil {
+		log.Fatalf("CRÍTICO: REDIS_URL no tiene un formato válido: %v", errRedis)
+	}
 	rdb := redis.NewClient(opt)
+
+	ctxPing, cancelPing := context.WithTimeout(context.Background(), 3*time.Second)
+	if errPing := rdb.Ping(ctxPing).Err(); errPing != nil {
+		log.Printf("⚠️ Redis no responde: %v", errPing)
+	} else {
+		fmt.Println("✅ Redis conectado")
+	}
+	cancelPing()
 
 	// 2. Inyección de Dependencias (Repository -> Service con Redis)
 	repo := repository.NewRepository(db)
