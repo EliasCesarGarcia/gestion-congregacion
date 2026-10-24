@@ -41,3 +41,13 @@ type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
+
+
+// Actor: quién hace el pedido, leído de la base (nunca del cliente ni del token).
+type Actor struct {
+	PersonaID      string
+	CongregacionID string
+	RolApp         string // publicador / coordinador / secretario / servicio
+	Estado         string // ALTA / BAJA
+	CongActiva     bool   // core_congregaciones.activa
+}

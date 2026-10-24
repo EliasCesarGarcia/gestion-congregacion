@@ -228,6 +228,11 @@ func (s *Service) GetSecurityBulletin() (map[string]interface{}, error) {
 
 func (s *Service) GetCatalog() ([]models.Publicacion, error) { return s.repo.GetPublicaciones() }
 
+// GetActor devuelve quién es la persona (congregación, rol, estado) leído de la base.
+func (s *Service) GetActor(personaID string) (*models.Actor, error) {
+	return s.repo.GetActor(personaID)
+}
+
 var (
 	ErrCampoInvalido = errors.New("campo no permitido")
 	ErrValorInvalido = errors.New("valor no válido")

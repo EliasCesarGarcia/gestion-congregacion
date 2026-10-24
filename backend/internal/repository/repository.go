@@ -132,6 +132,32 @@ func (r *Repository) GetUserByEmail(email string) (*models.Usuario, error) {
 	return &u, err
 }
 
+// GetActor lee de la base quién es la persona del token: su congregación,
+// su rol y si su cuenta y su congregación siguen activas.
+func (r *Repository) GetActor(personaID string) (*models.Actor, error) {
+	var a models.Actor
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	res := r.db.WithContext(ctx).Table("core_personas").
+		Select(`core_personas.id::text as persona_id,
+			COALESCE(core_personas.congregacion_id::text, '') as congregacion_id,
+			COALESCE(core_personas.rol_app, 'publicador') as rol_app,
+			COALESCE(core_personas.estado, '') as estado,
+			COALESCE(core_congregaciones.activa, false) as cong_activa`).
+		Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
+		Where("core_personas.id::text = ?", personaID).
+		Limit(1).Scan(&a)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	if res.RowsAffected == 0 {
+		return nil, gorm.ErrRecordNotFound
+	}
+	return &a, nil
+}
+
 // --- GESTIÓN DE PIN Y VERIFICACIÓN ---
 
 func (r *Repository) GetCongregacionName(num string) string {
