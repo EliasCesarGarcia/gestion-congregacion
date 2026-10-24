@@ -9,13 +9,17 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"gestion-congregacion/backend/internal/auth"
+	"gestion-congregacion/backend/internal/models"
+	"gestion-congregacion/backend/internal/service"
 	"log"
 	"net/http"
 	"os"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 // Añadimos cabeceras de blindaje industrial
@@ -111,4 +115,51 @@ func SuperAdminMiddleware(next http.Handler) http.Handler {
 		}
 		next.ServeHTTP(w, r)
 	})
+}
+
+
+const actorKey ctxKey = "actor"
+
+// ActorFromContext devuelve quién hace el pedido (congregación, rol, estado),
+// leído de la base por ActorMiddleware. Usar ESTE dato para los permisos.
+func ActorFromContext(r *http.Request) *models.Actor {
+	a, _ := r.Context().Value(actorKey).(*models.Actor)
+	return a
+}
+
+// ActorMiddleware: debe ir DENTRO de AuthMiddleware (usa la persona ya validada).
+// Consulta la base en cada pedido, así un cambio de rol, una baja o una
+// congregación desactivada se aplican enseguida.
+func ActorMiddleware(s *service.Service) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			personaID := PersonaIDFromContext(r)
+
+			a, err := s.GetActor(personaID)
+			if err != nil {
+				if errors.Is(err, gorm.ErrRecordNotFound) {
+					http.Error(w, "Sesión no válida", http.StatusUnauthorized)
+					return
+				}
+				log.Printf("❌ actor (persona %s): %v", personaID, err)
+				http.Error(w, "Servicio no disponible", http.StatusServiceUnavailable)
+				return
+			}
+
+			if a.Estado != "ALTA" {
+				log.Printf("⚠️ ACTOR RECHAZADO: persona '%s' con estado '%s'", personaID, a.Estado)
+				http.Error(w, "Cuenta no activa", http.StatusForbidden)
+				return
+			}
+
+			if !EsSuperAdmin(personaID) && (a.CongregacionID == "" || !a.CongActiva) {
+				log.Printf("⚠️ ACTOR RECHAZADO: persona '%s' sin congregación activa", personaID)
+				http.Error(w, "Congregación no activa", http.StatusForbidden)
+				return
+			}
+
+			ctx := context.WithValue(r.Context(), actorKey, a)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
 }
