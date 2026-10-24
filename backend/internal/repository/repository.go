@@ -29,41 +29,41 @@ func NewRepository(db *gorm.DB) *Repository {
 // --- USUARIOS Y AUTENTICACIÓN ---
 
 // GetUserForLogin extrae los datos del usuario (Admin o Persona)
-// Corregido: Uso de Context para evitar bloqueos y disipar el Breaker en latencia.
 func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 	var u models.Usuario
 
-	// 1. PROTECCIÓN POR LATENCIA: Si la DB tarda más de 2s, cortamos la conexión
+	// PROTECCIÓN POR LATENCIA: si la DB tarda más de 5s, cortamos la conexión
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	// Intento 1: Administradores (Usamos WithContext(ctx))
-	// Intentamos buscar primero en la tabla de administradores/usuarios con acceso
-	// Cambiamos JOIN por LEFT JOIN para evitar que datos faltantes de congregación bloqueen el login
+	// Intento 1: usuarios con acceso en core_usuarios (hoy, el dueño)
 	err := r.db.WithContext(ctx).Table("core_usuarios").
 		Select(`
-             core_usuarios.id, 
-            core_usuarios.persona_id, 
-            core_usuarios.username_temp as username, 
-            core_usuarios.password_hash, 
-            core_personas.apellido_nombre as nombre_completo, 
-            core_personas.url_imagen as foto_url, 
-            core_personas.email, 
-            core_personas.contacto, 
-            core_personas.estado, 
-            core_congregaciones.nombre as congregacion_nombre, 
-            core_congregaciones.numero_congregacion, 
-            core_congregaciones.zona_horaria,
-            core_congregaciones.direccion, 
-            core_congregaciones.ciudad, 
-            core_congregaciones.partido, 
-            core_congregaciones.provincia_estado as provincia, 
-            core_congregaciones.pais, 
-            core_congregaciones.region
-        `).
+			core_usuarios.id,
+			core_usuarios.persona_id,
+			core_usuarios.username_temp as username,
+			core_usuarios.password_hash,
+			core_personas.apellido_nombre as nombre_completo,
+			core_personas.url_imagen as foto_url,
+			core_personas.email,
+			core_personas.contacto,
+			core_personas.estado,
+			COALESCE(core_personas.rol_app, 'publicador') as rol_app,
+			COALESCE(core_congregaciones.id::text, '') as congregacion_id,
+			COALESCE(core_congregaciones.activa, false) as cong_activa,
+			core_congregaciones.nombre as congregacion_nombre,
+			core_congregaciones.numero_congregacion,
+			core_congregaciones.zona_horaria,
+			core_congregaciones.direccion,
+			core_congregaciones.ciudad,
+			core_congregaciones.partido,
+			core_congregaciones.provincia_estado as provincia,
+			core_congregaciones.pais,
+			core_congregaciones.region
+		`).
 		Joins("LEFT JOIN core_personas ON core_personas.id = core_usuarios.persona_id").
 		Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_usuarios.congregacion_id").
-		Where("LOWER(core_usuarios.username_temp) = LOWER(?) AND core_personas.estado = 'ALTA'", username). // Quitamos el filtro de estado aquí para probar
+		Where("LOWER(core_usuarios.username_temp) = LOWER(?) AND core_personas.estado = 'ALTA'", username).
 		First(&u).Error
 
 	if err != nil {
@@ -74,27 +74,30 @@ func (r *Repository) GetUserForLogin(username string) (*models.Usuario, error) {
 			return nil, err
 		}
 
-		// Intento 2: Persona normal (Usamos WithContext(ctx))
-		// Si no está en core_usuarios, buscamos en core_personas (usuarios normales)
+		// Intento 2: persona normal en core_personas (los hermanos)
 		err = r.db.WithContext(ctx).Table("core_personas").
 			Select(`
-                core_personas.id as persona_id, 
-                core_personas.apellido_nombre as nombre_completo, 
-                core_personas.email, 
-                core_personas.contacto, 
-                core_personas.url_imagen as foto_url, 
-                core_personas.username_temp as username, 
-                core_personas.password_hash, 
-                core_personas.estado, 
-                core_congregaciones.nombre as congregacion_nombre, 
-                core_congregaciones.numero_congregacion,
-                core_congregaciones.direccion, 
-                core_congregaciones.ciudad, 
-                core_congregaciones.partido, 
-                core_congregaciones.provincia_estado as provincia, 
-                core_congregaciones.pais, 
-                core_congregaciones.region
-            `).
+				core_personas.id as persona_id,
+				core_personas.apellido_nombre as nombre_completo,
+				core_personas.email,
+				core_personas.contacto,
+				core_personas.url_imagen as foto_url,
+				core_personas.username_temp as username,
+				core_personas.password_hash,
+				core_personas.estado,
+				COALESCE(core_personas.rol_app, 'publicador') as rol_app,
+				COALESCE(core_congregaciones.id::text, '') as congregacion_id,
+				COALESCE(core_congregaciones.activa, false) as cong_activa,
+				core_congregaciones.nombre as congregacion_nombre,
+				core_congregaciones.numero_congregacion,
+				core_congregaciones.zona_horaria,
+				core_congregaciones.direccion,
+				core_congregaciones.ciudad,
+				core_congregaciones.partido,
+				core_congregaciones.provincia_estado as provincia,
+				core_congregaciones.pais,
+				core_congregaciones.region
+			`).
 			Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
 			Where("LOWER(core_personas.username_temp) = LOWER(?) AND core_personas.estado = 'ALTA'", username).
 			First(&u).Error

@@ -15,6 +15,7 @@ import (
 	"net"
 
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -66,6 +67,14 @@ func LoginFinalHandler(s *service.Service) http.HandlerFunc {
 				w.WriteHeader(http.StatusUnauthorized)
 			}
 			json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
+			return
+		}
+
+		// La congregación tiene que estar habilitada (el superadmin queda exento)
+		if !user.CongActiva && !EsSuperAdmin(strconv.Itoa(user.PersonaID)) {
+			log.Printf("⚠️ LOGIN RECHAZADO: congregación no habilitada (persona %d)", user.PersonaID)
+			w.WriteHeader(http.StatusForbidden)
+			json.NewEncoder(w).Encode(map[string]string{"error": "CONGREGACION_INACTIVA"})
 			return
 		}
 

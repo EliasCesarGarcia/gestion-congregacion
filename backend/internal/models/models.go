@@ -16,7 +16,9 @@ type Usuario struct {
 	Contacto           string `json:"contacto" gorm:"column:contacto"`
 	Estado             string `json:"estado" gorm:"column:estado"` // ALTA/BAJA
 	FotoURL            string `json:"foto_url" gorm:"column:foto_url"`
-	CongregacionID     string `json:"congregacion_id"`
+	CongregacionID     string `json:"congregacion_id" gorm:"column:congregacion_id"`
+	RolApp             string `json:"rol_app" gorm:"column:rol_app"`
+	CongActiva         bool   `json:"-" gorm:"column:cong_activa"`
 	CongregacionNombre string `json:"congregacion_nombre" gorm:"column:congregacion_nombre"`
 	NumeroCongregacion string `json:"numero_congregacion" gorm:"column:numero_congregacion"`
 
@@ -41,7 +43,6 @@ type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
-
 
 // Actor: quién hace el pedido, leído de la base (nunca del cliente ni del token).
 type Actor struct {

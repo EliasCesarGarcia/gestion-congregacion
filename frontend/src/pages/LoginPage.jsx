@@ -222,6 +222,10 @@ function LoginPage() {
         setErrorMsg(
           "Seguridad activada: Por favor, resuelva el CAPTCHA inferior.",
         );
+      } else if (errorStr === "CONGREGACION_INACTIVA") {
+        setErrorMsg(
+          "Su congregación todavía no está habilitada. Consulte con los encargados.",
+        );
       } else if (status === 401) {
         setErrorMsg("El usuario y/o contraseña no es correcto.");
       } else if (status === 403 || status === 429) {
