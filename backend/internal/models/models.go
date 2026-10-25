@@ -52,3 +52,22 @@ type Actor struct {
 	Estado         string // ALTA / BAJA
 	CongActiva     bool   // core_congregaciones.activa
 }
+
+// PersonaResumen: lo mínimo que se muestra al listar personas.
+// A propósito NO incluye password_hash, email ni contacto.
+type PersonaResumen struct {
+	ID             int    `json:"id" gorm:"column:id"`
+	NombreCompleto string `json:"nombre_completo" gorm:"column:nombre_completo"`
+	RolApp         string `json:"rol_app" gorm:"column:rol_app"`
+	Estado         string `json:"estado" gorm:"column:estado"`
+	FotoURL        string `json:"foto_url" gorm:"column:foto_url"`
+	CongregacionID string `json:"congregacion_id" gorm:"column:congregacion_id"`
+}
+
+// PersonasPagina: respuesta paginada de la lista de personas.
+type PersonasPagina struct {
+	Total    int64            `json:"total"`
+	Page     int              `json:"page"`
+	Limit    int              `json:"limit"`
+	Personas []PersonaResumen `json:"personas"`
+}

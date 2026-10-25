@@ -430,3 +430,41 @@ func ChangePasswordHandler(s *service.Service) http.HandlerFunc {
 		}
 	}
 }
+
+// esEncargadoGeneral: coordinador, secretario o servicio (ven todo su congregación).
+func esEncargadoGeneral(rol string) bool {
+	return rol == "coordinador" || rol == "secretario" || rol == "servicio"
+}
+
+// ListPersonasHandler: lista paginada de personas de la congregación del actor.
+// Solo coordinador, secretario, servicio o superadmin. Solo el superadmin ve
+// todas las congregaciones.
+func ListPersonasHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		a := ActorFromContext(r)
+		if a == nil {
+			http.Error(w, "Sesión no válida", http.StatusUnauthorized)
+			return
+		}
+
+		esSuper := EsSuperAdmin(a.PersonaID)
+		if !esSuper && !esEncargadoGeneral(a.RolApp) {
+			log.Printf("⚠️ personas RECHAZADO: persona '%s' con rol '%s'", a.PersonaID, a.RolApp)
+			http.Error(w, "No autorizado", http.StatusForbidden)
+			return
+		}
+
+		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+
+		res, err := s.ListPersonas(a, esSuper, page, limit)
+		if err != nil {
+			log.Printf("❌ listar personas (persona %s): %v", a.PersonaID, err)
+			http.Error(w, "No se pudo obtener la lista", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(res)
+	}
+}

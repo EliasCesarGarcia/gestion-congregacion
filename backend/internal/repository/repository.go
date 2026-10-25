@@ -161,6 +161,42 @@ func (r *Repository) GetActor(personaID string) (*models.Actor, error) {
 	return &a, nil
 }
 
+// ListPersonas devuelve una página de personas en ALTA, sin datos sensibles.
+// Si todas es false, filtra por la congregación indicada (regla de oro).
+func (r *Repository) ListPersonas(congregacionID string, todas bool, limit, offset int) ([]models.PersonaResumen, int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	base := func() *gorm.DB {
+		q := r.db.WithContext(ctx).Table("core_personas").Where("core_personas.estado = 'ALTA'")
+		if !todas {
+			q = q.Where("core_personas.congregacion_id::text = ?", congregacionID)
+		}
+		return q
+	}
+
+	var total int64
+	if err := base().Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+
+	lista := []models.PersonaResumen{}
+	err := base().
+		Select(`core_personas.id as id,
+			core_personas.apellido_nombre as nombre_completo,
+			COALESCE(core_personas.rol_app, 'publicador') as rol_app,
+			COALESCE(core_personas.estado, '') as estado,
+			COALESCE(core_personas.url_imagen, '') as foto_url,
+			COALESCE(core_personas.congregacion_id::text, '') as congregacion_id`).
+		Order("core_personas.apellido_nombre asc, core_personas.id asc").
+		Limit(limit).Offset(offset).
+		Scan(&lista).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	return lista, total, nil
+}
+
 // --- GESTIÓN DE PIN Y VERIFICACIÓN ---
 
 func (r *Repository) GetCongregacionName(num string) string {

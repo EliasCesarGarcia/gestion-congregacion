@@ -59,6 +59,9 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("/api/upload-foto", protegida(http.HandlerFunc(handlers.UploadFotoHandler(svc))))
 	mux.Handle("/api/suspender-cuenta", protegida(http.HandlerFunc(handlers.SuspenderCuentaHandler(svc))))
 
+	// Personas de mi congregación (2026-10-24): coordinador, secretario, servicio o superadmin
+	mux.Handle("GET /api/personas", protegida(http.HandlerFunc(handlers.ListPersonasHandler(svc))))
+
 	mux.HandleFunc("/api/logout", handlers.LogoutHandler)
 
 	// Administración de Seguridad (2026-10-21): solo superadmins.
