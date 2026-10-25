@@ -81,3 +81,15 @@ type Modulo struct {
 	EsComun     bool   `json:"es_comun" gorm:"column:es_comun"`
 	NivelAcceso int    `json:"nivel_acceso" gorm:"column:nivel_acceso"`
 }
+
+// ModuloAdmin: un módulo visto por el superadmin en el panel de administración.
+// asignaciones y anuncios dicen cuántas filas lo referencian (si hay, no se puede borrar).
+type ModuloAdmin struct {
+	ID           string `json:"id" gorm:"column:id"`
+	Nombre       string `json:"nombre" gorm:"column:nombre"`
+	Descripcion  string `json:"descripcion" gorm:"column:descripcion"`
+	EsComun      bool   `json:"es_comun" gorm:"column:es_comun"`
+	Activo       bool   `json:"activo" gorm:"column:activo"`
+	Asignaciones int64  `json:"asignaciones" gorm:"column:asignaciones"`
+	Anuncios     int64  `json:"anuncios" gorm:"column:anuncios"`
+}

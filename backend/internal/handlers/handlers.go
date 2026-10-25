@@ -474,12 +474,20 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 	switch {
 	case errors.Is(err, service.ErrNivelInvalido),
 		errors.Is(err, service.ErrModuloComun),
-		errors.Is(err, service.ErrPersonaIDInvalid):
+		errors.Is(err, service.ErrPersonaIDInvalid),
+		errors.Is(err, service.ErrModuloIDInvalido),
+		errors.Is(err, service.ErrNombreModulo),
+		errors.Is(err, service.ErrDescripcionModulo),
+		errors.Is(err, service.ErrModuloSinCambios):
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	case errors.Is(err, service.ErrModuloNoExiste),
 		errors.Is(err, service.ErrPersonaNoValida),
 		errors.Is(err, service.ErrSinAsignacion):
 		http.Error(w, err.Error(), http.StatusNotFound)
+	case errors.Is(err, service.ErrModuloExiste),
+		errors.Is(err, service.ErrModuloEnUso),
+		errors.Is(err, service.ErrComunConAsignacion):
+		http.Error(w, err.Error(), http.StatusConflict)
 	default:
 		log.Printf("❌ %s (persona %s): %v", accion, personaID, err)
 		http.Error(w, "No se pudo completar la operación", http.StatusInternalServerError)
@@ -580,3 +588,92 @@ func QuitarModuloHandler(s *service.Service) http.HandlerFunc {
 	}
 }
 
+// --- ADMINISTRACIÓN DE MÓDULOS (solo superadmin: la ruta va dentro de SuperAdminMiddleware) ---
+
+// leerJSONAdmin: exige Content-Type JSON, limita el tamaño y decodifica.
+func leerJSONAdmin(w http.ResponseWriter, r *http.Request, destino interface{}) bool {
+	if !strings.HasPrefix(r.Header.Get("Content-Type"), "application/json") {
+		http.Error(w, "Content-Type debe ser application/json", http.StatusUnsupportedMediaType)
+		return false
+	}
+	r.Body = http.MaxBytesReader(w, r.Body, 4096)
+	if err := json.NewDecoder(r.Body).Decode(destino); err != nil {
+		http.Error(w, "JSON inválido", http.StatusBadRequest)
+		return false
+	}
+	return true
+}
+
+func ListModulosAdminHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		lista, err := s.ListModulosAdmin()
+		if err != nil {
+			log.Printf("❌ listar módulos admin (persona %s): %v", PersonaIDFromContext(r), err)
+			http.Error(w, "No se pudo obtener la lista", http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{"modulos": lista})
+	}
+}
+
+func CrearModuloHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			ID          string `json:"id"`
+			Nombre      string `json:"nombre"`
+			Descripcion string `json:"descripcion"`
+			EsComun     bool   `json:"es_comun"`
+		}
+		if !leerJSONAdmin(w, r, &req) {
+			return
+		}
+		if err := s.CrearModulo(req.ID, req.Nombre, req.Descripcion, req.EsComun); err != nil {
+			responderErrorModulos(w, err, "crear-modulo", PersonaIDFromContext(r))
+			return
+		}
+		log.Printf("🧩 módulo %q creado por persona %s", req.ID, PersonaIDFromContext(r))
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}
+}
+
+func EditarModuloHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			ID          string  `json:"id"`
+			Nombre      *string `json:"nombre"`
+			Descripcion *string `json:"descripcion"`
+			EsComun     *bool   `json:"es_comun"`
+			Activo      *bool   `json:"activo"`
+		}
+		if !leerJSONAdmin(w, r, &req) {
+			return
+		}
+		if err := s.EditarModulo(req.ID, req.Nombre, req.Descripcion, req.EsComun, req.Activo); err != nil {
+			responderErrorModulos(w, err, "editar-modulo", PersonaIDFromContext(r))
+			return
+		}
+		log.Printf("🧩 módulo %q modificado por persona %s", req.ID, PersonaIDFromContext(r))
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}
+}
+
+func EliminarModuloHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req struct {
+			ID string `json:"id"`
+		}
+		if !leerJSONAdmin(w, r, &req) {
+			return
+		}
+		if err := s.EliminarModulo(req.ID); err != nil {
+			responderErrorModulos(w, err, "eliminar-modulo", PersonaIDFromContext(r))
+			return
+		}
+		log.Printf("🧩 módulo %q eliminado por persona %s", req.ID, PersonaIDFromContext(r))
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}
+}

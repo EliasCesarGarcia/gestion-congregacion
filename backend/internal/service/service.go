@@ -346,6 +346,134 @@ func (s *Service) QuitarModulo(a *models.Actor, esSuper bool, personaDestino int
 	return nil
 }
 
+// --- ADMINISTRACIÓN DE MÓDULOS (solo superadmin; el handler ya lo comprobó) ---
+
+var (
+	ErrModuloIDInvalido   = errors.New("id no válido: minúsculas, números y _, empieza con letra, máximo 60")
+	ErrModuloExiste       = errors.New("ya existe un módulo con ese id")
+	ErrNombreModulo       = errors.New("el nombre es obligatorio (máximo 100 caracteres)")
+	ErrDescripcionModulo  = errors.New("la descripción admite máximo 500 caracteres")
+	ErrModuloSinCambios   = errors.New("no se indicó ningún campo para modificar")
+	ErrModuloEnUso        = errors.New("el módulo tiene asignaciones o anuncios: desactívelo en lugar de eliminarlo")
+	ErrComunConAsignacion = errors.New("el módulo tiene personas asignadas: quíteselo antes de hacerlo común")
+)
+
+var moduloIDRe = regexp.MustCompile(`^[a-z][a-z0-9_]{0,59}$`)
+
+func validarNombreModulo(n string) error {
+	if l := len([]rune(n)); l == 0 || l > 100 {
+		return ErrNombreModulo
+	}
+	return nil
+}
+
+func validarDescripcionModulo(d string) error {
+	if len([]rune(d)) > 500 {
+		return ErrDescripcionModulo
+	}
+	return nil
+}
+
+func (s *Service) ListModulosAdmin() ([]models.ModuloAdmin, error) {
+	return s.repo.ListModulosAdmin()
+}
+
+func (s *Service) CrearModulo(id, nombre, descripcion string, esComun bool) error {
+	id = strings.ToLower(strings.TrimSpace(id))
+	nombre = strings.TrimSpace(nombre)
+	descripcion = strings.TrimSpace(descripcion)
+
+	if !moduloIDRe.MatchString(id) {
+		return ErrModuloIDInvalido
+	}
+	if err := validarNombreModulo(nombre); err != nil {
+		return err
+	}
+	if err := validarDescripcionModulo(descripcion); err != nil {
+		return err
+	}
+
+	n, err := s.repo.CrearModulo(id, nombre, descripcion, esComun)
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return ErrModuloExiste
+	}
+	return nil
+}
+
+// EditarModulo: solo cambia los campos que vienen (puntero distinto de nil).
+func (s *Service) EditarModulo(id string, nombre, descripcion *string, esComun, activo *bool) error {
+	id = strings.ToLower(strings.TrimSpace(id))
+	if id == "" || len(id) > 60 {
+		return ErrModuloNoExiste
+	}
+
+	campos := map[string]interface{}{}
+	if nombre != nil {
+		n := strings.TrimSpace(*nombre)
+		if err := validarNombreModulo(n); err != nil {
+			return err
+		}
+		campos["nombre"] = n
+	}
+	if descripcion != nil {
+		d := strings.TrimSpace(*descripcion)
+		if err := validarDescripcionModulo(d); err != nil {
+			return err
+		}
+		campos["descripcion"] = d
+	}
+	if esComun != nil {
+		campos["es_comun"] = *esComun
+	}
+	if activo != nil {
+		campos["activo"] = *activo
+	}
+	if len(campos) == 0 {
+		return ErrModuloSinCambios
+	}
+
+	m, err := s.repo.GetModuloAdmin(id)
+	if err != nil {
+		return err
+	}
+	if m == nil {
+		return ErrModuloNoExiste
+	}
+	// Pasar a común un módulo con personas asignadas dejaría filas sin sentido.
+	if esComun != nil && *esComun && !m.EsComun && m.Asignaciones > 0 {
+		return ErrComunConAsignacion
+	}
+	return s.repo.ActualizarModulo(id, campos)
+}
+
+// EliminarModulo: borra de verdad solo si nadie lo referencia; si no, hay que desactivarlo.
+func (s *Service) EliminarModulo(id string) error {
+	id = strings.ToLower(strings.TrimSpace(id))
+	if id == "" || len(id) > 60 {
+		return ErrModuloNoExiste
+	}
+
+	m, err := s.repo.GetModuloAdmin(id)
+	if err != nil {
+		return err
+	}
+	if m == nil {
+		return ErrModuloNoExiste
+	}
+
+	n, err := s.repo.EliminarModulo(id)
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return ErrModuloEnUso
+	}
+	return nil
+}
+
 var (
 	ErrCampoInvalido = errors.New("campo no permitido")
 	ErrValorInvalido = errors.New("valor no válido")

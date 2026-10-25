@@ -220,12 +220,13 @@ func (r *Repository) GetMisModulos(personaID string, todos bool) ([]models.Modul
 	if todos {
 		res = r.db.WithContext(ctx).Table("core_modulos").
 			Select("id, COALESCE(nombre, '') as nombre, COALESCE(descripcion, '') as descripcion, es_comun, 3 as nivel_acceso").
+			Where("activo = true").
 			Order("nombre asc").Scan(&lista)
 	} else {
 		res = r.db.WithContext(ctx).Table("core_modulos as m").
 			Select("m.id, COALESCE(m.nombre, '') as nombre, COALESCE(m.descripcion, '') as descripcion, m.es_comun, COALESCE(p.nivel_acceso, 1) as nivel_acceso").
 			Joins("LEFT JOIN core_permisos_modulos p ON p.modulo_id = m.id AND p.persona_id::text = ?", personaID).
-			Where("m.es_comun = true OR p.id IS NOT NULL").
+			Where("m.activo = true AND (m.es_comun = true OR p.id IS NOT NULL)").
 			Order("m.nombre asc").Scan(&lista)
 	}
 	if res.Error != nil {
@@ -234,12 +235,12 @@ func (r *Repository) GetMisModulos(personaID string, todos bool) ([]models.Modul
 	return lista, nil
 }
 
-// GetModulo devuelve el módulo, o (nil, nil) si no existe.
+// GetModulo devuelve el módulo ACTIVO, o (nil, nil) si no existe o está inactivo.
 func (r *Repository) GetModulo(id string) (*models.Modulo, error) {
 	var m models.Modulo
 	res := r.db.Table("core_modulos").
 		Select("id, COALESCE(nombre, '') as nombre, COALESCE(descripcion, '') as descripcion, es_comun").
-		Where("id = ?", id).Limit(1).Scan(&m)
+		Where("id = ? AND activo = true", id).Limit(1).Scan(&m)
 	if res.Error != nil {
 		return nil, res.Error
 	}
@@ -264,6 +265,73 @@ func (r *Repository) AsignarModulo(personaID, moduloID string, nivel int) error 
 // QuitarModulo borra el permiso. Devuelve cuántas filas se borraron.
 func (r *Repository) QuitarModulo(personaID, moduloID string) (int64, error) {
 	res := r.db.Exec("DELETE FROM core_permisos_modulos WHERE persona_id::text = ? AND modulo_id = ?", personaID, moduloID)
+	return res.RowsAffected, res.Error
+}
+
+// --- ADMINISTRACIÓN DE MÓDULOS (solo superadmin) ---
+
+const sqlModuloAdmin = `SELECT m.id,
+	COALESCE(m.nombre, '') AS nombre,
+	COALESCE(m.descripcion, '') AS descripcion,
+	COALESCE(m.es_comun, false) AS es_comun,
+	m.activo AS activo,
+	(SELECT COUNT(*) FROM core_permisos_modulos p WHERE p.modulo_id = m.id) AS asignaciones,
+	(SELECT COUNT(*) FROM core_anuncios a WHERE a.modulo_relacionado::text = m.id) AS anuncios
+FROM core_modulos m`
+
+// ListModulosAdmin devuelve TODOS los módulos (activos e inactivos) con sus conteos.
+func (r *Repository) ListModulosAdmin() ([]models.ModuloAdmin, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	lista := []models.ModuloAdmin{}
+	res := r.db.WithContext(ctx).Raw(sqlModuloAdmin + " ORDER BY m.nombre ASC").Scan(&lista)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return lista, nil
+}
+
+// GetModuloAdmin devuelve un módulo (activo o no), o (nil, nil) si no existe.
+func (r *Repository) GetModuloAdmin(id string) (*models.ModuloAdmin, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var m models.ModuloAdmin
+	res := r.db.WithContext(ctx).Raw(sqlModuloAdmin+" WHERE m.id = ? LIMIT 1", id).Scan(&m)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	if res.RowsAffected == 0 {
+		return nil, nil
+	}
+	return &m, nil
+}
+
+// CrearModulo inserta el módulo. Devuelve 0 filas si el id ya existía.
+func (r *Repository) CrearModulo(id, nombre, descripcion string, esComun bool) (int64, error) {
+	res := r.db.Exec(`
+		INSERT INTO core_modulos (id, nombre, descripcion, es_comun, activo)
+		VALUES (?, ?, ?, ?, true)
+		ON CONFLICT (id) DO NOTHING`,
+		id, nombre, descripcion, esComun)
+	return res.RowsAffected, res.Error
+}
+
+// ActualizarModulo cambia solo los campos recibidos (nunca el id).
+func (r *Repository) ActualizarModulo(id string, campos map[string]interface{}) error {
+	return r.db.Table("core_modulos").Where("id = ?", id).Updates(campos).Error
+}
+
+// EliminarModulo borra el módulo SOLO si nadie lo referencia (todo en una sola
+// sentencia, sin carrera). Devuelve cuántas filas se borraron.
+func (r *Repository) EliminarModulo(id string) (int64, error) {
+	res := r.db.Exec(`
+		DELETE FROM core_modulos m
+		WHERE m.id = ?
+		  AND NOT EXISTS (SELECT 1 FROM core_permisos_modulos p WHERE p.modulo_id = m.id)
+		  AND NOT EXISTS (SELECT 1 FROM core_anuncios a WHERE a.modulo_relacionado::text = m.id)`,
+		id)
 	return res.RowsAffected, res.Error
 }
 
