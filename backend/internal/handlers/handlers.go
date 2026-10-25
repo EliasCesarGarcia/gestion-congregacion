@@ -517,6 +517,27 @@ func MisModulosHandler(s *service.Service) http.HandlerFunc {
 	}
 }
 
+// MeHandler: devuelve quién soy según la base de datos (no según el navegador).
+// El frontend lo usa solo para mostrar u ocultar pantallas; la seguridad real
+// sigue en cada ruta (SuperAdminMiddleware, ActorFromContext).
+func MeHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		a := ActorFromContext(r)
+		if a == nil {
+			http.Error(w, "Sesión no válida", http.StatusUnauthorized)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Cache-Control", "no-store")
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"rol_app":              a.RolApp,
+			"es_superadmin":        EsSuperAdmin(a.PersonaID),
+			"es_encargado_general": esEncargadoGeneral(a.RolApp),
+		})
+	}
+}
+
 // AsignarModuloHandler: solo coordinador, secretario, servicio o superadmin.
 func AsignarModuloHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
