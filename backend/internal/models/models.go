@@ -71,3 +71,13 @@ type PersonasPagina struct {
 	Limit    int              `json:"limit"`
 	Personas []PersonaResumen `json:"personas"`
 }
+
+// Modulo: un módulo de la app visto por una persona.
+// nivel_acceso: 1 ver, 2 editar, 3 borrar.
+type Modulo struct {
+	ID          string `json:"id" gorm:"column:id"`
+	Nombre      string `json:"nombre" gorm:"column:nombre"`
+	Descripcion string `json:"descripcion" gorm:"column:descripcion"`
+	EsComun     bool   `json:"es_comun" gorm:"column:es_comun"`
+	NivelAcceso int    `json:"nivel_acceso" gorm:"column:nivel_acceso"`
+}

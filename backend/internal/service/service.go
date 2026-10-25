@@ -257,6 +257,96 @@ func (s *Service) ListPersonas(a *models.Actor, todas bool, page, limit int) (*m
 }
 
 var (
+	ErrNivelInvalido    = errors.New("nivel de acceso no válido (de 1 a 3)")
+	ErrModuloNoExiste   = errors.New("el módulo no existe")
+	ErrModuloComun      = errors.New("el módulo es común y no se asigna")
+	ErrPersonaIDInvalid = errors.New("persona_id no válido")
+	ErrPersonaNoValida  = errors.New("la persona no existe en su congregación")
+	ErrSinAsignacion    = errors.New("esa persona no tiene ese módulo asignado")
+)
+
+// MisModulos: todos=true para coordinador, secretario, servicio o superadmin.
+func (s *Service) MisModulos(a *models.Actor, todos bool) ([]models.Modulo, error) {
+	return s.repo.GetMisModulos(a.PersonaID, todos)
+}
+
+// destinoValido: la persona destino existe y es de la congregación del actor
+// (el superadmin puede en cualquiera). Mismo error si no existe o es de otra.
+func (s *Service) destinoValido(a *models.Actor, esSuper bool, destino string, exigirAlta bool) error {
+	t, err := s.repo.BuscarActor(destino)
+	if err != nil {
+		return err
+	}
+	if t == nil || t.CongregacionID == "" {
+		return ErrPersonaNoValida
+	}
+	if exigirAlta && t.Estado != "ALTA" {
+		return ErrPersonaNoValida
+	}
+	if !esSuper && t.CongregacionID != a.CongregacionID {
+		return ErrPersonaNoValida
+	}
+	return nil
+}
+
+// AsignarModulo: el permiso (rol del actor) ya lo revisó el handler.
+func (s *Service) AsignarModulo(a *models.Actor, esSuper bool, personaDestino int, moduloID string, nivel int) error {
+	if personaDestino <= 0 {
+		return ErrPersonaIDInvalid
+	}
+	if nivel < 1 || nivel > 3 {
+		return ErrNivelInvalido
+	}
+	moduloID = strings.ToLower(strings.TrimSpace(moduloID))
+	if moduloID == "" || len(moduloID) > 60 {
+		return ErrModuloNoExiste
+	}
+
+	destino := fmt.Sprintf("%d", personaDestino)
+	if err := s.destinoValido(a, esSuper, destino, true); err != nil {
+		return err
+	}
+
+	m, err := s.repo.GetModulo(moduloID)
+	if err != nil {
+		return err
+	}
+	if m == nil {
+		return ErrModuloNoExiste
+	}
+	if m.EsComun {
+		return ErrModuloComun
+	}
+	return s.repo.AsignarModulo(destino, moduloID, nivel)
+}
+
+// QuitarModulo: igual que asignar, pero no exige que la persona esté en ALTA
+// (se puede limpiar los permisos de alguien dado de baja).
+func (s *Service) QuitarModulo(a *models.Actor, esSuper bool, personaDestino int, moduloID string) error {
+	if personaDestino <= 0 {
+		return ErrPersonaIDInvalid
+	}
+	moduloID = strings.ToLower(strings.TrimSpace(moduloID))
+	if moduloID == "" || len(moduloID) > 60 {
+		return ErrModuloNoExiste
+	}
+
+	destino := fmt.Sprintf("%d", personaDestino)
+	if err := s.destinoValido(a, esSuper, destino, false); err != nil {
+		return err
+	}
+
+	n, err := s.repo.QuitarModulo(destino, moduloID)
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return ErrSinAsignacion
+	}
+	return nil
+}
+
+var (
 	ErrCampoInvalido = errors.New("campo no permitido")
 	ErrValorInvalido = errors.New("valor no válido")
 	ErrUsernameEnUso = errors.New("el nombre de usuario ya está en uso")

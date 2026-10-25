@@ -468,3 +468,115 @@ func ListPersonasHandler(s *service.Service) http.HandlerFunc {
 		json.NewEncoder(w).Encode(res)
 	}
 }
+
+// responderErrorModulos traduce los errores del service a códigos HTTP.
+func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID string) {
+	switch {
+	case errors.Is(err, service.ErrNivelInvalido),
+		errors.Is(err, service.ErrModuloComun),
+		errors.Is(err, service.ErrPersonaIDInvalid):
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	case errors.Is(err, service.ErrModuloNoExiste),
+		errors.Is(err, service.ErrPersonaNoValida),
+		errors.Is(err, service.ErrSinAsignacion):
+		http.Error(w, err.Error(), http.StatusNotFound)
+	default:
+		log.Printf("❌ %s (persona %s): %v", accion, personaID, err)
+		http.Error(w, "No se pudo completar la operación", http.StatusInternalServerError)
+	}
+}
+
+// MisModulosHandler: módulos comunes + los asignados a mí. Coordinador,
+// secretario, servicio y superadmin ven todos.
+func MisModulosHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		a := ActorFromContext(r)
+		if a == nil {
+			http.Error(w, "Sesión no válida", http.StatusUnauthorized)
+			return
+		}
+
+		todos := EsSuperAdmin(a.PersonaID) || esEncargadoGeneral(a.RolApp)
+		lista, err := s.MisModulos(a, todos)
+		if err != nil {
+			log.Printf("❌ mis-modulos (persona %s): %v", a.PersonaID, err)
+			http.Error(w, "No se pudo obtener la lista", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]interface{}{"modulos": lista})
+	}
+}
+
+// AsignarModuloHandler: solo coordinador, secretario, servicio o superadmin.
+func AsignarModuloHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		a := ActorFromContext(r)
+		if a == nil {
+			http.Error(w, "Sesión no válida", http.StatusUnauthorized)
+			return
+		}
+		esSuper := EsSuperAdmin(a.PersonaID)
+		if !esSuper && !esEncargadoGeneral(a.RolApp) {
+			log.Printf("⚠️ asignar-modulo RECHAZADO: persona '%s' con rol '%s'", a.PersonaID, a.RolApp)
+			http.Error(w, "No autorizado", http.StatusForbidden)
+			return
+		}
+
+		r.Body = http.MaxBytesReader(w, r.Body, 4096)
+		var req struct {
+			PersonaID   int    `json:"persona_id"`
+			ModuloID    string `json:"modulo_id"`
+			NivelAcceso int    `json:"nivel_acceso"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "JSON inválido", http.StatusBadRequest)
+			return
+		}
+
+		if err := s.AsignarModulo(a, esSuper, req.PersonaID, req.ModuloID, req.NivelAcceso); err != nil {
+			responderErrorModulos(w, err, "asignar-modulo", a.PersonaID)
+			return
+		}
+		log.Printf("🔑 módulo '%s' (nivel %d) asignado a persona %d por persona %s", req.ModuloID, req.NivelAcceso, req.PersonaID, a.PersonaID)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}
+}
+
+// QuitarModuloHandler: solo coordinador, secretario, servicio o superadmin.
+func QuitarModuloHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		a := ActorFromContext(r)
+		if a == nil {
+			http.Error(w, "Sesión no válida", http.StatusUnauthorized)
+			return
+		}
+		esSuper := EsSuperAdmin(a.PersonaID)
+		if !esSuper && !esEncargadoGeneral(a.RolApp) {
+			log.Printf("⚠️ quitar-modulo RECHAZADO: persona '%s' con rol '%s'", a.PersonaID, a.RolApp)
+			http.Error(w, "No autorizado", http.StatusForbidden)
+			return
+		}
+
+		r.Body = http.MaxBytesReader(w, r.Body, 4096)
+		var req struct {
+			PersonaID int    `json:"persona_id"`
+			ModuloID  string `json:"modulo_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "JSON inválido", http.StatusBadRequest)
+			return
+		}
+
+		if err := s.QuitarModulo(a, esSuper, req.PersonaID, req.ModuloID); err != nil {
+			responderErrorModulos(w, err, "quitar-modulo", a.PersonaID)
+			return
+		}
+		log.Printf("🔑 módulo '%s' quitado a persona %d por persona %s", req.ModuloID, req.PersonaID, a.PersonaID)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}
+}
+

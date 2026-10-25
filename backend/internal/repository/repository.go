@@ -197,6 +197,76 @@ func (r *Repository) ListPersonas(congregacionID string, todas bool, limit, offs
 	return lista, total, nil
 }
 
+// BuscarActor es como GetActor, pero devuelve (nil, nil) si la persona no existe.
+func (r *Repository) BuscarActor(personaID string) (*models.Actor, error) {
+	a, err := r.GetActor(personaID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return a, nil
+}
+
+// GetMisModulos: si todos es true devuelve todos los módulos con nivel 3.
+// Si no, los comunes más los que la persona tiene asignados.
+func (r *Repository) GetMisModulos(personaID string, todos bool) ([]models.Modulo, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	lista := []models.Modulo{}
+	var res *gorm.DB
+	if todos {
+		res = r.db.WithContext(ctx).Table("core_modulos").
+			Select("id, COALESCE(nombre, '') as nombre, COALESCE(descripcion, '') as descripcion, es_comun, 3 as nivel_acceso").
+			Order("nombre asc").Scan(&lista)
+	} else {
+		res = r.db.WithContext(ctx).Table("core_modulos as m").
+			Select("m.id, COALESCE(m.nombre, '') as nombre, COALESCE(m.descripcion, '') as descripcion, m.es_comun, COALESCE(p.nivel_acceso, 1) as nivel_acceso").
+			Joins("LEFT JOIN core_permisos_modulos p ON p.modulo_id = m.id AND p.persona_id::text = ?", personaID).
+			Where("m.es_comun = true OR p.id IS NOT NULL").
+			Order("m.nombre asc").Scan(&lista)
+	}
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	return lista, nil
+}
+
+// GetModulo devuelve el módulo, o (nil, nil) si no existe.
+func (r *Repository) GetModulo(id string) (*models.Modulo, error) {
+	var m models.Modulo
+	res := r.db.Table("core_modulos").
+		Select("id, COALESCE(nombre, '') as nombre, COALESCE(descripcion, '') as descripcion, es_comun").
+		Where("id = ?", id).Limit(1).Scan(&m)
+	if res.Error != nil {
+		return nil, res.Error
+	}
+	if res.RowsAffected == 0 {
+		return nil, nil
+	}
+	return &m, nil
+}
+
+// AsignarModulo da (o actualiza) el permiso de una persona sobre un módulo.
+// La congregacion_id se copia SIEMPRE de la fila de la persona, nunca del cliente.
+func (r *Repository) AsignarModulo(personaID, moduloID string, nivel int) error {
+	return r.db.Exec(`
+		INSERT INTO core_permisos_modulos (persona_id, modulo_id, congregacion_id, nivel_acceso)
+		SELECT p.id, ?::text, p.congregacion_id, ?::integer
+		FROM core_personas p
+		WHERE p.id::text = ?
+		ON CONFLICT (persona_id, modulo_id) DO UPDATE SET nivel_acceso = EXCLUDED.nivel_acceso`,
+		moduloID, nivel, personaID).Error
+}
+
+// QuitarModulo borra el permiso. Devuelve cuántas filas se borraron.
+func (r *Repository) QuitarModulo(personaID, moduloID string) (int64, error) {
+	res := r.db.Exec("DELETE FROM core_permisos_modulos WHERE persona_id::text = ? AND modulo_id = ?", personaID, moduloID)
+	return res.RowsAffected, res.Error
+}
+
 // --- GESTIÓN DE PIN Y VERIFICACIÓN ---
 
 func (r *Repository) GetCongregacionName(num string) string {

@@ -62,6 +62,11 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	// Personas de mi congregación (2026-10-24): coordinador, secretario, servicio o superadmin
 	mux.Handle("GET /api/personas", protegida(http.HandlerFunc(handlers.ListPersonasHandler(svc))))
 
+	// Módulos y encargados (2026-10-24): ver los míos; asignar y quitar solo encargados generales o superadmin
+	mux.Handle("GET /api/mis-modulos", protegida(http.HandlerFunc(handlers.MisModulosHandler(svc))))
+	mux.Handle("POST /api/modulos/asignar", protegida(http.HandlerFunc(handlers.AsignarModuloHandler(svc))))
+	mux.Handle("POST /api/modulos/quitar", protegida(http.HandlerFunc(handlers.QuitarModuloHandler(svc))))
+
 	mux.HandleFunc("/api/logout", handlers.LogoutHandler)
 
 	// Administración de Seguridad (2026-10-21): solo superadmins.
