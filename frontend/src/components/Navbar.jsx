@@ -13,6 +13,7 @@ import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 // NUEVO: Importación para el soporte de traducción de react-i18next
 import { useTranslation } from "react-i18next";
+import { MODULOS_UI } from "../config/modulosConfig";
 
 // --- IMPORTACIÓN DE ICONOS (LUCIDE-REACT) ---
 // Optimizado: Se elimina ChevronDown que no se utilizaba para evitar advertencias de ESLint
@@ -34,7 +35,39 @@ function Navbar() {
   const { t, i18n } = useTranslation();
 
   // ✅ Solo destructuramos lo que Navbar realmente utiliza
-const { user, logout } = useContext(AppContext);
+  const { user, logout, modulos } = useContext(AppContext);
+
+  // Menú: ítems fijos + módulos del usuario que tengan pantalla (MODULOS_UI).
+  // Object.hasOwn evita que un id como "constructor" coincida con la tabla.
+  const itemsMenu = [
+    { to: "/", icon: <Home size={22} />, label: t("nav_home", "Inicio") },
+    ...modulos
+      .filter((m) => Object.hasOwn(MODULOS_UI, m.id))
+      .map((m) => {
+        const { to, icon: Icono, labelKey } = MODULOS_UI[m.id];
+        return { to, icon: <Icono size={22} />, label: t(labelKey, m.nombre) };
+      }),
+    {
+      to: "/seguridad-tips",
+      icon: <ShieldCheck size={22} />,
+      label: t("nav_security", "Seguridad Digital"),
+    },
+    {
+      to: "/contacto",
+      icon: <Globe size={22} />,
+      label: t("nav_help", "Ayuda y Contacto"),
+    },
+    {
+      to: "/perfil",
+      icon: <User size={22} />,
+      label: t("nav_profile", "Mi Perfil"),
+    },
+    {
+      to: "/configuracion",
+      icon: <Settings size={22} />,
+      label: t("nav_config", "Configuración"),
+    },
+  ];
 
   // NUEVO: Detección dinámica de dirección (LTR / RTL)
   const isRtl = i18n.dir
@@ -403,38 +436,7 @@ const { user, logout } = useContext(AppContext);
         <div
           className={`p-1 space-y-1 overflow-y-auto h-[calc(100%-60px)] custom-scrollbar ${isRtl ? "text-right" : "text-left"} mt-2`}
         >
-          {[
-            {
-              to: "/",
-              icon: <Home size={22} />,
-              label: t("nav_home", "Inicio"),
-            },
-            {
-              to: "/publicaciones",
-              icon: <BookOpen size={22} />,
-              label: t("nav_publications", "Publicaciones"),
-            },
-            {
-              to: "/seguridad-tips",
-              icon: <ShieldCheck size={22} />,
-              label: t("nav_security", "Seguridad Digital"),
-            },
-            {
-              to: "/contacto",
-              icon: <Globe size={22} />,
-              label: t("nav_help", "Ayuda y Contacto"),
-            },
-            {
-              to: "/perfil",
-              icon: <User size={22} />,
-              label: t("nav_profile", "Mi Perfil"),
-            },
-            {
-              to: "/configuracion",
-              icon: <Settings size={22} />,
-              label: t("nav_config", "Configuración"),
-            },
-          ].map((item) => {
+          {itemsMenu.map((item) => {
             const isAct = location.pathname === item.to;
 
             return (
