@@ -28,6 +28,7 @@ import {
   ShieldCheck,
   Globe,
   LayoutGrid,
+  SlidersHorizontal,
 } from "lucide-react";
 
 function Navbar() {
@@ -35,7 +36,7 @@ function Navbar() {
   const { t, i18n } = useTranslation();
 
   // ✅ Solo destructuramos lo que Navbar realmente utiliza
-  const { user, logout, modulos } = useContext(AppContext);
+  const { user, logout, modulos, permisos } = useContext(AppContext);
 
   // Menú: ítems fijos + módulos del usuario que tengan pantalla (MODULOS_UI).
   // Object.hasOwn evita que un id como "constructor" coincida con la tabla.
@@ -67,6 +68,16 @@ function Navbar() {
       icon: <Settings size={22} />,
       label: t("nav_config", "Configuración"),
     },
+    // Solo se muestra al superadmin (el backend igual valida cada ruta)
+    ...(permisos.es_superadmin
+      ? [
+          {
+            to: "/admin/modulos",
+            icon: <SlidersHorizontal size={22} />,
+            label: t("nav_admin_modules", "Módulos del sistema"),
+          },
+        ]
+      : []),
   ];
 
   // NUEVO: Detección dinámica de dirección (LTR / RTL)
@@ -120,6 +131,8 @@ function Navbar() {
       return t("nav_help_contact", "Centro de Ayuda y Contacto");
     if (location.pathname === "/configuracion")
       return t("nav_config", "Configuración");
+    if (location.pathname === "/admin/modulos")
+      return t("nav_admin_modules", "Módulos del sistema");
     return `${t("nav_congregation", "Congregación")} ${user?.congregacion_nombre || ""}`;
   };
 
@@ -172,6 +185,8 @@ function Navbar() {
     if (location.pathname === "/contacto") return <Globe className={size} />;
     if (location.pathname === "/configuracion")
       return <Settings className={size} />;
+    if (location.pathname === "/admin/modulos")
+      return <SlidersHorizontal className={size} />;
 
     return null; // Por seguridad, si no coincide ninguna, no muestra nada
   };

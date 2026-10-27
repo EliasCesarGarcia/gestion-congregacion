@@ -28,6 +28,7 @@ import ProfilePage from "./pages/ProfilePage"; // Administración de perfil de u
 import SecurityTipsPage from "./pages/SecurityTipsPage"; // Centro de seguridad digital
 import ContactoPage from "./pages/ContactoPage"; // Ayuda y soporte institucional
 import ConfiguracionPage from "./pages/ConfiguracionPage"; // Preferencias y accesibilidad (CEO 2026)
+import AdminModulosPage from "./pages/AdminModulosPage"; // Panel de superadmin: módulos
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -221,6 +222,23 @@ function App() {
                   />
                 </Helmet>
                 <ConfiguracionPage />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Panel de superadmin: módulos del sistema */}
+          <Route
+            path="/admin/modulos"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Módulos del Sistema | Administración</title>
+                  <meta
+                    name="description"
+                    content="Administración de los módulos del sistema (solo superadmin)."
+                  />
+                </Helmet>
+                <AdminModulosPage />
               </RutaProtegida>
             }
           />
