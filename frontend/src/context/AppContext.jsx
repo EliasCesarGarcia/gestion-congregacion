@@ -21,6 +21,15 @@ import { useParallax } from "../hooks/useParallax";
 
 export const AppContext = createContext();
 
+// Permisos del usuario según el servidor (GET /api/me). Solo sirven para
+// mostrar u ocultar pantallas: la seguridad real la decide el backend.
+const PERMISOS_VACIOS = {
+  rol_app: null,
+  es_superadmin: false,
+  es_encargado_general: false,
+  cargado: false,
+};
+
 export function AppProvider({ children }) {
   // MOTOR DE ANIMACIÓN: Recuperamos la referencia del motor Parallax
   const bgRef = useParallax();
@@ -31,9 +40,43 @@ export function AppProvider({ children }) {
     return saved ? JSON.parse(saved) : null;
   });
 
+  // --- PERMISOS (solo en memoria, nunca en sessionStorage) ---
+  const [permisos, setPermisos] = useState(PERMISOS_VACIOS);
+  const hayUsuario = !!user;
+
+  // Cada vez que hay sesión (login o recarga con F5) se pregunta al servidor.
+  useEffect(() => {
+    if (!hayUsuario) return;
+    let cancelado = false;
+
+    axios
+      .get("/api/me")
+      .then(({ data }) => {
+        if (cancelado) return;
+        setPermisos({
+          rol_app: data.rol_app ?? null,
+          es_superadmin: data.es_superadmin === true,
+          es_encargado_general: data.es_encargado_general === true,
+          cargado: true,
+        });
+      })
+      .catch(() => {
+        // Ante cualquier error se queda sin permisos especiales (lo más seguro).
+        if (!cancelado) setPermisos({ ...PERMISOS_VACIOS, cargado: true });
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [hayUsuario]);
+
   // --- ACCESIBILIDAD Y TEMAS ---
-  const [fontSize, setFontSize] = useState(() => localStorage.getItem("app_font_size") || "normal");
-  const [userTheme, setUserTheme] = useState(() => localStorage.getItem("app_theme") || "default");
+  const [fontSize, setFontSize] = useState(
+    () => localStorage.getItem("app_font_size") || "normal",
+  );
+  const [userTheme, setUserTheme] = useState(
+    () => localStorage.getItem("app_theme") || "default",
+  );
   const [, setTick] = useState(0); // Disparador para actualizar la hora del día
 
   // LÓGICA DE TIEMPO: Determina si es Mañana, Tarde o Noche
@@ -56,13 +99,43 @@ export function AppProvider({ children }) {
     }[timeOfDay];
 
     if (userTheme === "default") {
-        // Colores por defecto si el usuario no eligió un tema manual
-        const defaults = {
-            manana: { navy: "#33558b", blue: "#4a6da7", accent: "#8eb4f5", body: "#f0f4f8", card: "#ffffff", text_main: "#1a1a1a", text_light: "#ffffff", border: "#d1d1d1", effect: "none" },
-            tarde: { navy: "#3e4a59", blue: "#5c6b7d", accent: "#a1b4c7", body: "#f5f7fa", card: "#ffffff", text_main: "#1a1a1a", text_light: "#ffffff", border: "#cfd8dc", effect: "none" },
-            noche: { navy: "#1a335a", blue: "#214382", accent: "#4a6da7", body: "#f5f5f5", card: "#ffffff", text_main: "#1a1a1a", text_light: "#ffffff", border: "#d1d1d1", effect: "none" }
-        };
-        currentThemeData = defaults[timeOfDay];
+      // Colores por defecto si el usuario no eligió un tema manual
+      const defaults = {
+        manana: {
+          navy: "#33558b",
+          blue: "#4a6da7",
+          accent: "#8eb4f5",
+          body: "#f0f4f8",
+          card: "#ffffff",
+          text_main: "#1a1a1a",
+          text_light: "#ffffff",
+          border: "#d1d1d1",
+          effect: "none",
+        },
+        tarde: {
+          navy: "#3e4a59",
+          blue: "#5c6b7d",
+          accent: "#a1b4c7",
+          body: "#f5f7fa",
+          card: "#ffffff",
+          text_main: "#1a1a1a",
+          text_light: "#ffffff",
+          border: "#cfd8dc",
+          effect: "none",
+        },
+        noche: {
+          navy: "#1a335a",
+          blue: "#214382",
+          accent: "#4a6da7",
+          body: "#f5f5f5",
+          card: "#ffffff",
+          text_main: "#1a1a1a",
+          text_light: "#ffffff",
+          border: "#d1d1d1",
+          effect: "none",
+        },
+      };
+      currentThemeData = defaults[timeOfDay];
     } else {
       const baseTheme = themePalettes[userTheme];
       currentThemeData = { ...baseTheme[timeOfDay], effect: baseTheme.effect };
@@ -75,11 +148,20 @@ export function AppProvider({ children }) {
     const root = document.documentElement;
     root.setAttribute("data-theme", activeTheme.effect);
     root.setAttribute("data-time", timeOfDay);
-    
-    const props = ["navy", "blue", "accent", "body", "card", "text-main", "text-light", "border"];
-    props.forEach(p => {
-        const key = p.replace("-", "_");
-        root.style.setProperty(`--color-jw-${p}`, activeTheme[key]);
+
+    const props = [
+      "navy",
+      "blue",
+      "accent",
+      "body",
+      "card",
+      "text-main",
+      "text-light",
+      "border",
+    ];
+    props.forEach((p) => {
+      const key = p.replace("-", "_");
+      root.style.setProperty(`--color-jw-${p}`, activeTheme[key]);
     });
 
     localStorage.setItem("app_theme", userTheme);
@@ -93,49 +175,75 @@ export function AppProvider({ children }) {
 
   // Bucle de actualización de reloj cada minuto
   useEffect(() => {
-    const interval = setInterval(() => setTick(t => t + 1), 60000);
+    const interval = setInterval(() => setTick((t) => t + 1), 60000);
     return () => clearInterval(interval);
   }, []);
 
   // --- LÓGICA DE AUTENTICACIÓN ---
-const logout = useCallback(async () => {
+  const logout = useCallback(async () => {
     try {
-        // Le avisamos al backend que borre la cookie
-        await axios.post("/api/logout");
+      // Le avisamos al backend que borre la cookie
+      await axios.post("/api/logout");
     } catch {
-        console.error("Error al cerrar sesión en servidor");
+      console.error("Error al cerrar sesión en servidor");
     } finally {
-        setUser(null);
-        sessionStorage.removeItem("user_session");
-        window.location.href = "/login";
+      setUser(null);
+      sessionStorage.removeItem("user_session");
+      window.location.href = "/login";
     }
-}, []);
+  }, []);
 
-const login = (newData) => {
-    setUser(prev => {
-        // Lógica Inteligente:
-        // 1. Si newData tiene una propiedad 'user' (viene del login-final), usamos esa.
-        // 2. Si no, es una actualización parcial (como cambiar la foto), así que mezclamos lo viejo con lo nuevo.
-        const updatedUser = newData.user ? newData.user : { ...prev, ...newData };
-        
-        // Guardamos en sessionStorage para persistencia tras F5
-        sessionStorage.setItem("user_session", JSON.stringify(updatedUser));
-        return updatedUser;
+  const login = (newData) => {
+    setUser((prev) => {
+      // Lógica Inteligente:
+      // 1. Si newData tiene una propiedad 'user' (viene del login-final), usamos esa.
+      // 2. Si no, es una actualización parcial (como cambiar la foto), así que mezclamos lo viejo con lo nuevo.
+      const updatedUser = newData.user ? newData.user : { ...prev, ...newData };
+
+      // Guardamos en sessionStorage para persistencia tras F5
+      sessionStorage.setItem("user_session", JSON.stringify(updatedUser));
+      return updatedUser;
     });
-};
+  };
   // SEO 2026: Imágenes activas para pre-carga
-  const currentImages = backgroundImagesMap[activeTheme.effect]?.[timeOfDay] || null;
+  const currentImages =
+    backgroundImagesMap[activeTheme.effect]?.[timeOfDay] || null;
 
   return (
-    <AppContext.Provider value={{ user, login, logout, activeTheme, userTheme, setUserTheme, fontSize, setFontSize }}>
+    <AppContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+        permisos: hayUsuario ? permisos : PERMISOS_VACIOS,
+        activeTheme,
+        userTheme,
+        setUserTheme,
+        fontSize,
+        setFontSize,
+      }}
+    >
       {currentImages && (
         <Helmet>
-          <link rel="preload" as="image" href={`/images/themes/${currentImages.movil}`} media="(max-width: 768px)" fetchpriority="high" />
-          <link rel="preload" as="image" href={`/images/themes/${currentImages.pc}`} media="(min-width: 769px)" fetchpriority="high" />
+          <link
+            rel="preload"
+            as="image"
+            href={`/images/themes/${currentImages.movil}`}
+            media="(max-width: 768px)"
+            fetchpriority="high"
+          />
+          <link
+            rel="preload"
+            as="image"
+            href={`/images/themes/${currentImages.pc}`}
+            media="(min-width: 769px)"
+            fetchpriority="high"
+          />
         </Helmet>
       )}
       <div id="parallax-bg" ref={bgRef} />
       {children}
+    
     </AppContext.Provider>
   );
 }
