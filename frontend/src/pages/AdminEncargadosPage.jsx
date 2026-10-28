@@ -65,6 +65,8 @@ function AdminEncargadosPage() {
   const [total, setTotal] = useState(0);
   const [cargandoPersonas, setCargandoPersonas] = useState(false);
   const [errorPersonas, setErrorPersonas] = useState("");
+  const [busqueda, setBusqueda] = useState(""); // lo que se escribe
+  const [terminoActivo, setTerminoActivo] = useState(""); // lo que se buscó
 
   // Carga los puestos cuando se sabe que hay permiso y cada vez que cambia `version`.
   useEffect(() => {
@@ -75,7 +77,9 @@ function AdminEncargadosPage() {
       .get("/api/modulos/asignaciones")
       .then(({ data }) => {
         if (cancelado) return;
-        setAsignaciones(Array.isArray(data.asignaciones) ? data.asignaciones : []);
+        setAsignaciones(
+          Array.isArray(data.asignaciones) ? data.asignaciones : [],
+        );
         setErrorLista("");
         setCargando(false);
       })
@@ -124,7 +128,10 @@ function AdminEncargadosPage() {
     }
     if (status === 404) {
       return accion === "quitar"
-        ? t("enc_err_404_quitar", "Esa persona ya no tiene ese puesto. Se actualizó la lista.")
+        ? t(
+            "enc_err_404_quitar",
+            "Esa persona ya no tiene ese puesto. Se actualizó la lista.",
+          )
         : t(
             "enc_err_404_asignar",
             "La persona o el departamento ya no están disponibles. Se actualizó la lista.",
@@ -144,16 +151,17 @@ function AdminEncargadosPage() {
 
   const refrescar = () => setVersion((v) => v + 1);
 
-  const cargarPersonas = async (pag) => {
+  const cargarPersonas = async (pag, termino) => {
     setCargandoPersonas(true);
     setErrorPersonas("");
     try {
       const { data } = await axios.get("/api/personas", {
-        params: { page: pag, limit: LIMITE },
+        params: { page: pag, limit: LIMITE, q: termino || undefined },
       });
       setPersonas(Array.isArray(data.personas) ? data.personas : []);
       setTotal(Number(data.total) || 0);
       setPagina(pag);
+      setTerminoActivo(termino || "");
     } catch {
       setErrorPersonas(
         t("enc_error_personas", "No se pudo cargar la lista de personas."),
@@ -168,7 +176,8 @@ function AdminEncargadosPage() {
     setConfirmando("");
     setEligiendo({ moduloId, puesto });
     setPersonas([]);
-    cargarPersonas(1);
+    setBusqueda("");
+    cargarPersonas(1, "");
   };
 
   const cerrarSelector = () => setEligiendo(null);
@@ -271,7 +280,8 @@ function AdminEncargadosPage() {
         </p>
       )}
 
-      {!cargando && !errorLista &&
+      {!cargando &&
+        !errorLista &&
         departamentos.map((m) => {
           const delDepto = asignaciones.filter((a) => a.modulo_id === m.id);
           const eligiendoAqui = eligiendo?.moduloId === m.id;
@@ -396,6 +406,34 @@ function AdminEncargadosPage() {
                     </button>
                   </div>
 
+                  <form
+                    role="search"
+                    className="flex gap-2"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      cargarPersonas(1, busqueda.trim());
+                    }}
+                  >
+                    <input
+                      type="search"
+                      name="buscar_persona"
+                      autoComplete="off"
+                      maxLength={60}
+                      value={busqueda}
+                      onChange={(e) => setBusqueda(e.target.value)}
+                      placeholder={t("enc_buscar_ph", "Buscar por nombre")}
+                      aria-label={t("enc_buscar_ph", "Buscar por nombre")}
+                      className="w-full bg-jw-body text-jw-text-main border border-jw-border rounded-xl px-3 py-2 text-sm outline-none focus:border-jw-accent transition-colors"
+                    />
+                    <button
+                      type="submit"
+                      disabled={cargandoPersonas}
+                      className={CLASE_BTN_PRIMARIO}
+                    >
+                      {t("enc_buscar", "Buscar")}
+                    </button>
+                  </form>
+
                   {cargandoPersonas && (
                     <div className="flex justify-center py-4" role="status">
                       <Loader2 className="w-5 h-5 animate-spin text-jw-accent" />
@@ -412,7 +450,10 @@ function AdminEncargadosPage() {
                     <ul className="divide-y divide-jw-border border border-jw-border rounded-xl">
                       {personas.length === 0 && (
                         <li className="px-3 py-2 text-sm text-jw-text-main opacity-70">
-                          {t("enc_sin_personas", "No hay personas para mostrar.")}
+                          {t(
+                            "enc_sin_personas",
+                            "No hay personas para mostrar.",
+                          )}
                         </li>
                       )}
                       {personas.map((per) => {
@@ -460,7 +501,7 @@ function AdminEncargadosPage() {
                     <button
                       type="button"
                       disabled={cargandoPersonas || pagina <= 1}
-                      onClick={() => cargarPersonas(pagina - 1)}
+                      onClick={() => cargarPersonas(pagina - 1, terminoActivo)}
                       className={CLASE_BTN_SUAVE}
                     >
                       {t("enc_anterior", "Anterior")}
@@ -471,7 +512,7 @@ function AdminEncargadosPage() {
                     <button
                       type="button"
                       disabled={cargandoPersonas || pagina >= totalPaginas}
-                      onClick={() => cargarPersonas(pagina + 1)}
+                      onClick={() => cargarPersonas(pagina + 1, terminoActivo)}
                       className={CLASE_BTN_SUAVE}
                     >
                       {t("enc_siguiente", "Siguiente")}
