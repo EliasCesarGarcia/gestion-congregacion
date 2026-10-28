@@ -479,7 +479,8 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 		errors.Is(err, service.ErrNombreModulo),
 		errors.Is(err, service.ErrDescripcionModulo),
 		errors.Is(err, service.ErrModuloSinCambios),
-		errors.Is(err, service.ErrPuestoInvalido):
+		errors.Is(err, service.ErrPuestoInvalido),
+		errors.Is(err, service.ErrDetallesInvalido):
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	case errors.Is(err, service.ErrModuloNoExiste),
 		errors.Is(err, service.ErrPersonaNoValida),

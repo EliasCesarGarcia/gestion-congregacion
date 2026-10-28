@@ -67,6 +67,7 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("GET /api/mis-modulos", protegida(http.HandlerFunc(handlers.MisModulosHandler(svc))))
 	mux.Handle("GET /api/modulos/asignaciones", protegida(http.HandlerFunc(handlers.ListAsignacionesHandler(svc))))
 	mux.Handle("POST /api/modulos/asignar", protegida(http.HandlerFunc(handlers.AsignarPuestoHandler(svc))))
+	mux.Handle("GET /api/modulos/historial", protegida(http.HandlerFunc(handlers.ListHistorialPuestosHandler(svc))))
 	mux.Handle("POST /api/modulos/quitar", protegida(http.HandlerFunc(handlers.QuitarModuloHandler(svc))))
 
 	// Administración de módulos (2026-10-25): solo superadmins.

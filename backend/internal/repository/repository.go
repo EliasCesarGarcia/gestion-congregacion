@@ -278,10 +278,30 @@ func (r *Repository) AsignarModulo(personaID, moduloID string, nivel int) error 
 		moduloID, nivel, personaID).Error
 }
 
-// QuitarModulo borra el permiso. Devuelve cuántas filas se borraron.
-func (r *Repository) QuitarModulo(personaID, moduloID string) (int64, error) {
-	res := r.db.Exec("DELETE FROM core_permisos_modulos WHERE persona_id::text = ? AND modulo_id = ?", personaID, moduloID)
-	return res.RowsAffected, res.Error
+// QuitarModulo borra el permiso y, en la misma transacción, cierra la fila
+// vigente del historial. Devuelve cuántas filas de permiso se borraron.
+func (r *Repository) QuitarModulo(personaID, moduloID, actorID string) (int64, error) {
+	var filas int64
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		res := tx.Exec("DELETE FROM core_permisos_modulos WHERE persona_id::text = ? AND modulo_id = ?", personaID, moduloID)
+		if res.Error != nil {
+			return res.Error
+		}
+		filas = res.RowsAffected
+		if filas == 0 {
+			return nil
+		}
+		return tx.Exec(`
+			UPDATE core_puestos_historial h
+			SET fecha_fin = now(),
+			    quitado_por = (SELECT a.id FROM core_personas a WHERE a.id::text = ?)
+			WHERE h.persona_id::text = ? AND h.modulo_id = ? AND h.fecha_fin IS NULL`,
+			actorID, personaID, moduloID).Error
+	})
+	if err != nil {
+		return 0, err
+	}
+	return filas, nil
 }
 
 // --- ADMINISTRACIÓN DE MÓDULOS (solo superadmin) ---

@@ -2,7 +2,9 @@
  * ARCHIVO: puestos.go
  * UBICACIÓN: backend/internal/repository/puestos.go
  * DESCRIPCIÓN: Consultas de los puestos de cada departamento (encargado,
- * auxiliar, segundo auxiliar) sobre core_permisos_modulos.
+ * auxiliar, segundo auxiliar) sobre core_permisos_modulos, y su historial
+ * (core_puestos_historial). El permiso y el historial se escriben SIEMPRE en
+ * la misma transacción: o quedan los dos o no queda ninguno.
  */
 
 package repository
@@ -12,6 +14,8 @@ import (
 	"time"
 
 	"gestion-congregacion/backend/internal/models"
+
+	"gorm.io/gorm"
 )
 
 // ListAsignaciones devuelve quién ocupa cada puesto en los departamentos
@@ -38,20 +42,46 @@ func (r *Repository) ListAsignaciones(congregacionID string) ([]models.Asignacio
 	return lista, nil
 }
 
-// AsignarPuesto inserta el puesto. La congregacion_id se copia SIEMPRE de la
-// fila de la persona. Devuelve 0 filas si hubo conflicto con los índices únicos:
-// la persona ya tiene ese departamento, o el puesto ya está ocupado en la
-// congregación. Al resolverlo la base (no el código), no hay carrera entre dos
-// pedidos simultáneos.
-func (r *Repository) AsignarPuesto(personaID, moduloID, puesto string, nivel int) (int64, error) {
-	res := r.db.Exec(`
-		INSERT INTO core_permisos_modulos (persona_id, modulo_id, congregacion_id, nivel_acceso, puesto)
-		SELECT p.id, ?::text, p.congregacion_id, ?::integer, ?::text
-		FROM core_personas p
-		WHERE p.id::text = ?
-		ON CONFLICT DO NOTHING`,
-		moduloID, nivel, puesto, personaID)
-	return res.RowsAffected, res.Error
+// AsignarPuesto inserta el puesto y, en la misma transacción, la fila del
+// historial. La congregacion_id se copia SIEMPRE de la fila de la persona.
+// Devuelve 0 filas si hubo conflicto con los índices únicos (la persona ya
+// tiene ese departamento, o el puesto ya está ocupado): en ese caso NO se
+// escribe historial. Al resolverlo la base (no el código), no hay carrera
+// entre dos pedidos simultáneos.
+//
+// actorID = persona que hace la asignación (puede ir vacío: queda sin dato).
+// detalles = texto corto opcional, ya validado por el servicio.
+func (r *Repository) AsignarPuesto(personaID, moduloID, puesto string, nivel int, actorID, detalles string) (int64, error) {
+	var filas int64
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		res := tx.Exec(`
+			INSERT INTO core_permisos_modulos (persona_id, modulo_id, congregacion_id, nivel_acceso, puesto)
+			SELECT p.id, ?::text, p.congregacion_id, ?::integer, ?::text
+			FROM core_personas p
+			WHERE p.id::text = ?
+			ON CONFLICT DO NOTHING`,
+			moduloID, nivel, puesto, personaID)
+		if res.Error != nil {
+			return res.Error
+		}
+		filas = res.RowsAffected
+		if filas == 0 {
+			return nil
+		}
+		return tx.Exec(`
+			INSERT INTO core_puestos_historial
+				(persona_id, modulo_id, congregacion_id, puesto, asignado_por, detalles)
+			SELECT p.id, ?::text, p.congregacion_id, ?::text,
+			       (SELECT a.id FROM core_personas a WHERE a.id::text = ?),
+			       NULLIF(?::text, '')
+			FROM core_personas p
+			WHERE p.id::text = ?`,
+			moduloID, puesto, actorID, detalles, personaID).Error
+	})
+	if err != nil {
+		return 0, err
+	}
+	return filas, nil
 }
 
 // GetPuestoDe devuelve el puesto que la persona tiene en el departamento,
@@ -71,4 +101,51 @@ func (r *Repository) GetPuestoDe(personaID, moduloID string) (string, error) {
 		return "", nil
 	}
 	return puestos[0], nil
+}
+
+// ListHistorialPuestos devuelve el historial de puestos de la congregación,
+// del más reciente al más antiguo. moduloID y personaID son filtros
+// opcionales ("" = sin filtro).
+func (r *Repository) ListHistorialPuestos(congregacionID, moduloID, personaID string, limit, offset int) ([]models.HistorialPuesto, int64, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var total int64
+	res := r.db.WithContext(ctx).Raw(`
+		SELECT COUNT(*)
+		FROM core_puestos_historial h
+		WHERE h.congregacion_id::text = ?
+		  AND (?::text = '' OR h.modulo_id = ?::text)
+		  AND (?::text = '' OR h.persona_id::text = ?::text)`,
+		congregacionID, moduloID, moduloID, personaID, personaID).Scan(&total)
+	if res.Error != nil {
+		return nil, 0, res.Error
+	}
+
+	lista := []models.HistorialPuesto{}
+	res = r.db.WithContext(ctx).Raw(`
+		SELECT h.id AS id,
+		       h.modulo_id AS modulo_id,
+		       h.persona_id AS persona_id,
+		       COALESCE(pe.apellido_nombre, '') AS nombre_completo,
+		       h.puesto AS puesto,
+		       h.fecha_inicio AS fecha_inicio,
+		       h.fecha_fin AS fecha_fin,
+		       COALESCE(h.detalles, '') AS detalles,
+		       COALESCE(ap.apellido_nombre, '') AS asignado_por,
+		       COALESCE(qp.apellido_nombre, '') AS quitado_por
+		FROM core_puestos_historial h
+		JOIN core_personas pe ON pe.id = h.persona_id
+		LEFT JOIN core_personas ap ON ap.id = h.asignado_por
+		LEFT JOIN core_personas qp ON qp.id = h.quitado_por
+		WHERE h.congregacion_id::text = ?
+		  AND (?::text = '' OR h.modulo_id = ?::text)
+		  AND (?::text = '' OR h.persona_id::text = ?::text)
+		ORDER BY h.fecha_inicio DESC, h.id DESC
+		LIMIT ? OFFSET ?`,
+		congregacionID, moduloID, moduloID, personaID, personaID, limit, offset).Scan(&lista)
+	if res.Error != nil {
+		return nil, 0, res.Error
+	}
+	return lista, total, nil
 }

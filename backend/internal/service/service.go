@@ -336,7 +336,7 @@ func (s *Service) QuitarModulo(a *models.Actor, esSuper bool, personaDestino int
 		return err
 	}
 
-	n, err := s.repo.QuitarModulo(destino, moduloID)
+	n, err := s.repo.QuitarModulo(destino, moduloID, a.PersonaID)
 	if err != nil {
 		return err
 	}
