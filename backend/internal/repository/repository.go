@@ -10,6 +10,7 @@ package repository
 import (
 	"gestion-congregacion/backend/internal/models"
 	"gestion-congregacion/backend/internal/monitor"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -163,14 +164,29 @@ func (r *Repository) GetActor(personaID string) (*models.Actor, error) {
 
 // ListPersonas devuelve una página de personas en ALTA, sin datos sensibles.
 // Si todas es false, filtra por la congregación indicada (regla de oro).
-func (r *Repository) ListPersonas(congregacionID string, todas bool, limit, offset int) ([]models.PersonaResumen, int64, error) {
+func (r *Repository) ListPersonas(congregacionID string, todas bool, busqueda string, limit, offset int) ([]models.PersonaResumen, int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
+	// Búsqueda por nombre: se recorta a 60 caracteres y se escapan \, % y _
+	// para que el texto del usuario nunca actúe como comodín.
+	busqueda = strings.TrimSpace(busqueda)
+	if runas := []rune(busqueda); len(runas) > 60 {
+		busqueda = string(runas[:60])
+	}
+	patron := ""
+	if busqueda != "" {
+		esc := strings.NewReplacer(`\`, `\\`, `%`, `\%`, `_`, `\_`).Replace(busqueda)
+		patron = "%" + esc + "%"
+	}
 
 	base := func() *gorm.DB {
 		q := r.db.WithContext(ctx).Table("core_personas").Where("core_personas.estado = 'ALTA'")
 		if !todas {
 			q = q.Where("core_personas.congregacion_id::text = ?", congregacionID)
+		}
+		if patron != "" {
+			q = q.Where("core_personas.apellido_nombre ILIKE ?", patron)
 		}
 		return q
 	}

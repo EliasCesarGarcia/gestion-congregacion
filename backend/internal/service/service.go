@@ -235,7 +235,7 @@ func (s *Service) GetActor(personaID string) (*models.Actor, error) {
 
 // ListPersonas devuelve una página de personas de la congregación del actor.
 // todas=true (solo superadmin) se salta el filtro por congregación.
-func (s *Service) ListPersonas(a *models.Actor, todas bool, page, limit int) (*models.PersonasPagina, error) {
+func (s *Service) ListPersonas(a *models.Actor, todas bool, busqueda string, page, limit int) (*models.PersonasPagina, error) {
 	if !todas && a.CongregacionID == "" {
 		return nil, errors.New("la persona no tiene congregación")
 	}
@@ -249,7 +249,7 @@ func (s *Service) ListPersonas(a *models.Actor, todas bool, page, limit int) (*m
 		limit = 50
 	}
 
-	lista, total, err := s.repo.ListPersonas(a.CongregacionID, todas, limit, (page-1)*limit)
+	lista, total, err := s.repo.ListPersonas(a.CongregacionID, todas, busqueda, limit, (page-1)*limit)
 	if err != nil {
 		return nil, err
 	}

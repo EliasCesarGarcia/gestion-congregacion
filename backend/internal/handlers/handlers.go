@@ -457,7 +457,7 @@ func ListPersonasHandler(s *service.Service) http.HandlerFunc {
 		page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 		limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
 
-		res, err := s.ListPersonas(a, esSuper, page, limit)
+		res, err := s.ListPersonas(a, esSuper, r.URL.Query().Get("q"), page, limit)
 		if err != nil {
 			log.Printf("❌ listar personas (persona %s): %v", a.PersonaID, err)
 			http.Error(w, "No se pudo obtener la lista", http.StatusInternalServerError)
