@@ -29,6 +29,7 @@ import {
   Globe,
   LayoutGrid,
   SlidersHorizontal,
+  UserCog,
 } from "lucide-react";
 
 function Navbar() {
@@ -68,6 +69,16 @@ function Navbar() {
       icon: <Settings size={22} />,
       label: t("nav_config", "Configuración"),
     },
+    // Coordinador, secretario, servicio y superadmin (el backend igual valida cada ruta)
+    ...(permisos.es_superadmin || permisos.es_encargado_general
+      ? [
+          {
+            to: "/admin/encargados",
+            icon: <UserCog size={22} />,
+            label: t("nav_admin_encargados", "Encargados de departamentos"),
+          },
+        ]
+      : []),
     // Solo se muestra al superadmin (el backend igual valida cada ruta)
     ...(permisos.es_superadmin
       ? [
@@ -133,6 +144,8 @@ function Navbar() {
       return t("nav_config", "Configuración");
     if (location.pathname === "/admin/modulos")
       return t("nav_admin_modules", "Módulos del sistema");
+    if (location.pathname === "/admin/encargados")
+      return t("nav_admin_encargados", "Encargados de departamentos");
     return `${t("nav_congregation", "Congregación")} ${user?.congregacion_nombre || ""}`;
   };
 
@@ -187,6 +200,8 @@ function Navbar() {
       return <Settings className={size} />;
     if (location.pathname === "/admin/modulos")
       return <SlidersHorizontal className={size} />;
+    if (location.pathname === "/admin/encargados")
+      return <UserCog className={size} />;
 
     return null; // Por seguridad, si no coincide ninguna, no muestra nada
   };

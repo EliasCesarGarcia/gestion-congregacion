@@ -29,6 +29,7 @@ import SecurityTipsPage from "./pages/SecurityTipsPage"; // Centro de seguridad 
 import ContactoPage from "./pages/ContactoPage"; // Ayuda y soporte institucional
 import ConfiguracionPage from "./pages/ConfiguracionPage"; // Preferencias y accesibilidad (CEO 2026)
 import AdminModulosPage from "./pages/AdminModulosPage"; // Panel de superadmin: módulos
+import AdminEncargadosPage from "./pages/AdminEncargadosPage"; // Departamentos: encargados y auxiliares
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -239,6 +240,23 @@ function App() {
                   />
                 </Helmet>
                 <AdminModulosPage />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Departamentos: encargados y auxiliares (coordinador, secretario, servicio, superadmin) */}
+          <Route
+            path="/admin/encargados"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Encargados de Departamentos | Administración</title>
+                  <meta
+                    name="description"
+                    content="Asignación de encargados y auxiliares de cada departamento."
+                  />
+                </Helmet>
+                <AdminEncargadosPage />
               </RutaProtegida>
             }
           />
