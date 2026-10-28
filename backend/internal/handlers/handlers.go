@@ -478,7 +478,8 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 		errors.Is(err, service.ErrModuloIDInvalido),
 		errors.Is(err, service.ErrNombreModulo),
 		errors.Is(err, service.ErrDescripcionModulo),
-		errors.Is(err, service.ErrModuloSinCambios):
+		errors.Is(err, service.ErrModuloSinCambios),
+		errors.Is(err, service.ErrPuestoInvalido):
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	case errors.Is(err, service.ErrModuloNoExiste),
 		errors.Is(err, service.ErrPersonaNoValida),
@@ -486,7 +487,9 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 		http.Error(w, err.Error(), http.StatusNotFound)
 	case errors.Is(err, service.ErrModuloExiste),
 		errors.Is(err, service.ErrModuloEnUso),
-		errors.Is(err, service.ErrComunConAsignacion):
+		errors.Is(err, service.ErrComunConAsignacion),
+		errors.Is(err, service.ErrPuestoOcupado),
+		errors.Is(err, service.ErrPersonaYaTienePuesto):
 		http.Error(w, err.Error(), http.StatusConflict)
 	default:
 		log.Printf("❌ %s (persona %s): %v", accion, personaID, err)
