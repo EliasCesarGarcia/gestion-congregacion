@@ -6,8 +6,12 @@
  * backend en cada handler).
  *
  *  - GET  /api/modulos/asignaciones  -> puestos ocupados hoy.
- *  - POST /api/modulos/asignar       -> { persona_id, modulo_id, puesto, detalles? }
+ *  - POST /api/modulos/asignar       -> { persona_id, modulo_id, puesto, motivo_id?, detalles? }
+ *  - POST /api/modulos/quitar        -> { persona_id, modulo_id, motivo_id?, detalles? }
  *  - GET  /api/modulos/historial     -> ?modulo_id=&persona_id=&page=&limit=
+ *
+ * motivo_id es el id de un motivo ACTIVO del tipo correcto (ver motivos.go);
+ * 0 o ausente = sin motivo.
  */
 
 package handlers
@@ -48,7 +52,7 @@ func ListAsignacionesHandler(s *service.Service) http.HandlerFunc {
 }
 
 // AsignarPuestoHandler asigna un puesto. El nivel de acceso lo decide el
-// servidor según el puesto; "detalles" es opcional (máximo 100 palabras).
+// servidor según el puesto; "motivo_id" y "detalles" son opcionales.
 func AsignarPuestoHandler(s *service.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		a := ActorFromContext(r)
@@ -67,18 +71,55 @@ func AsignarPuestoHandler(s *service.Service) http.HandlerFunc {
 			PersonaID int    `json:"persona_id"`
 			ModuloID  string `json:"modulo_id"`
 			Puesto    string `json:"puesto"`
+			MotivoID  int64  `json:"motivo_id"`
 			Detalles  string `json:"detalles"`
 		}
 		if !leerJSONAdmin(w, r, &req) {
 			return
 		}
 
-		if err := s.AsignarPuesto(a, esSuper, req.PersonaID, req.ModuloID, req.Puesto, req.Detalles); err != nil {
+		if err := s.AsignarPuesto(a, esSuper, req.PersonaID, req.ModuloID, req.Puesto, req.Detalles, req.MotivoID); err != nil {
 			responderErrorModulos(w, err, "asignar-puesto", a.PersonaID)
 			return
 		}
 		// El texto de "detalles" no se escribe en el log.
 		log.Printf("🔑 puesto '%s' en '%s' asignado a persona %d por persona %s", req.Puesto, req.ModuloID, req.PersonaID, a.PersonaID)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
+	}
+}
+
+// QuitarPuestoHandler quita el puesto de una persona en un departamento y
+// cierra su fila del historial. "motivo_id" y "detalles" son opcionales.
+func QuitarPuestoHandler(s *service.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		a := ActorFromContext(r)
+		if a == nil {
+			http.Error(w, "Sesión no válida", http.StatusUnauthorized)
+			return
+		}
+		esSuper := EsSuperAdmin(a.PersonaID)
+		if !esSuper && !esEncargadoGeneral(a.RolApp) {
+			log.Printf("⚠️ quitar-puesto RECHAZADO: persona '%s' con rol '%s'", a.PersonaID, a.RolApp)
+			http.Error(w, "No autorizado", http.StatusForbidden)
+			return
+		}
+
+		var req struct {
+			PersonaID int    `json:"persona_id"`
+			ModuloID  string `json:"modulo_id"`
+			MotivoID  int64  `json:"motivo_id"`
+			Detalles  string `json:"detalles"`
+		}
+		if !leerJSONAdmin(w, r, &req) {
+			return
+		}
+
+		if err := s.QuitarPuesto(a, esSuper, req.PersonaID, req.ModuloID, req.Detalles, req.MotivoID); err != nil {
+			responderErrorModulos(w, err, "quitar-puesto", a.PersonaID)
+			return
+		}
+		log.Printf("🔑 puesto en '%s' quitado a persona %d por persona %s", req.ModuloID, req.PersonaID, a.PersonaID)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 	}

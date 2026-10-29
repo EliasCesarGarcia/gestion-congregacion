@@ -11,8 +11,9 @@
  *  - El encargado edita (nivel_acceso 2); los auxiliares solo leen (nivel 1).
  *    El nivel lo decide SIEMPRE el servidor a partir del puesto.
  *  - Cada asignación y cada baja de puesto queda en el historial
- *    (core_puestos_historial); nunca se borra. Al asignar se puede guardar un
- *    texto corto en "detalles" (máximo 100 palabras).
+ *    (core_puestos_historial); nunca se borra. Al asignar o quitar se puede
+ *    indicar un motivo del catálogo (opcional) y un texto corto en
+ *    "detalles" (máximo 100 palabras).
  */
 
 package service
@@ -74,9 +75,10 @@ func (s *Service) ListAsignaciones(a *models.Actor) ([]models.AsignacionPuesto, 
 }
 
 // AsignarPuesto: el permiso del actor (rol) ya lo revisó el handler.
-// detalles es opcional (texto corto); si el puesto ya estaba asignado igual,
-// repetir el pedido no cambia nada y no toca el historial.
-func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino int, moduloID, puesto, detalles string) error {
+// detalles y motivoID son opcionales (motivoID 0 = sin motivo); si el puesto
+// ya estaba asignado igual, repetir el pedido no cambia nada y no toca el
+// historial.
+func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino int, moduloID, puesto, detalles string, motivoID int64) error {
 	if personaDestino <= 0 {
 		return ErrPersonaIDInvalid
 	}
@@ -90,6 +92,10 @@ func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino in
 		return ErrModuloNoExiste
 	}
 	detalles, err := normalizarDetalles(detalles)
+	if err != nil {
+		return err
+	}
+	motivo, err := s.validarMotivo(motivoID, "asignar")
 	if err != nil {
 		return err
 	}
@@ -110,7 +116,7 @@ func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino in
 		return ErrModuloComun
 	}
 
-	filas, err := s.repo.AsignarPuesto(destino, moduloID, puesto, nivel, a.PersonaID, detalles)
+	filas, err := s.repo.AsignarPuesto(destino, moduloID, puesto, nivel, a.PersonaID, detalles, motivo)
 	if err != nil {
 		return err
 	}
@@ -130,6 +136,41 @@ func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino in
 		return ErrPersonaYaTienePuesto
 	}
 	return ErrPuestoOcupado
+}
+
+// QuitarPuesto: igual que asignar, pero no exige que la persona esté en ALTA
+// (se puede limpiar el puesto de alguien dado de baja). motivoID y detalles
+// son opcionales; se guardan en el historial al cerrar la fila vigente.
+func (s *Service) QuitarPuesto(a *models.Actor, esSuper bool, personaDestino int, moduloID, detalles string, motivoID int64) error {
+	if personaDestino <= 0 {
+		return ErrPersonaIDInvalid
+	}
+	moduloID = strings.ToLower(strings.TrimSpace(moduloID))
+	if moduloID == "" || len(moduloID) > 60 {
+		return ErrModuloNoExiste
+	}
+	detalles, err := normalizarDetalles(detalles)
+	if err != nil {
+		return err
+	}
+	motivo, err := s.validarMotivo(motivoID, "quitar")
+	if err != nil {
+		return err
+	}
+
+	destino := fmt.Sprintf("%d", personaDestino)
+	if err := s.destinoValido(a, esSuper, destino, false); err != nil {
+		return err
+	}
+
+	n, err := s.repo.QuitarPuesto(destino, moduloID, a.PersonaID, detalles, motivo)
+	if err != nil {
+		return err
+	}
+	if n == 0 {
+		return ErrSinAsignacion
+	}
+	return nil
 }
 
 // ListHistorialPuestos: historial de la congregación del actor, paginado.

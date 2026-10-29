@@ -480,13 +480,20 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 		errors.Is(err, service.ErrDescripcionModulo),
 		errors.Is(err, service.ErrModuloSinCambios),
 		errors.Is(err, service.ErrPuestoInvalido),
+		errors.Is(err, service.ErrPuestoInvalido),
+		errors.Is(err, service.ErrMotivoInvalido),
+		errors.Is(err, service.ErrMotivoDatos),
+		errors.Is(err, service.ErrMotivoTipoInvalido),
+		errors.Is(err, service.ErrMotivoSinCambios),
 		errors.Is(err, service.ErrDetallesInvalido):
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	case errors.Is(err, service.ErrModuloNoExiste),
+		errors.Is(err, service.ErrMotivoNoExiste),
 		errors.Is(err, service.ErrPersonaNoValida),
 		errors.Is(err, service.ErrSinAsignacion):
 		http.Error(w, err.Error(), http.StatusNotFound)
-	case errors.Is(err, service.ErrModuloExiste),
+	case errors.Is(err, service.ErrMotivoExiste),
+		errors.Is(err, service.ErrModuloExiste),
 		errors.Is(err, service.ErrModuloEnUso),
 		errors.Is(err, service.ErrComunConAsignacion),
 		errors.Is(err, service.ErrPuestoOcupado),
