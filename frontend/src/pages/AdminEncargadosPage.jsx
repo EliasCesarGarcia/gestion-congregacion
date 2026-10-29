@@ -3,13 +3,16 @@
  * UBICACIÓN: frontend/src/pages/AdminEncargadosPage.jsx
  * DESCRIPCIÓN: Pantalla de departamentos y puestos (encargado, auxiliar y
  * segundo auxiliar). Coordinador, secretario, servicio y superadmin asignan
- * y quitan personas de cada puesto.
+ * y quitan personas de cada puesto. Al asignar o quitar se puede elegir un
+ * motivo (lista que configura el superadmin) y escribir un detalle corto.
  *
  * REGLAS (las hace cumplir el backend; esta pantalla solo las muestra):
  *  - El encargado edita dentro del departamento; los auxiliares solo ven.
  *  - Un solo encargado, un solo auxiliar y un solo segundo auxiliar.
  *  - Una persona no puede tener dos puestos en el mismo departamento.
  *  - Solo se pueden asignar personas dadas de alta en la gestión de personas.
+ *  - Motivo y detalle son opcionales; el detalle admite hasta 100 palabras
+ *    y 1000 caracteres.
  *
  * SEGURIDAD: el chequeo de abajo solo oculta la pantalla. Las rutas
  * /api/modulos/* devuelven 403 a quien no tenga permiso.
@@ -25,6 +28,8 @@ import { Loader2, UserPlus, UserMinus, X } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 
 const LIMITE = 20; // personas por página en el selector (el backend admite hasta 50)
+const MAX_PALABRAS = 100; // igual que el backend
+const MAX_CARACTERES = 1000; // igual que el backend
 
 const PUESTOS = [
   { id: "encargado", clave: "enc_puesto_encargado", texto: "Encargado" },
@@ -41,6 +46,86 @@ const CLASE_BTN_PRIMARIO =
   "inline-flex items-center justify-center gap-2 bg-jw-navy text-jw-text-light rounded-xl px-3 py-2 text-sm font-medium hover:opacity-90 active:scale-95 transition disabled:opacity-50 disabled:pointer-events-none";
 const CLASE_BTN_SUAVE =
   "inline-flex items-center justify-center gap-2 border border-jw-border text-jw-text-main rounded-xl px-3 py-2 text-sm hover:bg-jw-accent/20 active:scale-95 transition disabled:opacity-40 disabled:pointer-events-none";
+const CLASE_CAMPO =
+  "w-full bg-jw-body text-jw-text-main border border-jw-border rounded-xl px-3 py-2 text-sm outline-none focus:border-jw-accent transition-colors";
+
+// Cuenta palabras como el backend (separadas por espacios).
+const contarPalabras = (texto) => {
+  const limpio = texto.trim();
+  return limpio ? limpio.split(/\s+/).length : 0;
+};
+
+/**
+ * Campos de motivo (desplegable) y detalle (texto corto). Está fuera de la
+ * pantalla principal a propósito: si se definiera adentro, se volvería a
+ * crear en cada tecla y el cursor se perdería.
+ */
+function CamposMotivo({
+  idBase,
+  lista,
+  motivo,
+  setMotivo,
+  detalles,
+  setDetalles,
+  deshabilitado,
+  t,
+}) {
+  const palabras = contarPalabras(detalles);
+  const excedido = palabras > MAX_PALABRAS;
+
+  return (
+    <div className="space-y-2">
+      <div>
+        <label
+          htmlFor={`${idBase}-motivo`}
+          className="block text-xs text-jw-text-main opacity-70 mb-1"
+        >
+          {t("enc_motivo", "Motivo (opcional)")}
+        </label>
+        <select
+          id={`${idBase}-motivo`}
+          value={motivo}
+          disabled={deshabilitado}
+          onChange={(e) => setMotivo(e.target.value)}
+          className={CLASE_CAMPO}
+        >
+          <option value="">{t("enc_sin_motivo", "Sin motivo")}</option>
+          {lista.map((m) => (
+            <option key={m.id} value={String(m.id)}>
+              {m.texto}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div>
+        <label
+          htmlFor={`${idBase}-detalles`}
+          className="block text-xs text-jw-text-main opacity-70 mb-1"
+        >
+          {t("enc_detalles", "Detalles (opcional)")}
+        </label>
+        <textarea
+          id={`${idBase}-detalles`}
+          rows={2}
+          maxLength={MAX_CARACTERES}
+          value={detalles}
+          disabled={deshabilitado}
+          onChange={(e) => setDetalles(e.target.value)}
+          className={`${CLASE_CAMPO} resize-y`}
+        />
+        <p
+          className={`text-xs mt-1 text-end ${
+            excedido ? "text-red-500" : "text-jw-text-main opacity-60"
+          }`}
+        >
+          {palabras} / {MAX_PALABRAS}{" "}
+          {t("enc_palabras", "palabras")}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 function AdminEncargadosPage() {
   const { t } = useTranslation();
@@ -53,10 +138,20 @@ function AdminEncargadosPage() {
   const [errorLista, setErrorLista] = useState("");
   const [version, setVersion] = useState(0);
 
+  // --- Motivos (listas para los desplegables) ---
+  const [motivos, setMotivos] = useState({ asignar: [], quitar: [] });
+  const [versionMotivos, setVersionMotivos] = useState(0);
+
   // --- Acciones ---
   const [aviso, setAviso] = useState(null); // { tipo: "ok" | "error", texto }
   const [ocupado, setOcupado] = useState(""); // acción en curso
-  const [confirmando, setConfirmando] = useState(""); // "modulo|persona"
+  const [confirmando, setConfirmando] = useState(""); // "modulo|puesto"
+
+  // --- Motivo y detalle al asignar / al quitar ---
+  const [motivoAsignar, setMotivoAsignar] = useState("");
+  const [detallesAsignar, setDetallesAsignar] = useState("");
+  const [motivoQuitar, setMotivoQuitar] = useState("");
+  const [detallesQuitar, setDetallesQuitar] = useState("");
 
   // --- Selector de personas (paginado) ---
   const [eligiendo, setEligiendo] = useState(null); // { moduloId, puesto }
@@ -99,6 +194,32 @@ function AdminEncargadosPage() {
     };
   }, [autorizado, version, t]);
 
+  // Carga los motivos activos (ambos tipos en una sola llamada). Si falla, los
+  // desplegables quedan solo con "Sin motivo": el motivo es opcional.
+  useEffect(() => {
+    if (!autorizado) return;
+    let cancelado = false;
+
+    axios
+      .get("/api/modulos/motivos")
+      .then(({ data }) => {
+        if (cancelado) return;
+        const lista = Array.isArray(data.motivos) ? data.motivos : [];
+        setMotivos({
+          asignar: lista.filter((m) => m.tipo === "asignar"),
+          quitar: lista.filter((m) => m.tipo === "quitar"),
+        });
+      })
+      .catch(() => {
+        if (cancelado) return;
+        setMotivos({ asignar: [], quitar: [] });
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [autorizado, versionMotivos]);
+
   // Mientras no se sepa el permiso, no se decide nada (evita redirigir de más).
   if (!permisos.cargado) {
     return (
@@ -112,6 +233,8 @@ function AdminEncargadosPage() {
   // Solo los departamentos que se asignan (los comunes no tienen encargado).
   const departamentos = modulos.filter((m) => !m.es_comun);
   const totalPaginas = Math.max(1, Math.ceil(total / LIMITE));
+  const asignarExcedido = contarPalabras(detallesAsignar) > MAX_PALABRAS;
+  const quitarExcedido = contarPalabras(detallesQuitar) > MAX_PALABRAS;
 
   // --- Funciones auxiliares ---
 
@@ -144,12 +267,24 @@ function AdminEncargadosPage() {
       );
     }
     if (status === 400) {
-      return t("enc_err_400", "Datos no válidos.");
+      return t(
+        "enc_err_400",
+        "Datos no válidos. Revise el motivo y los detalles (máximo 100 palabras).",
+      );
     }
     return t("enc_err_general", "Ocurrió un error. Intente de nuevo.");
   };
 
   const refrescar = () => setVersion((v) => v + 1);
+  const refrescarMotivos = () => setVersionMotivos((v) => v + 1);
+
+  // El cuerpo lleva motivo_id y detalles solo si se completaron.
+  const camposOpcionales = (motivo, detalles) => {
+    const extra = {};
+    if (motivo) extra.motivo_id = Number(motivo);
+    if (detalles.trim()) extra.detalles = detalles.trim();
+    return extra;
+  };
 
   const cargarPersonas = async (pag, termino) => {
     setCargandoPersonas(true);
@@ -175,12 +310,21 @@ function AdminEncargadosPage() {
     setAviso(null);
     setConfirmando("");
     setEligiendo({ moduloId, puesto });
+    setMotivoAsignar("");
+    setDetallesAsignar("");
     setPersonas([]);
     setBusqueda("");
     cargarPersonas(1, "");
   };
 
   const cerrarSelector = () => setEligiendo(null);
+
+  const abrirConfirmacion = (clave) => {
+    setAviso(null);
+    setMotivoQuitar("");
+    setDetallesQuitar("");
+    setConfirmando(clave);
+  };
 
   // --- Acciones ---
 
@@ -193,6 +337,7 @@ function AdminEncargadosPage() {
         persona_id: persona.id,
         modulo_id: moduloId,
         puesto,
+        ...camposOpcionales(motivoAsignar, detallesAsignar),
       });
       setAviso({
         tipo: "ok",
@@ -202,6 +347,11 @@ function AdminEncargadosPage() {
       refrescar();
     } catch (err) {
       setAviso({ tipo: "error", texto: mensajeError(err, "asignar") });
+      if (err.response?.status === 400) {
+        // Puede ser un motivo que el superadmin desactivó mientras tanto.
+        setMotivoAsignar("");
+        refrescarMotivos();
+      }
       if (err.response?.status === 404 || err.response?.status === 409) {
         setEligiendo(null);
         refrescar();
@@ -218,12 +368,17 @@ function AdminEncargadosPage() {
       await axios.post("/api/modulos/quitar", {
         persona_id: personaId,
         modulo_id: moduloId,
+        ...camposOpcionales(motivoQuitar, detallesQuitar),
       });
       setAviso({ tipo: "ok", texto: t("enc_ok_quitar", "Puesto quitado.") });
       setConfirmando("");
       refrescar();
     } catch (err) {
       setAviso({ tipo: "error", texto: mensajeError(err, "quitar") });
+      if (err.response?.status === 400) {
+        setMotivoQuitar("");
+        refrescarMotivos();
+      }
       if (err.response?.status === 404) {
         setConfirmando("");
         refrescar();
@@ -341,10 +496,7 @@ function AdminEncargadosPage() {
                         <button
                           type="button"
                           disabled={ocupado !== ""}
-                          onClick={() => {
-                            setAviso(null);
-                            setConfirmando(claveConfirmar);
-                          }}
+                          onClick={() => abrirConfirmacion(claveConfirmar)}
                           className={CLASE_BTN_SUAVE}
                         >
                           <UserMinus className="w-4 h-4" />
@@ -353,31 +505,45 @@ function AdminEncargadosPage() {
                       )}
 
                       {ocupante && enConfirmacion && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-jw-text-main">
+                        <div className="w-full space-y-3 border-t border-jw-border pt-3">
+                          <p className="text-sm text-jw-text-main">
                             {t("enc_confirmar_quitar", "¿Quitar este puesto?")}
-                          </span>
-                          <button
-                            type="button"
-                            disabled={ocupado !== ""}
-                            onClick={() => quitar(m.id, ocupante.persona_id)}
-                            className={CLASE_BTN_PRIMARIO}
-                          >
-                            {ocupado ===
-                            `quitar|${m.id}|${ocupante.persona_id}` ? (
-                              <Loader2 className="w-4 h-4 animate-spin" />
-                            ) : (
-                              t("enc_si_quitar", "Sí, quitar")
-                            )}
-                          </button>
-                          <button
-                            type="button"
-                            disabled={ocupado !== ""}
-                            onClick={() => setConfirmando("")}
-                            className={CLASE_BTN_SUAVE}
-                          >
-                            {t("enc_cancelar", "Cancelar")}
-                          </button>
+                          </p>
+
+                          <CamposMotivo
+                            idBase={`quitar-${m.id}-${p.id}`}
+                            lista={motivos.quitar}
+                            motivo={motivoQuitar}
+                            setMotivo={setMotivoQuitar}
+                            detalles={detallesQuitar}
+                            setDetalles={setDetallesQuitar}
+                            deshabilitado={ocupado !== ""}
+                            t={t}
+                          />
+
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              disabled={ocupado !== "" || quitarExcedido}
+                              onClick={() => quitar(m.id, ocupante.persona_id)}
+                              className={CLASE_BTN_PRIMARIO}
+                            >
+                              {ocupado ===
+                              `quitar|${m.id}|${ocupante.persona_id}` ? (
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                              ) : (
+                                t("enc_si_quitar", "Sí, quitar")
+                              )}
+                            </button>
+                            <button
+                              type="button"
+                              disabled={ocupado !== ""}
+                              onClick={() => setConfirmando("")}
+                              className={CLASE_BTN_SUAVE}
+                            >
+                              {t("enc_cancelar", "Cancelar")}
+                            </button>
+                          </div>
                         </div>
                       )}
                     </li>
@@ -406,6 +572,18 @@ function AdminEncargadosPage() {
                     </button>
                   </div>
 
+                  {/* Motivo y detalle: se aplican a la persona que se elija. */}
+                  <CamposMotivo
+                    idBase={`asignar-${m.id}`}
+                    lista={motivos.asignar}
+                    motivo={motivoAsignar}
+                    setMotivo={setMotivoAsignar}
+                    detalles={detallesAsignar}
+                    setDetalles={setDetallesAsignar}
+                    deshabilitado={ocupado !== ""}
+                    t={t}
+                  />
+
                   <form
                     role="search"
                     className="flex gap-2"
@@ -423,7 +601,7 @@ function AdminEncargadosPage() {
                       onChange={(e) => setBusqueda(e.target.value)}
                       placeholder={t("enc_buscar_ph", "Buscar por nombre")}
                       aria-label={t("enc_buscar_ph", "Buscar por nombre")}
-                      className="w-full bg-jw-body text-jw-text-main border border-jw-border rounded-xl px-3 py-2 text-sm outline-none focus:border-jw-accent transition-colors"
+                      className={CLASE_CAMPO}
                     />
                     <button
                       type="submit"
@@ -480,7 +658,7 @@ function AdminEncargadosPage() {
                             ) : (
                               <button
                                 type="button"
-                                disabled={ocupado !== ""}
+                                disabled={ocupado !== "" || asignarExcedido}
                                 onClick={() => asignar(per)}
                                 className={CLASE_BTN_PRIMARIO}
                               >
