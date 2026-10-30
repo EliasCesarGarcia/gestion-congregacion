@@ -5,6 +5,7 @@
  * segundo auxiliar). Coordinador, secretario, servicio y superadmin asignan
  * y quitan personas de cada puesto. Al asignar o quitar se puede elegir un
  * motivo (lista que configura el superadmin) y escribir un detalle corto.
+ * Al final hay un historial de puestos (solo lectura, paginado).
  *
  * REGLAS (las hace cumplir el backend; esta pantalla solo las muestra):
  *  - El encargado edita dentro del departamento; los auxiliares solo ven.
@@ -48,6 +49,28 @@ const CLASE_BTN_SUAVE =
   "inline-flex items-center justify-center gap-2 border border-jw-border text-jw-text-main rounded-xl px-3 py-2 text-sm hover:bg-jw-accent/20 active:scale-95 transition disabled:opacity-40 disabled:pointer-events-none";
 const CLASE_CAMPO =
   "w-full bg-jw-body text-jw-text-main border border-jw-border rounded-xl px-3 py-2 text-sm outline-none focus:border-jw-accent transition-colors";
+
+const LIMITE_HISTORIAL = 20; // filas por página del historial (el backend admite hasta 100)
+
+// Nombre corto de cada puesto para el historial (sin el "(opcional)").
+const NOMBRE_PUESTO = {
+  encargado: ["enc_puesto_encargado", "Encargado"],
+  auxiliar: ["enc_puesto_auxiliar", "Auxiliar"],
+  auxiliar_2: ["enc_hist_puesto_auxiliar_2", "Segundo auxiliar"],
+};
+
+// Fecha legible en el idioma de la persona; si el idioma no se reconoce, usa
+// el del navegador.
+const formatearFecha = (iso, idioma) => {
+  if (!iso) return "";
+  const fecha = new Date(iso);
+  if (Number.isNaN(fecha.getTime())) return "";
+  try {
+    return fecha.toLocaleDateString(idioma, { dateStyle: "medium" });
+  } catch {
+    return fecha.toLocaleDateString();
+  }
+};
 
 // Cuenta palabras como el backend (separadas por espacios).
 const contarPalabras = (texto) => {
@@ -128,7 +151,7 @@ function CamposMotivo({
 }
 
 function AdminEncargadosPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { permisos, modulos } = useContext(AppContext);
   const autorizado = permisos.es_superadmin || permisos.es_encargado_general;
 
@@ -162,6 +185,18 @@ function AdminEncargadosPage() {
   const [errorPersonas, setErrorPersonas] = useState("");
   const [busqueda, setBusqueda] = useState(""); // lo que se escribe
   const [terminoActivo, setTerminoActivo] = useState(""); // lo que se buscó
+
+  // --- Historial de puestos (solo lectura, se pide al abrirlo) ---
+  const [verHistorial, setVerHistorial] = useState(false);
+  const [filtroModulo, setFiltroModulo] = useState(""); // "" = todos
+  const [paginaHist, setPaginaHist] = useState(1);
+  // Resultado de la última consulta; `clave` dice a qué pedido corresponde.
+  const [resHist, setResHist] = useState({
+    clave: "",
+    historial: [],
+    total: 0,
+    error: "",
+  });
 
   // Carga los puestos cuando se sabe que hay permiso y cada vez que cambia `version`.
   useEffect(() => {
@@ -220,6 +255,56 @@ function AdminEncargadosPage() {
     };
   }, [autorizado, versionMotivos]);
 
+  // Identifica el pedido actual del historial (filtro + página + versión).
+  const claveHist = `${filtroModulo}|${paginaHist}|${version}`;
+
+  // Carga el historial solo mientras está abierto. Se vuelve a pedir al cambiar
+  // el filtro, la página o después de asignar o quitar un puesto (`version`).
+  useEffect(() => {
+    if (!autorizado || !verHistorial) return;
+    let cancelado = false;
+
+    axios
+      .get("/api/modulos/historial", {
+        params: {
+          modulo_id: filtroModulo || undefined,
+          page: paginaHist,
+          limit: LIMITE_HISTORIAL,
+        },
+      })
+      .then(({ data }) => {
+        if (cancelado) return;
+        setResHist({
+          clave: claveHist,
+          historial: Array.isArray(data.historial) ? data.historial : [],
+          total: Number(data.total) || 0,
+          error: "",
+        });
+      })
+      .catch(() => {
+        if (cancelado) return;
+        setResHist({
+          clave: claveHist,
+          historial: [],
+          total: 0,
+          error: t(
+            "enc_hist_error",
+            "No se pudo cargar el historial. Intente de nuevo.",
+          ),
+        });
+      });
+
+    return () => {
+      cancelado = true;
+    };
+  }, [autorizado, verHistorial, filtroModulo, paginaHist, claveHist, t]);
+
+  // Mientras la respuesta guardada no sea la del pedido actual, está cargando.
+  const cargandoHist = verHistorial && resHist.clave !== claveHist;
+  const historial = resHist.historial;
+  const totalHist = resHist.total;
+  const errorHist = resHist.error;
+
   // Mientras no se sepa el permiso, no se decide nada (evita redirigir de más).
   if (!permisos.cargado) {
     return (
@@ -235,6 +320,9 @@ function AdminEncargadosPage() {
   const totalPaginas = Math.max(1, Math.ceil(total / LIMITE));
   const asignarExcedido = contarPalabras(detallesAsignar) > MAX_PALABRAS;
   const quitarExcedido = contarPalabras(detallesQuitar) > MAX_PALABRAS;
+  const totalPaginasHist = Math.max(1, Math.ceil(totalHist / LIMITE_HISTORIAL));
+  const nombreDepartamento = (id) =>
+    modulos.find((m) => m.id === id)?.nombre || id;
 
   // --- Funciones auxiliares ---
 
@@ -701,6 +789,182 @@ function AdminEncargadosPage() {
             </section>
           );
         })}
+
+      {/* --- HISTORIAL DE PUESTOS (solo lectura) --- */}
+      {!cargando && !errorLista && (
+        <section className="bg-jw-card border border-jw-border rounded-2xl p-5 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 className="text-base font-medium text-jw-text-main">
+                {t("enc_hist_titulo", "Historial de puestos")}
+              </h2>
+              <p className="text-sm text-jw-text-main opacity-70">
+                {t(
+                  "enc_hist_subtitulo",
+                  "Quién ocupó cada puesto, desde cuándo, y los motivos de cada cambio. No se borra.",
+                )}
+              </p>
+            </div>
+            <button
+              type="button"
+              aria-expanded={verHistorial}
+              onClick={() => {
+                setVerHistorial((v) => !v);
+                setPaginaHist(1);
+              }}
+              className={CLASE_BTN_SUAVE}
+            >
+              {verHistorial
+                ? t("enc_hist_ocultar", "Ocultar historial")
+                : t("enc_hist_ver", "Ver historial")}
+            </button>
+          </div>
+
+          {verHistorial && (
+            <div className="space-y-3">
+              <div>
+                <label
+                  htmlFor="hist-filtro-modulo"
+                  className="block text-xs text-jw-text-main opacity-70 mb-1"
+                >
+                  {t("enc_hist_filtro", "Departamento")}
+                </label>
+                <select
+                  id="hist-filtro-modulo"
+                  value={filtroModulo}
+                  onChange={(e) => {
+                    setFiltroModulo(e.target.value);
+                    setPaginaHist(1);
+                  }}
+                  className={CLASE_CAMPO}
+                >
+                  <option value="">
+                    {t("enc_hist_todos", "Todos los departamentos")}
+                  </option>
+                  {departamentos.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {cargandoHist && (
+                <div className="flex justify-center py-4" role="status">
+                  <Loader2 className="w-5 h-5 animate-spin text-jw-accent" />
+                </div>
+              )}
+
+              {errorHist && (
+                <p className="text-sm text-jw-text-main border border-red-500/50 bg-red-500/10 rounded-xl px-3 py-2">
+                  {errorHist}
+                </p>
+              )}
+
+              {!cargandoHist && !errorHist && historial.length === 0 && (
+                <p className="text-sm text-jw-text-main opacity-70">
+                  {t("enc_hist_vacio", "Todavía no hay movimientos.")}
+                </p>
+              )}
+
+              {!cargandoHist && !errorHist && historial.length > 0 && (
+                <ul className="space-y-2">
+                  {historial.map((h) => {
+                    const [clavePuesto, textoPuesto] = NOMBRE_PUESTO[
+                      h.puesto
+                    ] || ["", h.puesto];
+                    const vigente = !h.fecha_fin;
+                    return (
+                      <li
+                        key={h.id}
+                        className="border border-jw-border rounded-xl px-3 py-2 space-y-1"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <p className="text-sm font-medium text-jw-text-main">
+                            {h.nombre_completo || `#${h.persona_id}`}
+                          </p>
+                          {vigente && (
+                            <span className="text-xs border border-green-600/40 bg-green-600/10 text-jw-text-main rounded-full px-2 py-0.5">
+                              {t("enc_hist_vigente", "Vigente")}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-jw-text-main opacity-70">
+                          {nombreDepartamento(h.modulo_id)} ·{" "}
+                          {clavePuesto ? t(clavePuesto, textoPuesto) : textoPuesto}
+                        </p>
+                        <p className="text-xs text-jw-text-main opacity-70">
+                          {formatearFecha(h.fecha_inicio, i18n.language)}
+                          {" – "}
+                          {vigente
+                            ? t("enc_hist_hoy", "hoy")
+                            : formatearFecha(h.fecha_fin, i18n.language)}
+                        </p>
+
+                        {(h.asignado_por || h.motivo_asignar || h.detalles) && (
+                          <div className="text-sm text-jw-text-main">
+                            <p>
+                              <span className="opacity-60">
+                                {t("enc_hist_asignado", "Asignado")}
+                              </span>
+                              {h.asignado_por && ` · ${h.asignado_por}`}
+                              {h.motivo_asignar && ` · ${h.motivo_asignar}`}
+                            </p>
+                            {h.detalles && (
+                              <p className="text-xs opacity-80 whitespace-pre-wrap break-words">
+                                {h.detalles}
+                              </p>
+                            )}
+                          </div>
+                        )}
+
+                        {(h.quitado_por || h.motivo_quitar || h.detalles_quitar) && (
+                          <div className="text-sm text-jw-text-main">
+                            <p>
+                              <span className="opacity-60">
+                                {t("enc_hist_quitado", "Quitado")}
+                              </span>
+                              {h.quitado_por && ` · ${h.quitado_por}`}
+                              {h.motivo_quitar && ` · ${h.motivo_quitar}`}
+                            </p>
+                            {h.detalles_quitar && (
+                              <p className="text-xs opacity-80 whitespace-pre-wrap break-words">
+                                {h.detalles_quitar}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  disabled={cargandoHist || paginaHist <= 1}
+                  onClick={() => setPaginaHist((p) => p - 1)}
+                  className={CLASE_BTN_SUAVE}
+                >
+                  {t("enc_anterior", "Anterior")}
+                </button>
+                <span className="text-xs text-jw-text-main opacity-70">
+                  {t("enc_pagina", "Página")} {paginaHist} / {totalPaginasHist}
+                </span>
+                <button
+                  type="button"
+                  disabled={cargandoHist || paginaHist >= totalPaginasHist}
+                  onClick={() => setPaginaHist((p) => p + 1)}
+                  className={CLASE_BTN_SUAVE}
+                >
+                  {t("enc_siguiente", "Siguiente")}
+                </button>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }
