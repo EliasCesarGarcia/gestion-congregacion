@@ -30,6 +30,7 @@ import ContactoPage from "./pages/ContactoPage"; // Ayuda y soporte instituciona
 import ConfiguracionPage from "./pages/ConfiguracionPage"; // Preferencias y accesibilidad (CEO 2026)
 import AdminModulosPage from "./pages/AdminModulosPage"; // Panel de superadmin: módulos
 import AdminEncargadosPage from "./pages/AdminEncargadosPage"; // Departamentos: encargados y auxiliares
+import AdminMotivosPage from "./pages/AdminMotivosPage"; // Panel de superadmin: motivos de puestos
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -257,6 +258,23 @@ function App() {
                   />
                 </Helmet>
                 <AdminEncargadosPage />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Panel de superadmin: motivos de asignar y quitar puestos */}
+          <Route
+            path="/admin/motivos"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Motivos de Puestos | Administración</title>
+                  <meta
+                    name="description"
+                    content="Administración de los motivos para asignar y quitar puestos (solo superadmin)."
+                  />
+                </Helmet>
+                <AdminMotivosPage />
               </RutaProtegida>
             }
           />

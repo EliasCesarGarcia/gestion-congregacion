@@ -30,6 +30,7 @@ import {
   LayoutGrid,
   SlidersHorizontal,
   UserCog,
+  Tag,
 } from "lucide-react";
 
 function Navbar() {
@@ -86,6 +87,11 @@ function Navbar() {
             to: "/admin/modulos",
             icon: <SlidersHorizontal size={22} />,
             label: t("nav_admin_modules", "Módulos del sistema"),
+          },
+          {
+            to: "/admin/motivos",
+            icon: <Tag size={22} />,
+            label: t("nav_admin_motivos", "Motivos de puestos"),
           },
         ]
       : []),
@@ -146,6 +152,8 @@ function Navbar() {
       return t("nav_admin_modules", "Módulos del sistema");
     if (location.pathname === "/admin/encargados")
       return t("nav_admin_encargados", "Encargados de departamentos");
+    if (location.pathname === "/admin/motivos")
+      return t("nav_admin_motivos", "Motivos de puestos");
     return `${t("nav_congregation", "Congregación")} ${user?.congregacion_nombre || ""}`;
   };
 
@@ -202,6 +210,7 @@ function Navbar() {
       return <SlidersHorizontal className={size} />;
     if (location.pathname === "/admin/encargados")
       return <UserCog className={size} />;
+    if (location.pathname === "/admin/motivos") return <Tag className={size} />;
 
     return null; // Por seguridad, si no coincide ninguna, no muestra nada
   };
