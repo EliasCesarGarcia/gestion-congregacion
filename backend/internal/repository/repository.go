@@ -149,7 +149,8 @@ func (r *Repository) GetActor(personaID string) (*models.Actor, error) {
 			COALESCE(core_personas.congregacion_id::text, '') as congregacion_id,
 			COALESCE(core_personas.rol_app, 'publicador') as rol_app,
 			COALESCE(core_personas.estado, '') as estado,
-			COALESCE(core_congregaciones.activa, false) as cong_activa`).
+			COALESCE(core_congregaciones.activa, false) as cong_activa,
+			COALESCE(core_congregaciones.circuito::text, '') as circuito`).
 		Joins("LEFT JOIN core_congregaciones ON core_congregaciones.id = core_personas.congregacion_id").
 		Where("core_personas.id::text = ?", personaID).
 		Limit(1).Scan(&a)

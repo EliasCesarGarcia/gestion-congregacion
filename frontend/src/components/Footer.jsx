@@ -10,7 +10,7 @@
 // --- IMPORTACIONES DE LIBRERÍAS Y COMPONENTES ---
 import React, { useContext } from "react";
 import { AppContext } from "../context/AppContext";
-import { MapPin, Globe, ShieldCheck } from "lucide-react";
+import { MapPin, Globe, ShieldCheck, Route } from "lucide-react";
 import { Link } from "react-router-dom";
 // NUEVO: Importación para el soporte de traducción de react-i18next
 import { useTranslation } from "react-i18next";
@@ -89,6 +89,19 @@ function Footer() {
             <span className="opacity-70 text-xs font-light shrink-0">
               <bdi>({user.numero_congregacion})</bdi>
             </span>
+
+            {/* NUEVO: separador vertical + circuito (solo si la congregación lo tiene cargado) */}
+            {user.circuito && String(user.circuito).trim() !== "" && (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="h-3.5 w-px bg-white/30 mx-1.5 shrink-0"
+                />
+                <span className="opacity-70 text-xs font-light shrink-0">
+                  {t("nav_circuit", "Circuito")} <bdi>{user.circuito}</bdi>
+                </span>
+              </>
+            )}
           </h3>
 
           <div className="space-y-2 w-full">

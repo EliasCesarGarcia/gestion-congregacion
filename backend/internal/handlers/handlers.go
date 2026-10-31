@@ -554,6 +554,7 @@ func MeHandler() http.HandlerFunc {
 			"rol_app":              a.RolApp,
 			"es_superadmin":        EsSuperAdmin(a.PersonaID),
 			"es_encargado_general": esEncargadoGeneral(a.RolApp),
+			"circuito":             a.Circuito,
 		})
 	}
 }

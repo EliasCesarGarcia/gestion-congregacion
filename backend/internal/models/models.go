@@ -51,6 +51,7 @@ type Actor struct {
 	RolApp         string // publicador / coordinador / secretario / servicio
 	Estado         string // ALTA / BAJA
 	CongActiva     bool   // core_congregaciones.activa
+	Circuito       string // core_congregaciones.circuito ('' si no tiene)
 }
 
 // PersonaResumen: lo mínimo que se muestra al listar personas.
