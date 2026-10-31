@@ -26,12 +26,13 @@ type Usuario struct {
 	ZonaHoraria string `json:"zona_horaria" gorm:"column:zona_horaria"`
 
 	// Campos de ubicación restaurados
-	Region    string `json:"region" gorm:"column:region"`
-	Pais      string `json:"pais" gorm:"column:pais"`
-	Provincia string `json:"provincia" gorm:"column:provincia"`
-	Partido   string `json:"partido" gorm:"column:partido"`
-	Ciudad    string `json:"ciudad" gorm:"column:ciudad"`
-	Direccion string `json:"direccion" gorm:"column:direccion"`
+	Region       string `json:"region" gorm:"column:region"`
+	Pais         string `json:"pais" gorm:"column:pais"`
+	Provincia    string `json:"provincia" gorm:"column:provincia"`
+	Partido      string `json:"partido" gorm:"column:partido"`
+	Ciudad       string `json:"ciudad" gorm:"column:ciudad"`
+	Direccion    string `json:"direccion" gorm:"column:direccion"`
+	CodigoPostal string `json:"codigo_postal" gorm:"column:codigo_postal"`
 
 	EsAdminLocal      bool   `json:"es_admin_local"`
 	Username          string `json:"username" gorm:"column:username_temp"`

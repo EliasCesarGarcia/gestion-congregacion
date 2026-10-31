@@ -162,6 +162,21 @@ function Footer() {
                     {user.pais}
                   </span>
                 )}
+
+                {/* NUEVO: separador + código postal (solo si la congregación lo tiene cargado) */}
+                {user.codigo_postal &&
+                  String(user.codigo_postal).trim() !== "" && (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="h-3 w-px bg-white/30 mx-2 self-center shrink-0"
+                      />
+                      <span className="shrink-0">
+                        {t("nav_postal_code", "CP")}{" "}
+                        <bdi itemProp="postalCode">{user.codigo_postal}</bdi>
+                      </span>
+                    </>
+                  )}
               </p>
             </address>
 
