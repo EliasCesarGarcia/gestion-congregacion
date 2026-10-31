@@ -125,12 +125,11 @@ function Footer() {
                     className="truncate flex-shrink-0"
                   >
                     {user.direccion}
-                    {user.ciudad || user.provincia || user.pais
+                    {user.ciudad || user.partido || user.provincia || user.pais
                       ? ",\u00A0"
                       : ""}{" "}
                   </span>
                 )}
-
                 {/* Ciudad: Texto + Coma (condicional) */}
                 {user.ciudad && (
                   <span
@@ -138,11 +137,19 @@ function Footer() {
                     className="truncate flex-shrink-0"
                   >
                     {user.ciudad}
+                    {user.partido || user.provincia || user.pais
+                      ? ",\u00A0"
+                      : ""}{" "}
+                  </span>
+                )}
+                {/* NUEVO: Partido: Texto + Coma (condicional) */}
+                {user.partido && (
+                  <span className="truncate flex-shrink-0">
+                    {user.partido}
                     {user.provincia || user.pais ? ",\u00A0" : ""}{" "}
                   </span>
                 )}
-
-                {/* Provincia: Texto + Coma (condicional) */}
+                {/* Provincia: Texto + Coma (condicional) */}{" "}
                 {user.provincia && (
                   <span
                     itemProp="addressRegion"
@@ -152,7 +159,6 @@ function Footer() {
                     {user.pais ? ",\u00A0" : ""}{" "}
                   </span>
                 )}
-
                 {/* País */}
                 {user.pais && (
                   <span
@@ -162,7 +168,6 @@ function Footer() {
                     {user.pais}
                   </span>
                 )}
-
                 {/* NUEVO: separador + código postal (solo si la congregación lo tiene cargado) */}
                 {user.codigo_postal &&
                   String(user.codigo_postal).trim() !== "" && (
