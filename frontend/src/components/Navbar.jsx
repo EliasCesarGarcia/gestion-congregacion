@@ -31,6 +31,7 @@ import {
   SlidersHorizontal,
   UserCog,
   Tag,
+  Building2,
 } from "lucide-react";
 
 function Navbar() {
@@ -93,6 +94,11 @@ function Navbar() {
             icon: <Tag size={22} />,
             label: t("nav_admin_motivos", "Motivos de puestos"),
           },
+          {
+            to: "/admin/congregaciones",
+            icon: <Building2 size={22} />,
+            label: t("nav_admin_congregaciones", "Congregaciones"),
+          },
         ]
       : []),
   ];
@@ -154,6 +160,8 @@ function Navbar() {
       return t("nav_admin_encargados", "Encargados de departamentos");
     if (location.pathname === "/admin/motivos")
       return t("nav_admin_motivos", "Motivos de puestos");
+    if (location.pathname === "/admin/congregaciones")
+      return t("nav_admin_congregaciones", "Congregaciones");
     return `${t("nav_congregation", "Congregación")} ${user?.congregacion_nombre || ""}`;
   };
 
@@ -211,6 +219,8 @@ function Navbar() {
     if (location.pathname === "/admin/encargados")
       return <UserCog className={size} />;
     if (location.pathname === "/admin/motivos") return <Tag className={size} />;
+    if (location.pathname === "/admin/congregaciones")
+      return <Building2 className={size} />;
 
     return null; // Por seguridad, si no coincide ninguna, no muestra nada
   };

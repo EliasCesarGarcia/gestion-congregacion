@@ -31,6 +31,7 @@ import ConfiguracionPage from "./pages/ConfiguracionPage"; // Preferencias y acc
 import AdminModulosPage from "./pages/AdminModulosPage"; // Panel de superadmin: módulos
 import AdminEncargadosPage from "./pages/AdminEncargadosPage"; // Departamentos: encargados y auxiliares
 import AdminMotivosPage from "./pages/AdminMotivosPage"; // Panel de superadmin: motivos de puestos
+import AdminCongregacionesPage from "./pages/AdminCongregacionesPage"; // Panel de superadmin: congregaciones
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -275,6 +276,23 @@ function App() {
                   />
                 </Helmet>
                 <AdminMotivosPage />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Panel de superadmin: congregaciones */}
+          <Route
+            path="/admin/congregaciones"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Congregaciones | Administración</title>
+                  <meta
+                    name="description"
+                    content="Administración de las congregaciones del sistema (solo superadmin)."
+                  />
+                </Helmet>
+                <AdminCongregacionesPage />
               </RutaProtegida>
             }
           />
