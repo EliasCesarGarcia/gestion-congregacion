@@ -81,6 +81,14 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("POST /api/admin/motivos/crear", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CrearMotivoHandler(svc)))))
 	mux.Handle("POST /api/admin/motivos/editar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EditarMotivoHandler(svc)))))
 
+	// Congregaciones (2026-10-30): solo superadmins.
+	mux.Handle("GET /api/admin/congregaciones", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListCongregacionesAdminHandler(svc)))))
+	mux.Handle("POST /api/admin/congregaciones/crear", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CrearCongregacionHandler(svc)))))
+	mux.Handle("POST /api/admin/congregaciones/editar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EditarCongregacionHandler(svc)))))
+	mux.Handle("POST /api/admin/congregaciones/estado", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EstadoCongregacionHandler(svc)))))
+	mux.Handle("POST /api/admin/congregaciones/eliminar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EliminarCongregacionHandler(svc)))))
+	mux.Handle("GET /api/admin/congregaciones/historial", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListHistorialCongregacionesHandler(svc)))))
+
 	mux.HandleFunc("/api/logout", handlers.LogoutHandler)
 
 	// Administración de Seguridad (2026-10-21): solo superadmins.

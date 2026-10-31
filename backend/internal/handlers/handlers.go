@@ -480,15 +480,20 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 		errors.Is(err, service.ErrDescripcionModulo),
 		errors.Is(err, service.ErrModuloSinCambios),
 		errors.Is(err, service.ErrPuestoInvalido),
-		errors.Is(err, service.ErrPuestoInvalido),
 		errors.Is(err, service.ErrMotivoInvalido),
 		errors.Is(err, service.ErrMotivoDatos),
 		errors.Is(err, service.ErrMotivoTipoInvalido),
 		errors.Is(err, service.ErrMotivoSinCambios),
+		errors.Is(err, service.ErrCongregacionDatos),
+		errors.Is(err, service.ErrCongregacionIDInvalido),
+		errors.Is(err, service.ErrCongregacionSinCambios),
+		errors.Is(err, service.ErrCongregacionFiltro),
+		errors.Is(err, service.ErrConfirmacionNumero),
 		errors.Is(err, service.ErrDetallesInvalido):
 		http.Error(w, err.Error(), http.StatusBadRequest)
 	case errors.Is(err, service.ErrModuloNoExiste),
 		errors.Is(err, service.ErrMotivoNoExiste),
+		errors.Is(err, service.ErrCongregacionNoExiste),
 		errors.Is(err, service.ErrPersonaNoValida),
 		errors.Is(err, service.ErrSinAsignacion):
 		http.Error(w, err.Error(), http.StatusNotFound)
@@ -497,7 +502,11 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 		errors.Is(err, service.ErrModuloEnUso),
 		errors.Is(err, service.ErrComunConAsignacion),
 		errors.Is(err, service.ErrPuestoOcupado),
-		errors.Is(err, service.ErrPersonaYaTienePuesto):
+		errors.Is(err, service.ErrPersonaYaTienePuesto),
+		errors.Is(err, service.ErrCongregacionExiste),
+		errors.Is(err, service.ErrCongregacionSinEncargados),
+		errors.Is(err, service.ErrCongregacionActiva),
+		errors.Is(err, service.ErrCongregacionEnUso):
 		http.Error(w, err.Error(), http.StatusConflict)
 	default:
 		log.Printf("❌ %s (persona %s): %v", accion, personaID, err)
