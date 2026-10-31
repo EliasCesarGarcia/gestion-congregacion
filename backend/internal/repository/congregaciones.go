@@ -38,6 +38,7 @@ SELECT c.id::text AS id,
        COALESCE(c.numero_congregacion, '') AS numero_congregacion,
        c.zona_horaria,
        COALESCE(c.circuito, '')            AS circuito,
+       COALESCE(c.codigo_postal, '')       AS codigo_postal,
        c.activa,
        (SELECT count(*) FROM core_personas p
          WHERE p.congregacion_id = c.id AND p.estado = 'ALTA') AS personas,
@@ -128,16 +129,16 @@ func (r *Repository) CrearCongregacion(d models.DatosCongregacion, actorID int) 
 	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		res := tx.Raw(`
 			INSERT INTO core_congregaciones
-				(nombre, pais, provincia_estado, ciudad, region, partido, direccion,
-				 numero_congregacion, zona_horaria, circuito, activa)
+								(nombre, pais, provincia_estado, ciudad, region, partido, direccion,
+				 numero_congregacion, zona_horaria, circuito, codigo_postal, activa)
 			VALUES (?::text, ?::text, ?::text, ?::text,
 			        NULLIF(?::text, ''), NULLIF(?::text, ''), NULLIF(?::text, ''),
-			        ?::text, ?::text, NULLIF(?::text, ''), false)
+			        ?::text, ?::text, NULLIF(?::text, ''), NULLIF(?::text, ''), false)
 			ON CONFLICT DO NOTHING
 			RETURNING id::text AS id`,
 			d.Nombre, d.Pais, d.ProvinciaEstado, d.Ciudad,
 			d.Region, d.Partido, d.Direccion,
-			d.Numero, d.ZonaHoraria, d.Circuito).Scan(&fila)
+			d.Numero, d.ZonaHoraria, d.Circuito, d.CodigoPostal).Scan(&fila)
 		if res.Error != nil {
 			return res.Error
 		}
@@ -187,7 +188,8 @@ func (r *Repository) EditarCongregacion(id string, c models.CambiosCongregacion,
 				region    = CASE WHEN ?::boolean THEN NULLIF(?::text, '') ELSE region    END,
 				partido   = CASE WHEN ?::boolean THEN NULLIF(?::text, '') ELSE partido   END,
 				direccion = CASE WHEN ?::boolean THEN NULLIF(?::text, '') ELSE direccion END,
-				circuito  = CASE WHEN ?::boolean THEN NULLIF(?::text, '') ELSE circuito  END
+				circuito  = CASE WHEN ?::boolean THEN NULLIF(?::text, '') ELSE circuito  END,
+				codigo_postal = CASE WHEN ?::boolean THEN NULLIF(?::text, '') ELSE codigo_postal END
 			WHERE id = ?::uuid
 			RETURNING id::text AS id, nombre, COALESCE(numero_congregacion, '') AS numero`,
 			valorTexto(c.Nombre), valorTexto(c.Pais), valorTexto(c.ProvinciaEstado),
@@ -196,6 +198,7 @@ func (r *Repository) EditarCongregacion(id string, c models.CambiosCongregacion,
 			c.Partido != nil, textoOVacio(c.Partido),
 			c.Direccion != nil, textoOVacio(c.Direccion),
 			c.Circuito != nil, textoOVacio(c.Circuito),
+			c.CodigoPostal != nil, textoOVacio(c.CodigoPostal),
 			id).Scan(&fila)
 		if res.Error != nil {
 			return res.Error

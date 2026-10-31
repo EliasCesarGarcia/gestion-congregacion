@@ -41,16 +41,84 @@ const POR_PAGINA_HIST = 20; // líneas del historial por página
 
 // Campos editables. Los máximos son los mismos que valida el backend.
 const CAMPOS = [
-  { clave: "nombre", claveT: "cong_f_nombre", textoT: "Nombre", max: 100, obligatorio: true },
-  { clave: "numero_congregacion", claveT: "cong_f_numero", textoT: "Número", max: 20, obligatorio: true },
-  { clave: "pais", claveT: "cong_f_pais", textoT: "País", max: 100, obligatorio: true },
-  { clave: "provincia_estado", claveT: "cong_f_provincia", textoT: "Provincia o estado", max: 100, obligatorio: true },
-  { clave: "ciudad", claveT: "cong_f_ciudad", textoT: "Ciudad", max: 100, obligatorio: true },
-  { clave: "partido", claveT: "cong_f_partido", textoT: "Partido", max: 100, obligatorio: false },
-  { clave: "region", claveT: "cong_f_region", textoT: "Región", max: 100, obligatorio: false },
-  { clave: "direccion", claveT: "cong_f_direccion", textoT: "Dirección", max: 200, obligatorio: false },
-  { clave: "circuito", claveT: "cong_f_circuito", textoT: "Circuito", max: 20, obligatorio: false },
-  { clave: "zona_horaria", claveT: "cong_f_zona", textoT: "Zona horaria", max: 64, obligatorio: true, lista: true },
+  {
+    clave: "nombre",
+    claveT: "cong_f_nombre",
+    textoT: "Nombre",
+    max: 100,
+    obligatorio: true,
+  },
+  {
+    clave: "numero_congregacion",
+    claveT: "cong_f_numero",
+    textoT: "Número",
+    max: 20,
+    obligatorio: true,
+  },
+  {
+    clave: "pais",
+    claveT: "cong_f_pais",
+    textoT: "País",
+    max: 100,
+    obligatorio: true,
+  },
+  {
+    clave: "provincia_estado",
+    claveT: "cong_f_provincia",
+    textoT: "Provincia o estado",
+    max: 100,
+    obligatorio: true,
+  },
+  {
+    clave: "ciudad",
+    claveT: "cong_f_ciudad",
+    textoT: "Ciudad",
+    max: 100,
+    obligatorio: true,
+  },
+  {
+    clave: "partido",
+    claveT: "cong_f_partido",
+    textoT: "Partido",
+    max: 100,
+    obligatorio: false,
+  },
+  {
+    clave: "region",
+    claveT: "cong_f_region",
+    textoT: "Región",
+    max: 100,
+    obligatorio: false,
+  },
+  {
+    clave: "direccion",
+    claveT: "cong_f_direccion",
+    textoT: "Dirección",
+    max: 200,
+    obligatorio: false,
+  },
+  {
+    clave: "codigo_postal",
+    claveT: "cong_f_codigo_postal",
+    textoT: "Código postal",
+    max: 12,
+    obligatorio: false,
+  },
+  {
+    clave: "circuito",
+    claveT: "cong_f_circuito",
+    textoT: "Circuito",
+    max: 20,
+    obligatorio: false,
+  },
+  {
+    clave: "zona_horaria",
+    claveT: "cong_f_zona",
+    textoT: "Zona horaria",
+    max: 64,
+    obligatorio: true,
+    lista: true,
+  },
 ];
 
 const VACIO = Object.fromEntries(CAMPOS.map((c) => [c.clave, ""]));
@@ -69,7 +137,11 @@ const ZONAS = (() => {
 const FILTROS = [
   { id: "todas", clave: "cong_filtro_todas", texto: "Todas" },
   { id: "activas", clave: "cong_filtro_activas", texto: "Habilitadas" },
-  { id: "deshabilitadas", clave: "cong_filtro_deshab", texto: "Deshabilitadas" },
+  {
+    id: "deshabilitadas",
+    clave: "cong_filtro_deshab",
+    texto: "Deshabilitadas",
+  },
 ];
 
 const ACCIONES_HIST = {
@@ -92,7 +164,9 @@ const CLASE_CAMPO =
 
 // Recorta espacios de todos los campos.
 const limpiar = (valores) =>
-  Object.fromEntries(CAMPOS.map((c) => [c.clave, (valores[c.clave] || "").trim()]));
+  Object.fromEntries(
+    CAMPOS.map((c) => [c.clave, (valores[c.clave] || "").trim()]),
+  );
 
 const obligatoriosCompletos = (datos) =>
   CAMPOS.filter((c) => c.obligatorio).every((c) => datos[c.clave] !== "");
@@ -433,7 +507,8 @@ function AdminCongregacionesPage() {
     // Solo se envía lo que cambió (así el historial dice qué se tocó).
     const cambios = {};
     CAMPOS.forEach((f) => {
-      if (datos[f.clave] !== (c[f.clave] || "")) cambios[f.clave] = datos[f.clave];
+      if (datos[f.clave] !== (c[f.clave] || ""))
+        cambios[f.clave] = datos[f.clave];
     });
     if (Object.keys(cambios).length === 0) {
       setEditando(null);
@@ -446,7 +521,11 @@ function AdminCongregacionesPage() {
     ejecutar(
       `editar|${c.id}`,
       "editar",
-      () => axios.post("/api/admin/congregaciones/editar", { id: c.id, ...cambios }),
+      () =>
+        axios.post("/api/admin/congregaciones/editar", {
+          id: c.id,
+          ...cambios,
+        }),
       t("cong_ok_editar", "Congregación guardada."),
       () => setEditando(null),
     );
@@ -463,7 +542,8 @@ function AdminCongregacionesPage() {
     ejecutar(
       `estado|${c.id}`,
       "estado",
-      () => axios.post("/api/admin/congregaciones/estado", { id: c.id, activa }),
+      () =>
+        axios.post("/api/admin/congregaciones/estado", { id: c.id, activa }),
       activa
         ? t("cong_ok_habilitar", "Congregación habilitada.")
         : t("cong_ok_deshabilitar", "Congregación deshabilitada."),
@@ -534,8 +614,14 @@ function AdminCongregacionesPage() {
               autoComplete="off"
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
-              placeholder={t("cong_buscar_ph", "Buscar por nombre, número o ciudad")}
-              aria-label={t("cong_buscar_ph", "Buscar por nombre, número o ciudad")}
+              placeholder={t(
+                "cong_buscar_ph",
+                "Buscar por nombre, número o ciudad",
+              )}
+              aria-label={t(
+                "cong_buscar_ph",
+                "Buscar por nombre, número o ciudad",
+              )}
               className={`${CLASE_CAMPO} flex-1 min-w-0`}
             />
             <button type="submit" className={CLASE_BTN_SUAVE}>
@@ -569,7 +655,10 @@ function AdminCongregacionesPage() {
         </div>
 
         {formAbierto && (
-          <form onSubmit={crear} className="space-y-3 border-t border-jw-border pt-4">
+          <form
+            onSubmit={crear}
+            className="space-y-3 border-t border-jw-border pt-4"
+          >
             <CamposCongregacion
               valores={nuevo}
               alCambiar={(clave, valor) =>
@@ -630,7 +719,8 @@ function AdminCongregacionesPage() {
 
           {lista.map((c) => {
             const enEdicion = editando === c.id;
-            const confirmaAca = confirmando?.id === c.id ? confirmando.tipo : "";
+            const confirmaAca =
+              confirmando?.id === c.id ? confirmando.tipo : "";
             const completa =
               c.tiene_coordinador && c.tiene_secretario && c.tiene_servicio;
             const ubicacion = [c.ciudad, c.partido, c.provincia_estado, c.pais]
@@ -650,7 +740,10 @@ function AdminCongregacionesPage() {
                 }`}
               >
                 {enEdicion ? (
-                  <form onSubmit={(e) => guardarEdicion(e, c)} className="space-y-3">
+                  <form
+                    onSubmit={(e) => guardarEdicion(e, c)}
+                    className="space-y-3"
+                  >
                     <CamposCongregacion
                       valores={valoresEdit}
                       alCambiar={(clave, valor) =>
@@ -688,7 +781,9 @@ function AdminCongregacionesPage() {
                       <div className="min-w-0">
                         <h2 className="text-base font-medium text-jw-text-main">
                           {c.nombre}
-                          {c.numero_congregacion ? ` · ${c.numero_congregacion}` : ""}
+                          {c.numero_congregacion
+                            ? ` · ${c.numero_congregacion}`
+                            : ""}
                         </h2>
                         <p className="text-sm text-jw-text-main opacity-70">
                           {ubicacion}
@@ -732,6 +827,14 @@ function AdminCongregacionesPage() {
                           <dd className="inline">{c.direccion}</dd>
                         </div>
                       )}
+                      {c.codigo_postal && (
+                        <div>
+                          <dt className="inline opacity-60">
+                            {t("cong_f_codigo_postal", "Código postal")}:{" "}
+                          </dt>
+                          <dd className="inline">{c.codigo_postal}</dd>
+                        </div>
+                      )}
                       <div>
                         <dt className="inline opacity-60">
                           {t("cong_f_zona", "Zona horaria")}:{" "}
@@ -746,7 +849,10 @@ function AdminCongregacionesPage() {
                       </div>
                     </dl>
 
-                    <ul className="flex flex-wrap gap-2" aria-label={t("cong_encargados", "Encargados generales")}>
+                    <ul
+                      className="flex flex-wrap gap-2"
+                      aria-label={t("cong_encargados", "Encargados generales")}
+                    >
                       {roles.map(([tiene, clave, texto]) => (
                         <li
                           key={clave}
@@ -876,7 +982,10 @@ function AdminCongregacionesPage() {
                           value={textoConfirm}
                           disabled={ocupado !== ""}
                           onChange={(e) => setTextoConfirm(e.target.value)}
-                          aria-label={t("cong_confirmar_num", "Número de la congregación")}
+                          aria-label={t(
+                            "cong_confirmar_num",
+                            "Número de la congregación",
+                          )}
                           className={CLASE_CAMPO}
                         />
                         <div className="flex items-center gap-2">
@@ -895,7 +1004,10 @@ function AdminCongregacionesPage() {
                             ) : (
                               <>
                                 <Trash2 className="w-4 h-4" />
-                                {t("cong_confirmar_elim_si", "Eliminar definitivamente")}
+                                {t(
+                                  "cong_confirmar_elim_si",
+                                  "Eliminar definitivamente",
+                                )}
                               </>
                             )}
                           </button>
@@ -987,8 +1099,11 @@ function AdminCongregacionesPage() {
                       className="border border-jw-border rounded-xl px-3 py-2"
                     >
                       <p className="text-sm text-jw-text-main">
-                        <strong>{t(clave, texto)}</strong> · {h.congregacion_nombre}
-                        {h.congregacion_numero ? ` · ${h.congregacion_numero}` : ""}
+                        <strong>{t(clave, texto)}</strong> ·{" "}
+                        {h.congregacion_nombre}
+                        {h.congregacion_numero
+                          ? ` · ${h.congregacion_numero}`
+                          : ""}
                       </p>
                       <p className="text-xs text-jw-text-main opacity-60">
                         {h.actor_nombre}

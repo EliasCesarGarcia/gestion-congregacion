@@ -7,7 +7,7 @@
  * REGLAS (las hace cumplir el backend):
  *  - Una congregación nueva nace DESHABILITADA.
  *  - Obligatorios: nombre, país, provincia o estado, ciudad, número y zona
- *    horaria. Opcionales: región, partido, dirección y circuito.
+ *    horaria. Opcionales: región, partido, dirección, circuito y código postal.
  *  - No se repite el número dentro del mismo país.
  *  - Habilitar exige coordinador, secretario y servicio en estado ALTA.
  *    Deshabilitar siempre se puede.
@@ -33,7 +33,7 @@ import (
 )
 
 var (
-	ErrCongregacionDatos         = errors.New("datos de la congregación no válidos: nombre, país, provincia o estado, ciudad, número y zona horaria son obligatorios (máximo 100 caracteres; dirección hasta 200)")
+	ErrCongregacionDatos         = errors.New("datos de la congregación no válidos: nombre, país, provincia o estado, ciudad, número y zona horaria son obligatorios (máximo 100 caracteres; dirección hasta 200; código postal hasta 12)")
 	ErrCongregacionIDInvalido    = errors.New("id de congregación no válido")
 	ErrCongregacionNoExiste      = errors.New("la congregación no existe")
 	ErrCongregacionExiste        = errors.New("ya existe una congregación con ese número en ese país")
@@ -51,6 +51,7 @@ const (
 	maxCongregacionNumero    = 20
 	maxCongregacionZona      = 64
 	maxCongregacionCircuito  = 20
+	maxCongregacionCP        = 12
 	maxBusquedaCongregacion  = 100
 	limitePorDefectoCong     = 20
 	limiteMaximoCong         = 50
@@ -189,6 +190,9 @@ func (s *Service) CrearCongregacion(in models.DatosCongregacion, actorID int) (*
 	if d.Circuito, err = limpiarTextoCongregacion(in.Circuito, maxCongregacionCircuito, false); err != nil {
 		return nil, err
 	}
+	if d.CodigoPostal, err = limpiarTextoCongregacion(in.CodigoPostal, maxCongregacionCP, false); err != nil {
+		return nil, err
+	}
 
 	id, err := s.repo.CrearCongregacion(d, actorID)
 	if errors.Is(err, repository.ErrCongregacionDuplicada) {
@@ -254,6 +258,9 @@ func (s *Service) EditarCongregacion(id string, in models.CambiosCongregacion, a
 		return nil, err
 	}
 	if err := limpiar(in.Circuito, &c.Circuito, "circuito", maxCongregacionCircuito, false); err != nil {
+		return nil, err
+	}
+	if err := limpiar(in.CodigoPostal, &c.CodigoPostal, "codigo_postal", maxCongregacionCP, false); err != nil {
 		return nil, err
 	}
 	if len(campos) == 0 {

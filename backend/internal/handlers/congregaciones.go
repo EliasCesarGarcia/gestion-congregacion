@@ -74,6 +74,7 @@ func CrearCongregacionHandler(s *service.Service) http.HandlerFunc {
 			NumeroCongregacion string `json:"numero_congregacion"`
 			ZonaHoraria        string `json:"zona_horaria"`
 			Circuito           string `json:"circuito"`
+			CodigoPostal       string `json:"codigo_postal"`
 		}
 		if !leerJSONAdmin(w, r, &req) {
 			return
@@ -89,6 +90,7 @@ func CrearCongregacionHandler(s *service.Service) http.HandlerFunc {
 			Numero:          req.NumeroCongregacion,
 			ZonaHoraria:     req.ZonaHoraria,
 			Circuito:        req.Circuito,
+			CodigoPostal:    req.CodigoPostal,
 		}, actorID)
 		if err != nil {
 			responderErrorModulos(w, err, "crear-congregacion", PersonaIDFromContext(r))
@@ -118,6 +120,7 @@ func EditarCongregacionHandler(s *service.Service) http.HandlerFunc {
 			NumeroCongregacion *string `json:"numero_congregacion"`
 			ZonaHoraria        *string `json:"zona_horaria"`
 			Circuito           *string `json:"circuito"`
+			CodigoPostal       *string `json:"codigo_postal"`
 		}
 		if !leerJSONAdmin(w, r, &req) {
 			return
@@ -133,6 +136,7 @@ func EditarCongregacionHandler(s *service.Service) http.HandlerFunc {
 			Numero:          req.NumeroCongregacion,
 			ZonaHoraria:     req.ZonaHoraria,
 			Circuito:        req.Circuito,
+			CodigoPostal:    req.CodigoPostal,
 		}, actorID)
 		if err != nil {
 			responderErrorModulos(w, err, "editar-congregacion", PersonaIDFromContext(r))

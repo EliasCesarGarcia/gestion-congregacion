@@ -25,6 +25,7 @@ type CongregacionAdmin struct {
 	NumeroCongregacion string `json:"numero_congregacion"`
 	ZonaHoraria        string `json:"zona_horaria"`
 	Circuito           string `json:"circuito"`
+	CodigoPostal       string `json:"codigo_postal"`
 	Activa             bool   `json:"activa"`
 	Personas           int64  `json:"personas"`
 	TieneCoordinador   bool   `json:"tiene_coordinador"`
@@ -53,10 +54,10 @@ type DatosCongregacion struct {
 	Numero          string
 	ZonaHoraria     string
 	Circuito        string
+	CodigoPostal    string
 }
 
-// CambiosCongregacion: nil = no tocar. En los opcionales (Region, Partido,
-// Direccion, Circuito) una cadena vacía significa "borrar el dato".
+// CambiosCongregacion: nil = no tocar. En los opcionales (Region, Partido, Direccion, Circuito, CodigoPostal) una cadena vacía significa "borrar el dato".
 type CambiosCongregacion struct {
 	Nombre          *string
 	Pais            *string
@@ -68,6 +69,7 @@ type CambiosCongregacion struct {
 	Numero          *string
 	ZonaHoraria     *string
 	Circuito        *string
+	CodigoPostal    *string
 }
 
 // CongregacionHistorial: una línea del registro de cambios. El nombre y el
