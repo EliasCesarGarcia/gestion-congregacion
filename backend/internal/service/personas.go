@@ -37,7 +37,7 @@ const (
 )
 
 var (
-	situacionesLista1 = []string{"Publicador", "Precursor Auxiliar", "Precursor Regular", "Precursor Especial", "Misionero"}
+	situacionesLista1 = []string{"Publicador", "Precursor Auxiliar", "Precursor Auxiliar de Continuo", "Precursor Regular", "Precursor Especial", "Misionero"}
 	situacionesLista2 = []string{"Siervo Ministerial", "Anciano"}
 	situacionesLista3 = []string{"Superintendente", "Auxiliar de Grupo"}
 )
