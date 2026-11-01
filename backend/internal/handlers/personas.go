@@ -31,8 +31,13 @@ import (
 // responderErrorPersonas: agrega el filtro inválido (400) y deja el resto al
 // traductor común de errores.
 func responderErrorPersonas(w http.ResponseWriter, err error, accion, personaID string) {
-	if errors.Is(err, service.ErrPersonaFiltro) {
+	switch {
+	case errors.Is(err, service.ErrPersonaFiltro),
+		errors.Is(err, service.ErrPersonaDatos):
 		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	case errors.Is(err, service.ErrPersonaSinCambio):
+		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
 	responderErrorModulos(w, err, accion, personaID)

@@ -67,6 +67,10 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("GET /api/personas/conteos", protegida(http.HandlerFunc(handlers.ConteosPersonasHandler(svc))))
 	mux.Handle("GET /api/personas/ficha", protegida(http.HandlerFunc(handlers.FichaPersonaHandler(svc))))
 	mux.Handle("GET /api/personas/historial", protegida(http.HandlerFunc(handlers.HistorialPersonaHandler(svc))))
+	// Módulo de personas (2026-11-01), escritura: encargados generales y superadmin.
+	mux.Handle("POST /api/personas/crear", protegida(http.HandlerFunc(handlers.CrearPersonaHandler(svc))))
+	mux.Handle("POST /api/personas/editar", protegida(http.HandlerFunc(handlers.EditarPersonaHandler(svc))))
+	mux.Handle("POST /api/personas/situacion", protegida(http.HandlerFunc(handlers.CambiarSituacionPersonaHandler(svc))))
 	// Lo propio de cada persona: solo su ficha y sus historiales.
 	mux.Handle("GET /api/me/ficha", protegida(http.HandlerFunc(handlers.MiFichaHandler(svc))))
 	mux.Handle("GET /api/me/historial", protegida(http.HandlerFunc(handlers.MiHistorialHandler(svc))))
