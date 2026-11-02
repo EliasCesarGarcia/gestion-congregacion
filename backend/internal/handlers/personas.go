@@ -36,7 +36,8 @@ func responderErrorPersonas(w http.ResponseWriter, err error, accion, personaID 
 		errors.Is(err, service.ErrPersonaDatos):
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
-	case errors.Is(err, service.ErrPersonaSinCambio):
+	case errors.Is(err, service.ErrPersonaSinCambio),
+		errors.Is(err, service.ErrPersonaRolOcupado):
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}
@@ -82,6 +83,7 @@ func BuscarPersonasHandler(s *service.Service) http.HandlerFunc {
 			Situacion2:     q.Get("situacion_2"),
 			Situacion3:     q.Get("situacion_3"),
 			Grupo:          q.Get("grupo"),
+			RolApp:         q.Get("rol_app"),
 		}, enteroDeQuery(r, "page"), enteroDeQuery(r, "limit"))
 		if err != nil {
 			responderErrorPersonas(w, err, "buscar-personas", a.PersonaID)

@@ -118,6 +118,19 @@ func prepararFiltroPersonas(in models.FiltroPersonas) (models.FiltroPersonas, er
 		f.Grupo = strconv.Itoa(n)
 	}
 
+	f.RolApp = strings.ToLower(strings.TrimSpace(in.RolApp))
+	if f.RolApp != "" {
+		valido := false
+		for _, rol := range rolesApp {
+			if f.RolApp == rol {
+				valido = true
+			}
+		}
+		if !valido {
+			return f, ErrPersonaFiltro
+		}
+	}
+
 	f.Palabras = palabrasBusqueda(in.Q)
 	return f, nil
 }

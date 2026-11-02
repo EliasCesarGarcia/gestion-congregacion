@@ -20,6 +20,7 @@ type FiltroPersonas struct {
 	Situacion2     string // "", un valor de la lista o "sin"
 	Situacion3     string // "", un valor de la lista o "sin"
 	Grupo          string // "", "sin" o un número
+	RolApp         string // "" o publicador, secretario, coordinador, servicio
 	Palabras       []string
 }
 
@@ -36,6 +37,7 @@ type PersonaFila struct {
 	Situacion2     string `json:"situacion_2" gorm:"column:situacion_2"`
 	Situacion3     string `json:"situacion_3" gorm:"column:situacion_3"`
 	FotoURL        string `json:"foto_url" gorm:"column:foto_url"`
+	RolApp         string `json:"rol_app" gorm:"column:rol_app"`
 }
 
 // BusquedaPersonasPagina: respuesta paginada de la búsqueda.
@@ -104,6 +106,7 @@ type ConteosPersonas struct {
 	Bajas        int64             `json:"bajas" gorm:"column:bajas"`
 	Situaciones  []ConteoSituacion `json:"situaciones" gorm:"-"`
 	Grupos       []ConteoGrupo     `json:"grupos" gorm:"-"`
+	Roles        []ConteoRol       `json:"roles" gorm:"-"`
 }
 
 // HistorialEstadoPersona: una vez que la persona estuvo de alta. Vigente =

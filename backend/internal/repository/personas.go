@@ -67,6 +67,10 @@ func filtroPersonasSQL(congregacionID string, todas bool, f models.FiltroPersona
 		sb.WriteString(" AND p.grupo = ?::integer")
 		args = append(args, f.Grupo)
 	}
+	if f.RolApp != "" {
+		sb.WriteString(" AND p.rol_app = ?::text")
+		args = append(args, f.RolApp)
+	}
 	for _, palabra := range f.Palabras {
 		sb.WriteString(" AND " + sinTildes(pajarPersonas) + " LIKE '%' || " + sinTildes("?::text") + " || '%'")
 		args = append(args, palabra)
@@ -85,7 +89,8 @@ SELECT p.id AS id,
        p.situacion_1 AS situacion_1,
        COALESCE(p.situacion_2, '') AS situacion_2,
        COALESCE(p.situacion_3, '') AS situacion_3,
-       COALESCE(p.url_imagen, '') AS foto_url
+       COALESCE(p.url_imagen, '') AS foto_url,
+       COALESCE(p.rol_app, 'publicador') AS rol_app
 FROM core_personas p`
 
 // BuscarPersonas devuelve una página y el total que cumple el filtro,
@@ -161,6 +166,18 @@ func (r *Repository) ConteosPersonas(congregacionID string, todas bool) (*models
 		WHERE p.estado = 'ALTA' AND `+alcancePersonasSQL+`
 		GROUP BY p.grupo
 		ORDER BY p.grupo ASC NULLS LAST`, todas, congregacionID).Scan(&c.Grupos).Error; err != nil {
+		return nil, err
+	}
+	c.Roles = []models.ConteoRol{}
+	if err := r.db.WithContext(ctx).Raw(`
+		SELECT p.rol_app AS rol,
+		       count(*) AS total,
+		       COALESCE(string_agg(p.apellido || ' ' || p.nombre, ', ' ORDER BY p.apellido, p.nombre)
+		                FILTER (WHERE p.rol_app <> 'publicador'), '') AS titulares
+		FROM core_personas p
+		WHERE p.estado = 'ALTA' AND `+alcancePersonasSQL+`
+		GROUP BY p.rol_app
+		ORDER BY p.rol_app ASC`, todas, congregacionID).Scan(&c.Roles).Error; err != nil {
 		return nil, err
 	}
 	return &c, nil
