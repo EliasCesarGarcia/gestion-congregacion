@@ -47,7 +47,7 @@ func (s *Service) CambiarRolPersona(a *models.Actor, personaID int, rol string) 
 		return err
 	}
 
-	cambio, err := s.repo.CambiarRolPersona(personaID, rol)
+	cambio, err := s.repo.CambiarRolPersona(personaID, rol, a.PersonaID)
 	if err != nil {
 		switch {
 		case errors.Is(err, repository.ErrRolOcupado):

@@ -139,4 +139,5 @@ type HistorialPersona struct {
 	PersonaID   int                         `json:"persona_id"`
 	Estado      []HistorialEstadoPersona    `json:"estado"`
 	Situaciones []HistorialSituacionPersona `json:"situaciones"`
+	Roles       []HistorialRolPersona       `json:"roles"`
 }

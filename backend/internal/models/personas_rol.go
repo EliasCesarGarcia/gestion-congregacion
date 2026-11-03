@@ -14,3 +14,16 @@ type ConteoRol struct {
 	Total     int64  `json:"total" gorm:"column:total"`
 	Titulares string `json:"titulares" gorm:"column:titulares"`
 }
+
+// HistorialRolPersona: un período en que la persona tuvo un rol (secretario,
+// coordinador o servicio). Las fechas van en UTC (AAAA-MM-DD HH:MM) y vienen
+// null si no se conocen (roles cargados antes de existir este historial).
+type HistorialRolPersona struct {
+	ID          int64   `json:"id" gorm:"column:id"`
+	Rol         string  `json:"rol" gorm:"column:rol"`
+	FechaInicio *string `json:"fecha_inicio" gorm:"column:fecha_inicio"`
+	FechaFin    *string `json:"fecha_fin" gorm:"column:fecha_fin"`
+	Vigente     bool    `json:"vigente" gorm:"column:vigente"`
+	AsignadoPor string  `json:"asignado_por" gorm:"column:asignado_por"`
+	QuitadoPor  string  `json:"quitado_por" gorm:"column:quitado_por"`
+}

@@ -241,7 +241,11 @@ func (s *Service) historialDe(personaID int) (*models.HistorialPersona, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &models.HistorialPersona{PersonaID: personaID, Estado: estado, Situaciones: situaciones}, nil
+	roles, err := s.repo.ListHistorialRolesPersona(personaID)
+	if err != nil {
+		return nil, err
+	}
+	return &models.HistorialPersona{PersonaID: personaID, Estado: estado, Situaciones: situaciones, Roles: roles}, nil
 }
 
 // HistorialPersona: los historiales de una persona de la congregación del actor.
