@@ -42,15 +42,18 @@ SELECT c.id::text AS id,
        c.activa,
        (SELECT count(*) FROM core_personas p
          WHERE p.congregacion_id = c.id AND p.estado = 'ALTA') AS personas,
-       EXISTS (SELECT 1 FROM core_personas p
-         WHERE p.congregacion_id = c.id AND p.estado = 'ALTA'
-           AND p.rol_app = 'coordinador') AS tiene_coordinador,
-       EXISTS (SELECT 1 FROM core_personas p
-         WHERE p.congregacion_id = c.id AND p.estado = 'ALTA'
-           AND p.rol_app = 'secretario') AS tiene_secretario,
-       EXISTS (SELECT 1 FROM core_personas p
-         WHERE p.congregacion_id = c.id AND p.estado = 'ALTA'
-           AND p.rol_app = 'servicio') AS tiene_servicio
+              EXISTS (SELECT 1 FROM core_personas_roles_historial h
+         JOIN core_personas p ON p.id = h.persona_id
+         WHERE h.congregacion_id = c.id AND h.vigente = true
+           AND h.rol = 'coordinador' AND p.estado = 'ALTA') AS tiene_coordinador,
+       EXISTS (SELECT 1 FROM core_personas_roles_historial h
+         JOIN core_personas p ON p.id = h.persona_id
+         WHERE h.congregacion_id = c.id AND h.vigente = true
+           AND h.rol = 'secretario' AND p.estado = 'ALTA') AS tiene_secretario,
+       EXISTS (SELECT 1 FROM core_personas_roles_historial h
+         JOIN core_personas p ON p.id = h.persona_id
+         WHERE h.congregacion_id = c.id AND h.vigente = true
+           AND h.rol = 'servicio' AND p.estado = 'ALTA') AS tiene_servicio
 FROM core_congregaciones c
 `
 
