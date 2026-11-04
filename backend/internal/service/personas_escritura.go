@@ -400,6 +400,9 @@ func (s *Service) CambiarSituacionPersona(a *models.Actor, esSuper bool, persona
 	if ficha.FechaAlta != nil && f < *ficha.FechaAlta {
 		return errDatosPersona("la fecha es anterior a la fecha de alta de la persona")
 	}
+		if campo == 2 && nuevo != "Anciano" && ficha.RolApp != "publicador" {
+		return errDatosPersona("la persona es titular de un rol de la congregación: primero hay que reemplazarla en ese rol")
+	}
 
 	cambio, err := s.repo.CambiarSituacionPersona(personaID, campo, nuevo, f, a.PersonaID)
 	if err != nil {

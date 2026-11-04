@@ -1,14 +1,15 @@
 /**
  * ARCHIVO: personas_rol.go
  * UBICACIÓN: backend/internal/models/personas_rol.go
- * DESCRIPCIÓN: Conteo de personas en ALTA por rol de la aplicación
- * (publicador, secretario, coordinador, servicio).
+ * DESCRIPCIÓN: Roles de la aplicación (coordinador, secretario, servicio).
+ * Una persona puede tener varios roles; cada rol tiene un solo titular por
+ * congregación. "Publicador" es la ausencia de rol.
  */
 
 package models
 
-// ConteoRol: cuántas personas en ALTA tienen ese rol. Titulares lista sus
-// nombres (vacío para publicador).
+// ConteoRol: cuántas personas en ALTA tienen ese rol (publicador = sin ningún
+// rol). Titulares lista sus nombres (vacío para publicador).
 type ConteoRol struct {
 	Rol       string `json:"rol" gorm:"column:rol"`
 	Total     int64  `json:"total" gorm:"column:total"`
@@ -28,8 +29,10 @@ type HistorialRolPersona struct {
 	QuitadoPor  string  `json:"quitado_por" gorm:"column:quitado_por"`
 }
 
-// CambioRol: una persona y el rol que pasa a tener en una rotación.
-type CambioRol struct {
-	PersonaID int    `json:"persona_id"`
-	RolApp    string `json:"rol_app"`
+// RotacionRoles: el NUEVO titular de cada rol que cambia (id de persona).
+// 0 = ese rol no cambia. Ejemplo: {"coordinador": 31, "servicio": 31}.
+type RotacionRoles struct {
+	Coordinador int `json:"coordinador"`
+	Secretario  int `json:"secretario"`
+	Servicio    int `json:"servicio"`
 }

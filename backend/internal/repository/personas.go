@@ -67,8 +67,10 @@ func filtroPersonasSQL(congregacionID string, todas bool, f models.FiltroPersona
 		sb.WriteString(" AND p.grupo = ?::integer")
 		args = append(args, f.Grupo)
 	}
-	if f.RolApp != "" {
-		sb.WriteString(" AND p.rol_app = ?::text")
+	if f.RolApp == "publicador" {
+		sb.WriteString(" AND NOT EXISTS (SELECT 1 FROM core_personas_roles_historial hr WHERE hr.persona_id = p.id AND hr.vigente = true)")
+	} else if f.RolApp != "" {
+		sb.WriteString(" AND EXISTS (SELECT 1 FROM core_personas_roles_historial hr WHERE hr.persona_id = p.id AND hr.vigente = true AND hr.rol = ?::text)")
 		args = append(args, f.RolApp)
 	}
 	for _, palabra := range f.Palabras {
@@ -170,14 +172,28 @@ func (r *Repository) ConteosPersonas(congregacionID string, todas bool) (*models
 	}
 	c.Roles = []models.ConteoRol{}
 	if err := r.db.WithContext(ctx).Raw(`
-		SELECT p.rol_app AS rol,
-		       count(*) AS total,
-		       COALESCE(string_agg(p.apellido || ' ' || p.nombre, ', ' ORDER BY p.apellido, p.nombre)
-		                FILTER (WHERE p.rol_app <> 'publicador'), '') AS titulares
-		FROM core_personas p
-		WHERE p.estado = 'ALTA' AND `+alcancePersonasSQL+`
-		GROUP BY p.rol_app
-		ORDER BY p.rol_app ASC`, todas, congregacionID).Scan(&c.Roles).Error; err != nil {
+		WITH altas AS (
+			SELECT p.id, p.apellido, p.nombre
+			FROM core_personas p
+			WHERE p.estado = 'ALTA' AND `+alcancePersonasSQL+`
+		), vigentes AS (
+			SELECT h.rol, h.persona_id
+			FROM core_personas_roles_historial h
+			JOIN altas a ON a.id = h.persona_id
+			WHERE h.vigente = true
+		)
+		SELECT x.rol AS rol, x.total AS total, x.titulares AS titulares FROM (
+			SELECT v.rol AS rol, count(*) AS total,
+			       string_agg(a.apellido || ' ' || a.nombre, ', ' ORDER BY a.apellido, a.nombre) AS titulares
+			FROM vigentes v
+			JOIN altas a ON a.id = v.persona_id
+			GROUP BY v.rol
+			UNION ALL
+			SELECT 'publicador', count(*), ''
+			FROM altas a
+			WHERE NOT EXISTS (SELECT 1 FROM vigentes v WHERE v.persona_id = a.id)
+		) x
+		ORDER BY x.rol ASC`, todas, congregacionID).Scan(&c.Roles).Error; err != nil {
 		return nil, err
 	}
 	return &c, nil

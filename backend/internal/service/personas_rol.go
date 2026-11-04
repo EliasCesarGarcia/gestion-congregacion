@@ -1,8 +1,14 @@
 /**
  * ARCHIVO: personas_rol.go
  * UBICACIÓN: backend/internal/service/personas_rol.go
- * DESCRIPCIÓN: Cambio del rol de la aplicación (coordinador, secretario,
- * servicio). Solo el superadmin: la ruta va dentro de SuperAdminMiddleware.
+ * DESCRIPCIÓN: Roles de la aplicación (coordinador, secretario, servicio).
+ *
+ * REGLAS:
+ *  - Solo un Anciano en ALTA puede tener uno de esos tres roles.
+ *  - Un mismo anciano puede tener varios; nunca dos titulares del mismo rol.
+ *  - Rotación (coordinador, secretario o servicio, solo en su congregación):
+ *    se nombra al nuevo titular de cada rol que cambia, así nunca queda vacante.
+ *  - Asignar o quitar libremente (incluso dejar un rol vacante): solo superadmin.
  */
 
 package service
@@ -19,13 +25,27 @@ import (
 // ErrPersonaRolOcupado: la congregación ya tiene a alguien con ese rol (409).
 var ErrPersonaRolOcupado = errors.New("la congregación ya tiene una persona con ese rol: quíteselo antes")
 
-// rolesApp: valores válidos de core_personas.rol_app.
+// rolesApp: valores válidos de rol (publicador = sin rol).
 var rolesApp = []string{"publicador", "secretario", "coordinador", "servicio"}
 
-// CambiarRolPersona: el actor es superadmin (lo comprobó la ruta). Nadie
-// cambia su propio rol. Asignar un rol exige persona en ALTA; quitarlo
-// (publicador) se puede siempre.
-func (s *Service) CambiarRolPersona(a *models.Actor, personaID int, rol string) error {
+func traducirErrorRol(err error) error {
+	switch {
+	case errors.Is(err, repository.ErrRolOcupado):
+		return ErrPersonaRolOcupado
+	case errors.Is(err, repository.ErrPersonaInexistente):
+		return ErrPersonaNoValida
+	case errors.Is(err, repository.ErrRolNoElegible):
+		return errDatosPersona("las personas deben estar en alta y ser Anciano para un rol de encargado")
+	case errors.Is(err, repository.ErrRolesIncompletos):
+		return errDatosPersona("después del cambio, coordinador, secretario y servicio deben quedar cada uno con una sola persona en alta")
+	}
+	return err
+}
+
+// CambiarRolPersona (solo superadmin, lo comprobó la ruta). rol "publicador"
+// quita todos los roles de la persona; quitar=true quita solo ese rol; si no,
+// lo asigna. Nadie cambia su propio rol.
+func (s *Service) CambiarRolPersona(a *models.Actor, personaID int, rol string, quitar bool) error {
 	if personaID <= 0 {
 		return ErrPersonaIDInvalid
 	}
@@ -39,23 +59,25 @@ func (s *Service) CambiarRolPersona(a *models.Actor, personaID int, rol string) 
 	if !valido {
 		return errDatosPersona("el rol debe ser publicador, secretario, coordinador o servicio")
 	}
+	if quitar && rol == "publicador" {
+		return errDatosPersona("para quitar un rol indique cuál: coordinador, secretario o servicio")
+	}
 	if fmt.Sprintf("%d", personaID) == a.PersonaID {
 		return errDatosPersona("no puede cambiar su propio rol")
 	}
 
-	if _, err := s.fichaParaEscribir(a, true, personaID, rol != "publicador"); err != nil {
+	asigna := rol != "publicador" && !quitar
+	ficha, err := s.fichaParaEscribir(a, true, personaID, asigna)
+	if err != nil {
 		return err
 	}
+	if asigna && ficha.Situacion2 != "Anciano" {
+		return errDatosPersona("solo un Anciano puede ser coordinador, secretario o servicio")
+	}
 
-	cambio, err := s.repo.CambiarRolPersona(personaID, rol, a.PersonaID)
+	cambio, err := s.repo.CambiarRolPersona(personaID, rol, quitar, a.PersonaID)
 	if err != nil {
-		switch {
-		case errors.Is(err, repository.ErrRolOcupado):
-			return ErrPersonaRolOcupado
-		case errors.Is(err, repository.ErrPersonaInexistente):
-			return ErrPersonaNoValida
-		}
-		return err
+		return traducirErrorRol(err)
 	}
 	if !cambio {
 		return ErrPersonaSinCambio
@@ -63,60 +85,32 @@ func (s *Service) CambiarRolPersona(a *models.Actor, personaID int, rol string) 
 	return nil
 }
 
-// RotarRolesPersonas: un encargado (coordinador, secretario o servicio) rota los
-// tres roles dentro de SU congregación. cambios = rol final de cada persona
-// involucrada (2 a 6 personas, sin repetir persona ni rol de encargado).
-func (s *Service) RotarRolesPersonas(a *models.Actor, cambios []models.CambioRol) error {
+// RotarRolesPersonas: un titular rota los roles dentro de SU congregación.
+// in = nuevo titular de cada rol que cambia (0 = no cambia).
+func (s *Service) RotarRolesPersonas(a *models.Actor, in models.RotacionRoles) error {
 	if a.CongregacionID == "" {
 		return ErrSinCongregacion
 	}
-	if len(cambios) < 2 || len(cambios) > 6 {
-		return errDatosPersona("una rotación involucra de 2 a 6 personas")
-	}
-
-	vistasPersona := map[int]bool{}
-	vistosRol := map[string]bool{}
-	limpios := make([]models.CambioRol, 0, len(cambios))
-	for _, c := range cambios {
-		if c.PersonaID <= 0 {
+	titulares := map[string]int{}
+	for rol, id := range map[string]int{
+		"coordinador": in.Coordinador,
+		"secretario":  in.Secretario,
+		"servicio":    in.Servicio,
+	} {
+		if id < 0 {
 			return ErrPersonaIDInvalid
 		}
-		rol := strings.ToLower(strings.TrimSpace(c.RolApp))
-		valido := false
-		for _, r := range rolesApp {
-			if rol == r {
-				valido = true
-			}
+		if id > 0 {
+			titulares[rol] = id
 		}
-		if !valido {
-			return errDatosPersona("el rol debe ser publicador, secretario, coordinador o servicio")
-		}
-		if vistasPersona[c.PersonaID] {
-			return errDatosPersona("una persona no puede aparecer dos veces")
-		}
-		vistasPersona[c.PersonaID] = true
-		if rol != "publicador" {
-			if vistosRol[rol] {
-				return errDatosPersona("el rol '%s' no puede asignarse a dos personas", rol)
-			}
-			vistosRol[rol] = true
-		}
-		limpios = append(limpios, models.CambioRol{PersonaID: c.PersonaID, RolApp: rol})
+	}
+	if len(titulares) == 0 {
+		return errDatosPersona("indique al menos un rol a cambiar: coordinador, secretario o servicio")
 	}
 
-	hecho, err := s.repo.RotarRolesPersonas(a.CongregacionID, limpios, a.PersonaID)
+	hecho, err := s.repo.RotarRolesPersonas(a.CongregacionID, titulares, a.PersonaID)
 	if err != nil {
-		switch {
-		case errors.Is(err, repository.ErrPersonaInexistente):
-			return ErrPersonaNoValida
-		case errors.Is(err, repository.ErrRolNoElegible):
-			return errDatosPersona("todas las personas deben estar en alta y, para un rol de encargado, ser Anciano")
-		case errors.Is(err, repository.ErrRolesIncompletos):
-			return errDatosPersona("después del cambio, coordinador, secretario y servicio deben quedar cada uno con una sola persona en alta")
-		case errors.Is(err, repository.ErrRolOcupado):
-			return ErrPersonaRolOcupado
-		}
-		return err
+		return traducirErrorRol(err)
 	}
 	if !hecho {
 		return ErrPersonaSinCambio
