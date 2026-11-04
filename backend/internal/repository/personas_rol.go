@@ -133,3 +133,142 @@ func (r *Repository) ListHistorialRolesPersona(id int) ([]models.HistorialRolPer
 	}
 	return lista, nil
 }
+
+var (
+	// ErrRolNoElegible: alguien no está en ALTA o no es Anciano para un rol de encargado.
+	ErrRolNoElegible = errors.New("persona no elegible para el rol")
+	// ErrRolesIncompletos: tras el cambio, algún rol quedaría vacante o repetido.
+	ErrRolesIncompletos = errors.New("roles incompletos")
+)
+
+var rolesEncargado = []string{"coordinador", "secretario", "servicio"}
+
+// RotarRolesPersonas aplica varios cambios de rol en UNA transacción y exige que
+// al final coordinador, secretario y servicio tengan cada uno exactamente una
+// persona en ALTA. Bloquea la congregación. Devuelve false si no había nada que
+// cambiar. Los cambios ya vienen validados en forma por el servicio.
+func (r *Repository) RotarRolesPersonas(congregacionID string, cambios []models.CambioRol, actorID string) (bool, error) {
+	hecho := false
+	err := r.db.Transaction(func(tx *gorm.DB) error {
+		var bloqueo []string
+		if err := tx.Raw(
+			"SELECT id::text FROM core_congregaciones WHERE id::text = ?::text FOR UPDATE",
+			congregacionID).Scan(&bloqueo).Error; err != nil {
+			return err
+		}
+		if len(bloqueo) == 0 {
+			return ErrPersonaInexistente
+		}
+
+		ids := make([]int, len(cambios))
+		for i, c := range cambios {
+			ids[i] = c.PersonaID
+		}
+
+		type fila struct {
+			ID         int    `gorm:"column:id"`
+			RolApp     string `gorm:"column:rol_app"`
+			Estado     string `gorm:"column:estado"`
+			Situacion2 string `gorm:"column:situacion_2"`
+		}
+		var filas []fila
+		if err := tx.Raw(`
+			SELECT id AS id, COALESCE(rol_app, 'publicador') AS rol_app,
+			       estado AS estado, COALESCE(situacion_2, '') AS situacion_2
+			FROM core_personas
+			WHERE id IN ? AND congregacion_id::text = ?::text
+			ORDER BY id FOR UPDATE`, ids, congregacionID).Scan(&filas).Error; err != nil {
+			return err
+		}
+		if len(filas) != len(ids) {
+			return ErrPersonaInexistente // alguna no existe o es de otra congregación
+		}
+		porID := map[int]fila{}
+		for _, f := range filas {
+			porID[f.ID] = f
+		}
+
+		var aplicar []models.CambioRol
+		for _, c := range cambios {
+			f := porID[c.PersonaID]
+			if f.Estado != "ALTA" {
+				return ErrRolNoElegible
+			}
+			if c.RolApp != "publicador" && f.Situacion2 != "Anciano" {
+				return ErrRolNoElegible
+			}
+			if f.RolApp != c.RolApp {
+				aplicar = append(aplicar, c)
+			}
+		}
+		if len(aplicar) == 0 {
+			return nil
+		}
+
+		// 1) Se cierran TODOS los períodos vigentes de los que cambian...
+		idsCambian := make([]int, len(aplicar))
+		for i, c := range aplicar {
+			idsCambian[i] = c.PersonaID
+		}
+		if err := tx.Exec(`
+			UPDATE core_personas_roles_historial
+			SET vigente = false, fecha_fin = now(),
+			    quitado_por = NULLIF(?::text,'')::integer
+			WHERE persona_id IN ? AND vigente = true`,
+			actorID, idsCambian).Error; err != nil {
+			return err
+		}
+
+		// 2) ...y recién después se abren los nuevos (así un intercambio no
+		// choca con los índices únicos) y se actualiza rol_app.
+		for _, c := range aplicar {
+			if c.RolApp != "publicador" {
+				if err := tx.Exec(`
+					INSERT INTO core_personas_roles_historial
+						(persona_id, congregacion_id, rol, fecha_inicio, asignado_por, vigente)
+					VALUES (?::integer, ?::uuid, ?::text, now(), NULLIF(?::text,'')::integer, true)`,
+					c.PersonaID, congregacionID, c.RolApp, actorID).Error; err != nil {
+					if strings.Contains(err.Error(), "23505") {
+						return ErrRolOcupado // otra persona (que no entra en la rotación) tiene ese rol
+					}
+					return err
+				}
+			}
+			if err := tx.Exec("UPDATE core_personas SET rol_app = ?::text WHERE id = ?::integer",
+				c.RolApp, c.PersonaID).Error; err != nil {
+				return err
+			}
+		}
+
+		// 3) Control final: los tres roles cubiertos, uno por persona, en ALTA.
+		type conteo struct {
+			Rol   string `gorm:"column:rol"`
+			Total int64  `gorm:"column:total"`
+			Altas int64  `gorm:"column:altas"`
+		}
+		var cs []conteo
+		if err := tx.Raw(`
+			SELECT rol_app AS rol, count(*) AS total,
+			       count(*) FILTER (WHERE estado = 'ALTA') AS altas
+			FROM core_personas
+			WHERE congregacion_id::text = ?::text AND COALESCE(rol_app, 'publicador') <> 'publicador'
+			GROUP BY rol_app`, congregacionID).Scan(&cs).Error; err != nil {
+			return err
+		}
+		por := map[string]conteo{}
+		for _, c := range cs {
+			por[c.Rol] = c
+		}
+		for _, rol := range rolesEncargado {
+			if c, ok := por[rol]; !ok || c.Total != 1 || c.Altas != 1 {
+				return ErrRolesIncompletos
+			}
+		}
+		hecho = true
+		return nil
+	})
+	if err != nil {
+		return false, err
+	}
+	return hecho, nil
+}

@@ -71,8 +71,10 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("POST /api/personas/crear", protegida(http.HandlerFunc(handlers.CrearPersonaHandler(svc))))
 	mux.Handle("POST /api/personas/editar", protegida(http.HandlerFunc(handlers.EditarPersonaHandler(svc))))
 	mux.Handle("POST /api/personas/situacion", protegida(http.HandlerFunc(handlers.CambiarSituacionPersonaHandler(svc))))
-		// Rol de la aplicación (2026-11-01): solo superadmin asigna coordinador, secretario y servicio.
+	// Rol de la aplicación (2026-11-01): solo superadmin asigna coordinador, secretario y servicio.
 	mux.Handle("POST /api/admin/personas/rol", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CambiarRolPersonaHandler(svc)))))
+	// Rotación de roles (2026-11-03): los tres encargados, solo en su congregación.
+	mux.Handle("POST /api/personas/roles/rotar", protegida(http.HandlerFunc(handlers.RotarRolesPersonasHandler(svc))))
 	// Lo propio de cada persona: solo su ficha y sus historiales.
 	mux.Handle("GET /api/me/ficha", protegida(http.HandlerFunc(handlers.MiFichaHandler(svc))))
 	mux.Handle("GET /api/me/historial", protegida(http.HandlerFunc(handlers.MiHistorialHandler(svc))))

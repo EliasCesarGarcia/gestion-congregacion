@@ -27,3 +27,9 @@ type HistorialRolPersona struct {
 	AsignadoPor string  `json:"asignado_por" gorm:"column:asignado_por"`
 	QuitadoPor  string  `json:"quitado_por" gorm:"column:quitado_por"`
 }
+
+// CambioRol: una persona y el rol que pasa a tener en una rotación.
+type CambioRol struct {
+	PersonaID int    `json:"persona_id"`
+	RolApp    string `json:"rol_app"`
+}
