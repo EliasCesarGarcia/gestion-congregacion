@@ -75,6 +75,13 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("POST /api/admin/personas/rol", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CambiarRolPersonaHandler(svc)))))
 	// Rotación de roles (2026-11-03): los tres encargados, solo en su congregación.
 	mux.Handle("POST /api/personas/roles/rotar", protegida(http.HandlerFunc(handlers.RotarRolesPersonasHandler(svc))))
+	// Bajas, reactivación y motivos de baja (2026-11-06).
+	mux.Handle("POST /api/personas/baja", protegida(http.HandlerFunc(handlers.DarDeBajaPersonaHandler(svc))))
+	mux.Handle("POST /api/personas/reactivar", protegida(http.HandlerFunc(handlers.ReactivarPersonaHandler(svc))))
+	mux.Handle("GET /api/personas/motivos-baja", protegida(http.HandlerFunc(handlers.ListMotivosBajaHandler(svc))))
+	mux.Handle("GET /api/admin/personas/motivos-baja", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListMotivosBajaAdminHandler(svc)))))
+	mux.Handle("POST /api/admin/personas/motivos-baja/crear", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CrearMotivoBajaHandler(svc)))))
+	mux.Handle("POST /api/admin/personas/motivos-baja/editar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EditarMotivoBajaHandler(svc)))))
 	// Lo propio de cada persona: solo su ficha y sus historiales.
 	mux.Handle("GET /api/me/ficha", protegida(http.HandlerFunc(handlers.MiFichaHandler(svc))))
 	mux.Handle("GET /api/me/historial", protegida(http.HandlerFunc(handlers.MiHistorialHandler(svc))))

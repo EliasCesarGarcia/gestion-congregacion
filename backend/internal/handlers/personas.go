@@ -37,7 +37,8 @@ func responderErrorPersonas(w http.ResponseWriter, err error, accion, personaID 
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	case errors.Is(err, service.ErrPersonaSinCambio),
-		errors.Is(err, service.ErrPersonaRolOcupado):
+		errors.Is(err, service.ErrPersonaRolOcupado),
+		errors.Is(err, service.ErrPersonaTitularRol):
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}

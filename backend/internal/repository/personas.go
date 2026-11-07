@@ -254,7 +254,7 @@ func (r *Repository) ListHistorialEstadoPersona(id int) ([]models.HistorialEstad
 		       to_char(h.fecha_alta, 'YYYY-MM-DD') AS fecha_alta,
 		       to_char(h.fecha_baja, 'YYYY-MM-DD') AS fecha_baja,
 		       h.vigente AS vigente,
-		       COALESCE(m.nombre, '') AS motivo_baja,
+		       COALESCE(h.motivo_baja, m.nombre, '') AS motivo_baja,
 		       COALESCE(h.detalles, '') AS detalles,
 		       COALESCE(ap.apellido || ' ' || ap.nombre, '') AS alta_por,
 		       COALESCE(bp.apellido || ' ' || bp.nombre, '') AS baja_por
