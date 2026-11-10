@@ -11,8 +11,10 @@
  *  - No se puede dar de baja a un titular de rol (coordinador, secretario o
  *    servicio): primero se lo reemplaza con la rotación de roles.
  *  - Nadie se da de baja a sí mismo.
- *  - La baja quita los puestos y cierra las situaciones; reactivar deja a la
- *    persona como Publicador y los cargos se reasignan a mano.
+ *  - La baja quita los puestos y cierra las situaciones, todo con la fecha de
+ *    baja elegida (no se puede dar de baja antes de que empiece un puesto
+ *    vigente); reactivar deja a la persona como Publicador y los cargos se
+ *    reasignan a mano.
  *  - El catálogo de motivos lo gestiona solo el superadmin (lo exige la ruta).
  */
 
@@ -41,6 +43,8 @@ func traducirErrorBaja(err error) error {
 		return ErrPersonaSinCambio
 	case errors.Is(err, repository.ErrFechaAnteriorInicio):
 		return errDatosPersona("la fecha es anterior al inicio de una situación vigente de la persona")
+	case errors.Is(err, repository.ErrFechaAnteriorPuesto):
+		return errDatosPersona("la fecha es anterior al inicio de un puesto vigente de la persona: no se puede cerrar antes de que empiece")
 	case errors.Is(err, repository.ErrFechaAnteriorBaja):
 		return errDatosPersona("la fecha es anterior a la última baja de la persona")
 	}
@@ -77,6 +81,10 @@ func (s *Service) DarDeBajaPersona(a *models.Actor, esSuper bool, personaID int,
 	if err != nil {
 		return err
 	}
+	fechaHora, err := fechaHoraPersona(f)
+	if err != nil {
+		return err
+	}
 	detalles, err = normalizarDetalles(detalles)
 	if err != nil {
 		return err
@@ -97,7 +105,7 @@ func (s *Service) DarDeBajaPersona(a *models.Actor, esSuper bool, personaID int,
 		return errDatosPersona("la fecha de baja no puede ser anterior a la fecha de alta")
 	}
 
-	if err := s.repo.DarDeBajaPersona(personaID, f, motivo, detalles, a.PersonaID); err != nil {
+	if err := s.repo.DarDeBajaPersona(personaID, f, fechaHora, motivo, detalles, a.PersonaID); err != nil {
 		return traducirErrorBaja(err)
 	}
 	return nil

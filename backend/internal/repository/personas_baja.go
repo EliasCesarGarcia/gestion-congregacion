@@ -139,12 +139,18 @@ func (r *Repository) EditarMotivoBaja(id int64, nombre *string, orden *int, acti
 //  3. cierra su fila vigente de estado con fecha, motivo (id y copia del
 //     texto), detalles y quién la dio de baja;
 //  4. cierra sus situaciones vigentes (1, 2 y 3) con la fecha de baja;
-//  5. le quita todos sus puestos (permiso + historial con el motivo "Baja de la persona");
+//  5. le quita todos sus puestos (permiso + historial con el motivo "Baja de la
+//     persona"), cerrándolos con la fecha de baja elegida (fechaHora);
 //  6. deja la persona en BAJA, sin situación 2 ni 3 y con situación 1 Publicador.
 //
-// fecha va como AAAA-MM-DD, ya validada por el servicio.
-func (r *Repository) DarDeBajaPersona(personaID int, fecha string, motivoID *int64, detalles, actorID string) error {
+// fecha va como AAAA-MM-DD, ya validada por el servicio. fechaHora es la misma
+// fecha para las columnas con hora (puestos): nil = ahora (now()); si es una
+// fecha pasada, las 12:00 UTC de ese día. Si algún puesto vigente empezó
+// DESPUÉS de esa fecha, se rechaza con ErrFechaAnteriorPuesto (no se cierra un
+// puesto antes de que empiece) y no se escribe nada.
+func (r *Repository) DarDeBajaPersona(personaID int, fecha string, fechaHora *time.Time, motivoID *int64, detalles, actorID string) error {
 	idTxt := strconv.Itoa(personaID)
+	fechaSQL := fechaRolParam(fechaHora)
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		cong, err := congregacionDePersonaRol(tx, personaID)
 		if err != nil {
@@ -184,6 +190,18 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, motivoID *int
 		}
 		if len(posteriores) > 0 {
 			return ErrFechaAnteriorInicio
+		}
+
+		var puestosPosteriores []int64
+		if err := tx.Raw(`
+			SELECT id FROM core_puestos_historial
+			WHERE persona_id::text = ?::text AND fecha_fin IS NULL
+			  AND fecha_inicio > COALESCE(?::timestamptz, now())
+			LIMIT 1`, idTxt, fechaSQL).Scan(&puestosPosteriores).Error; err != nil {
+			return err
+		}
+		if len(puestosPosteriores) > 0 {
+			return ErrFechaAnteriorPuesto
 		}
 
 		res := tx.Exec(`
@@ -227,11 +245,11 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, motivoID *int
 		}
 		if err := tx.Exec(`
 			UPDATE core_puestos_historial
-			SET fecha_fin = now(),
+			SET fecha_fin = COALESCE(?::timestamptz, now()),
 			    quitado_por = (SELECT a.id FROM core_personas a WHERE a.id::text = ?::text),
 			    motivo_quitar = 'Baja de la persona'
 			WHERE persona_id::text = ?::text AND fecha_fin IS NULL`,
-			actorID, idTxt).Error; err != nil {
+			fechaSQL, actorID, idTxt).Error; err != nil {
 			return err
 		}
 
