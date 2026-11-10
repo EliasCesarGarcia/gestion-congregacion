@@ -6,12 +6,14 @@
  * backend en cada handler).
  *
  *  - GET  /api/modulos/asignaciones  -> puestos ocupados hoy.
- *  - POST /api/modulos/asignar       -> { persona_id, modulo_id, puesto, motivo_id?, detalles? }
- *  - POST /api/modulos/quitar        -> { persona_id, modulo_id, motivo_id?, detalles? }
+ *  - POST /api/modulos/asignar       -> { persona_id, modulo_id, puesto, motivo_id?, detalles?, fecha? }
+ *  - POST /api/modulos/quitar        -> { persona_id, modulo_id, motivo_id?, detalles?, fecha? }
  *  - GET  /api/modulos/historial     -> ?modulo_id=&persona_id=&page=&limit=
  *
  * motivo_id es el id de un motivo ACTIVO del tipo correcto (ver motivos.go);
  * 0 o ausente = sin motivo.
+ * fecha (AAAA-MM-DD) es opcional: ausente = hoy (hora real del servidor); puede
+ * ser pasada, nunca futura.
  */
 
 package handlers
@@ -73,12 +75,13 @@ func AsignarPuestoHandler(s *service.Service) http.HandlerFunc {
 			Puesto    string `json:"puesto"`
 			MotivoID  int64  `json:"motivo_id"`
 			Detalles  string `json:"detalles"`
+			Fecha     string `json:"fecha"`
 		}
 		if !leerJSONAdmin(w, r, &req) {
 			return
 		}
 
-		if err := s.AsignarPuesto(a, esSuper, req.PersonaID, req.ModuloID, req.Puesto, req.Detalles, req.MotivoID); err != nil {
+		if err := s.AsignarPuesto(a, esSuper, req.PersonaID, req.ModuloID, req.Puesto, req.Detalles, req.MotivoID, req.Fecha); err != nil {
 			responderErrorModulos(w, err, "asignar-puesto", a.PersonaID)
 			return
 		}
@@ -110,12 +113,13 @@ func QuitarPuestoHandler(s *service.Service) http.HandlerFunc {
 			ModuloID  string `json:"modulo_id"`
 			MotivoID  int64  `json:"motivo_id"`
 			Detalles  string `json:"detalles"`
+			Fecha     string `json:"fecha"`
 		}
 		if !leerJSONAdmin(w, r, &req) {
 			return
 		}
 
-		if err := s.QuitarPuesto(a, esSuper, req.PersonaID, req.ModuloID, req.Detalles, req.MotivoID); err != nil {
+		if err := s.QuitarPuesto(a, esSuper, req.PersonaID, req.ModuloID, req.Detalles, req.MotivoID, req.Fecha); err != nil {
 			responderErrorModulos(w, err, "quitar-puesto", a.PersonaID)
 			return
 		}

@@ -6,17 +6,28 @@
  * (core_puestos_historial). El permiso y el historial se escriben SIEMPRE en
  * la misma transacción: o quedan los dos o no queda ninguno.
  * Los motivos (core_puestos_motivos) se copian como texto al historial.
+ * Las fechas de inicio y de fin se pueden elegir (tramo 2D, paso 3): nil = now().
  */
 
 package repository
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"gestion-congregacion/backend/internal/models"
 
 	"gorm.io/gorm"
+)
+
+var (
+	// ErrFechaAnteriorPuesto: la fecha de fin es anterior al inicio del puesto vigente.
+	ErrFechaAnteriorPuesto = errors.New("la fecha es anterior al inicio del puesto vigente")
+	// ErrFechaSolapaPuestoPersona: la fecha se superpone con un período cerrado de la misma persona en ese departamento.
+	ErrFechaSolapaPuestoPersona = errors.New("la fecha se superpone con un período anterior de la persona en ese departamento")
+	// ErrFechaSolapaPuestoCargo: la fecha se superpone con un período cerrado de ese mismo puesto en el departamento.
+	ErrFechaSolapaPuestoCargo = errors.New("la fecha se superpone con un período anterior de ese puesto en el departamento")
 )
 
 // motivoParam convierte un *int64 opcional en un valor para la consulta
@@ -63,8 +74,15 @@ func (r *Repository) ListAsignaciones(congregacionID string) ([]models.Asignacio
 // detalles = texto corto opcional, ya validado por el servicio.
 // motivoID = motivo opcional ya validado; el historial guarda su id y una
 // copia de su texto.
-func (r *Repository) AsignarPuesto(personaID, moduloID, puesto string, nivel int, actorID, detalles string, motivoID *int64) (int64, error) {
+// fecha = momento de inicio del puesto, ya validada por el servicio (no
+// futura, no anterior al alta). nil = ahora (now()). Si viene, no puede
+// superponerse con un período CERRADO de la misma persona en ese departamento
+// ni con uno del mismo puesto en ese departamento de su congregación: en ese
+// caso se devuelve ErrFechaSolapaPuestoPersona o ErrFechaSolapaPuestoCargo y
+// la transacción se deshace completa (no queda ni el permiso).
+func (r *Repository) AsignarPuesto(personaID, moduloID, puesto string, nivel int, actorID, detalles string, motivoID *int64, fecha *time.Time) (int64, error) {
 	var filas int64
+	fechaSQL := fechaRolParam(fecha)
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		res := tx.Exec(`
 			INSERT INTO core_permisos_modulos (persona_id, modulo_id, congregacion_id, nivel_acceso, puesto)
@@ -80,19 +98,47 @@ func (r *Repository) AsignarPuesto(personaID, moduloID, puesto string, nivel int
 		if filas == 0 {
 			return nil
 		}
+
+		// Períodos cerrados que terminan después de la fecha de inicio = superposición.
+		type solape struct {
+			MismaPersona bool `gorm:"column:misma_persona"`
+		}
+		var solapes []solape
+		if err := tx.Raw(`
+			SELECT (h.persona_id::text = ?::text) AS misma_persona
+			FROM core_puestos_historial h
+			WHERE h.modulo_id = ?::text
+			  AND h.fecha_fin IS NOT NULL
+			  AND h.fecha_fin > COALESCE(?::timestamptz, now())
+			  AND (h.persona_id::text = ?::text
+			       OR (h.puesto = ?::text
+			           AND h.congregacion_id::text = (SELECT p.congregacion_id::text FROM core_personas p WHERE p.id::text = ?::text)))
+			ORDER BY (h.persona_id::text = ?::text) DESC
+			LIMIT 1`,
+			personaID, moduloID, fechaSQL, personaID, puesto, personaID, personaID).Scan(&solapes).Error; err != nil {
+			return err
+		}
+		if len(solapes) > 0 {
+			if solapes[0].MismaPersona {
+				return ErrFechaSolapaPuestoPersona
+			}
+			return ErrFechaSolapaPuestoCargo
+		}
+
 		return tx.Exec(`
 			INSERT INTO core_puestos_historial
 				(persona_id, modulo_id, congregacion_id, puesto, asignado_por, detalles,
-				 motivo_asignar_id, motivo_asignar)
+				 motivo_asignar_id, motivo_asignar, fecha_inicio)
 			SELECT p.id, ?::text, p.congregacion_id, ?::text,
 			       (SELECT a.id FROM core_personas a WHERE a.id::text = ?),
 			       NULLIF(?::text, ''),
 			       ?::bigint,
-			       (SELECT m.texto FROM core_puestos_motivos m WHERE m.id = ?::bigint)
+			       (SELECT m.texto FROM core_puestos_motivos m WHERE m.id = ?::bigint),
+			       COALESCE(?::timestamptz, now())
 			FROM core_personas p
 			WHERE p.id::text = ?`,
 			moduloID, puesto, actorID, detalles,
-			motivoParam(motivoID), motivoParam(motivoID), personaID).Error
+			motivoParam(motivoID), motivoParam(motivoID), fechaSQL, personaID).Error
 	})
 	if err != nil {
 		return 0, err
@@ -103,8 +149,14 @@ func (r *Repository) AsignarPuesto(personaID, moduloID, puesto string, nivel int
 // QuitarPuesto borra el permiso y, en la misma transacción, cierra la fila
 // vigente del historial guardando quién lo quitó, el motivo (id y copia del
 // texto) y el detalle opcional. Devuelve cuántas filas de permiso se borraron.
-func (r *Repository) QuitarPuesto(personaID, moduloID, actorID, detalles string, motivoID *int64) (int64, error) {
+//
+// fecha = momento de fin del puesto, ya validada por el servicio. nil = ahora
+// (now()). No puede ser anterior al inicio de la fila vigente: en ese caso se
+// devuelve ErrFechaAnteriorPuesto y la transacción se deshace (el permiso
+// borrado vuelve a quedar).
+func (r *Repository) QuitarPuesto(personaID, moduloID, actorID, detalles string, motivoID *int64, fecha *time.Time) (int64, error) {
 	var filas int64
+	fechaSQL := fechaRolParam(fecha)
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		res := tx.Exec("DELETE FROM core_permisos_modulos WHERE persona_id::text = ? AND modulo_id = ?", personaID, moduloID)
 		if res.Error != nil {
@@ -114,15 +166,28 @@ func (r *Repository) QuitarPuesto(personaID, moduloID, actorID, detalles string,
 		if filas == 0 {
 			return nil
 		}
+
+		var posteriores []int64
+		if err := tx.Raw(`
+			SELECT id FROM core_puestos_historial
+			WHERE persona_id::text = ? AND modulo_id = ? AND fecha_fin IS NULL
+			  AND fecha_inicio > COALESCE(?::timestamptz, now())
+			LIMIT 1`, personaID, moduloID, fechaSQL).Scan(&posteriores).Error; err != nil {
+			return err
+		}
+		if len(posteriores) > 0 {
+			return ErrFechaAnteriorPuesto
+		}
+
 		return tx.Exec(`
 			UPDATE core_puestos_historial h
-			SET fecha_fin = now(),
+			SET fecha_fin = COALESCE(?::timestamptz, now()),
 			    quitado_por = (SELECT a.id FROM core_personas a WHERE a.id::text = ?),
 			    motivo_quitar_id = ?::bigint,
 			    motivo_quitar = (SELECT m.texto FROM core_puestos_motivos m WHERE m.id = ?::bigint),
 			    detalles_quitar = NULLIF(?::text, '')
 			WHERE h.persona_id::text = ? AND h.modulo_id = ? AND h.fecha_fin IS NULL`,
-			actorID, motivoParam(motivoID), motivoParam(motivoID), detalles,
+			fechaSQL, actorID, motivoParam(motivoID), motivoParam(motivoID), detalles,
 			personaID, moduloID).Error
 	})
 	if err != nil {

@@ -14,6 +14,11 @@
  *    (core_puestos_historial); nunca se borra. Al asignar o quitar se puede
  *    indicar un motivo del catálogo (opcional) y un texto corto en
  *    "detalles" (máximo 100 palabras).
+ *  - Fecha elegible (tramo 2D, paso 3): al asignar y al quitar se puede indicar
+ *    la fecha (AAAA-MM-DD). Vacía = ahora. Puede ser pasada, nunca futura; al
+ *    asignar no puede ser anterior al alta de la persona; no puede superponerse
+ *    con otro período del mismo puesto o de la misma persona en el departamento,
+ *    y al quitar no puede ser anterior al inicio del puesto vigente.
  */
 
 package service
@@ -25,6 +30,7 @@ import (
 	"unicode/utf8"
 
 	"gestion-congregacion/backend/internal/models"
+	"gestion-congregacion/backend/internal/repository"
 )
 
 var (
@@ -42,6 +48,19 @@ const (
 	historialLimitePorDefecto = 20
 	historialLimiteMaximo     = 100
 )
+
+// traducirErrorPuesto convierte los errores de fecha del repositorio en 400.
+func traducirErrorPuesto(err error) error {
+	switch {
+	case errors.Is(err, repository.ErrFechaAnteriorPuesto):
+		return errDatosPersona("la fecha es anterior al inicio del puesto vigente de la persona")
+	case errors.Is(err, repository.ErrFechaSolapaPuestoPersona):
+		return errDatosPersona("la fecha se superpone con un período anterior de la persona en ese departamento")
+	case errors.Is(err, repository.ErrFechaSolapaPuestoCargo):
+		return errDatosPersona("la fecha se superpone con un período anterior de ese puesto en el departamento")
+	}
+	return err
+}
 
 // nivelPorPuesto: encargado edita (2); auxiliares solo ven (1).
 var nivelPorPuesto = map[string]int{
@@ -77,8 +96,9 @@ func (s *Service) ListAsignaciones(a *models.Actor) ([]models.AsignacionPuesto, 
 // AsignarPuesto: el permiso del actor (rol) ya lo revisó el handler.
 // detalles y motivoID son opcionales (motivoID 0 = sin motivo); si el puesto
 // ya estaba asignado igual, repetir el pedido no cambia nada y no toca el
-// historial.
-func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino int, moduloID, puesto, detalles string, motivoID int64) error {
+// historial (tampoco se cambia su fecha: eso es del paso 5).
+// fecha (AAAA-MM-DD) es opcional: vacía = ahora; puede ser pasada, nunca futura.
+func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino int, moduloID, puesto, detalles string, motivoID int64, fecha string) error {
 	if personaDestino <= 0 {
 		return ErrPersonaIDInvalid
 	}
@@ -99,10 +119,20 @@ func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino in
 	if err != nil {
 		return err
 	}
+	f, err := fechaHoraPersona(fecha)
+	if err != nil {
+		return err
+	}
 
 	destino := fmt.Sprintf("%d", personaDestino)
-	if err := s.destinoValido(a, esSuper, destino, true); err != nil {
+	// Misma comprobación que destinoValido (existe, en ALTA, de su congregación)
+	// y además trae la ficha para comparar la fecha con el alta.
+	ficha, err := s.fichaParaEscribir(a, esSuper, personaDestino, true)
+	if err != nil {
 		return err
+	}
+	if f != nil && ficha.FechaAlta != nil && f.UTC().Format("2006-01-02") < *ficha.FechaAlta {
+		return errDatosPersona("la fecha es anterior a la fecha de alta de la persona")
 	}
 
 	m, err := s.repo.GetModulo(moduloID)
@@ -116,9 +146,9 @@ func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino in
 		return ErrModuloComun
 	}
 
-	filas, err := s.repo.AsignarPuesto(destino, moduloID, puesto, nivel, a.PersonaID, detalles, motivo)
+	filas, err := s.repo.AsignarPuesto(destino, moduloID, puesto, nivel, a.PersonaID, detalles, motivo, f)
 	if err != nil {
-		return err
+		return traducirErrorPuesto(err)
 	}
 	if filas > 0 {
 		return nil
@@ -141,7 +171,9 @@ func (s *Service) AsignarPuesto(a *models.Actor, esSuper bool, personaDestino in
 // QuitarPuesto: igual que asignar, pero no exige que la persona esté en ALTA
 // (se puede limpiar el puesto de alguien dado de baja). motivoID y detalles
 // son opcionales; se guardan en el historial al cerrar la fila vigente.
-func (s *Service) QuitarPuesto(a *models.Actor, esSuper bool, personaDestino int, moduloID, detalles string, motivoID int64) error {
+// fecha (AAAA-MM-DD) es opcional: vacía = ahora; puede ser pasada, nunca futura,
+// y no puede ser anterior al inicio del puesto vigente.
+func (s *Service) QuitarPuesto(a *models.Actor, esSuper bool, personaDestino int, moduloID, detalles string, motivoID int64, fecha string) error {
 	if personaDestino <= 0 {
 		return ErrPersonaIDInvalid
 	}
@@ -157,15 +189,19 @@ func (s *Service) QuitarPuesto(a *models.Actor, esSuper bool, personaDestino int
 	if err != nil {
 		return err
 	}
+	f, err := fechaHoraPersona(fecha)
+	if err != nil {
+		return err
+	}
 
 	destino := fmt.Sprintf("%d", personaDestino)
 	if err := s.destinoValido(a, esSuper, destino, false); err != nil {
 		return err
 	}
 
-	n, err := s.repo.QuitarPuesto(destino, moduloID, a.PersonaID, detalles, motivo)
+	n, err := s.repo.QuitarPuesto(destino, moduloID, a.PersonaID, detalles, motivo, f)
 	if err != nil {
-		return err
+		return traducirErrorPuesto(err)
 	}
 	if n == 0 {
 		return ErrSinAsignacion
