@@ -164,7 +164,7 @@ func fechaPersona(valor string, obligatoria bool) (string, error) {
 	if err != nil || t.Year() < 1900 {
 		return "", errDatosPersona("fecha no válida: use AAAA-MM-DD")
 	}
-	limite := time.Now().UTC().Truncate(24 * time.Hour).AddDate(0, 0, 1)
+	limite := time.Now().UTC().Truncate(24*time.Hour).AddDate(0, 0, 1)
 	if t.After(limite) {
 		return "", errDatosPersona("la fecha no puede ser futura")
 	}
@@ -350,9 +350,9 @@ func (s *Service) EditarPersona(a *models.Actor, esSuper bool, personaID int, in
 	}
 	d.FechaAlta = fecha
 
-	n, err := s.repo.EditarPersona(personaID, d)
+	n, err := s.repo.EditarPersona(personaID, d, a.PersonaID)
 	if err != nil {
-		return err
+		return traducirErrorFechasEstado(err)
 	}
 	if n == 0 {
 		return ErrPersonaNoValida
@@ -400,7 +400,7 @@ func (s *Service) CambiarSituacionPersona(a *models.Actor, esSuper bool, persona
 	if ficha.FechaAlta != nil && f < *ficha.FechaAlta {
 		return errDatosPersona("la fecha es anterior a la fecha de alta de la persona")
 	}
-		if campo == 2 && nuevo != "Anciano" && ficha.RolApp != "publicador" {
+	if campo == 2 && nuevo != "Anciano" && ficha.RolApp != "publicador" {
 		return errDatosPersona("la persona es titular de un rol de la congregación: primero hay que reemplazarla en ese rol")
 	}
 

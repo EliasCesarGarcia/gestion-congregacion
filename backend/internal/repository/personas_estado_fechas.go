@@ -41,6 +41,21 @@ func (e *ErrEstadoIncoherente) Error() string {
 func (r *Repository) ModificarFechasEstado(id int64, congregacionID string, todas bool, alta *string, baja *FechaElegida, actorID string) (bool, error) {
 	cambio := false
 	err := r.db.Transaction(func(tx *gorm.DB) error {
+		var e error
+		cambio, e = modificarFechasEstadoTx(tx, id, congregacionID, todas, alta, baja, actorID)
+		return e
+	})
+	if err != nil {
+		return false, err
+	}
+	return cambio, nil
+}
+
+// modificarFechasEstadoTx es el núcleo de ModificarFechasEstado: trabaja sobre
+// una transacción ya abierta, así EditarPersona puede usarlo dentro de la suya.
+func modificarFechasEstadoTx(tx *gorm.DB, id int64, congregacionID string, todas bool, alta *string, baja *FechaElegida, actorID string) (bool, error) {
+	cambio := false
+	err := func() error {
 		type fila struct {
 			PersonaID      int     `gorm:"column:persona_id"`
 			CongregacionID string  `gorm:"column:congregacion_id"`
@@ -191,7 +206,7 @@ func (r *Repository) ModificarFechasEstado(id int64, congregacionID string, toda
 
 		cambio = true
 		return nil
-	})
+	}()
 	if err != nil {
 		return false, err
 	}

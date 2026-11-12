@@ -116,12 +116,58 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 }
 
 // EditarPersona reemplaza los datos editables (apellido, nombre, contacto,
-// grupo, condición, detalles, dirección y fecha de alta). Los textos vacíos
-// quedan en NULL. Si la persona está de alta, la fecha también se copia a su
-// fila vigente de estado. Devuelve cuántas personas se modificaron.
-func (r *Repository) EditarPersona(id int, d models.DatosPersona) (int64, error) {
+// grupo, condición, detalles y dirección). Los textos vacíos quedan en NULL.
+// La fecha de alta ya NO se escribe directo: si cambió, se modifica la última
+// fila de estado de la persona con la misma lógica de la ruta de fechas del
+// historial (superposición, situaciones, roles y puestos que quedarían fuera),
+// que también sincroniza core_personas.fecha_alta. Todo en UNA transacción.
+// Devuelve cuántas personas se modificaron.
+func (r *Repository) EditarPersona(id int, d models.DatosPersona, actorID string) (int64, error) {
 	var filas int64
 	err := r.db.Transaction(func(tx *gorm.DB) error {
+		type actual struct {
+			FechaAlta *string `gorm:"column:fecha_alta"`
+		}
+		var as []actual
+		if err := tx.Raw(`
+			SELECT to_char(fecha_alta, 'YYYY-MM-DD') AS fecha_alta
+			FROM core_personas WHERE id = ?::integer`, id).Scan(&as).Error; err != nil {
+			return err
+		}
+		if len(as) == 0 {
+			return nil // no existe: filas queda en 0
+		}
+
+		// La fecha de alta va PRIMERO: así se bloquea en el mismo orden que la
+		// baja (congregación y después persona) y no hay bloqueos cruzados.
+		if d.FechaAlta != "" && (as[0].FechaAlta == nil || *as[0].FechaAlta != d.FechaAlta) {
+			var ultimas []int64
+			if err := tx.Raw(`
+				SELECT id FROM core_personas_estado_historial
+				WHERE persona_id = ?::integer
+				ORDER BY vigente DESC, fecha_alta DESC NULLS LAST, id DESC
+				LIMIT 1`, id).Scan(&ultimas).Error; err != nil {
+				return err
+			}
+			alta := d.FechaAlta
+			cambio := false
+			if len(ultimas) > 0 {
+				c, err := modificarFechasEstadoTx(tx, ultimas[0], "", true, &alta, nil, actorID)
+				if err != nil {
+					return err
+				}
+				cambio = c
+			}
+			if !cambio {
+				// Sin filas de estado, o la fila ya tenía esa fecha: solo se
+				// alinea la ficha.
+				if err := tx.Exec("UPDATE core_personas SET fecha_alta = ?::date WHERE id = ?::integer",
+					alta, id).Error; err != nil {
+					return err
+				}
+			}
+		}
+
 		res := tx.Exec(`
 			UPDATE core_personas SET
 				apellido         = ?::text,
@@ -136,24 +182,16 @@ func (r *Repository) EditarPersona(id int, d models.DatosPersona) (int64, error)
 				pais             = NULLIF(?::text,''),
 				provincia_estado = NULLIF(?::text,''),
 				ciudad           = NULLIF(?::text,''),
-				partido          = NULLIF(?::text,''),
-				fecha_alta       = NULLIF(?::text,'')::date
+				partido          = NULLIF(?::text,'')
 			WHERE id = ?::integer`,
 			d.Apellido, d.Nombre, d.ApellidoNombre, d.Contacto, paramGrupoPersona(d.Grupo),
 			d.Condicion, d.Detalles, d.Direccion, d.CodigoPostal, d.Pais, d.ProvinciaEstado,
-			d.Ciudad, d.Partido, d.FechaAlta, id)
+			d.Ciudad, d.Partido, id)
 		if res.Error != nil {
 			return res.Error
 		}
 		filas = res.RowsAffected
-		if filas == 0 {
-			return nil
-		}
-		return tx.Exec(`
-			UPDATE core_personas_estado_historial
-			SET fecha_alta = NULLIF(?::text,'')::date
-			WHERE persona_id = ?::integer AND vigente = true`,
-			d.FechaAlta, id).Error
+		return nil
 	})
 	if err != nil {
 		return 0, err
