@@ -5,6 +5,10 @@
  * filtros, números de la congregación y paginación. Lo ven coordinador,
  * secretario, servicio y superadmin.
  *
+ * CONGREGACIÓN: coordinador, secretario y servicio ven solo la suya (lo
+ * decide el backend). El superadmin elige una con el selector (arranca en la
+ * suya) y NUNCA se mezclan congregaciones: todo lo que se ve es de la elegida.
+ *
  * La búsqueda no distingue mayúsculas ni tildes (lo resuelve el backend) y
  * busca en apellido, nombre y situaciones. Cada cambio de filtro vuelve a la
  * página 1. Si el usuario sigue escribiendo, el pedido anterior se cancela.
@@ -34,10 +38,19 @@ const iniciales = (p) =>
 
 function PersonasPage() {
   const { t } = useTranslation();
-  const { permisos } = useContext(AppContext);
+  const { permisos, user } = useContext(AppContext);
+  const esSuper = permisos.es_superadmin;
   const autorizado =
-    permisos.cargado &&
-    (permisos.es_superadmin || permisos.es_encargado_general);
+    permisos.cargado && (esSuper || permisos.es_encargado_general);
+
+  // --- Congregación (solo la elige el superadmin; arranca en la suya) ---
+  const [congregaciones, setCongregaciones] = useState([]);
+  const [errorCong, setErrorCong] = useState(false);
+  const [congregacionId, setCongregacionId] = useState(
+    user?.congregacion_id || "",
+  );
+  // El superadmin necesita una congregación concreta antes de pedir datos.
+  const listo = autorizado && (!esSuper || congregacionId !== "");
 
   // --- Búsqueda y filtros ---
   const [busqueda, setBusqueda] = useState(""); // lo que se escribe
@@ -57,7 +70,7 @@ function PersonasPage() {
   });
   const [conteos, setConteos] = useState({ datos: null, error: false });
 
-  const clave = JSON.stringify([qActiva, filtros, pagina]);
+  const clave = JSON.stringify([congregacionId, qActiva, filtros, pagina]);
   const cargando = resultado.clave !== clave;
 
   const cambiarFiltro = (parcial) => {
@@ -72,6 +85,13 @@ function PersonasPage() {
     setPagina(1);
   };
 
+  const cambiarCongregacion = (id) => {
+    setCongregacionId(id);
+    setConteos({ datos: null, error: false }); // los números son de la anterior
+    setFiltros(FILTROS_VACIOS); // los grupos y situaciones pueden ser otros
+    setPagina(1);
+  };
+
   // Pausa de 300 ms desde la última tecla.
   useEffect(() => {
     const id = setTimeout(() => {
@@ -81,11 +101,37 @@ function PersonasPage() {
     return () => clearTimeout(id);
   }, [busqueda]);
 
+  // Superadmin: lista de congregaciones para el selector. Si su sesión no
+  // trae congregación, se elige la primera de la lista.
+  useEffect(() => {
+    if (!autorizado || !esSuper) return;
+    let cancelado = false;
+    axios
+      .get("/api/admin/congregaciones", {
+        params: { q: "", estado: "todas", page: 1, limit: 100 },
+      })
+      .then(({ data }) => {
+        if (cancelado) return;
+        const filas = Array.isArray(data.congregaciones)
+          ? data.congregaciones
+          : [];
+        setCongregaciones(filas);
+        setCongregacionId((actual) => actual || filas[0]?.id || "");
+      })
+      .catch(() => {
+        if (!cancelado) setErrorCong(true);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, [autorizado, esSuper]);
+
   // Lista: se vuelve a pedir cada vez que cambia algo; el pedido viejo se cancela.
   useEffect(() => {
-    if (!autorizado) return;
+    if (!listo) return;
     const control = new AbortController();
     const params = { page: pagina, limit: LIMITE };
+    if (esSuper) params.congregacion_id = congregacionId;
     if (qActiva) params.q = qActiva;
     Object.entries(filtros).forEach(([k, v]) => {
       if (v) params[k] = v;
@@ -116,16 +162,18 @@ function PersonasPage() {
       });
 
     return () => control.abort();
-    // `clave` ya resume qActiva, filtros y pagina.
+    // `clave` ya resume congregacionId, qActiva, filtros y pagina.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autorizado, clave]);
+  }, [listo, clave]);
 
-  // Números de arriba (una vez al entrar).
+  // Números de arriba (al entrar y al cambiar de congregación).
   useEffect(() => {
-    if (!autorizado) return;
+    if (!listo) return;
     let cancelado = false;
     axios
-      .get("/api/personas/conteos")
+      .get("/api/personas/conteos", {
+        params: esSuper ? { congregacion_id: congregacionId } : {},
+      })
       .then(({ data }) => {
         if (!cancelado) setConteos({ datos: data, error: false });
       })
@@ -135,7 +183,7 @@ function PersonasPage() {
     return () => {
       cancelado = true;
     };
-  }, [autorizado]);
+  }, [listo, esSuper, congregacionId]);
 
   if (!permisos.cargado) {
     return (
@@ -180,14 +228,47 @@ function PersonasPage() {
 
   return (
     <div className="max-w-5xl mx-auto p-6 space-y-6">
-      <div className="flex items-baseline justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-jw-text-main">
-          {t("per_titulo", "Personas")}
-        </h1>
-        {!cargando && !resultado.error && (
-          <span className="text-sm text-jw-text-main opacity-70">
-            {resultado.total} {t("per_personas", "personas")}
-          </span>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold text-jw-text-main">
+            {t("per_titulo", "Personas")}
+          </h1>
+          {!cargando && !resultado.error && (
+            <span className="text-sm text-jw-text-main opacity-70">
+              {resultado.total} {t("per_personas", "personas")}
+            </span>
+          )}
+        </div>
+
+        {esSuper && (
+          <div className="w-full sm:w-72">
+            <CampoSelect
+              id="per-congregacion"
+              label={t("per_congregacion", "Congregación")}
+              value={congregacionId}
+              onChange={(e) => cambiarCongregacion(e.target.value)}
+              error={
+                errorCong
+                  ? t(
+                      "per_error_congregaciones",
+                      "No se pudo cargar la lista de congregaciones.",
+                    )
+                  : undefined
+              }
+            >
+              {congregaciones.length === 0 && congregacionId && (
+                <option value={congregacionId}>
+                  {user?.congregacion_nombre || congregacionId}
+                </option>
+              )}
+              {congregaciones.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.nombre}
+                  {c.numero_congregacion ? ` (${c.numero_congregacion})` : ""}
+                </option>
+              ))}
+            </CampoSelect>
+          </div>
         )}
       </div>
 

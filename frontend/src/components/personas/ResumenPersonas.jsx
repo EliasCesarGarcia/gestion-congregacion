@@ -47,7 +47,10 @@ function ResumenPersonas({ conteos, error, filtros, onFiltro }) {
         aria-label={t("per_cargando", "Cargando…")}
       >
         {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="h-20 rounded-2xl bg-jw-card border border-jw-border" />
+          <div
+            key={i}
+            className="h-20 rounded-2xl bg-jw-card border border-jw-border"
+          />
         ))}
       </div>
     );
@@ -86,6 +89,13 @@ function ResumenPersonas({ conteos, error, filtros, onFiltro }) {
           onClick={() => onFiltro({ estado: "BAJA", condicion: "" })}
         />
       </div>
+
+      {conteos.sin_condicion > 0 && (
+        <p className="text-xs text-jw-text-main opacity-70">
+          {t("per_sin_condicion", "Sin condición cargada")}:{" "}
+          {conteos.sin_condicion}
+        </p>
+      )}
 
       {situaciones.length > 0 && (
         <div className="flex flex-wrap gap-2">
