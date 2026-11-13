@@ -30,6 +30,7 @@ import ContactoPage from "./pages/ContactoPage"; // Ayuda y soporte instituciona
 import ConfiguracionPage from "./pages/ConfiguracionPage"; // Preferencias y accesibilidad (CEO 2026)
 import AdminModulosPage from "./pages/AdminModulosPage"; // Panel de superadmin: módulos
 import AdminEncargadosPage from "./pages/AdminEncargadosPage"; // Departamentos: encargados y auxiliares
+import PersonasPage from "./pages/PersonasPage"; // Módulo de personas (encargados generales y superadmin)
 import AdminMotivosPage from "./pages/AdminMotivosPage"; // Panel de superadmin: motivos de puestos
 import AdminCongregacionesPage from "./pages/AdminCongregacionesPage"; // Panel de superadmin: congregaciones
 
@@ -242,6 +243,22 @@ function App() {
                   />
                 </Helmet>
                 <AdminModulosPage />
+              </RutaProtegida>
+            }
+          />
+          {/* Módulo de personas (coordinador, secretario, servicio, superadmin) */}
+          <Route
+            path="/personas"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Personas | Gestión Local</title>
+                  <meta
+                    name="description"
+                    content="Gestión de las personas de la congregación."
+                  />
+                </Helmet>
+                <PersonasPage />
               </RutaProtegida>
             }
           />

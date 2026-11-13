@@ -32,6 +32,7 @@ import {
   UserCog,
   Tag,
   Building2,
+  Users,
 } from "lucide-react";
 
 function Navbar() {
@@ -74,6 +75,11 @@ function Navbar() {
     // Coordinador, secretario, servicio y superadmin (el backend igual valida cada ruta)
     ...(permisos.es_superadmin || permisos.es_encargado_general
       ? [
+          {
+            to: "/personas",
+            icon: <Users size={22} />,
+            label: t("nav_personas", "Personas"),
+          },
           {
             to: "/admin/encargados",
             icon: <UserCog size={22} />,
@@ -156,6 +162,8 @@ function Navbar() {
       return t("nav_config", "Configuración");
     if (location.pathname === "/admin/modulos")
       return t("nav_admin_modules", "Módulos del sistema");
+    if (location.pathname === "/personas") 
+      return t("nav_personas", "Personas");
     if (location.pathname === "/admin/encargados")
       return t("nav_admin_encargados", "Encargados de departamentos");
     if (location.pathname === "/admin/motivos")
