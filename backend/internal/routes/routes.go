@@ -85,6 +85,12 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("GET /api/admin/personas/motivos-baja", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListMotivosBajaAdminHandler(svc)))))
 	mux.Handle("POST /api/admin/personas/motivos-baja/crear", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CrearMotivoBajaHandler(svc)))))
 	mux.Handle("POST /api/admin/personas/motivos-baja/editar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EditarMotivoBajaHandler(svc)))))
+	// Catálogo único de motivos (2026-11-14): los encargados leen los activos de un uso; solo el superadmin gestiona.
+	mux.Handle("GET /api/personas/motivos", protegida(http.HandlerFunc(handlers.ListMotivosPersonasHandler(svc))))
+	mux.Handle("GET /api/admin/catalogo-motivos", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListCatalogoMotivosAdminHandler(svc)))))
+	mux.Handle("POST /api/admin/catalogo-motivos/crear", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CrearCatalogoMotivoHandler(svc)))))
+	mux.Handle("POST /api/admin/catalogo-motivos/editar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EditarCatalogoMotivoHandler(svc)))))
+	mux.Handle("POST /api/admin/catalogo-motivos/uso", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.UsoCatalogoMotivoHandler(svc)))))
 	// Lo propio de cada persona: solo su ficha y sus historiales.
 	mux.Handle("GET /api/me/ficha", protegida(http.HandlerFunc(handlers.MiFichaHandler(svc))))
 	mux.Handle("GET /api/me/historial", protegida(http.HandlerFunc(handlers.MiHistorialHandler(svc))))

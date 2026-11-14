@@ -483,6 +483,7 @@ func responderErrorModulos(w http.ResponseWriter, err error, accion, personaID s
 		errors.Is(err, service.ErrMotivoInvalido),
 		errors.Is(err, service.ErrMotivoDatos),
 		errors.Is(err, service.ErrMotivoTipoInvalido),
+		errors.Is(err, service.ErrMotivoUsoInvalido),
 		errors.Is(err, service.ErrMotivoSinCambios),
 		errors.Is(err, service.ErrCongregacionDatos),
 		errors.Is(err, service.ErrCongregacionIDInvalido),
