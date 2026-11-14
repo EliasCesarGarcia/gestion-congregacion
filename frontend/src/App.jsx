@@ -31,6 +31,7 @@ import ConfiguracionPage from "./pages/ConfiguracionPage"; // Preferencias y acc
 import AdminModulosPage from "./pages/AdminModulosPage"; // Panel de superadmin: módulos
 import AdminEncargadosPage from "./pages/AdminEncargadosPage"; // Departamentos: encargados y auxiliares
 import PersonasPage from "./pages/PersonasPage"; // Módulo de personas (encargados generales y superadmin)
+import FichaPersonaPage from "./pages/FichaPersonaPage"; // Ficha de una persona
 import AdminMotivosPage from "./pages/AdminMotivosPage"; // Panel de superadmin: motivos de puestos
 import AdminCongregacionesPage from "./pages/AdminCongregacionesPage"; // Panel de superadmin: congregaciones
 
@@ -259,6 +260,23 @@ function App() {
                   />
                 </Helmet>
                 <PersonasPage />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Ficha de una persona (coordinador, secretario, servicio, superadmin) */}
+          <Route
+            path="/personas/:id"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Ficha de persona | Gestión Local</title>
+                  <meta
+                    name="description"
+                    content="Datos e historial de una persona de la congregación."
+                  />
+                </Helmet>
+                <FichaPersonaPage />
               </RutaProtegida>
             }
           />

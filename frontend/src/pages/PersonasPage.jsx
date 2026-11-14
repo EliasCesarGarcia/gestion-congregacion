@@ -18,7 +18,7 @@
  */
 
 import { useContext, useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import { Loader2, Search, SlidersHorizontal } from "lucide-react";
@@ -207,17 +207,24 @@ function PersonasPage() {
 
   const filtrosActivos = Object.values(filtros).filter(Boolean).length;
   const hayAlgo = filtrosActivos > 0 || busqueda.trim() !== "";
-  const totalPaginas = Math.max(1, Math.ceil(resultado.total / resultado.limite));
+  const totalPaginas = Math.max(
+    1,
+    Math.ceil(resultado.total / resultado.limite),
+  );
 
   const selectSituacion = (campo, etiqueta) => (
     <CampoSelect
       id={`per-sit-${campo}`}
       label={etiqueta}
       value={filtros[`situacion_${campo}`]}
-      onChange={(e) => cambiarFiltro({ [`situacion_${campo}`]: e.target.value })}
+      onChange={(e) =>
+        cambiarFiltro({ [`situacion_${campo}`]: e.target.value })
+      }
     >
       <option value="">{t("per_todas", "Todas")}</option>
-      {campo > 1 && <option value="sin">{t("per_sin_situacion", "Sin situación")}</option>}
+      {campo > 1 && (
+        <option value="sin">{t("per_sin_situacion", "Sin situación")}</option>
+      )}
       {valoresDe(campo).map((v) => (
         <option key={v} value={v}>
           {v}
@@ -422,9 +429,12 @@ function PersonasPage() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-medium text-jw-text-main truncate">
+                    <Link
+                      to={`/personas/${p.id}`}
+                      className="block text-sm font-medium text-jw-text-main truncate hover:underline"
+                    >
                       {p.apellido} {p.nombre}
-                    </p>
+                    </Link>
                     <div className="flex flex-wrap gap-1 mt-1">
                       {p.situacion_1 && <Etiqueta>{p.situacion_1}</Etiqueta>}
                       {p.situacion_2 && <Etiqueta>{p.situacion_2}</Etiqueta>}
@@ -433,7 +443,9 @@ function PersonasPage() {
                         <Etiqueta tono="ok">{t(rol[0], rol[1])}</Etiqueta>
                       )}
                       {deBaja && (
-                        <Etiqueta tono="aviso">{t("per_baja", "Baja")}</Etiqueta>
+                        <Etiqueta tono="aviso">
+                          {t("per_baja", "Baja")}
+                        </Etiqueta>
                       )}
                       {!deBaja && p.condicion === "I" && (
                         <Etiqueta tono="aviso">
