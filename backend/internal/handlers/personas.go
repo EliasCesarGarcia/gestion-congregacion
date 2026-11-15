@@ -36,9 +36,15 @@ func responderErrorPersonas(w http.ResponseWriter, err error, accion, personaID 
 		errors.Is(err, service.ErrPersonaDatos):
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
+	case errors.Is(err, service.ErrGrupoNoExiste):
+		http.Error(w, err.Error(), http.StatusNotFound)
+		return
 	case errors.Is(err, service.ErrPersonaSinCambio),
 		errors.Is(err, service.ErrPersonaRolOcupado),
-		errors.Is(err, service.ErrPersonaTitularRol):
+		errors.Is(err, service.ErrPersonaTitularRol),
+		errors.Is(err, service.ErrGrupoNumeroExiste),
+		errors.Is(err, service.ErrGrupoConGente),
+		errors.Is(err, service.ErrGrupoCerrado):
 		http.Error(w, err.Error(), http.StatusConflict)
 		return
 	}

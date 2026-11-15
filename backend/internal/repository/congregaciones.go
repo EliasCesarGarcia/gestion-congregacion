@@ -266,6 +266,7 @@ func (r *Repository) EliminarCongregacion(id string, actorID int) error {
 			WHERE c.id = ?::uuid
 			  AND c.activa = false
 			  AND NOT EXISTS (SELECT 1 FROM core_personas            WHERE congregacion_id = c.id)
+			  AND NOT EXISTS (SELECT 1 FROM core_grupos              WHERE congregacion_id = c.id)
 			  AND NOT EXISTS (SELECT 1 FROM core_usuarios            WHERE congregacion_id = c.id)
 			  AND NOT EXISTS (SELECT 1 FROM core_permisos_modulos    WHERE congregacion_id = c.id)
 			  AND NOT EXISTS (SELECT 1 FROM core_anuncios            WHERE congregacion_id = c.id)

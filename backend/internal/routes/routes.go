@@ -87,6 +87,11 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("POST /api/admin/catalogo-motivos/crear", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CrearCatalogoMotivoHandler(svc)))))
 	mux.Handle("POST /api/admin/catalogo-motivos/editar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EditarCatalogoMotivoHandler(svc)))))
 	mux.Handle("POST /api/admin/catalogo-motivos/uso", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.UsoCatalogoMotivoHandler(svc)))))
+	// Grupos de servicio (2026-11-15): encargados generales y superadmin, solo en su congregación.
+	mux.Handle("GET /api/personas/grupos", protegida(http.HandlerFunc(handlers.ListGruposHandler(svc))))
+	mux.Handle("POST /api/personas/grupos/crear", protegida(http.HandlerFunc(handlers.CrearGrupoHandler(svc))))
+	mux.Handle("POST /api/personas/grupos/editar", protegida(http.HandlerFunc(handlers.EditarGrupoHandler(svc))))
+	mux.Handle("POST /api/personas/grupos/cerrar", protegida(http.HandlerFunc(handlers.CerrarGrupoHandler(svc))))
 	// Lo propio de cada persona: solo su ficha y sus historiales.
 	mux.Handle("GET /api/me/ficha", protegida(http.HandlerFunc(handlers.MiFichaHandler(svc))))
 	mux.Handle("GET /api/me/historial", protegida(http.HandlerFunc(handlers.MiHistorialHandler(svc))))
