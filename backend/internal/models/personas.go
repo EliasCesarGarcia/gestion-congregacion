@@ -117,6 +117,7 @@ type HistorialEstadoPersona struct {
 	FechaBaja  *string `json:"fecha_baja" gorm:"column:fecha_baja"`
 	Vigente    bool    `json:"vigente" gorm:"column:vigente"`
 	MotivoBaja string  `json:"motivo_baja" gorm:"column:motivo_baja"`
+	MotivoAlta string  `json:"motivo_alta" gorm:"column:motivo_alta"`
 	Detalles   string  `json:"detalles" gorm:"column:detalles"`
 	AltaPor    string  `json:"alta_por" gorm:"column:alta_por"`
 	BajaPor    string  `json:"baja_por" gorm:"column:baja_por"`

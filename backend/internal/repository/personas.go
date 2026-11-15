@@ -255,11 +255,13 @@ func (r *Repository) ListHistorialEstadoPersona(id int) ([]models.HistorialEstad
 		       to_char(h.fecha_baja, 'YYYY-MM-DD') AS fecha_baja,
 		       h.vigente AS vigente,
 		       COALESCE(h.motivo_baja, m.nombre, '') AS motivo_baja,
+			   COALESCE(h.motivo_alta, ma.nombre, '') AS motivo_alta,
 		       COALESCE(h.detalles, '') AS detalles,
 		       COALESCE(ap.apellido || ' ' || ap.nombre, '') AS alta_por,
 		       COALESCE(bp.apellido || ' ' || bp.nombre, '') AS baja_por
 		FROM core_personas_estado_historial h
-		LEFT JOIN core_personas_motivos_baja m ON m.id = h.motivo_baja_id
+		LEFT JOIN core_motivos m ON m.id = h.motivo_baja_id
+		LEFT JOIN core_motivos ma ON ma.id = h.motivo_alta_id
 		LEFT JOIN core_personas ap ON ap.id = h.alta_por
 		LEFT JOIN core_personas bp ON bp.id = h.baja_por
 		WHERE h.persona_id = ?::integer

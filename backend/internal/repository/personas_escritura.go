@@ -83,9 +83,11 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 		id := ids[0]
 
 		if err := tx.Exec(`
-			INSERT INTO core_personas_estado_historial (persona_id, fecha_alta, vigente, alta_por)
-			VALUES (?::integer, NULLIF(?::text,'')::date, true, NULLIF(?::text,'')::integer)`,
-			id, n.FechaAlta, n.ActorID).Error; err != nil {
+			INSERT INTO core_personas_estado_historial
+				(persona_id, fecha_alta, vigente, alta_por, motivo_alta_id, motivo_alta)
+			VALUES (?::integer, NULLIF(?::text,'')::date, true, NULLIF(?::text,'')::integer, ?::integer,
+			        (SELECT m.nombre FROM core_motivos m WHERE m.id = ?::integer))`,
+			id, n.FechaAlta, n.ActorID, motivoParam(n.MotivoAltaID), motivoParam(n.MotivoAltaID)).Error; err != nil {
 			return err
 		}
 

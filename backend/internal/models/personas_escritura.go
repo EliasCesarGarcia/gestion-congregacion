@@ -37,4 +37,5 @@ type NuevaPersona struct {
 	Situacion2     string
 	Situacion3     string
 	ActorID        string
+	MotivoAltaID   *int64 // motivo de alta del catálogo (nil = sin motivo)
 }

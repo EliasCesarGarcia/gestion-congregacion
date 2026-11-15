@@ -81,10 +81,6 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	// Bajas, reactivación y motivos de baja (2026-11-06).
 	mux.Handle("POST /api/personas/baja", protegida(http.HandlerFunc(handlers.DarDeBajaPersonaHandler(svc))))
 	mux.Handle("POST /api/personas/reactivar", protegida(http.HandlerFunc(handlers.ReactivarPersonaHandler(svc))))
-	mux.Handle("GET /api/personas/motivos-baja", protegida(http.HandlerFunc(handlers.ListMotivosBajaHandler(svc))))
-	mux.Handle("GET /api/admin/personas/motivos-baja", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListMotivosBajaAdminHandler(svc)))))
-	mux.Handle("POST /api/admin/personas/motivos-baja/crear", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CrearMotivoBajaHandler(svc)))))
-	mux.Handle("POST /api/admin/personas/motivos-baja/editar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.EditarMotivoBajaHandler(svc)))))
 	// Catálogo único de motivos (2026-11-14): los encargados leen los activos de un uso; solo el superadmin gestiona.
 	mux.Handle("GET /api/personas/motivos", protegida(http.HandlerFunc(handlers.ListMotivosPersonasHandler(svc))))
 	mux.Handle("GET /api/admin/catalogo-motivos", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListCatalogoMotivosAdminHandler(svc)))))

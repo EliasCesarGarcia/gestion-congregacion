@@ -71,6 +71,7 @@ type EntradaPersona struct {
 	ProvinciaEstado string `json:"provincia_estado"`
 	Ciudad          string `json:"ciudad"`
 	Partido         string `json:"partido"`
+	MotivoAltaID    int64  `json:"motivo_alta_id"`
 }
 
 func errDatosPersona(format string, a ...interface{}) error {
@@ -307,6 +308,10 @@ func (s *Service) CrearPersona(a *models.Actor, esSuper bool, in EntradaPersona)
 	if err != nil {
 		return 0, err
 	}
+	motivo, err := s.validarMotivoDeUso(in.MotivoAltaID, "personas.alta")
+	if err != nil {
+		return 0, err
+	}
 
 	id, err := s.repo.CrearPersona(models.NuevaPersona{
 		DatosPersona:   d,
@@ -315,6 +320,7 @@ func (s *Service) CrearPersona(a *models.Actor, esSuper bool, in EntradaPersona)
 		Situacion2:     s2,
 		Situacion3:     s3,
 		ActorID:        a.PersonaID,
+		MotivoAltaID:   motivo,
 	})
 	if err != nil {
 		return 0, err
