@@ -59,7 +59,7 @@ type EntradaPersona struct {
 	Nombre          string `json:"nombre"`
 	Contacto        string `json:"contacto"`
 	Detalles        string `json:"detalles"`
-	Grupo           *int   `json:"grupo"`
+	GrupoID         *int   `json:"grupo_id"` // solo al crear (0 o ausente = sin grupo); al editar se ignora
 	Condicion       string `json:"condicion"`
 	FechaAlta       string `json:"fecha_alta"`
 	Situacion1      string `json:"situacion_1"`
@@ -211,14 +211,6 @@ func prepararDatosPersona(in EntradaPersona) (models.DatosPersona, error) {
 		return d, err
 	}
 
-	if in.Grupo != nil {
-		if *in.Grupo < 1 || *in.Grupo > personasMaxGrupo {
-			return d, errDatosPersona("el grupo debe ser un número de 1 a %d", personasMaxGrupo)
-		}
-		g := *in.Grupo
-		d.Grupo = &g
-	}
-
 	d.Condicion = strings.ToUpper(strings.TrimSpace(in.Condicion))
 	if d.Condicion != "" && d.Condicion != "A" && d.Condicion != "I" {
 		return d, errDatosPersona("la condición debe ser A (activo) o I (inactivo)")
@@ -313,6 +305,15 @@ func (s *Service) CrearPersona(a *models.Actor, esSuper bool, in EntradaPersona)
 		return 0, err
 	}
 
+	var grupoID *int
+	if in.GrupoID != nil && *in.GrupoID != 0 {
+		if *in.GrupoID < 0 {
+			return 0, errDatosPersona("el grupo no es válido")
+		}
+		g := *in.GrupoID
+		grupoID = &g
+	}
+
 	id, err := s.repo.CrearPersona(models.NuevaPersona{
 		DatosPersona:   d,
 		CongregacionID: congID,
@@ -321,9 +322,10 @@ func (s *Service) CrearPersona(a *models.Actor, esSuper bool, in EntradaPersona)
 		Situacion3:     s3,
 		ActorID:        a.PersonaID,
 		MotivoAltaID:   motivo,
+		GrupoID:        grupoID,
 	})
 	if err != nil {
-		return 0, err
+		return 0, traducirErrorMovimiento(err)
 	}
 	if id == 0 {
 		return 0, ErrCongregacionNoExiste

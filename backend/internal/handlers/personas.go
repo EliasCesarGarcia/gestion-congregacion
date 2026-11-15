@@ -44,6 +44,7 @@ func responderErrorPersonas(w http.ResponseWriter, err error, accion, personaID 
 		errors.Is(err, service.ErrPersonaTitularRol),
 		errors.Is(err, service.ErrGrupoNumeroExiste),
 		errors.Is(err, service.ErrGrupoConGente),
+		errors.Is(err, service.ErrPersonaEncargadoGrupo),
 		errors.Is(err, service.ErrGrupoCerrado):
 		http.Error(w, err.Error(), http.StatusConflict)
 		return

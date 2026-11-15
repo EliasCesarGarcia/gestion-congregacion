@@ -62,9 +62,9 @@ func filtroPersonasSQL(congregacionID string, todas bool, f models.FiltroPersona
 		args = append(args, f.Situacion3)
 	}
 	if f.Grupo == "sin" {
-		sb.WriteString(" AND p.grupo IS NULL")
+		sb.WriteString(" AND p.grupo_id IS NULL")
 	} else if f.Grupo != "" {
-		sb.WriteString(" AND p.grupo = ?::integer")
+		sb.WriteString(" AND EXISTS (SELECT 1 FROM core_grupos fg WHERE fg.id = p.grupo_id AND fg.numero = ?::integer)")
 		args = append(args, f.Grupo)
 	}
 	if f.RolApp == "publicador" {
@@ -87,7 +87,8 @@ SELECT p.id AS id,
        p.nombre AS nombre,
        p.estado AS estado,
        COALESCE(p.condicion::text, '') AS condicion,
-       p.grupo AS grupo,
+       (SELECT g.numero FROM core_grupos g WHERE g.id = p.grupo_id) AS grupo,
+       p.grupo_id AS grupo_id,
        p.situacion_1 AS situacion_1,
        COALESCE(p.situacion_2, '') AS situacion_2,
        COALESCE(p.situacion_3, '') AS situacion_3,
@@ -156,7 +157,7 @@ func (r *Repository) ConteosPersonas(congregacionID string, todas bool) (*models
 
 	c.Grupos = []models.ConteoGrupo{}
 	if err := r.db.WithContext(ctx).Raw(`
-		SELECT p.grupo AS grupo,
+		SELECT g.numero AS grupo,
 		       count(*) AS total,
 		       count(*) FILTER (WHERE p.condicion = 'A') AS activos,
 		       count(*) FILTER (WHERE p.condicion = 'I') AS inactivos,
@@ -165,9 +166,10 @@ func (r *Repository) ConteosPersonas(congregacionID string, todas bool) (*models
 		       COALESCE(string_agg(p.apellido || ' ' || p.nombre, ', ' ORDER BY p.apellido, p.nombre)
 		                FILTER (WHERE p.situacion_3 = 'Auxiliar de Grupo'), '') AS auxiliar
 		FROM core_personas p
+		LEFT JOIN core_grupos g ON g.id = p.grupo_id
 		WHERE p.estado = 'ALTA' AND `+alcancePersonasSQL+`
-		GROUP BY p.grupo
-		ORDER BY p.grupo ASC NULLS LAST`, todas, congregacionID).Scan(&c.Grupos).Error; err != nil {
+		GROUP BY g.numero
+		ORDER BY g.numero ASC NULLS LAST`, todas, congregacionID).Scan(&c.Grupos).Error; err != nil {
 		return nil, err
 	}
 	c.Roles = []models.ConteoRol{}
@@ -213,7 +215,8 @@ func (r *Repository) GetFichaPersona(id int) (*models.PersonaFicha, error) {
 		       p.nombre AS nombre,
 		       p.estado AS estado,
 		       COALESCE(p.condicion::text, '') AS condicion,
-		       p.grupo AS grupo,
+		       (SELECT g.numero FROM core_grupos g WHERE g.id = p.grupo_id) AS grupo,
+               p.grupo_id AS grupo_id,
 		       p.situacion_1 AS situacion_1,
 		       COALESCE(p.situacion_2, '') AS situacion_2,
 		       COALESCE(p.situacion_3, '') AS situacion_3,

@@ -5,12 +5,15 @@
  * datos y cambiar situaciones. Cada operación escribe la persona y su
  * historial en UNA transacción: o quedan las dos cosas o ninguna.
  * Nunca se inventan fechas: una fecha desconocida se guarda como NULL.
+ * El grupo ya NO se edita acá: se elige al crear (grupo_id) y después solo
+ * cambia con MoverPersonaDeGrupo, para que el historial siempre quede registrado.
  */
 
 package repository
 
 import (
 	"errors"
+	"strings"
 
 	"gestion-congregacion/backend/internal/models"
 
@@ -23,14 +26,6 @@ var (
 	// ErrFechaAnteriorInicio: el cambio de situación sería anterior a su inicio.
 	ErrFechaAnteriorInicio = errors.New("la fecha es anterior al inicio de la situación vigente")
 )
-
-// paramGrupoPersona convierte el grupo opcional en un valor para la consulta (nil = NULL).
-func paramGrupoPersona(g *int) interface{} {
-	if g == nil {
-		return nil
-	}
-	return *g
-}
 
 // columnaSituacionPersona: nombre de columna según el campo (1, 2 o 3).
 // Nunca se arma con texto que venga de afuera.
@@ -46,23 +41,58 @@ func columnaSituacionPersona(campo int) (string, bool) {
 	return "", false
 }
 
-// CrearPersona inserta la persona en ALTA, su fila vigente de estado y una fila
-// vigente por cada situación, todo en una transacción. Devuelve el id nuevo, o
-// 0 (sin error) si la congregación no existe. Las situaciones empiezan en la
-// fecha de alta.
+// CrearPersona inserta la persona en ALTA, su fila vigente de estado (con el
+// motivo de alta si se eligió uno) y una fila vigente por cada situación,
+// todo en una transacción. Si n.GrupoID viene, la persona entra a ese grupo
+// (que debe estar activo y ser de su congregación) con fecha de ingreso igual
+// a su fecha de alta. Devuelve el id nuevo, o 0 (sin error) si la congregación
+// no existe. Las situaciones empiezan en la fecha de alta.
 func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 	nuevoID := 0
 	err := r.db.Transaction(func(tx *gorm.DB) error {
+		// Grupo elegido: se bloquea y se comprueba antes de insertar a la persona.
+		numeroGrupo := 0
+		var paramNumero, paramGrupo interface{}
+		if n.GrupoID != nil {
+			type destino struct {
+				CongregacionID string  `gorm:"column:congregacion_id"`
+				Numero         int     `gorm:"column:numero"`
+				Activo         bool    `gorm:"column:activo"`
+				FechaInicio    *string `gorm:"column:fecha_inicio"`
+			}
+			var ds []destino
+			if err := tx.Raw(`
+				SELECT congregacion_id::text AS congregacion_id,
+				       numero AS numero,
+				       activo AS activo,
+				       to_char(fecha_inicio, 'YYYY-MM-DD') AS fecha_inicio
+				FROM core_grupos WHERE id = ?::integer FOR UPDATE`, *n.GrupoID).Scan(&ds).Error; err != nil {
+				return err
+			}
+			if len(ds) == 0 || !strings.EqualFold(ds[0].CongregacionID, n.CongregacionID) {
+				return ErrGrupoInexistente
+			}
+			if !ds[0].Activo {
+				return ErrGrupoCerrado
+			}
+			if ds[0].FechaInicio != nil && n.FechaAlta < *ds[0].FechaInicio {
+				return ErrFechaAnteriorIngresoGrupo
+			}
+			numeroGrupo = ds[0].Numero
+			paramNumero = numeroGrupo
+			paramGrupo = *n.GrupoID
+		}
+
 		var ids []int
 		if err := tx.Raw(`
 			INSERT INTO core_personas
 				(congregacion_id, apellido, nombre, apellido_nombre, estado,
-				 situacion_1, situacion_2, situacion_3, condicion, grupo, fecha_alta,
+				 situacion_1, situacion_2, situacion_3, condicion, grupo, grupo_id, fecha_alta,
 				 contacto, detalles, direccion, codigo_postal, pais, provincia_estado,
 				 ciudad, partido)
 			SELECT c.id, ?::text, ?::text, ?::text, 'ALTA',
 			       ?::text, NULLIF(?::text,''), NULLIF(?::text,''),
-			       NULLIF(?::text,'')::char(1), ?::integer, NULLIF(?::text,'')::date,
+			       NULLIF(?::text,'')::char(1), ?::integer, ?::integer, NULLIF(?::text,'')::date,
 			       NULLIF(?::text,''), NULLIF(?::text,''), NULLIF(?::text,''),
 			       NULLIF(?::text,''), NULLIF(?::text,''), NULLIF(?::text,''),
 			       NULLIF(?::text,''), NULLIF(?::text,'')
@@ -71,7 +101,7 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 			RETURNING id`,
 			n.Apellido, n.Nombre, n.ApellidoNombre,
 			n.Situacion1, n.Situacion2, n.Situacion3,
-			n.Condicion, paramGrupoPersona(n.Grupo), n.FechaAlta,
+			n.Condicion, paramNumero, paramGrupo, n.FechaAlta,
 			n.Contacto, n.Detalles, n.Direccion, n.CodigoPostal, n.Pais, n.ProvinciaEstado,
 			n.Ciudad, n.Partido,
 			n.CongregacionID).Scan(&ids).Error; err != nil {
@@ -108,6 +138,17 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 				return err
 			}
 		}
+
+		if n.GrupoID != nil {
+			if err := tx.Exec(`
+				INSERT INTO core_grupos_movimientos
+					(persona_id, grupo_id, numero_grupo, fecha_inicio, vigente, asignado_por)
+				VALUES (?::integer, ?::integer, ?::integer, NULLIF(?::text,'')::date, true,
+				        NULLIF(?::text,'')::integer)`,
+				id, *n.GrupoID, numeroGrupo, n.FechaAlta, n.ActorID).Error; err != nil {
+				return err
+			}
+		}
 		nuevoID = id
 		return nil
 	})
@@ -118,7 +159,8 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 }
 
 // EditarPersona reemplaza los datos editables (apellido, nombre, contacto,
-// grupo, condición, detalles y dirección). Los textos vacíos quedan en NULL.
+// condición, detalles y dirección). Los textos vacíos quedan en NULL. El grupo
+// NO se toca: cambia solo con MoverPersonaDeGrupo.
 // La fecha de alta ya NO se escribe directo: si cambió, se modifica la última
 // fila de estado de la persona con la misma lógica de la ruta de fechas del
 // historial (superposición, situaciones, roles y puestos que quedarían fuera),
@@ -176,7 +218,6 @@ func (r *Repository) EditarPersona(id int, d models.DatosPersona, actorID string
 				nombre           = ?::text,
 				apellido_nombre  = ?::text,
 				contacto         = NULLIF(?::text,''),
-				grupo            = ?::integer,
 				condicion        = NULLIF(?::text,'')::char(1),
 				detalles         = NULLIF(?::text,''),
 				direccion        = NULLIF(?::text,''),
@@ -186,7 +227,7 @@ func (r *Repository) EditarPersona(id int, d models.DatosPersona, actorID string
 				ciudad           = NULLIF(?::text,''),
 				partido          = NULLIF(?::text,'')
 			WHERE id = ?::integer`,
-			d.Apellido, d.Nombre, d.ApellidoNombre, d.Contacto, paramGrupoPersona(d.Grupo),
+			d.Apellido, d.Nombre, d.ApellidoNombre, d.Contacto,
 			d.Condicion, d.Detalles, d.Direccion, d.CodigoPostal, d.Pais, d.ProvinciaEstado,
 			d.Ciudad, d.Partido, id)
 		if res.Error != nil {

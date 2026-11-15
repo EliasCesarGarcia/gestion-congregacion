@@ -33,6 +33,7 @@ type PersonaFila struct {
 	Estado         string `json:"estado" gorm:"column:estado"`
 	Condicion      string `json:"condicion" gorm:"column:condicion"`
 	Grupo          *int   `json:"grupo" gorm:"column:grupo"`
+	GrupoID        *int   `json:"grupo_id" gorm:"column:grupo_id"`
 	Situacion1     string `json:"situacion_1" gorm:"column:situacion_1"`
 	Situacion2     string `json:"situacion_2" gorm:"column:situacion_2"`
 	Situacion3     string `json:"situacion_3" gorm:"column:situacion_3"`
@@ -59,6 +60,7 @@ type PersonaFicha struct {
 	Estado          string  `json:"estado" gorm:"column:estado"`
 	Condicion       string  `json:"condicion" gorm:"column:condicion"`
 	Grupo           *int    `json:"grupo" gorm:"column:grupo"`
+	GrupoID         *int    `json:"grupo_id" gorm:"column:grupo_id"`
 	Situacion1      string  `json:"situacion_1" gorm:"column:situacion_1"`
 	Situacion2      string  `json:"situacion_2" gorm:"column:situacion_2"`
 	Situacion3      string  `json:"situacion_3" gorm:"column:situacion_3"`
