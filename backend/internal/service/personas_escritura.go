@@ -300,6 +300,9 @@ func (s *Service) CrearPersona(a *models.Actor, esSuper bool, in EntradaPersona)
 	if err != nil {
 		return 0, err
 	}
+	if s3 != "" {
+		return 0, errDatosPersona("la situación 3 (superintendente o auxiliar de grupo) se asigna desde el grupo, después de crear a la persona")
+	}
 	motivo, err := s.validarMotivoDeUso(in.MotivoAltaID, "personas.alta")
 	if err != nil {
 		return 0, err
@@ -368,18 +371,21 @@ func (s *Service) EditarPersona(a *models.Actor, esSuper bool, personaID int, in
 	return nil
 }
 
-// CambiarSituacionPersona: campo 1, 2 o 3. valor "" (o "sin") quita la situación
+// CambiarSituacionPersona: valor "" (o "sin") quita la situación
 // 2 o 3; la 1 solo se reemplaza. Cierra la vigente con la fecha y abre la nueva.
 // La persona debe estar en ALTA.
 func (s *Service) CambiarSituacionPersona(a *models.Actor, esSuper bool, personaID, campo int, valor, fecha string) error {
 	var validas []string
+	if campo == 3 {
+		return errDatosPersona("la situación 3 (superintendente o auxiliar de grupo) se cambia desde el grupo: use la ruta de encargados del grupo")
+	}
 	switch campo {
 	case 1:
 		validas = situacionesLista1
 	case 2:
 		validas = situacionesLista2
-	case 3:
-		validas = situacionesLista3
+	//case 3:
+		//validas = situacionesLista3
 	default:
 		return errDatosPersona("el campo debe ser 1, 2 o 3")
 	}
@@ -411,7 +417,15 @@ func (s *Service) CambiarSituacionPersona(a *models.Actor, esSuper bool, persona
 	if campo == 2 && nuevo != "Anciano" && ficha.RolApp != "publicador" {
 		return errDatosPersona("la persona es titular de un rol de la congregación: primero hay que reemplazarla en ese rol")
 	}
-
+	if campo == 2 && nuevo == "" {
+		existe, excepcion, err := s.repo.EncargadoDePersona(personaID)
+		if err != nil {
+			return err
+		}
+		if existe && !excepcion {
+			return ErrPersonaEncargadoGrupo
+		}
+	}
 	cambio, err := s.repo.CambiarSituacionPersona(personaID, campo, nuevo, f, a.PersonaID)
 	if err != nil {
 		switch {
