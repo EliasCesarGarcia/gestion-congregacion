@@ -13,10 +13,12 @@
  *  - No se puede dar de baja a un titular de rol (coordinador, secretario o
  *    servicio): primero se lo reemplaza con la rotación de roles.
  *  - Nadie se da de baja a sí mismo.
- *  - La baja quita los puestos y cierra las situaciones, todo con la fecha de
- *    baja elegida (no se puede dar de baja antes de que empiece un puesto
- *    vigente); reactivar deja a la persona como Publicador y los cargos se
- *    reasignan a mano.
+ *  - La baja quita los puestos, cierra las situaciones y deja a la persona sin
+ *    grupo (cerrando su cargo de superintendente o auxiliar, que queda
+ *    vacante), todo con la fecha de baja elegida (no se puede dar de baja antes
+ *    de que empiece un puesto, la pertenencia al grupo o el cargo vigentes);
+ *    reactivar deja a la persona como Publicador y sin grupo, y los puestos y
+ *    el grupo se reasignan a mano.
  *  - El catálogo de motivos lo gestiona solo el superadmin (motivos_catalogo.go).
  */
 
@@ -49,6 +51,12 @@ func traducirErrorBaja(err error) error {
 		return errDatosPersona("la fecha es anterior al inicio de un puesto vigente de la persona: no se puede cerrar antes de que empiece")
 	case errors.Is(err, repository.ErrFechaAnteriorBaja):
 		return errDatosPersona("la fecha es anterior a la última baja de la persona")
+	case errors.Is(err, repository.ErrFechaAnteriorMovimiento):
+		return errDatosPersona("la fecha es anterior al inicio de la pertenencia de la persona a su grupo: no se puede cerrar antes de que empiece")
+	case errors.Is(err, repository.ErrFechaAnteriorEncargado):
+		return errDatosPersona("la fecha es anterior al inicio de su cargo de superintendente o auxiliar del grupo: no se puede cerrar antes de que empiece")
+	case errors.Is(err, repository.ErrGrupoInexistente):
+		return ErrGrupoNoExiste
 	}
 	return err
 }

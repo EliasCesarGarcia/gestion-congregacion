@@ -43,9 +43,11 @@ func (e *ErrTitularRol) Error() string {
 //  3. cierra su fila vigente de estado con fecha, motivo (id y copia del
 //     texto), detalles y quién la dio de baja;
 //  4. cierra sus situaciones vigentes (1, 2 y 3) con la fecha de baja;
-//  5. le quita todos sus puestos (permiso + historial con el motivo "Baja de la
+//  5. cierra su pertenencia vigente al grupo y, si era superintendente o
+//     auxiliar, su cargo (que queda vacante), con la misma fecha;
+//  6. le quita todos sus puestos (permiso + historial con el motivo "Baja de la
 //     persona"), cerrándolos con la fecha de baja elegida (fechaHora);
-//  6. deja la persona en BAJA, sin situación 2 ni 3 y con situación 1 Publicador.
+//  7. deja la persona en BAJA, sin grupo, sin situación 2 ni 3 y con situación 1 Publicador.
 //
 // fecha va como AAAA-MM-DD, ya validada por el servicio. fechaHora es la misma
 // fecha para las columnas con hora (puestos): nil = ahora (now()); si es una
@@ -109,6 +111,53 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, fechaHora *ti
 			return ErrFechaAnteriorPuesto
 		}
 
+		// Grupo y cargo de encargado vigentes (si los hay): la fecha no puede ser
+		// anterior a su inicio (las fechas AAAA-MM-DD se comparan como texto).
+		type periodoGrupo struct {
+			ID          int64   `gorm:"column:id"`
+			GrupoID     int     `gorm:"column:grupo_id"`
+			FechaInicio *string `gorm:"column:fecha_inicio"`
+		}
+		var movs []periodoGrupo
+		if err := tx.Raw(`
+			SELECT id AS id, grupo_id AS grupo_id, to_char(fecha_inicio, 'YYYY-MM-DD') AS fecha_inicio
+			FROM core_grupos_movimientos
+			WHERE persona_id = ?::integer AND vigente
+			LIMIT 1`, personaID).Scan(&movs).Error; err != nil {
+			return err
+		}
+		if len(movs) > 0 && movs[0].FechaInicio != nil && fecha < *movs[0].FechaInicio {
+			return ErrFechaAnteriorMovimiento
+		}
+		var encs []periodoGrupo
+		if err := tx.Raw(`
+			SELECT id AS id, grupo_id AS grupo_id, to_char(fecha_inicio, 'YYYY-MM-DD') AS fecha_inicio
+			FROM core_grupos_encargados_historial
+			WHERE persona_id = ?::integer AND vigente
+			LIMIT 1`, personaID).Scan(&encs).Error; err != nil {
+			return err
+		}
+		if len(encs) > 0 && encs[0].FechaInicio != nil && fecha < *encs[0].FechaInicio {
+			return ErrFechaAnteriorEncargado
+		}
+
+		// Bloqueo de los grupos involucrados (después de congregación y persona;
+		// si fueran dos, de menor a mayor id).
+		gruposABloquear := []int{}
+		if len(movs) > 0 {
+			gruposABloquear = append(gruposABloquear, movs[0].GrupoID)
+		}
+		if len(encs) > 0 && (len(movs) == 0 || encs[0].GrupoID != movs[0].GrupoID) {
+			gruposABloquear = append(gruposABloquear, encs[0].GrupoID)
+		}
+		if len(gruposABloquear) == 2 && gruposABloquear[0] > gruposABloquear[1] {
+			gruposABloquear[0], gruposABloquear[1] = gruposABloquear[1], gruposABloquear[0]
+		}
+		for _, g := range gruposABloquear {
+			if _, err := bloquearGrupo(tx, g); err != nil {
+				return err
+			}
+		}
 		res := tx.Exec(`
 			UPDATE core_personas_estado_historial
 			SET vigente = false,
@@ -145,6 +194,29 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, fechaHora *ti
 			return err
 		}
 
+		if len(movs) > 0 {
+			if err := tx.Exec(`
+				UPDATE core_grupos_movimientos
+				SET vigente = false,
+				    fecha_fin = ?::date,
+				    motivo_salida = 'Baja de la persona',
+				    quitado_por = NULLIF(?::text, '')::integer
+				WHERE id = ?::bigint`, fecha, actorID, movs[0].ID).Error; err != nil {
+				return err
+			}
+		}
+
+		if len(encs) > 0 {
+			if err := tx.Exec(`
+				UPDATE core_grupos_encargados_historial
+				SET vigente = false,
+				    fecha_fin = ?::date,
+				    quitado_por = NULLIF(?::text, '')::integer
+				WHERE id = ?::bigint`, fecha, actorID, encs[0].ID).Error; err != nil {
+				return err
+			}
+		}
+
 		if err := tx.Exec("DELETE FROM core_permisos_modulos WHERE persona_id::text = ?::text", idTxt).Error; err != nil {
 			return err
 		}
@@ -158,10 +230,12 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, fechaHora *ti
 			return err
 		}
 
+		// grupo (la columna vieja) se mantiene en paralelo hasta el A8.
 		return tx.Exec(`
 			UPDATE core_personas
 			SET estado = 'BAJA', fecha_baja = ?::date,
-			    situacion_1 = 'Publicador', situacion_2 = NULL, situacion_3 = NULL
+			    situacion_1 = 'Publicador', situacion_2 = NULL, situacion_3 = NULL,
+			    grupo_id = NULL, grupo = NULL
 			WHERE id = ?::integer`, fecha, personaID).Error
 	})
 }
@@ -170,6 +244,7 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, fechaHora *ti
 // abre una fila nueva de estado (alta vigente, con el motivo de alta si se
 // eligió uno: id y copia del texto) y la deja en ALTA con condición A,
 // situación 1 Publicador (abierta desde la fecha) y sin situación 2 ni 3.
+// Queda sin grupo (la baja ya se lo quitó): el grupo se asigna a mano con mover.
 // Las situaciones que hubiera vigentes (personas dadas de baja antes de este
 // módulo) se cierran con la fecha de reactivación.
 // motivoID (ya validado por el servicio contra el uso personas.alta) puede ser nil.
