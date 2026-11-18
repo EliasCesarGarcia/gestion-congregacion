@@ -52,6 +52,8 @@ func traducirErrorFechasSituacion(err error) error {
 		return errDatosPersona("la situación sigue vigente y no tiene fecha de fin: para cerrarla cambie la situación")
 	case errors.Is(err, repository.ErrFechaSolapaSituacion):
 		return errDatosPersona("la fecha se superpone con otro período de la misma situación de la persona")
+	case errors.Is(err, repository.ErrSituacion3DesdeCargo):
+		return errDatosPersona("la situación 3 (superintendente o auxiliar de grupo) se corrige desde el cargo del grupo: use las fechas de encargados")
 	}
 	return err
 }

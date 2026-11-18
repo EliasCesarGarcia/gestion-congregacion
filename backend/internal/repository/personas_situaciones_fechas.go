@@ -78,6 +78,9 @@ func (r *Repository) ModificarFechasSituacion(id int64, congregacionID string, t
 		if len(filas) == 0 || (!todas && filas[0].CongregacionID != congregacionID) {
 			return ErrFilaInexistente
 		}
+		if filas[0].Campo == 3 {
+			return ErrSituacion3DesdeCargo
+		}
 
 		// 2) Bloquear a la persona y volver a leer la fila.
 		var bloqueada []int
