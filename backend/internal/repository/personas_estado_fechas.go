@@ -231,8 +231,13 @@ func moverCierresDeBaja(tx *gorm.DB, personaID int, idTxt string, estadoID int64
 		       to_char(h.fecha_inicio, 'YYYY-MM-DD') AS fecha_inicio
 		FROM core_personas_situaciones_historial h
 		WHERE h.persona_id = ?::integer
-		  AND h.vigente = false
+		  		  AND h.vigente = false
 		  AND h.fecha_fin = ?::date
+		  AND NOT (h.campo = 3 AND EXISTS (
+		        SELECT 1 FROM core_grupos_encargados_historial ec
+		        WHERE ec.persona_id = h.persona_id AND ec.vigente = false
+		          AND ec.fecha_fin = h.fecha_fin
+		          AND ec.fecha_inicio IS NOT DISTINCT FROM h.fecha_inicio))
 		  AND NOT EXISTS (
 		        SELECT 1 FROM core_personas_situaciones_historial s
 		        WHERE s.persona_id = h.persona_id AND s.campo = h.campo
@@ -478,6 +483,18 @@ func moverCierresDeBaja(tx *gorm.DB, personaID int, idTxt string, estadoID int64
 			}
 		}
 
+		// Situación 3 espejo del cargo (con las fechas VIEJAS): se mueve junto con él.
+		var espejos []int64
+		if err := tx.Raw(`
+			SELECT s.id FROM core_personas_situaciones_historial s
+			WHERE s.persona_id = ?::integer AND s.campo = 3 AND s.vigente = false
+			  AND s.fecha_fin = ?::date
+			  AND s.fecha_inicio IS NOT DISTINCT FROM ?::date
+			ORDER BY s.id DESC LIMIT 1`,
+			personaID, dOld, fechaTextoParam(c.FechaInicio)).Scan(&espejos).Error; err != nil {
+			return err
+		}
+
 		if err := tx.Exec(`
 			UPDATE core_grupos_encargados_historial
 			SET fecha_fin = ?::date,
@@ -485,6 +502,16 @@ func moverCierresDeBaja(tx *gorm.DB, personaID int, idTxt string, estadoID int64
 			    modificado_at = now()
 			WHERE id = ?::bigint`, nueva.Dia, actorID, c.ID).Error; err != nil {
 			return err
+		}
+		if len(espejos) > 0 {
+			if err := tx.Exec(`
+				UPDATE core_personas_situaciones_historial
+				SET fecha_fin = ?::date,
+				    modificado_por = NULLIF(?::text, '')::integer,
+				    modificado_at = now()
+				WHERE id = ?::bigint`, nueva.Dia, actorID, espejos[0]).Error; err != nil {
+				return err
+			}
 		}
 	}
 	return nil
