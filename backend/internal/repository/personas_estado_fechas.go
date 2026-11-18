@@ -4,8 +4,9 @@
  * DESCRIPCIÓN: Tramo 2D, paso 5.4: modificar la fecha de alta y/o de baja de
  * una fila YA CARGADA del historial de estado (core_personas_estado_historial).
  * Aplica la regla 5: si la baja cambia de día, lo que se cerró ese mismo día
- * con la baja (situaciones y puestos) se mueve con ella, en la misma
- * transacción. Escribe modificado_por y modificado_at.
+ * con la baja (situaciones, puestos, pertenencias a grupos y cargos de
+ * encargado) se mueve con ella, en la misma transacción. Escribe
+ * modificado_por y modificado_at.
  */
 
 package repository
@@ -333,6 +334,159 @@ func moverCierresDeBaja(tx *gorm.DB, personaID int, idTxt string, estadoID int64
 			return err
 		}
 	}
+
+	// --- Pertenencias a grupos cerradas con la baja (A6: motivo_salida = 'Baja de la persona') ---
+	type mov struct {
+		ID          int64   `gorm:"column:id"`
+		NumeroGrupo int     `gorm:"column:numero_grupo"`
+		FechaInicio *string `gorm:"column:fecha_inicio"`
+	}
+	var movs []mov
+	if err := tx.Raw(`
+		SELECT m.id AS id, m.numero_grupo AS numero_grupo,
+		       to_char(m.fecha_inicio, 'YYYY-MM-DD') AS fecha_inicio
+		FROM core_grupos_movimientos m
+		WHERE m.persona_id = ?::integer
+		  AND m.vigente = false
+		  AND m.motivo_salida = 'Baja de la persona'
+		  AND m.motivo_salida_id IS NULL
+		  AND m.fecha_fin = ?::date`,
+		personaID, dOld).Scan(&movs).Error; err != nil {
+		return err
+	}
+	for _, m := range movs {
+		if m.FechaInicio != nil && nueva.Dia < *m.FechaInicio {
+			return &ErrEstadoIncoherente{Detalle: fmt.Sprintf(
+				"la pertenencia al grupo %d empieza el %s, después de la nueva fecha de baja (%s)",
+				m.NumeroGrupo, *m.FechaInicio, nueva.Dia)}
+		}
+		var solapes []int64
+		if err := tx.Raw(`
+			SELECT m.id
+			FROM core_grupos_movimientos m
+			WHERE m.id <> ?::bigint AND m.persona_id = ?::integer
+			  AND (m.vigente OR m.fecha_fin IS NOT NULL)
+			  AND COALESCE(?::date, '-infinity'::date) < COALESCE(m.fecha_fin, 'infinity'::date)
+			  AND ?::date > COALESCE(m.fecha_inicio, '-infinity'::date)
+			LIMIT 1`,
+			m.ID, personaID, fechaTextoParam(m.FechaInicio), nueva.Dia).Scan(&solapes).Error; err != nil {
+			return err
+		}
+		if len(solapes) > 0 {
+			return &ErrEstadoIncoherente{Detalle: fmt.Sprintf(
+				"la pertenencia al grupo %d se superpondría con otra pertenencia al mover la baja al %s",
+				m.NumeroGrupo, nueva.Dia)}
+		}
+		if err := tx.Exec(`
+			UPDATE core_grupos_movimientos
+			SET fecha_fin = ?::date,
+			    modificado_por = NULLIF(?::text, '')::integer,
+			    modificado_at = now()
+			WHERE id = ?::bigint`, nueva.Dia, actorID, m.ID).Error; err != nil {
+			return err
+		}
+	}
+
+	// --- Cargos de encargado cerrados con la baja ---
+	// Los cargos no tienen motivo: se reconocen por fecha_fin = día de la baja,
+	// salvo que alguien más haya EMPEZADO ese día el mismo cargo en el mismo
+	// grupo (entonces fue un reemplazo manual). Mismo criterio que las situaciones.
+	type carg struct {
+		ID          int64   `gorm:"column:id"`
+		GrupoID     int     `gorm:"column:grupo_id"`
+		NumeroGrupo int     `gorm:"column:numero_grupo"`
+		Cargo       string  `gorm:"column:cargo"`
+		FechaInicio *string `gorm:"column:fecha_inicio"`
+	}
+	var cargos []carg
+	if err := tx.Raw(`
+		SELECT e.id AS id, e.grupo_id AS grupo_id, g.numero AS numero_grupo, e.cargo AS cargo,
+		       to_char(e.fecha_inicio, 'YYYY-MM-DD') AS fecha_inicio
+		FROM core_grupos_encargados_historial e
+		JOIN core_grupos g ON g.id = e.grupo_id
+		WHERE e.persona_id = ?::integer
+		  AND e.vigente = false
+		  AND e.fecha_fin = ?::date
+		  AND NOT EXISTS (
+		        SELECT 1 FROM core_grupos_encargados_historial o
+		        WHERE o.id <> e.id AND o.grupo_id = e.grupo_id AND o.cargo = e.cargo
+		          AND o.fecha_inicio = ?::date
+		          AND NOT EXISTS (
+		                SELECT 1 FROM core_personas_estado_historial s
+		                WHERE s.persona_id = e.persona_id AND s.id <> ?::bigint
+		                  AND s.fecha_alta = ?::date))`,
+		personaID, dOld, dOld, estadoID, dOld).Scan(&cargos).Error; err != nil {
+		return err
+	}
+	for _, c := range cargos {
+		if c.FechaInicio != nil && nueva.Dia < *c.FechaInicio {
+			return &ErrEstadoIncoherente{Detalle: fmt.Sprintf(
+				"el cargo de %s del grupo %d empieza el %s, después de la nueva fecha de baja (%s)",
+				c.Cargo, c.NumeroGrupo, *c.FechaInicio, nueva.Dia)}
+		}
+		var solapes []int64
+		if err := tx.Raw(`
+			SELECT o.id
+			FROM core_grupos_encargados_historial o
+			WHERE o.id <> ?::bigint
+			  AND (o.persona_id = ?::integer
+			       OR (o.grupo_id = ?::integer AND o.cargo = ?::text))
+			  AND (o.vigente OR o.fecha_fin IS NOT NULL)
+			  AND COALESCE(?::date, '-infinity'::date) < COALESCE(o.fecha_fin, 'infinity'::date)
+			  AND ?::date > COALESCE(o.fecha_inicio, '-infinity'::date)
+			LIMIT 1`,
+			c.ID, personaID, c.GrupoID, c.Cargo,
+			fechaTextoParam(c.FechaInicio), nueva.Dia).Scan(&solapes).Error; err != nil {
+			return err
+		}
+		if len(solapes) > 0 {
+			return &ErrEstadoIncoherente{Detalle: fmt.Sprintf(
+				"el cargo de %s del grupo %d se superpondría con otro período del cargo al mover la baja al %s",
+				c.Cargo, c.NumeroGrupo, nueva.Dia)}
+		}
+
+		// El cargo debe seguir dentro de una pertenencia al mismo grupo. Las
+		// pertenencias cerradas con la baja ya se movieron arriba, así que se
+		// leen con sus fechas nuevas. Sin pertenencias registradas (datos
+		// viejos), no se comprueba.
+		type pert struct {
+			FechaInicio *string `gorm:"column:fecha_inicio"`
+			FechaFin    *string `gorm:"column:fecha_fin"`
+		}
+		var perts []pert
+		if err := tx.Raw(`
+			SELECT to_char(m.fecha_inicio, 'YYYY-MM-DD') AS fecha_inicio,
+			       to_char(m.fecha_fin, 'YYYY-MM-DD') AS fecha_fin
+			FROM core_grupos_movimientos m
+			WHERE m.persona_id = ?::integer AND m.grupo_id = ?::integer`,
+			personaID, c.GrupoID).Scan(&perts).Error; err != nil {
+			return err
+		}
+		if len(perts) > 0 {
+			nf := nueva.Dia
+			dentro := false
+			for _, p := range perts {
+				if cargoDentroDePertenencia(p.FechaInicio, p.FechaFin, c.FechaInicio, &nf) {
+					dentro = true
+					break
+				}
+			}
+			if !dentro {
+				return &ErrEstadoIncoherente{Detalle: fmt.Sprintf(
+					"el cargo de %s del grupo %d quedaría fuera de la pertenencia de la persona al grupo al mover la baja al %s",
+					c.Cargo, c.NumeroGrupo, nueva.Dia)}
+			}
+		}
+
+		if err := tx.Exec(`
+			UPDATE core_grupos_encargados_historial
+			SET fecha_fin = ?::date,
+			    modificado_por = NULLIF(?::text, '')::integer,
+			    modificado_at = now()
+			WHERE id = ?::bigint`, nueva.Dia, actorID, c.ID).Error; err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -387,6 +541,19 @@ func verificarDependientesDelPeriodo(tx *gorm.DB, personaID int, idTxt string, e
 	}
 	if d, err := revisar("core_puestos_historial",
 		"'el puesto ' || h.puesto || ' de ' || h.modulo_id", iniTS, finTS, "h.fecha_fin IS NULL"); err != nil {
+		return err
+	} else if d != "" {
+		return &ErrEstadoIncoherente{Detalle: d + " quedaría fuera del período de alta: corríjalo antes en su historial"}
+	}
+	if d, err := revisar("core_grupos_movimientos",
+		"'la pertenencia al grupo ' || h.numero_grupo", iniD, finD, "h.vigente"); err != nil {
+		return err
+	} else if d != "" {
+		return &ErrEstadoIncoherente{Detalle: d + " quedaría fuera del período de alta: corríjela antes en su historial"}
+	}
+	if d, err := revisar("core_grupos_encargados_historial",
+		"'el cargo de ' || h.cargo || ' del grupo ' || (SELECT g.numero FROM core_grupos g WHERE g.id = h.grupo_id)",
+		iniD, finD, "h.vigente"); err != nil {
 		return err
 	} else if d != "" {
 		return &ErrEstadoIncoherente{Detalle: d + " quedaría fuera del período de alta: corríjalo antes en su historial"}
