@@ -137,10 +137,47 @@ type HistorialSituacionPersona struct {
 	QuitadoPor  string  `json:"quitado_por" gorm:"column:quitado_por"`
 }
 
-// HistorialPersona: los dos historiales de una persona.
+// HistorialGrupoPersona: una pertenencia de la persona a un grupo. NumeroGrupo
+// es el número que tenía el grupo en ese momento. Los motivos son la copia
+// del texto guardada en la fila.
+type HistorialGrupoPersona struct {
+	ID              int64   `json:"id" gorm:"column:id"`
+	GrupoID         int     `json:"grupo_id" gorm:"column:grupo_id"`
+	NumeroGrupo     int     `json:"numero_grupo" gorm:"column:numero_grupo"`
+	FechaInicio     *string `json:"fecha_inicio" gorm:"column:fecha_inicio"`
+	FechaFin        *string `json:"fecha_fin" gorm:"column:fecha_fin"`
+	Vigente         bool    `json:"vigente" gorm:"column:vigente"`
+	MotivoEntrada   string  `json:"motivo_entrada" gorm:"column:motivo_entrada"`
+	DetallesEntrada string  `json:"detalles_entrada" gorm:"column:detalles_entrada"`
+	MotivoSalida    string  `json:"motivo_salida" gorm:"column:motivo_salida"`
+	DetallesSalida  string  `json:"detalles_salida" gorm:"column:detalles_salida"`
+	AsignadoPor     string  `json:"asignado_por" gorm:"column:asignado_por"`
+	QuitadoPor      string  `json:"quitado_por" gorm:"column:quitado_por"`
+}
+
+// HistorialEncargadoPersona: un período de la persona como superintendente o
+// auxiliar de un grupo. NumeroGrupo es el número ACTUAL del grupo (la tabla de
+// cargos no guarda copia del número).
+type HistorialEncargadoPersona struct {
+	ID          int64   `json:"id" gorm:"column:id"`
+	GrupoID     int     `json:"grupo_id" gorm:"column:grupo_id"`
+	NumeroGrupo int     `json:"numero_grupo" gorm:"column:numero_grupo"`
+	Cargo       string  `json:"cargo" gorm:"column:cargo"`
+	FechaInicio *string `json:"fecha_inicio" gorm:"column:fecha_inicio"`
+	FechaFin    *string `json:"fecha_fin" gorm:"column:fecha_fin"`
+	Vigente     bool    `json:"vigente" gorm:"column:vigente"`
+	Excepcion   bool    `json:"excepcion" gorm:"column:excepcion"`
+	Detalles    string  `json:"detalles" gorm:"column:detalles"`
+	AsignadoPor string  `json:"asignado_por" gorm:"column:asignado_por"`
+	QuitadoPor  string  `json:"quitado_por" gorm:"column:quitado_por"`
+}
+
+// HistorialPersona: los historiales de una persona.
 type HistorialPersona struct {
 	PersonaID   int                         `json:"persona_id"`
 	Estado      []HistorialEstadoPersona    `json:"estado"`
 	Situaciones []HistorialSituacionPersona `json:"situaciones"`
 	Roles       []HistorialRolPersona       `json:"roles"`
+	Grupos      []HistorialGrupoPersona     `json:"grupos"`
+	Encargados  []HistorialEncargadoPersona `json:"encargados"`
 }
