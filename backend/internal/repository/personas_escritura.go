@@ -52,7 +52,7 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 	err := r.db.Transaction(func(tx *gorm.DB) error {
 		// Grupo elegido: se bloquea y se comprueba antes de insertar a la persona.
 		numeroGrupo := 0
-		var paramNumero, paramGrupo interface{}
+		var paramGrupo interface{}
 		if n.GrupoID != nil {
 			type destino struct {
 				CongregacionID string  `gorm:"column:congregacion_id"`
@@ -79,7 +79,6 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 				return ErrFechaAnteriorIngresoGrupo
 			}
 			numeroGrupo = ds[0].Numero
-			paramNumero = numeroGrupo
 			paramGrupo = *n.GrupoID
 		}
 
@@ -87,12 +86,12 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 		if err := tx.Raw(`
 			INSERT INTO core_personas
 				(congregacion_id, apellido, nombre, apellido_nombre, estado,
-				 situacion_1, situacion_2, situacion_3, condicion, grupo, grupo_id, fecha_alta,
+				 situacion_1, situacion_2, situacion_3, condicion, grupo_id, fecha_alta,
 				 contacto, detalles, direccion, codigo_postal, pais, provincia_estado,
 				 ciudad, partido)
 			SELECT c.id, ?::text, ?::text, ?::text, 'ALTA',
 			       ?::text, NULLIF(?::text,''), NULLIF(?::text,''),
-			       NULLIF(?::text,'')::char(1), ?::integer, ?::integer, NULLIF(?::text,'')::date,
+			       NULLIF(?::text,'')::char(1), ?::integer, NULLIF(?::text,'')::date,
 			       NULLIF(?::text,''), NULLIF(?::text,''), NULLIF(?::text,''),
 			       NULLIF(?::text,''), NULLIF(?::text,''), NULLIF(?::text,''),
 			       NULLIF(?::text,''), NULLIF(?::text,'')
@@ -101,7 +100,7 @@ func (r *Repository) CrearPersona(n models.NuevaPersona) (int, error) {
 			RETURNING id`,
 			n.Apellido, n.Nombre, n.ApellidoNombre,
 			n.Situacion1, n.Situacion2, n.Situacion3,
-			n.Condicion, paramNumero, paramGrupo, n.FechaAlta,
+			n.Condicion, paramGrupo, n.FechaAlta,
 			n.Contacto, n.Detalles, n.Direccion, n.CodigoPostal, n.Pais, n.ProvinciaEstado,
 			n.Ciudad, n.Partido,
 			n.CongregacionID).Scan(&ids).Error; err != nil {

@@ -230,12 +230,11 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, fechaHora *ti
 			return err
 		}
 
-		// grupo (la columna vieja) se mantiene en paralelo hasta el A8.
 		return tx.Exec(`
 			UPDATE core_personas
 			SET estado = 'BAJA', fecha_baja = ?::date,
 			    situacion_1 = 'Publicador', situacion_2 = NULL, situacion_3 = NULL,
-			    grupo_id = NULL, grupo = NULL
+			    grupo_id = NULL
 			WHERE id = ?::integer`, fecha, personaID).Error
 	})
 }

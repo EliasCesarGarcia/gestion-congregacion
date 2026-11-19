@@ -1,12 +1,12 @@
 /**
- * ARCHIVO: grupos_mover.go
- * UBICACIÓN: backend/internal/repository/grupos_mover.go
- * DESCRIPCIÓN: Mover una persona de un grupo a otro (o dejarla sin grupo).
- * Todo en UNA transacción: cierra su pertenencia vigente
- * (core_grupos_movimientos), abre la nueva y actualiza core_personas
- * (grupo_id, y la columna vieja grupo mientras exista). Nunca se inventan fechas.
- * Orden de bloqueos: congregación, persona y grupo destino (el mismo que usan
- * la baja y los cambios de roles).
+* ARCHIVO: grupos_mover.go
+* UBICACIÓN: backend/internal/repository/grupos_mover.go
+* DESCRIPCIÓN: Mover una persona de un grupo a otro (o dejarla sin grupo).
+* Todo en UNA transacción: cierra su pertenencia vigente
+* (core_grupos_movimientos), abre la nueva y actualiza core_personas
+* (grupo_id). Nunca se inventan fechas.
+* Orden de bloqueos: congregación, persona y grupo destino (el mismo que usan
+* la baja y los cambios de roles).
  */
 
 package repository
@@ -146,7 +146,7 @@ func (r *Repository) MoverPersonaDeGrupo(personaID int, grupoID *int, fecha stri
 			}
 		}
 
-		var nuevoGrupo, nuevoNumero interface{}
+		var nuevoGrupo interface{}
 		if grupoID != nil {
 			if err := tx.Exec(`
 				INSERT INTO core_grupos_movimientos
@@ -160,13 +160,11 @@ func (r *Repository) MoverPersonaDeGrupo(personaID int, grupoID *int, fecha stri
 				return err
 			}
 			nuevoGrupo = *grupoID
-			nuevoNumero = numero
 		}
 
-		// grupo (la columna vieja) se mantiene en paralelo hasta que se elimine.
 		if err := tx.Exec(
-			"UPDATE core_personas SET grupo_id = ?::integer, grupo = ?::integer WHERE id = ?::integer",
-			nuevoGrupo, nuevoNumero, personaID).Error; err != nil {
+			"UPDATE core_personas SET grupo_id = ?::integer WHERE id = ?::integer",
+			nuevoGrupo, personaID).Error; err != nil {
 			return err
 		}
 		cambio = true
