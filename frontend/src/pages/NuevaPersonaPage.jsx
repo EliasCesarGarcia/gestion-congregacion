@@ -95,11 +95,7 @@ function NuevaPersonaPage() {
 
   // --- Grupos vigentes de la congregación ---
   // `clave` dice a qué congregación pertenece la lista (si no coincide, carga).
-  const claveGrupos = !autorizado
-    ? ""
-    : esSuper
-      ? congregacionId
-      : "propia";
+  const claveGrupos = !autorizado ? "" : esSuper ? congregacionId : "propia";
   const [grupos, setGrupos] = useState({ clave: "", lista: [], error: false });
   const cargandoGrupos = claveGrupos !== "" && grupos.clave !== claveGrupos;
 
@@ -169,8 +165,9 @@ function NuevaPersonaPage() {
     // Los grupos son de cada congregación: el elegido ya no vale.
     setValores((v) => ({ ...v, grupo_id: "" }));
     setErrores((e) => {
-      const { congregacion, ...resto } = e;
-      return resto;
+      const n = { ...e };
+      delete n.congregacion;
+      return n;
     });
   };
 
@@ -266,7 +263,9 @@ function NuevaPersonaPage() {
 
   const nombreCong =
     congregaciones.find((c) => c.id === congregacionId)?.nombre ||
-    (congregacionId === user?.congregacion_id ? user?.congregacion_nombre : "") ||
+    (congregacionId === user?.congregacion_id
+      ? user?.congregacion_nombre
+      : "") ||
     "";
 
   const mensajeConfirmar = [
