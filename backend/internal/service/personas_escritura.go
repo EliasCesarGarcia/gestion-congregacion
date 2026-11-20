@@ -120,6 +120,63 @@ func nombrePropioPersona(valor, campo string) (string, error) {
 	return v, nil
 }
 
+// contactoPersona: opcional. Si viene, debe empezar con "+" y el código de
+// país, y llevar solo dígitos, espacios, guiones y paréntesis (7 a 15 dígitos
+// en total, el máximo de un número internacional).
+func contactoPersona(valor string) (string, error) {
+	v, err := textoPersona(valor, "el contacto", personasLargoContacto, false, false)
+	if err != nil || v == "" {
+		return v, err
+	}
+	if !strings.HasPrefix(v, "+") {
+		return "", errDatosPersona("el contacto debe empezar con el código de país (por ejemplo +54)")
+	}
+	digitos := 0
+	for _, r := range v[1:] {
+		switch {
+		case r >= '0' && r <= '9':
+			digitos++
+		case r == ' ' || r == '-' || r == '(' || r == ')':
+		default:
+			return "", errDatosPersona("el contacto solo admite números, espacios, guiones y paréntesis")
+		}
+	}
+	if digitos < 7 || digitos > 15 {
+		return "", errDatosPersona("el contacto debe tener entre 7 y 15 dígitos, con el código de país")
+	}
+	return v, nil
+}
+
+// textoConCaracteres: como textoPersona (opcional), pero además solo admite
+// los caracteres que acepte `permitido`. `descripcion` va en el mensaje.
+func textoConCaracteres(valor, campo string, max int, permitido func(rune) bool, descripcion string) (string, error) {
+	v, err := textoPersona(valor, campo, max, false, false)
+	if err != nil || v == "" {
+		return v, err
+	}
+	for _, r := range v {
+		if !permitido(r) {
+			return "", errDatosPersona("%s solo admite %s", campo, descripcion)
+		}
+	}
+	return v, nil
+}
+
+// Dirección: "Av. Libertador 1234, piso 3° dpto. B/4".
+func runaDireccion(r rune) bool {
+	return unicode.IsLetter(r) || unicode.IsDigit(r) || strings.ContainsRune(" .,'’-°/#()&", r)
+}
+
+// País, provincia, ciudad y partido: admiten números ("25 de Mayo", "9 de Julio").
+func runaUbicacion(r rune) bool {
+	return unicode.IsLetter(r) || unicode.IsDigit(r) || strings.ContainsRune(" .'’-()", r)
+}
+
+// Código postal: letras, números, espacios y guiones ("B1618", "SW1A 1AA").
+func runaPostal(r rune) bool {
+	return (r >= '0' && r <= '9') || (r >= 'A' && r <= 'Z') || (r >= 'a' && r <= 'z') || r == ' ' || r == '-'
+}
+
 // capitalizarPalabraPersona: "jean-pierre" → "Jean-Pierre", "d'angelo" → "D'Angelo".
 func capitalizarPalabraPersona(p string) string {
 	runas := []rune(p)
@@ -204,7 +261,7 @@ func prepararDatosPersona(in EntradaPersona) (models.DatosPersona, error) {
 	d.Nombre = nombreTituloPersona(nombre)
 	d.ApellidoNombre = d.Apellido + " " + d.Nombre
 
-	if d.Contacto, err = textoPersona(in.Contacto, "el contacto", personasLargoContacto, false, false); err != nil {
+	if d.Contacto, err = contactoPersona(in.Contacto); err != nil {
 		return d, err
 	}
 	if d.Detalles, err = textoPersona(in.Detalles, "los detalles", personasLargoDetalles, false, true); err != nil {
@@ -216,22 +273,23 @@ func prepararDatosPersona(in EntradaPersona) (models.DatosPersona, error) {
 		return d, errDatosPersona("la condición debe ser A (activo) o I (inactivo)")
 	}
 
-	if d.Direccion, err = textoPersona(in.Direccion, "la dirección", personasLargoDireccion, false, false); err != nil {
+		if d.Direccion, err = textoConCaracteres(in.Direccion, "la dirección", personasLargoDireccion, runaDireccion, "letras, números, espacios y . , ' - ° / # ( ) &"); err != nil {
 		return d, err
 	}
-	if d.CodigoPostal, err = textoPersona(in.CodigoPostal, "el código postal", personasLargoPostal, false, false); err != nil {
+	if d.CodigoPostal, err = textoConCaracteres(in.CodigoPostal, "el código postal", personasLargoPostal, runaPostal, "letras, números, espacios y guiones"); err != nil {
 		return d, err
 	}
-	if d.Pais, err = textoPersona(in.Pais, "el país", personasLargoUbicacion, false, false); err != nil {
+	d.CodigoPostal = strings.ToUpper(d.CodigoPostal)
+	if d.Pais, err = textoConCaracteres(in.Pais, "el país", personasLargoUbicacion, runaUbicacion, "letras, números, espacios y . ' - ( )"); err != nil {
 		return d, err
 	}
-	if d.ProvinciaEstado, err = textoPersona(in.ProvinciaEstado, "la provincia/estado", personasLargoUbicacion, false, false); err != nil {
+	if d.ProvinciaEstado, err = textoConCaracteres(in.ProvinciaEstado, "la provincia/estado", personasLargoUbicacion, runaUbicacion, "letras, números, espacios y . ' - ( )"); err != nil {
 		return d, err
 	}
-	if d.Ciudad, err = textoPersona(in.Ciudad, "la ciudad", personasLargoUbicacion, false, false); err != nil {
+	if d.Ciudad, err = textoConCaracteres(in.Ciudad, "la ciudad", personasLargoUbicacion, runaUbicacion, "letras, números, espacios y . ' - ( )"); err != nil {
 		return d, err
 	}
-	if d.Partido, err = textoPersona(in.Partido, "el partido", personasLargoUbicacion, false, false); err != nil {
+	if d.Partido, err = textoConCaracteres(in.Partido, "el partido", personasLargoUbicacion, runaUbicacion, "letras, números, espacios y . ' - ( )"); err != nil {
 		return d, err
 	}
 	return d, nil
@@ -385,7 +443,7 @@ func (s *Service) CambiarSituacionPersona(a *models.Actor, esSuper bool, persona
 	case 2:
 		validas = situacionesLista2
 	//case 3:
-		//validas = situacionesLista3
+	//validas = situacionesLista3
 	default:
 		return errDatosPersona("el campo debe ser 1, 2 o 3")
 	}
