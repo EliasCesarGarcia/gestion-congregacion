@@ -83,3 +83,17 @@ export function CampoSelect({
     </Envoltorio>
   );
 }
+export function CampoArea({ id, label, obligatorio, error, ayuda, ...resto }) {
+  return (
+    <Envoltorio {...{ id, label, obligatorio, error, ayuda }}>
+      <textarea
+        id={id}
+        required={obligatorio}
+        aria-invalid={!!error}
+        aria-describedby={error || ayuda ? `${id}-msg` : undefined}
+        className={`${CLASE_ENTRADA} ${claseBorde(error)} resize-y`}
+        {...resto}
+      />
+    </Envoltorio>
+  );
+}

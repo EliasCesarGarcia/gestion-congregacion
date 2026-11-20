@@ -12,3 +12,10 @@ export function fechaCorta(texto, vacio = "—") {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(texto);
   return m ? `${m[3]}/${m[2]}/${m[1]}` : texto;
 }
+// Fecha de hoy del dispositivo como "AAAA-MM-DD". Se arma con las partes
+// locales (toISOString usaría UTC y cerca de la medianoche daría otro día).
+export function hoyISO() {
+  const d = new Date();
+  const dos = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${dos(d.getMonth() + 1)}-${dos(d.getDate())}`;
+}

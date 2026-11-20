@@ -24,3 +24,35 @@ export const ROLES = {
   servicio: ["per_rol_servicio", "Servicio"],
   publicador: ["per_rol_publicador", "Publicador"],
 };
+// Listas válidas del backend para el formulario (un valor fuera de lista es 400).
+// La situación 3 no se elige a mano: se pone sola desde el grupo.
+export const SITUACIONES_1 = [
+  "Publicador",
+  "Precursor Auxiliar",
+  "Precursor Auxiliar de Continuo",
+  "Precursor Regular",
+  "Precursor Especial",
+  "Misionero",
+];
+export const SITUACIONES_2 = ["Siervo Ministerial", "Anciano"];
+
+// Valores iniciales del formulario de persona (todo texto, como los inputs).
+// `fecha_alta` la completa cada pantalla (en el alta, hoy).
+export const FORM_PERSONA_VACIO = {
+  apellido: "",
+  nombre: "",
+  contacto: "",
+  fecha_alta: "",
+  condicion: "",
+  motivo_alta_id: "",
+  situacion_1: "Publicador",
+  situacion_2: "",
+  grupo_id: "",
+  direccion: "",
+  ciudad: "",
+  partido: "",
+  provincia_estado: "",
+  pais: "",
+  codigo_postal: "",
+  detalles: "",
+};

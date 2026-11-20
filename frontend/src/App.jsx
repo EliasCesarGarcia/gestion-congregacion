@@ -34,6 +34,7 @@ import PersonasPage from "./pages/PersonasPage"; // Módulo de personas (encarga
 import FichaPersonaPage from "./pages/FichaPersonaPage"; // Ficha de una persona
 import AdminMotivosPage from "./pages/AdminMotivosPage"; // Panel de superadmin: motivos de puestos
 import AdminCongregacionesPage from "./pages/AdminCongregacionesPage"; // Panel de superadmin: congregaciones
+import NuevaPersonaPage from "./pages/NuevaPersonaPage"; // Alta de persona
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -260,6 +261,22 @@ function App() {
                   />
                 </Helmet>
                 <PersonasPage />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/personas/nueva"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Nueva persona | Gestión Local</title>
+                  <meta
+                    name="description"
+                    content="Alta de una persona de la congregación."
+                  />
+                </Helmet>
+                <NuevaPersonaPage />
               </RutaProtegida>
             }
           />

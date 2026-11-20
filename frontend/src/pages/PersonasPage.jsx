@@ -18,10 +18,10 @@
  */
 
 import { useContext, useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { Loader2, Search, SlidersHorizontal } from "lucide-react";
+import { Loader2, Plus, Search, SlidersHorizontal } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import Boton from "../components/ui/Boton";
 import Tarjeta from "../components/ui/Tarjeta";
@@ -38,6 +38,7 @@ const iniciales = (p) =>
 
 function PersonasPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { permisos, user } = useContext(AppContext);
   const esSuper = permisos.es_superadmin;
   const autorizado =
@@ -321,6 +322,18 @@ function PersonasPage() {
               {t("per_limpiar", "Limpiar")}
             </Boton>
           )}
+          <Boton
+            icono={Plus}
+            onClick={() =>
+              navigate(
+                esSuper && congregacionId
+                  ? `/personas/nueva?congregacion=${encodeURIComponent(congregacionId)}`
+                  : "/personas/nueva",
+              )
+            }
+          >
+            {t("per_nueva", "Nueva persona")}
+          </Boton>
         </div>
 
         {verFiltros && (
