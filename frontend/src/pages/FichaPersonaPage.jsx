@@ -10,12 +10,13 @@
  */
 
 import { useContext, useEffect, useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Pencil } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import Tarjeta from "../components/ui/Tarjeta";
+import Boton from "../components/ui/Boton";
 import Etiqueta from "../components/ui/Etiqueta";
 import HistorialPersona from "../components/personas/HistorialPersona";
 import { ROLES } from "../config/personasConfig";
@@ -25,7 +26,9 @@ function Dato({ etiqueta, children }) {
   return (
     <div>
       <dt className="text-xs text-jw-text-main opacity-60">{etiqueta}</dt>
-      <dd className="text-sm text-jw-text-main break-words">{children || "—"}</dd>
+      <dd className="text-sm text-jw-text-main break-words">
+        {children || "—"}
+      </dd>
     </div>
   );
 }
@@ -33,6 +36,7 @@ function Dato({ etiqueta, children }) {
 function FichaPersonaPage() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const navigate = useNavigate();
   const { permisos } = useContext(AppContext);
   const autorizado =
     permisos.cargado &&
@@ -67,7 +71,8 @@ function FichaPersonaPage() {
           id,
           ficha: null,
           historial: null,
-          error: detalle || t("per_error_ficha", "No se pudo cargar la persona."),
+          error:
+            detalle || t("per_error_ficha", "No se pudo cargar la persona."),
         });
       });
 
@@ -127,7 +132,13 @@ function FichaPersonaPage() {
       : p.condicion === "I"
         ? t("per_inactivo", "Inactivo")
         : t("per_sin_condicion_dato", "Sin condición");
-  const direccion = [p.direccion, p.ciudad, p.partido, p.provincia_estado, p.pais]
+  const direccion = [
+    p.direccion,
+    p.ciudad,
+    p.partido,
+    p.provincia_estado,
+    p.pais,
+  ]
     .filter(Boolean)
     .join(", ");
 
@@ -136,15 +147,19 @@ function FichaPersonaPage() {
       {volver}
 
       {/* Encabezado */}
-      <Tarjeta className="flex items-center gap-4">
+      <Tarjeta className="flex flex-wrap items-center gap-4">
         <div className="w-16 h-16 rounded-full overflow-hidden bg-jw-body border border-jw-border flex items-center justify-center text-lg text-jw-text-main shrink-0">
           {p.foto_url ? (
-            <img src={p.foto_url} alt="" className="w-full h-full object-cover" />
+            <img
+              src={p.foto_url}
+              alt=""
+              className="w-full h-full object-cover"
+            />
           ) : (
             `${p.apellido?.[0] || ""}${p.nombre?.[0] || ""}`.toUpperCase()
           )}
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 flex-1">
           <h1 className="text-xl font-semibold text-jw-text-main break-words">
             {p.apellido} {p.nombre}
           </h1>
@@ -160,13 +175,23 @@ function FichaPersonaPage() {
             )}
           </div>
         </div>
+        <Boton
+          variante="suave"
+          icono={Pencil}
+          className="shrink-0"
+          onClick={() => navigate(`/personas/${id}/editar`)}
+        >
+          {t("per_editar_boton", "Editar")}
+        </Boton>
       </Tarjeta>
 
       {/* Datos */}
       <Tarjeta>
         <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Dato etiqueta={t("per_f_grupo", "Grupo")}>
-            {p.grupo != null ? `${t("per_grupo", "Grupo")} ${p.grupo}` : t("per_sin_grupo", "Sin grupo")}
+            {p.grupo != null
+              ? `${t("per_grupo", "Grupo")} ${p.grupo}`
+              : t("per_sin_grupo", "Sin grupo")}
           </Dato>
           <Dato etiqueta={t("per_f_condicion", "Condición")}>{condicion}</Dato>
           <Dato etiqueta={t("per_fecha_alta", "Fecha de alta")}>
@@ -180,7 +205,9 @@ function FichaPersonaPage() {
           <Dato etiqueta={t("per_contacto", "Contacto")}>{p.contacto}</Dato>
           <Dato etiqueta={t("per_email", "Email")}>{p.email}</Dato>
           <Dato etiqueta={t("per_direccion", "Dirección")}>{direccion}</Dato>
-          <Dato etiqueta={t("per_codigo_postal", "Código postal")}>{p.codigo_postal}</Dato>
+          <Dato etiqueta={t("per_codigo_postal", "Código postal")}>
+            {p.codigo_postal}
+          </Dato>
         </dl>
         {p.detalles && (
           <div className="mt-4 pt-4 border-t border-jw-border">

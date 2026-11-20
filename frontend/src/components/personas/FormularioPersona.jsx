@@ -48,6 +48,9 @@ function FormularioPersona({
   cargandoGrupos = false,
   errorGrupos = false,
   motivos = [],
+  // Solo en la edición:
+  fechaAltaObligatoria = true,
+  actuales = {},
 }) {
   const { t } = useTranslation();
   const esAlta = modo === "alta";
@@ -135,11 +138,18 @@ function FormularioPersona({
           type="date"
           max={hoyISO()}
           label={t("per_fecha_alta", "Fecha de alta")}
-          obligatorio
-          ayuda={t(
-            "per_ayuda_fecha_alta",
-            "Por defecto es hoy; puede ser una fecha pasada.",
-          )}
+          obligatorio={esAlta || fechaAltaObligatoria}
+          ayuda={
+            esAlta
+              ? t(
+                  "per_ayuda_fecha_alta",
+                  "Por defecto es hoy; puede ser una fecha pasada.",
+                )
+              : t(
+                  "per_ayuda_fecha_alta_ed",
+                  "Cambiarla ajusta el historial de altas y bajas.",
+                )
+          }
         />
         <CampoSelect
           {...campo("condicion")}
@@ -171,65 +181,93 @@ function FormularioPersona({
         )}
       </Seccion>
 
-      <Seccion titulo={t("per_s_situacion", "Situación y grupo")}>
-        <CampoSelect
-          {...campo("situacion_1")}
-          label={t("per_f_sit1", "Situación 1")}
-        >
-          {SITUACIONES_1.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </CampoSelect>
-        <CampoSelect
-          {...campo("situacion_2")}
-          label={t("per_f_sit2", "Situación 2")}
-        >
-          <option value="">{t("per_sin_situacion", "Sin situación")}</option>
-          {SITUACIONES_2.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </CampoSelect>
-        {esAlta && (
-          <div className={ANCHO_COMPLETO}>
-            <CampoSelect
-              {...campo("grupo_id")}
-              label={t("per_f_grupo", "Grupo")}
-              disabled={cargandoGrupos}
-              error={
-                errorGrupos
-                  ? t("per_error_grupos", "No se pudo cargar la lista de grupos.")
-                  : undefined
-              }
-              ayuda={
-                !cargandoGrupos && !errorGrupos && grupos.length === 0
-                  ? t(
-                      "per_sin_grupos_cong",
-                      "Esta congregación todavía no tiene grupos.",
-                    )
-                  : t(
-                      "per_ayuda_grupo",
-                      "Opcional. Solo se ofrecen los grupos vigentes.",
-                    )
-              }
-            >
-              <option value="">
-                {cargandoGrupos
-                  ? t("per_cargando", "Cargando…")
-                  : t("per_sin_grupo", "Sin grupo")}
+      {esAlta && (
+        <Seccion titulo={t("per_s_situacion", "Situación y grupo")}>
+          <CampoSelect
+            {...campo("situacion_1")}
+            label={t("per_f_sit1", "Situación 1")}
+          >
+            {SITUACIONES_1.map((s) => (
+              <option key={s} value={s}>
+                {s}
               </option>
-              {grupos.map((g) => (
-                <option key={g.id} value={g.id}>
-                  {t("per_grupo", "Grupo")} {g.numero}
+            ))}
+          </CampoSelect>
+          <CampoSelect
+            {...campo("situacion_2")}
+            label={t("per_f_sit2", "Situación 2")}
+          >
+            <option value="">{t("per_sin_situacion", "Sin situación")}</option>
+            {SITUACIONES_2.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </CampoSelect>
+          {esAlta && (
+            <div className={ANCHO_COMPLETO}>
+              <CampoSelect
+                {...campo("grupo_id")}
+                label={t("per_f_grupo", "Grupo")}
+                disabled={cargandoGrupos}
+                error={
+                  errorGrupos
+                    ? t(
+                        "per_error_grupos",
+                        "No se pudo cargar la lista de grupos.",
+                      )
+                    : undefined
+                }
+                ayuda={
+                  !cargandoGrupos && !errorGrupos && grupos.length === 0
+                    ? t(
+                        "per_sin_grupos_cong",
+                        "Esta congregación todavía no tiene grupos.",
+                      )
+                    : t(
+                        "per_ayuda_grupo",
+                        "Opcional. Solo se ofrecen los grupos vigentes.",
+                      )
+                }
+              >
+                <option value="">
+                  {cargandoGrupos
+                    ? t("per_cargando", "Cargando…")
+                    : t("per_sin_grupo", "Sin grupo")}
                 </option>
-              ))}
-            </CampoSelect>
+                {grupos.map((g) => (
+                  <option key={g.id} value={g.id}>
+                    {t("per_grupo", "Grupo")} {g.numero}
+                  </option>
+                ))}
+              </CampoSelect>
+            </div>
+          )}
+        </Seccion>
+      )}
+
+            {!esAlta && (
+        <Seccion titulo={t("per_s_situacion_actual", "Situación y grupo")}>
+          <div className={ANCHO_COMPLETO}>
+            <p className="text-sm text-jw-text-main">
+              {[actuales.situacion_1, actuales.situacion_2, actuales.situacion_3]
+                .filter(Boolean)
+                .join(" · ") || t("per_sin_situacion", "Sin situación")}
+            </p>
+            <p className="text-sm text-jw-text-main mt-1">
+              {actuales.grupo != null
+                ? `${t("per_grupo", "Grupo")} ${actuales.grupo}`
+                : t("per_sin_grupo", "Sin grupo")}
+            </p>
+            <p className="text-xs text-jw-text-main opacity-60 mt-2">
+              {t(
+                "per_ayuda_sit_lectura",
+                "La situación y el grupo no se editan acá: cambian con fecha y quedan en el historial.",
+              )}
+            </p>
           </div>
-        )}
-      </Seccion>
+        </Seccion>
+      )}
 
       <Seccion titulo={t("per_s_direccion", "Dirección (opcional)")}>
         <div className={ANCHO_COMPLETO}>

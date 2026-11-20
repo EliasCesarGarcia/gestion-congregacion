@@ -35,6 +35,7 @@ import FichaPersonaPage from "./pages/FichaPersonaPage"; // Ficha de una persona
 import AdminMotivosPage from "./pages/AdminMotivosPage"; // Panel de superadmin: motivos de puestos
 import AdminCongregacionesPage from "./pages/AdminCongregacionesPage"; // Panel de superadmin: congregaciones
 import NuevaPersonaPage from "./pages/NuevaPersonaPage"; // Alta de persona
+import EditarPersonaPage from "./pages/EditarPersonaPage"; // Edición de persona
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -277,6 +278,22 @@ function App() {
                   />
                 </Helmet>
                 <NuevaPersonaPage />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/personas/:id/editar"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Editar persona | Gestión Local</title>
+                  <meta
+                    name="description"
+                    content="Edición de los datos de una persona de la congregación."
+                  />
+                </Helmet>
+                <EditarPersonaPage />
               </RutaProtegida>
             }
           />
