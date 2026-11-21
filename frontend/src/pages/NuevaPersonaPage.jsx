@@ -6,9 +6,10 @@
  * elige la congregación; arranca en la que llega por ?congregacion= o en la
  * suya).
  *
- * Flujo: completar -> "Dar de alta" -> si falta algo se marca en cada campo
- * sin borrar lo escrito -> diálogo de confirmación -> POST /api/personas/crear
- * -> se abre la ficha de la persona nueva.
+ * Flujo: completar (cada campo se valida al salir de él) -> "Dar de alta" ->
+ * si falta algo se marca en cada campo sin borrar lo escrito -> diálogo de
+ * confirmación -> POST /api/personas/crear -> se abre la ficha de la persona
+ * nueva. Las reglas están en lib/validaciones.js (las mismas del backend).
  *
  * SEGURIDAD: el chequeo de abajo solo oculta la pantalla; el backend decide.
  */
@@ -24,15 +25,18 @@ import Confirmacion from "../components/ui/Confirmacion";
 import FormularioPersona from "../components/personas/FormularioPersona";
 import { FORM_PERSONA_VACIO } from "../config/personasConfig";
 import { fechaCorta, hoyISO } from "../lib/fechas";
-
-// Solo letras, espacios, guion, apóstrofo y punto (igual que el backend).
-const REGEX_APELLIDO = /^[\p{L}\s.'’-]+$/u;
+import {
+  armarContacto,
+  etiquetaCampoPersona,
+  validarAlSalir,
+  validarFormularioPersona,
+} from "../lib/validaciones";
 
 // Campos de texto opcionales que se mandan solo si tienen algo escrito.
+// (El contacto se arma aparte: país + número.)
 const OPCIONALES = [
   "situacion_2",
   "condicion",
-  "contacto",
   "detalles",
   "direccion",
   "ciudad",
@@ -172,39 +176,18 @@ function NuevaPersonaPage() {
   };
 
   // --- Validación ---
+  // Al salir de un campo con algo escrito se marca su error en el momento.
+  const alSalir = (nombre) => {
+    const mensaje = validarAlSalir(nombre, valores, t);
+    if (mensaje) setErrores((e) => ({ ...e, [nombre]: mensaje }));
+  };
+
   const validar = () => {
     const e = {};
     if (esSuper && !congregacionId) {
       e.congregacion = t("per_err_congregacion", "Elija la congregación.");
     }
-    const apellido = valores.apellido.trim();
-    if (!apellido) {
-      e.apellido = t("per_err_apellido", "Falta el apellido.");
-    } else if (!REGEX_APELLIDO.test(apellido)) {
-      e.apellido = t(
-        "per_err_apellido_chars",
-        "Solo letras, espacios, guion, apóstrofo y punto.",
-      );
-    }
-    if (!valores.nombre.trim()) {
-      e.nombre = t("per_err_nombre", "Falta el nombre.");
-    }
-    if (!valores.fecha_alta) {
-      e.fecha_alta = t("per_err_fecha_alta", "Falta la fecha de alta.");
-    } else if (valores.fecha_alta > hoyISO()) {
-      e.fecha_alta = t(
-        "per_err_fecha_futura",
-        "La fecha de alta no puede ser futura.",
-      );
-    }
-    return e;
-  };
-
-  const etiquetasFaltantes = {
-    congregacion: t("per_congregacion", "Congregación"),
-    apellido: t("per_f_apellido", "Apellido"),
-    nombre: t("per_f_nombre", "Nombre"),
-    fecha_alta: t("per_fecha_alta", "Fecha de alta"),
+    return { ...e, ...validarFormularioPersona(valores, t) };
   };
 
   const alEnviar = (ev) => {
@@ -215,7 +198,7 @@ function NuevaPersonaPage() {
     if (claves.length > 0) {
       setAviso(
         `${t("per_aviso_revisar", "Revise estos campos")}: ${claves
-          .map((k) => etiquetasFaltantes[k])
+          .map((k) => etiquetaCampoPersona(k, t))
           .join(", ")}.`,
       );
       // Lleva el foco al primer campo con error.
@@ -239,6 +222,8 @@ function NuevaPersonaPage() {
       const x = String(v[k] ?? "").trim();
       if (x) cuerpo[k] = x;
     });
+    const contacto = armarContacto(v.contacto_pais, v.contacto_numero);
+    if (contacto) cuerpo.contacto = contacto;
     if (v.grupo_id) cuerpo.grupo_id = Number(v.grupo_id);
     if (v.motivo_alta_id) cuerpo.motivo_alta_id = Number(v.motivo_alta_id);
     if (esSuper) cuerpo.congregacion_id = congregacionId;
@@ -318,6 +303,7 @@ function NuevaPersonaPage() {
           valores={valores}
           errores={errores}
           onCambiar={cambiar}
+          onSalir={alSalir}
           esSuper={esSuper}
           congregaciones={congregaciones}
           congregacionId={congregacionId}

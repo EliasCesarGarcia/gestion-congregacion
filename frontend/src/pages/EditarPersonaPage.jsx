@@ -5,11 +5,12 @@
  * /personas/:id/editar. La usan coordinador, secretario, servicio (de su
  * congregación) y superadmin.
  *
- * Flujo: se carga la ficha -> se completa el formulario -> "Guardar cambios"
- * -> si falta algo se marca en cada campo sin borrar lo escrito -> si no hay
- * cambios se avisa -> diálogo de confirmación -> POST /api/personas/editar
- * (formulario COMPLETO: lo que queda vacío se guarda como "sin dato") -> se
- * vuelve a la ficha.
+ * Flujo: se carga la ficha -> se completa el formulario (cada campo se valida
+ * al salir de él) -> "Guardar cambios" -> si falta algo se marca en cada campo
+ * sin borrar lo escrito -> si no hay cambios se avisa -> diálogo de
+ * confirmación -> POST /api/personas/editar (formulario COMPLETO: lo que
+ * queda vacío se guarda como "sin dato") -> se vuelve a la ficha.
+ * Las reglas están en lib/validaciones.js (las mismas del backend).
  *
  * Situaciones y grupo NO se editan acá: el backend los ignora. Se muestran
  * como lectura (la situación se cambia con fecha en el paso 3.4 y el grupo
@@ -28,11 +29,14 @@ import Boton from "../components/ui/Boton";
 import Confirmacion from "../components/ui/Confirmacion";
 import FormularioPersona from "../components/personas/FormularioPersona";
 import { FORM_PERSONA_VACIO } from "../config/personasConfig";
-import { fechaCorta, hoyISO } from "../lib/fechas";
-
-// Solo letras, espacios, guion, apóstrofo y punto (igual que el backend,
-// que lo exige tanto en el apellido como en el nombre).
-const REGEX_NOMBRE = /^[\p{L}\s.'’-]+$/u;
+import { fechaCorta } from "../lib/fechas";
+import {
+  armarContacto,
+  dividirContacto,
+  etiquetaCampoPersona,
+  validarAlSalir,
+  validarFormularioPersona,
+} from "../lib/validaciones";
 
 const detalleDe = (err) =>
   typeof err.response?.data === "string" ? err.response.data.trim() : "";
@@ -41,27 +45,32 @@ const detalleDe = (err) =>
 const soloFecha = (texto) => (texto ? String(texto).slice(0, 10) : "");
 
 // Ficha del backend -> valores del formulario (los null pasan a "").
-const desdeFicha = (p) => ({
-  ...FORM_PERSONA_VACIO,
-  apellido: p.apellido ?? "",
-  nombre: p.nombre ?? "",
-  contacto: p.contacto ?? "",
-  fecha_alta: soloFecha(p.fecha_alta),
-  condicion: p.condicion ?? "",
-  direccion: p.direccion ?? "",
-  ciudad: p.ciudad ?? "",
-  partido: p.partido ?? "",
-  provincia_estado: p.provincia_estado ?? "",
-  pais: p.pais ?? "",
-  codigo_postal: p.codigo_postal ?? "",
-  detalles: p.detalles ?? "",
-});
+// El contacto guardado ("+54 11 2345-6789") se parte en país y número.
+const desdeFicha = (p) => {
+  const contacto = dividirContacto(p.contacto);
+  return {
+    ...FORM_PERSONA_VACIO,
+    apellido: p.apellido ?? "",
+    nombre: p.nombre ?? "",
+    contacto_pais: contacto.pais,
+    contacto_numero: contacto.numero,
+    fecha_alta: soloFecha(p.fecha_alta),
+    condicion: p.condicion ?? "",
+    direccion: p.direccion ?? "",
+    ciudad: p.ciudad ?? "",
+    partido: p.partido ?? "",
+    provincia_estado: p.provincia_estado ?? "",
+    pais: p.pais ?? "",
+    codigo_postal: p.codigo_postal ?? "",
+    detalles: p.detalles ?? "",
+  };
+};
 
-// Campos que se mandan al guardar (siempre todos: la edición es completa).
+// Campos de texto que se mandan al guardar (siempre todos: la edición es
+// completa). El contacto se arma aparte: país + número.
 const CAMPOS = [
   "apellido",
   "nombre",
-  "contacto",
   "fecha_alta",
   "condicion",
   "direccion",
@@ -172,6 +181,12 @@ function EditarPersonaPage() {
   const ficha = carga.ficha;
   const tieneFechaAlta = !!ficha.fecha_alta;
   const fechaBaja = ficha.estado === "BAJA" ? soloFecha(ficha.fecha_baja) : "";
+  // Una persona antigua sin fecha puede seguir sin ella; si ya la tiene, no
+  // se puede vaciar.
+  const opcionesValidacion = {
+    fechaAltaObligatoria: tieneFechaAlta,
+    fechaBaja,
+  };
 
   // --- Cambios en el formulario ---
   const cambiar = (parcial) => {
@@ -184,50 +199,10 @@ function EditarPersonaPage() {
   };
 
   // --- Validación ---
-  const validar = () => {
-    const e = {};
-    const apellido = valores.apellido.trim();
-    if (!apellido) {
-      e.apellido = t("per_err_apellido", "Falta el apellido.");
-    } else if (!REGEX_NOMBRE.test(apellido)) {
-      e.apellido = t(
-        "per_err_apellido_chars",
-        "Solo letras, espacios, guion, apóstrofo y punto.",
-      );
-    }
-    const nombre = valores.nombre.trim();
-    if (!nombre) {
-      e.nombre = t("per_err_nombre", "Falta el nombre.");
-    } else if (!REGEX_NOMBRE.test(nombre)) {
-      e.nombre = t(
-        "per_err_nombre_chars",
-        "Solo letras, espacios, guion, apóstrofo y punto.",
-      );
-    }
-    if (!valores.fecha_alta) {
-      // Una persona antigua sin fecha puede seguir sin ella; si ya la tiene,
-      // no se puede vaciar.
-      if (tieneFechaAlta) {
-        e.fecha_alta = t("per_err_fecha_alta", "Falta la fecha de alta.");
-      }
-    } else if (valores.fecha_alta > hoyISO()) {
-      e.fecha_alta = t(
-        "per_err_fecha_futura",
-        "La fecha de alta no puede ser futura.",
-      );
-    } else if (fechaBaja && valores.fecha_alta > fechaBaja) {
-      e.fecha_alta = t(
-        "per_err_alta_despues_baja",
-        "La fecha de alta no puede ser posterior a la fecha de baja.",
-      );
-    }
-    return e;
-  };
-
-  const etiquetasFaltantes = {
-    apellido: t("per_f_apellido", "Apellido"),
-    nombre: t("per_f_nombre", "Nombre"),
-    fecha_alta: t("per_fecha_alta", "Fecha de alta"),
+  // Al salir de un campo con algo escrito se marca su error en el momento.
+  const alSalir = (nombre) => {
+    const mensaje = validarAlSalir(nombre, valores, t, opcionesValidacion);
+    if (mensaje) setErrores((e) => ({ ...e, [nombre]: mensaje }));
   };
 
   const hayCambios =
@@ -235,13 +210,13 @@ function EditarPersonaPage() {
 
   const alEnviar = (ev) => {
     ev.preventDefault();
-    const errs = validar();
+    const errs = validarFormularioPersona(valores, t, opcionesValidacion);
     setErrores(errs);
     const claves = Object.keys(errs);
     if (claves.length > 0) {
       setAviso(
         `${t("per_aviso_revisar", "Revise estos campos")}: ${claves
-          .map((k) => etiquetasFaltantes[k])
+          .map((k) => etiquetaCampoPersona(k, t))
           .join(", ")}.`,
       );
       document.getElementById(`per-f-${claves[0]}`)?.focus();
@@ -261,6 +236,10 @@ function EditarPersonaPage() {
     CAMPOS.forEach((k) => {
       cuerpo[k] = String(valores[k] ?? "").trim();
     });
+    cuerpo.contacto = armarContacto(
+      valores.contacto_pais,
+      valores.contacto_numero,
+    );
     return cuerpo;
   };
 
@@ -328,6 +307,7 @@ function EditarPersonaPage() {
           valores={valores}
           errores={errores}
           onCambiar={cambiar}
+          onSalir={alSalir}
           fechaAltaObligatoria={tieneFechaAlta}
           actuales={{
             situacion_1: ficha.situacion_1,

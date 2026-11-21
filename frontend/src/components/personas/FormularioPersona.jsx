@@ -2,8 +2,14 @@
  * ARCHIVO: FormularioPersona.jsx
  * UBICACIÓN: frontend/src/components/personas/FormularioPersona.jsx
  * DESCRIPCIÓN: Campos del formulario de una persona, compartidos por el alta
- * (modo "alta") y la edición (modo "edicion", paso 3.3b). No guarda nada: la
- * página que lo usa maneja los valores, la validación y el pedido al backend.
+ * (modo "alta") y la edición (modo "edicion"). No guarda nada: la página que
+ * lo usa maneja los valores, la validación y el pedido al backend.
+ *
+ * Cada caja lleva un placeholder (ejemplo genérico) y debajo una ayuda que
+ * NO desaparece al escribir. El contacto se elige por país (el código +NN se
+ * pone solo). Los valores del contacto son `contacto_pais` y
+ * `contacto_numero`; la página arma "+NN número" al guardar.
+ * `onSalir(nombre)` avisa a la página que se salió de un campo, para validarlo.
  *
  * Orden de las secciones (de lo más importante a lo menos):
  * datos personales, alta, situación y grupo, dirección y detalles.
@@ -11,14 +17,21 @@
  * En modo "edicion" no se muestran congregación, motivo de alta ni grupo: el
  * grupo solo cambia con "mover", para que siempre quede en el historial.
  * La situación 3 (superintendente / auxiliar) tampoco está: se pone sola
- * desde el grupo.
+ * desde el grupo. Las situaciones 1 y 2 se ven solo como lectura (se cambian
+ * con fecha, paso 3.4).
  */
 
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import Tarjeta from "../ui/Tarjeta";
-import { CampoTexto, CampoSelect, CampoArea } from "../ui/Campo";
+import { CampoTexto, CampoSelect, CampoArea, CampoTelefono } from "../ui/Campo";
 import { SITUACIONES_1, SITUACIONES_2 } from "../../config/personasConfig";
 import { hoyISO } from "../../lib/fechas";
+import {
+  LIMITES,
+  dividirContacto,
+  listarPaises,
+} from "../../lib/validaciones";
 
 function Seccion({ titulo, children }) {
   return (
@@ -36,6 +49,7 @@ function FormularioPersona({
   valores,
   errores = {},
   onCambiar,
+  onSalir,
   // Solo superadmin en el alta:
   esSuper = false,
   congregaciones = [],
@@ -52,16 +66,32 @@ function FormularioPersona({
   fechaAltaObligatoria = true,
   actuales = {},
 }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const esAlta = modo === "alta";
 
-  // Props comunes de cada campo (id, valor, error y cambio).
+  // Países con su código, en el idioma de la pantalla.
+  const idioma = (i18n.language || "es").split("-")[0];
+  const paises = useMemo(() => listarPaises(idioma), [idioma]);
+
+  // Props comunes de cada campo (id, valor, error, cambio y salida).
   const campo = (nombre) => ({
     id: `per-f-${nombre}`,
     value: valores[nombre],
     error: errores[nombre],
     onChange: (e) => onCambiar({ [nombre]: e.target.value }),
+    onBlur: () => onSalir?.(nombre),
   });
+
+  // Número de contacto: si se pega uno internacional ("+54 11 ..."), el país
+  // se detecta solo y el número queda sin el código.
+  const alNumero = (texto) => {
+    if (texto.trimStart().startsWith("+")) {
+      const { pais, numero } = dividirContacto(texto, valores.contacto_pais);
+      onCambiar({ contacto_pais: pais, contacto_numero: numero });
+    } else {
+      onCambiar({ contacto_numero: texto });
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -113,21 +143,49 @@ function FormularioPersona({
           label={t("per_f_apellido", "Apellido")}
           obligatorio
           autoComplete="off"
+          maxLength={LIMITES.nombre}
           placeholder={t("per_ph_apellido", "Ej.: García López")}
+          ayuda={t(
+            "per_ayuda_apellido",
+            "Solo letras, espacios, guion y apóstrofo. Ej.: García López.",
+          )}
         />
         <CampoTexto
           {...campo("nombre")}
           label={t("per_f_nombre", "Nombre")}
           obligatorio
           autoComplete="off"
+          maxLength={LIMITES.nombre}
           placeholder={t("per_ph_nombre", "Ej.: Juan Carlos")}
+          ayuda={t(
+            "per_ayuda_nombre",
+            "Solo letras, espacios, guion y apóstrofo. Ej.: Juan Carlos.",
+          )}
         />
         <div className={ANCHO_COMPLETO}>
-          <CampoTexto
-            {...campo("contacto")}
+          <CampoTelefono
+            id="per-f-contacto_numero"
             label={t("per_contacto", "Contacto")}
-            autoComplete="off"
-            placeholder={t("per_ph_contacto", "Teléfono o celular")}
+            labelPais={t("per_contacto_pais", "País del teléfono")}
+            pais={valores.contacto_pais}
+            numero={valores.contacto_numero}
+            paises={paises}
+            error={errores.contacto_numero}
+            // Se vuelve a mandar el número para que se limpie su error.
+            onPais={(p) =>
+              onCambiar({
+                contacto_pais: p,
+                contacto_numero: valores.contacto_numero,
+              })
+            }
+            onNumero={alNumero}
+            onBlur={() => onSalir?.("contacto_numero")}
+            maxLength={30}
+            placeholder={t("per_ph_contacto", "Ej.: 11 2345-6789")}
+            ayuda={t(
+              "per_ayuda_contacto",
+              "Elija el país y escriba el número con código de área. Ej.: 11 2345-6789.",
+            )}
           />
         </div>
       </Seccion>
@@ -204,49 +262,44 @@ function FormularioPersona({
               </option>
             ))}
           </CampoSelect>
-          {esAlta && (
-            <div className={ANCHO_COMPLETO}>
-              <CampoSelect
-                {...campo("grupo_id")}
-                label={t("per_f_grupo", "Grupo")}
-                disabled={cargandoGrupos}
-                error={
-                  errorGrupos
-                    ? t(
-                        "per_error_grupos",
-                        "No se pudo cargar la lista de grupos.",
-                      )
-                    : undefined
-                }
-                ayuda={
-                  !cargandoGrupos && !errorGrupos && grupos.length === 0
-                    ? t(
-                        "per_sin_grupos_cong",
-                        "Esta congregación todavía no tiene grupos.",
-                      )
-                    : t(
-                        "per_ayuda_grupo",
-                        "Opcional. Solo se ofrecen los grupos vigentes.",
-                      )
-                }
-              >
-                <option value="">
-                  {cargandoGrupos
-                    ? t("per_cargando", "Cargando…")
-                    : t("per_sin_grupo", "Sin grupo")}
+          <div className={ANCHO_COMPLETO}>
+            <CampoSelect
+              {...campo("grupo_id")}
+              label={t("per_f_grupo", "Grupo")}
+              disabled={cargandoGrupos}
+              error={
+                errorGrupos
+                  ? t("per_error_grupos", "No se pudo cargar la lista de grupos.")
+                  : undefined
+              }
+              ayuda={
+                !cargandoGrupos && !errorGrupos && grupos.length === 0
+                  ? t(
+                      "per_sin_grupos_cong",
+                      "Esta congregación todavía no tiene grupos.",
+                    )
+                  : t(
+                      "per_ayuda_grupo",
+                      "Opcional. Solo se ofrecen los grupos vigentes.",
+                    )
+              }
+            >
+              <option value="">
+                {cargandoGrupos
+                  ? t("per_cargando", "Cargando…")
+                  : t("per_sin_grupo", "Sin grupo")}
+              </option>
+              {grupos.map((g) => (
+                <option key={g.id} value={g.id}>
+                  {t("per_grupo", "Grupo")} {g.numero}
                 </option>
-                {grupos.map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {t("per_grupo", "Grupo")} {g.numero}
-                  </option>
-                ))}
-              </CampoSelect>
-            </div>
-          )}
+              ))}
+            </CampoSelect>
+          </div>
         </Seccion>
       )}
 
-            {!esAlta && (
+      {!esAlta && (
         <Seccion titulo={t("per_s_situacion_actual", "Situación y grupo")}>
           <div className={ANCHO_COMPLETO}>
             <p className="text-sm text-jw-text-main">
@@ -275,38 +328,57 @@ function FormularioPersona({
             {...campo("direccion")}
             label={t("per_direccion", "Dirección")}
             autoComplete="off"
-            placeholder={t("per_ph_direccion", "Calle y número")}
+            maxLength={LIMITES.direccion}
+            contador
+            placeholder={t("per_ph_direccion", "Ej.: Av. Libertador 1234, piso 3")}
+            ayuda={t(
+              "per_ayuda_direccion",
+              "Calle, número y, si corresponde, piso o departamento.",
+            )}
           />
         </div>
         <CampoTexto
           {...campo("ciudad")}
           label={t("per_ciudad", "Ciudad")}
           autoComplete="off"
-          placeholder={t("per_ph_ciudad", "Ej.: El Talar")}
+          maxLength={LIMITES.ubicacion}
+          placeholder={t("per_ph_ciudad", "Ej.: Córdoba")}
+          ayuda={t("per_ayuda_ciudad", "Ciudad o localidad.")}
         />
         <CampoTexto
           {...campo("partido")}
           label={t("per_partido", "Partido")}
           autoComplete="off"
-          placeholder={t("per_ph_partido", "Ej.: Tigre")}
+          maxLength={LIMITES.ubicacion}
+          placeholder={t("per_ph_partido", "Ej.: San Martín")}
+          ayuda={t("per_ayuda_partido", "Partido o departamento.")}
         />
         <CampoTexto
           {...campo("provincia_estado")}
           label={t("per_provincia", "Provincia o estado")}
           autoComplete="off"
-          placeholder={t("per_ph_provincia", "Ej.: Buenos Aires")}
+          maxLength={LIMITES.ubicacion}
+          placeholder={t("per_ph_provincia", "Ej.: Santa Fe")}
+          ayuda={t("per_ayuda_provincia", "Provincia, estado o región.")}
         />
         <CampoTexto
           {...campo("pais")}
           label={t("per_pais", "País")}
           autoComplete="off"
+          maxLength={LIMITES.ubicacion}
           placeholder={t("per_ph_pais", "Ej.: Argentina")}
+          ayuda={t("per_ayuda_pais", "País de residencia.")}
         />
         <CampoTexto
           {...campo("codigo_postal")}
           label={t("per_codigo_postal", "Código postal")}
           autoComplete="off"
+          maxLength={LIMITES.postal}
           placeholder={t("per_ph_cp", "Ej.: B1618")}
+          ayuda={t(
+            "per_ayuda_cp",
+            "Letras y números, sin símbolos. Ej.: B1618.",
+          )}
         />
       </Seccion>
 
@@ -315,10 +387,15 @@ function FormularioPersona({
           <CampoArea
             {...campo("detalles")}
             rows={4}
+            maxLength={LIMITES.detalles}
             label={t("per_detalles", "Detalles")}
             placeholder={t(
               "per_ph_detalles",
               "Notas sobre la persona (opcional)",
+            )}
+            ayuda={t(
+              "per_ayuda_detalles",
+              "Datos útiles sobre la persona. Es opcional.",
             )}
           />
         </div>

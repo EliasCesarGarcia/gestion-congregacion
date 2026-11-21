@@ -41,7 +41,8 @@ export const SITUACIONES_2 = ["Siervo Ministerial", "Anciano"];
 export const FORM_PERSONA_VACIO = {
   apellido: "",
   nombre: "",
-  contacto: "",
+  contacto_pais: "AR",
+  contacto_numero: "",
   fecha_alta: "",
   condicion: "",
   motivo_alta_id: "",

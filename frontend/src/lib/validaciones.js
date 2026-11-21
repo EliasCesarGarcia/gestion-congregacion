@@ -197,3 +197,85 @@ export function validarTelefono(pais, numero, t) {
   }
   return "";
 }
+
+// --- Validación del formulario completo ---
+
+// Campos que se validan, en el orden en que aparecen en pantalla (el foco va
+// al primero que falle).
+export const CAMPOS_VALIDABLES = [
+  "apellido",
+  "nombre",
+  "contacto_numero",
+  "fecha_alta",
+  "direccion",
+  "ciudad",
+  "partido",
+  "provincia_estado",
+  "pais",
+  "codigo_postal",
+];
+
+// Mensaje de error de un campo ("" si está bien o si no se valida).
+// opciones: { fechaAltaObligatoria, fechaBaja } (solo para la fecha de alta).
+export function validarCampoPersona(nombre, valores, t, opciones = {}) {
+  const { fechaAltaObligatoria = true, fechaBaja = "" } = opciones;
+  switch (nombre) {
+    case "apellido":
+      return validarApellido(valores.apellido, t);
+    case "nombre":
+      return validarNombre(valores.nombre, t);
+    case "contacto_numero":
+      return validarTelefono(valores.contacto_pais, valores.contacto_numero, t);
+    case "fecha_alta":
+      return validarFechaAlta(valores.fecha_alta, t, {
+        obligatoria: fechaAltaObligatoria,
+        fechaBaja,
+      });
+    case "direccion":
+      return validarTextoOpcional(valores.direccion, "direccion", t);
+    case "ciudad":
+    case "partido":
+    case "provincia_estado":
+    case "pais":
+      return validarTextoOpcional(valores[nombre], "ubicacion", t);
+    case "codigo_postal":
+      return validarTextoOpcional(valores.codigo_postal, "postal", t);
+    default:
+      return "";
+  }
+}
+
+// Al salir de un campo: solo se valida si tiene algo escrito (pasar de largo
+// por un campo vacío no debe mostrar errores; eso lo hace "Guardar").
+export function validarAlSalir(nombre, valores, t, opciones) {
+  if (!String(valores[nombre] ?? "").trim()) return "";
+  return validarCampoPersona(nombre, valores, t, opciones);
+}
+
+// Todos los errores del formulario: { campo: mensaje }.
+export function validarFormularioPersona(valores, t, opciones) {
+  const errores = {};
+  CAMPOS_VALIDABLES.forEach((k) => {
+    const mensaje = validarCampoPersona(k, valores, t, opciones);
+    if (mensaje) errores[k] = mensaje;
+  });
+  return errores;
+}
+
+// Nombre legible de un campo, para el aviso "Revise estos campos: ...".
+export function etiquetaCampoPersona(nombre, t) {
+  const e = {
+    congregacion: ["per_congregacion", "Congregación"],
+    apellido: ["per_f_apellido", "Apellido"],
+    nombre: ["per_f_nombre", "Nombre"],
+    contacto_numero: ["per_contacto", "Contacto"],
+    fecha_alta: ["per_fecha_alta", "Fecha de alta"],
+    direccion: ["per_direccion", "Dirección"],
+    ciudad: ["per_ciudad", "Ciudad"],
+    partido: ["per_partido", "Partido"],
+    provincia_estado: ["per_provincia", "Provincia o estado"],
+    pais: ["per_pais", "País"],
+    codigo_postal: ["per_codigo_postal", "Código postal"],
+  }[nombre];
+  return e ? t(e[0], e[1]) : nombre;
+}
