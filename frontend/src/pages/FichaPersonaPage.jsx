@@ -1,9 +1,17 @@
 /**
  * ARCHIVO: FichaPersonaPage.jsx
  * UBICACIÓN: frontend/src/pages/FichaPersonaPage.jsx
- * DESCRIPCIÓN: Ficha de una persona (solo lectura) con sus historiales.
- * Ruta: /personas/:id. La ven coordinador, secretario, servicio (de su
- * congregación) y superadmin.
+ * DESCRIPCIÓN: Ficha de una persona con sus historiales. Ruta: /personas/:id.
+ * La ven coordinador, secretario, servicio (de su congregación) y superadmin.
+ *
+ * Jerarquía de la pantalla (de lo más importante a lo menos):
+ *  1. Identidad: foto, apellido y nombre, ID, alta/baja y condición.
+ *  2. Contacto: teléfono, email y dirección (solo lo que tiene).
+ *  3. Situación, por orden de prioridad: cargo en la aplicación, situación 3,
+ *     situación 2 y situación 1; después grupo y condición.
+ *  4. Registro: fechas de alta y baja.
+ *  5. Detalles (notas), al final.
+ *  Debajo, los historiales (HistorialPersona).
  *
  * SEGURIDAD: el chequeo de abajo solo oculta la pantalla. El backend responde
  * igual a una persona inexistente que a una de otra congregación.
@@ -13,7 +21,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { ArrowLeft, Loader2, Pencil } from "lucide-react";
+import { ArrowLeft, Loader2, Pencil, Phone } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import Tarjeta from "../components/ui/Tarjeta";
 import Boton from "../components/ui/Boton";
@@ -22,14 +30,29 @@ import HistorialPersona from "../components/personas/HistorialPersona";
 import { ROLES } from "../config/personasConfig";
 import { fechaCorta } from "../lib/fechas";
 
-function Dato({ etiqueta, children }) {
+// Una fila "etiqueta ........ valor" dentro de un bloque.
+function Fila({ etiqueta, children }) {
   return (
-    <div>
-      <dt className="text-xs text-jw-text-main opacity-60">{etiqueta}</dt>
-      <dd className="text-sm text-jw-text-main break-words">
-        {children || "—"}
+    <div className="flex items-baseline justify-between gap-6 py-2.5">
+      <dt className="text-sm text-jw-text-main opacity-60 shrink-0">
+        {etiqueta}
+      </dt>
+      <dd className="text-sm font-medium text-jw-text-main text-end min-w-0 break-words">
+        {children}
       </dd>
     </div>
+  );
+}
+
+// Tarjeta con título pequeño y filas separadas por una línea fina.
+function Bloque({ titulo, children }) {
+  return (
+    <Tarjeta>
+      <h2 className="text-xs font-medium uppercase tracking-wide text-jw-text-main opacity-60 mb-1">
+        {titulo}
+      </h2>
+      <dl className="divide-y divide-jw-border">{children}</dl>
+    </Tarjeta>
   );
 }
 
@@ -125,30 +148,40 @@ function FichaPersonaPage() {
   const p = datos.ficha;
   const deBaja = p.estado === "BAJA";
   const rol = ROLES[p.rol_app];
+  const mostrarCargo = !!rol && p.rol_app !== "publicador";
   const sinFecha = t("per_sin_fecha", "sin fecha");
-  const condicion =
+
+  const condicionTexto =
     p.condicion === "A"
       ? t("per_activo", "Activo")
       : p.condicion === "I"
         ? t("per_inactivo", "Inactivo")
         : t("per_sin_condicion_dato", "Sin condición");
-  const direccion = [
+  const condicionTono =
+    p.condicion === "A" ? "ok" : p.condicion === "I" ? "aviso" : "neutro";
+
+  // Teléfono: si tiene código de país ("+54 ..."), es un enlace para llamar.
+  const telefono = p.contacto || "";
+  const hrefTelefono = telefono.startsWith("+")
+    ? `tel:+${telefono.replace(/\D/g, "")}`
+    : "";
+
+  const lineasDireccion = [
     p.direccion,
-    p.ciudad,
-    p.partido,
-    p.provincia_estado,
-    p.pais,
-  ]
-    .filter(Boolean)
-    .join(", ");
+    [p.ciudad, p.partido].filter(Boolean).join(", "),
+    [p.provincia_estado, p.pais].filter(Boolean).join(", "),
+    p.codigo_postal ? `${t("per_cp_corto", "CP")} ${p.codigo_postal}` : "",
+  ].filter(Boolean);
+
+  const hayContacto = !!telefono || !!p.email || lineasDireccion.length > 0;
 
   return (
     <div className="max-w-3xl mx-auto p-6 space-y-6">
       {volver}
 
-      {/* Encabezado */}
-      <Tarjeta className="flex flex-wrap items-center gap-4">
-        <div className="w-16 h-16 rounded-full overflow-hidden bg-jw-body border border-jw-border flex items-center justify-center text-lg text-jw-text-main shrink-0">
+      {/* 1. Identidad */}
+      <Tarjeta className="flex flex-wrap items-center gap-5">
+        <div className="w-20 h-20 rounded-full overflow-hidden bg-jw-body border border-jw-border flex items-center justify-center text-xl text-jw-text-main shrink-0">
           {p.foto_url ? (
             <img
               src={p.foto_url}
@@ -160,19 +193,17 @@ function FichaPersonaPage() {
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <h1 className="text-xl font-semibold text-jw-text-main break-words">
+          <p className="text-xs text-jw-text-main opacity-60 tabular-nums">
+            {t("per_id", "ID")} {p.id}
+          </p>
+          <h1 className="text-2xl font-semibold text-jw-text-main break-words">
             {p.apellido} {p.nombre}
           </h1>
           <div className="flex flex-wrap gap-1 mt-2">
             <Etiqueta tono={deBaja ? "aviso" : "ok"}>
               {deBaja ? t("per_baja", "Baja") : t("per_alta", "Alta")}
             </Etiqueta>
-            {p.situacion_1 && <Etiqueta>{p.situacion_1}</Etiqueta>}
-            {p.situacion_2 && <Etiqueta>{p.situacion_2}</Etiqueta>}
-            {p.situacion_3 && <Etiqueta>{p.situacion_3}</Etiqueta>}
-            {rol && p.rol_app !== "publicador" && (
-              <Etiqueta tono="ok">{t(rol[0], rol[1])}</Etiqueta>
-            )}
+            <Etiqueta tono={condicionTono}>{condicionTexto}</Etiqueta>
           </div>
         </div>
         <Boton
@@ -185,36 +216,101 @@ function FichaPersonaPage() {
         </Boton>
       </Tarjeta>
 
-      {/* Datos */}
-      <Tarjeta>
-        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Dato etiqueta={t("per_f_grupo", "Grupo")}>
-            {p.grupo != null
-              ? `${t("per_grupo", "Grupo")} ${p.grupo}`
-              : t("per_sin_grupo", "Sin grupo")}
-          </Dato>
-          <Dato etiqueta={t("per_f_condicion", "Condición")}>{condicion}</Dato>
-          <Dato etiqueta={t("per_fecha_alta", "Fecha de alta")}>
-            {fechaCorta(p.fecha_alta, sinFecha)}
-          </Dato>
-          {deBaja && (
-            <Dato etiqueta={t("per_fecha_baja", "Fecha de baja")}>
-              {fechaCorta(p.fecha_baja, sinFecha)}
-            </Dato>
-          )}
-          <Dato etiqueta={t("per_contacto", "Contacto")}>{p.contacto}</Dato>
-          <Dato etiqueta={t("per_email", "Email")}>{p.email}</Dato>
-          <Dato etiqueta={t("per_direccion", "Dirección")}>{direccion}</Dato>
-          <Dato etiqueta={t("per_codigo_postal", "Código postal")}>
-            {p.codigo_postal}
-          </Dato>
-        </dl>
-        {p.detalles && (
-          <div className="mt-4 pt-4 border-t border-jw-border">
-            <Dato etiqueta={t("per_detalles", "Detalles")}>{p.detalles}</Dato>
-          </div>
+      {/* 2. Contacto */}
+      <Bloque titulo={t("per_contacto", "Contacto")}>
+        {hayContacto ? (
+          <>
+            {telefono && (
+              <Fila etiqueta={t("per_telefono", "Teléfono")}>
+                {hrefTelefono ? (
+                  <a
+                    href={hrefTelefono}
+                    dir="ltr"
+                    aria-label={`${t("per_llamar", "Llamar")} ${telefono}`}
+                    className="inline-flex items-center gap-1.5 underline underline-offset-4 decoration-jw-border hover:decoration-current"
+                  >
+                    <Phone size={14} aria-hidden="true" />
+                    {telefono}
+                  </a>
+                ) : (
+                  <span dir="ltr">{telefono}</span>
+                )}
+              </Fila>
+            )}
+            {p.email && (
+              <Fila etiqueta={t("per_email", "Email")}>
+                <a
+                  href={`mailto:${p.email}`}
+                  className="underline underline-offset-4 decoration-jw-border hover:decoration-current"
+                >
+                  {p.email}
+                </a>
+              </Fila>
+            )}
+            {lineasDireccion.length > 0 && (
+              <Fila etiqueta={t("per_direccion", "Dirección")}>
+                {lineasDireccion.map((linea, i) => (
+                  <div key={i}>{linea}</div>
+                ))}
+              </Fila>
+            )}
+          </>
+        ) : (
+          <p className="py-2.5 text-sm text-jw-text-main opacity-60">
+            {t("per_sin_contacto", "Sin datos de contacto.")}
+          </p>
         )}
-      </Tarjeta>
+      </Bloque>
+
+      {/* 3. Situación, por orden de prioridad */}
+      <Bloque titulo={t("per_s_situacion_ficha", "Situación")}>
+        {mostrarCargo && (
+          <Fila etiqueta={t("per_cargo_app", "Cargo en la aplicación")}>
+            {t(rol[0], rol[1])}
+          </Fila>
+        )}
+        {p.situacion_3 && (
+          <Fila etiqueta={t("per_f_sit3", "Situación 3")}>{p.situacion_3}</Fila>
+        )}
+        {p.situacion_2 && (
+          <Fila etiqueta={t("per_f_sit2", "Situación 2")}>{p.situacion_2}</Fila>
+        )}
+        <Fila etiqueta={t("per_f_sit1", "Situación 1")}>
+          {p.situacion_1 || "—"}
+        </Fila>
+        <Fila etiqueta={t("per_f_grupo", "Grupo")}>
+          {p.grupo != null
+            ? `${t("per_grupo", "Grupo")} ${p.grupo}`
+            : t("per_sin_grupo", "Sin grupo")}
+        </Fila>
+        <Fila etiqueta={t("per_f_condicion", "Condición")}>
+          {condicionTexto}
+        </Fila>
+      </Bloque>
+
+      {/* 4. Registro */}
+      <Bloque titulo={t("per_s_registro", "Registro")}>
+        <Fila etiqueta={t("per_fecha_alta", "Fecha de alta")}>
+          {fechaCorta(p.fecha_alta, sinFecha)}
+        </Fila>
+        {deBaja && (
+          <Fila etiqueta={t("per_fecha_baja", "Fecha de baja")}>
+            {fechaCorta(p.fecha_baja, sinFecha)}
+          </Fila>
+        )}
+      </Bloque>
+
+      {/* 5. Detalles, al final */}
+      {p.detalles && (
+        <Tarjeta>
+          <h2 className="text-xs font-medium uppercase tracking-wide text-jw-text-main opacity-60 mb-2">
+            {t("per_detalles", "Detalles")}
+          </h2>
+          <p className="text-sm text-jw-text-main whitespace-pre-line break-words">
+            {p.detalles}
+          </p>
+        </Tarjeta>
+      )}
 
       <HistorialPersona historial={datos.historial} />
     </div>
