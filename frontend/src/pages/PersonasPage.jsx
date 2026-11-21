@@ -21,7 +21,13 @@ import { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { Loader2, Plus, Search, SlidersHorizontal } from "lucide-react";
+import {
+  LayoutGrid,
+  Loader2,
+  Plus,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import Boton from "../components/ui/Boton";
 import Tarjeta from "../components/ui/Tarjeta";
@@ -322,6 +328,19 @@ function PersonasPage() {
               {t("per_limpiar", "Limpiar")}
             </Boton>
           )}
+          <Boton
+            variante="suave"
+            icono={LayoutGrid}
+            onClick={() =>
+              navigate(
+                esSuper && congregacionId
+                  ? `/personas/grupos?congregacion=${encodeURIComponent(congregacionId)}`
+                  : "/personas/grupos",
+              )
+            }
+          >
+            {t("per_h_grupos", "Grupos")}
+          </Boton>
           <Boton
             icono={Plus}
             onClick={() =>

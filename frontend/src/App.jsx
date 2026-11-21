@@ -36,6 +36,7 @@ import AdminMotivosPage from "./pages/AdminMotivosPage"; // Panel de superadmin:
 import AdminCongregacionesPage from "./pages/AdminCongregacionesPage"; // Panel de superadmin: congregaciones
 import NuevaPersonaPage from "./pages/NuevaPersonaPage"; // Alta de persona
 import EditarPersonaPage from "./pages/EditarPersonaPage"; // Edición de persona
+import GruposPage from "./pages/GruposPage"; // Grupos de la congregación
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -278,6 +279,22 @@ function App() {
                   />
                 </Helmet>
                 <NuevaPersonaPage />
+              </RutaProtegida>
+            }
+          />
+
+          <Route
+            path="/personas/grupos"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Grupos | Gestión Local</title>
+                  <meta
+                    name="description"
+                    content="Grupos de la congregación: ver, crear, renumerar y cerrar."
+                  />
+                </Helmet>
+                <GruposPage />
               </RutaProtegida>
             }
           />
