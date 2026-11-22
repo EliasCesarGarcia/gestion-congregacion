@@ -23,9 +23,18 @@ import { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
-import { ArrowLeft, Loader2, Plus, Users } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRightLeft,
+  Loader2,
+  Plus,
+  UserCheck,
+  Users,
+} from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import IntegrantesGrupo from "../components/personas/IntegrantesGrupo";
+import MoverPersonasGrupo from "../components/personas/MoverPersonasGrupo";
+import EncargadosGrupo from "../components/personas/EncargadosGrupo";
 import Boton from "../components/ui/Boton";
 import Tarjeta from "../components/ui/Tarjeta";
 import Etiqueta from "../components/ui/Etiqueta";
@@ -175,6 +184,8 @@ function GruposPage() {
   const [dialogo, setDialogo] = useState(DIALOGO_CERRADO);
   const [mensaje, setMensaje] = useState("");
   const [verGrupo, setVerGrupo] = useState(null);
+  const [mover, setMover] = useState(null); // null | { tipo: "grupo", grupo } | { tipo: "sin" }
+  const [encargadosDe, setEncargadosDe] = useState(null); // grupo abierto en "Encargados"
 
   if (!permisos.cargado) {
     return (
@@ -444,9 +455,20 @@ function GruposPage() {
           />
           {t("per_ver_cerrados", "Ver también los grupos cerrados")}
         </label>
-        <Boton icono={Plus} onClick={abrirCrear} disabled={!listo}>
-          {t("per_nuevo_grupo", "Nuevo grupo")}
-        </Boton>
+        <div className="flex flex-wrap gap-2">
+          {resultado.sinGrupo > 0 && activos.length > 0 && (
+            <Boton
+              variante="suave"
+              icono={ArrowRightLeft}
+              onClick={() => setMover({ tipo: "sin" })}
+            >
+              {t("per_asignar_sin_grupo", "Asignar personas sin grupo")}
+            </Boton>
+          )}
+          <Boton icono={Plus} onClick={abrirCrear} disabled={!listo}>
+            {t("per_nuevo_grupo", "Nuevo grupo")}
+          </Boton>
+        </div>
       </div>
 
       {mensaje && (
@@ -542,6 +564,22 @@ function GruposPage() {
                   >
                     {t("per_ver_integrantes", "Ver integrantes")}
                   </Boton>
+                  {(g.miembros ?? 0) > 0 && (
+                    <Boton
+                      variante="suave"
+                      icono={ArrowRightLeft}
+                      onClick={() => setMover({ tipo: "grupo", grupo: g })}
+                    >
+                      {t("per_mover_integrantes", "Mover integrantes")}
+                    </Boton>
+                  )}
+                  <Boton
+                    variante="suave"
+                    icono={UserCheck}
+                    onClick={() => setEncargadosDe(g)}
+                  >
+                    {t("per_encargados", "Encargados")}
+                  </Boton>
                   <Boton variante="suave" onClick={() => abrirRenumerar(g)}>
                     {t("per_renumerar", "Renumerar")}
                   </Boton>
@@ -554,7 +592,52 @@ function GruposPage() {
           ))}
         </div>
       )}
-
+      {encargadosDe && (
+        <EncargadosGrupo
+          key={encargadosDe.id}
+          grupo={encargadosDe}
+          esSuper={esSuper}
+          congregacionId={congregacionId}
+          onCerrar={() => setEncargadosDe(null)}
+          onListo={(texto) => {
+            setMensaje(texto);
+            setEncargadosDe(null);
+            setRecarga((r) => r + 1);
+          }}
+        />
+      )}
+      {mover && (
+        <MoverPersonasGrupo
+          key={mover.tipo === "grupo" ? mover.grupo.id : "sin"}
+          origen={mover}
+          grupos={activos}
+          esSuper={esSuper}
+          congregacionId={congregacionId}
+          onCerrar={() => setMover(null)}
+          onListo={({ movidas, sinCambio, destino }) => {
+            setMensaje(
+              [
+                t("per_mover_ok", {
+                  defaultValue:
+                    "Personas movidas: {{n}}. Destino: {{destino}}.",
+                  n: movidas,
+                  destino,
+                }),
+                sinCambio > 0
+                  ? t("per_mover_ya", {
+                      defaultValue: "{{n}} ya estaban en ese destino.",
+                      n: sinCambio,
+                    })
+                  : "",
+              ]
+                .filter(Boolean)
+                .join(" "),
+            );
+            setMover(null);
+            setRecarga((r) => r + 1);
+          }}
+        />
+      )}
       {verGrupo && (
         <IntegrantesGrupo
           key={verGrupo.id}
