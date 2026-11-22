@@ -112,7 +112,7 @@ function Confirmacion({
         aria-modal="true"
         aria-labelledby="confirmacion-titulo"
         aria-describedby={mensaje ? "confirmacion-mensaje" : undefined}
-        className="relative w-full max-w-sm bg-jw-card text-jw-text-main border border-jw-border rounded-2xl p-6 shadow-xl"
+        className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto bg-jw-card text-jw-text-main border border-jw-border rounded-2xl p-6 shadow-xl"
       >
         <h2 id="confirmacion-titulo" className="text-base font-semibold">
           {titulo}

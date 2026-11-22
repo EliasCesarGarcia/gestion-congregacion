@@ -27,6 +27,7 @@ import Tarjeta from "../components/ui/Tarjeta";
 import Boton from "../components/ui/Boton";
 import Etiqueta from "../components/ui/Etiqueta";
 import HistorialPersona from "../components/personas/HistorialPersona";
+import BajaReactivarPersona from "../components/personas/BajaReactivarPersona";
 import { ROLES } from "../config/personasConfig";
 import { fechaCorta } from "../lib/fechas";
 
@@ -72,7 +73,12 @@ function FichaPersonaPage() {
     historial: null,
     error: "",
   });
-  const cargando = datos.id !== id;
+
+  // Después de una baja o reactivación se vuelve a pedir la ficha.
+  const [recarga, setRecarga] = useState(0);
+  const [mensaje, setMensaje] = useState("");
+  const clave = `${id}:${recarga}`;
+  const cargando = datos.id !== clave;
 
   useEffect(() => {
     if (!autorizado) return;
@@ -84,14 +90,14 @@ function FichaPersonaPage() {
       axios.get("/api/personas/historial", opciones),
     ])
       .then(([f, h]) => {
-        setDatos({ id, ficha: f.data, historial: h.data, error: "" });
+        setDatos({ id: clave, ficha: f.data, historial: h.data, error: "" });
       })
       .catch((err) => {
         if (axios.isCancel(err)) return;
         const detalle =
           typeof err.response?.data === "string" ? err.response.data : "";
         setDatos({
-          id,
+          id: clave,
           ficha: null,
           historial: null,
           error:
@@ -100,7 +106,7 @@ function FichaPersonaPage() {
       });
 
     return () => control.abort();
-  }, [autorizado, id, t]);
+  }, [autorizado, id, clave, t]);
 
   if (!permisos.cargado) {
     return (
@@ -179,6 +185,15 @@ function FichaPersonaPage() {
     <div className="max-w-3xl mx-auto p-6 space-y-6">
       {volver}
 
+      {mensaje && (
+        <p
+          role="status"
+          className="text-sm text-jw-text-main border border-green-600/40 bg-green-600/10 rounded-xl px-3 py-2"
+        >
+          {mensaje}
+        </p>
+      )}
+
       {/* 1. Identidad */}
       <Tarjeta className="flex flex-wrap items-center gap-5">
         <div className="w-20 h-20 rounded-full overflow-hidden bg-jw-body border border-jw-border flex items-center justify-center text-xl text-jw-text-main shrink-0">
@@ -214,6 +229,13 @@ function FichaPersonaPage() {
         >
           {t("per_editar_boton", "Editar")}
         </Boton>
+        <BajaReactivarPersona
+          persona={p}
+          onListo={(texto) => {
+            setMensaje(texto);
+            setRecarga((r) => r + 1);
+          }}
+        />
       </Tarjeta>
 
       {/* 2. Contacto */}
