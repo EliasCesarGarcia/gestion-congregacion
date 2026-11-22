@@ -42,5 +42,6 @@ type NuevaPersona struct {
 	Situacion3     string
 	ActorID        string
 	MotivoAltaID   *int64
+	DetallesAlta   string // detalles del alta (opcional, ya normalizados)
 	GrupoID        *int
 }

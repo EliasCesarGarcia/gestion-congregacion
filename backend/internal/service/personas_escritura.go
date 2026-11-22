@@ -72,6 +72,7 @@ type EntradaPersona struct {
 	Ciudad          string `json:"ciudad"`
 	Partido         string `json:"partido"`
 	MotivoAltaID    int64  `json:"motivo_alta_id"`
+	DetallesAlta    string `json:"detalles_alta"` // solo al crear
 }
 
 func errDatosPersona(format string, a ...interface{}) error {
@@ -273,7 +274,7 @@ func prepararDatosPersona(in EntradaPersona) (models.DatosPersona, error) {
 		return d, errDatosPersona("la condición debe ser A (activo) o I (inactivo)")
 	}
 
-		if d.Direccion, err = textoConCaracteres(in.Direccion, "la dirección", personasLargoDireccion, runaDireccion, "letras, números, espacios y . , ' - ° / # ( ) &"); err != nil {
+	if d.Direccion, err = textoConCaracteres(in.Direccion, "la dirección", personasLargoDireccion, runaDireccion, "letras, números, espacios y . , ' - ° / # ( ) &"); err != nil {
 		return d, err
 	}
 	if d.CodigoPostal, err = textoConCaracteres(in.CodigoPostal, "el código postal", personasLargoPostal, runaPostal, "letras, números, espacios y guiones"); err != nil {
@@ -361,7 +362,14 @@ func (s *Service) CrearPersona(a *models.Actor, esSuper bool, in EntradaPersona)
 	if s3 != "" {
 		return 0, errDatosPersona("la situación 3 (superintendente o auxiliar de grupo) se asigna desde el grupo, después de crear a la persona")
 	}
+	if in.MotivoAltaID <= 0 {
+		return 0, errDatosPersona("el motivo de alta es obligatorio")
+	}
 	motivo, err := s.validarMotivoDeUso(in.MotivoAltaID, "personas.alta")
+	if err != nil {
+		return 0, err
+	}
+	detallesAlta, err := normalizarDetalles(in.DetallesAlta)
 	if err != nil {
 		return 0, err
 	}
@@ -383,6 +391,7 @@ func (s *Service) CrearPersona(a *models.Actor, esSuper bool, in EntradaPersona)
 		Situacion3:     s3,
 		ActorID:        a.PersonaID,
 		MotivoAltaID:   motivo,
+		DetallesAlta:   detallesAlta,
 		GrupoID:        grupoID,
 	})
 	if err != nil {
