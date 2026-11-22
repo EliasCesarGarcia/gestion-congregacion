@@ -7,7 +7,7 @@
  *  - Un encargado solo actúa en su congregación; el superadmin en cualquiera.
  *  - La fecha es obligatoria, no futura y no anterior al alta (baja) ni a la
  *    última baja (reactivación). Nunca se inventan fechas.
- *  - Motivo opcional. Sale del catálogo único: la baja acepta motivos activos
+ *  - Motivo obligatorio (baja y reactivación). Sale del catálogo único: la baja acepta motivos activos
  *    del uso personas.baja y la reactivación los del uso personas.alta.
  *    Detalles de la baja: hasta 100 palabras.
  *  - No se puede dar de baja a un titular de rol (coordinador, secretario o
@@ -67,6 +67,9 @@ func (s *Service) DarDeBajaPersona(a *models.Actor, esSuper bool, personaID int,
 	if personaID <= 0 {
 		return ErrPersonaIDInvalid
 	}
+	if motivoID <= 0 {
+		return errDatosPersona("el motivo de la baja es obligatorio")
+	}
 	if fmt.Sprintf("%d", personaID) == a.PersonaID {
 		return errDatosPersona("no puede darse de baja a sí misma")
 	}
@@ -106,11 +109,18 @@ func (s *Service) DarDeBajaPersona(a *models.Actor, esSuper bool, personaID int,
 
 // ReactivarPersona: la persona debe estar en BAJA.
 // motivoID 0 = sin motivo; si viene, debe ser un motivo activo del uso personas.alta.
-func (s *Service) ReactivarPersona(a *models.Actor, esSuper bool, personaID int, fecha string, motivoID int64) error {
+func (s *Service) ReactivarPersona(a *models.Actor, esSuper bool, personaID int, fecha, detalles string, motivoID int64) error {
 	if personaID <= 0 {
 		return ErrPersonaIDInvalid
 	}
+	if motivoID <= 0 {
+		return errDatosPersona("el motivo de la reactivación es obligatorio")
+	}
 	f, err := fechaPersona(fecha, true)
+	if err != nil {
+		return err
+	}
+	detalles, err = normalizarDetalles(detalles)
 	if err != nil {
 		return err
 	}
@@ -129,7 +139,7 @@ func (s *Service) ReactivarPersona(a *models.Actor, esSuper bool, personaID int,
 		return errDatosPersona("la fecha de alta no puede ser anterior a la fecha de baja")
 	}
 
-	if err := s.repo.ReactivarPersona(personaID, f, motivo, a.PersonaID); err != nil {
+	if err := s.repo.ReactivarPersona(personaID, f, motivo, detalles, a.PersonaID); err != nil {
 		return traducirErrorBaja(err)
 	}
 	return nil

@@ -4,9 +4,9 @@
  * DESCRIPCIÓN: Rutas de bajas y reactivación. Coordinador, secretario,
  * servicio o superadmin:
  *
- *  - POST /api/personas/baja      -> { id, fecha, motivo_id?, detalles? }
+ *  - POST /api/personas/baja      -> { id, fecha, motivo_id, detalles? }
  *      motivo_id: motivo activo del uso personas.baja (0 o ausente = sin motivo).
- *  - POST /api/personas/reactivar -> { id, fecha, motivo_id? }
+ *  - POST /api/personas/reactivar -> { id, fecha, motivo_id, detalles? }
  *      motivo_id: motivo activo del uso personas.alta (0 o ausente = sin motivo).
  *
  * Los desplegables se llenan con GET /api/personas/motivos?uso=baja|alta|grupo
@@ -56,11 +56,12 @@ func ReactivarPersonaHandler(s *service.Service) http.HandlerFunc {
 			ID       int    `json:"id"`
 			Fecha    string `json:"fecha"`
 			MotivoID int64  `json:"motivo_id"`
+			Detalles string `json:"detalles"`
 		}
 		if !leerJSONPersonas(w, r, &req) {
 			return
 		}
-		if err := s.ReactivarPersona(a, esSuper, req.ID, req.Fecha, req.MotivoID); err != nil {
+		if err := s.ReactivarPersona(a, esSuper, req.ID, req.Fecha, req.Detalles, req.MotivoID); err != nil {
 			responderErrorPersonas(w, err, "reactivar-persona", a.PersonaID)
 			return
 		}

@@ -247,7 +247,7 @@ func (r *Repository) DarDeBajaPersona(personaID int, fecha string, fechaHora *ti
 // Las situaciones que hubiera vigentes (personas dadas de baja antes de este
 // módulo) se cierran con la fecha de reactivación.
 // motivoID (ya validado por el servicio contra el uso personas.alta) puede ser nil.
-func (r *Repository) ReactivarPersona(personaID int, fecha string, motivoID *int64, actorID string) error {
+func (r *Repository) ReactivarPersona(personaID int, fecha string, motivoID *int64, detalles, actorID string) error {
 	return r.db.Transaction(func(tx *gorm.DB) error {
 		var estados []string
 		if err := tx.Raw("SELECT estado FROM core_personas WHERE id = ?::integer FOR UPDATE", personaID).Scan(&estados).Error; err != nil {
@@ -292,10 +292,11 @@ func (r *Repository) ReactivarPersona(personaID int, fecha string, motivoID *int
 
 		if err := tx.Exec(`
 			INSERT INTO core_personas_estado_historial
-				(persona_id, fecha_alta, vigente, alta_por, motivo_alta_id, motivo_alta)
+				(persona_id, fecha_alta, vigente, alta_por, motivo_alta_id, motivo_alta, detalles_alta)
 			VALUES (?::integer, ?::date, true, NULLIF(?::text, '')::integer, ?::integer,
-			        (SELECT m.nombre FROM core_motivos m WHERE m.id = ?::integer))`,
-			personaID, fecha, actorID, motivoParam(motivoID), motivoParam(motivoID)).Error; err != nil {
+			        (SELECT m.nombre FROM core_motivos m WHERE m.id = ?::integer),
+			        NULLIF(?::text, ''))`,
+			personaID, fecha, actorID, motivoParam(motivoID), motivoParam(motivoID), detalles).Error; err != nil {
 			if strings.Contains(err.Error(), "23505") {
 				return ErrPersonaEstadoNoCorresponde
 			}

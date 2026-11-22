@@ -260,6 +260,7 @@ func (r *Repository) ListHistorialEstadoPersona(id int) ([]models.HistorialEstad
 		       COALESCE(h.motivo_baja, m.nombre, '') AS motivo_baja,
 			   COALESCE(h.motivo_alta, ma.nombre, '') AS motivo_alta,
 		       COALESCE(h.detalles, '') AS detalles,
+		       COALESCE(h.detalles_alta, '') AS detalles_alta,
 		       COALESCE(ap.apellido || ' ' || ap.nombre, '') AS alta_por,
 		       COALESCE(bp.apellido || ' ' || bp.nombre, '') AS baja_por
 		FROM core_personas_estado_historial h

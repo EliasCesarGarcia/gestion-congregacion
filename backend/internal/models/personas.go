@@ -114,15 +114,16 @@ type ConteosPersonas struct {
 // HistorialEstadoPersona: una vez que la persona estuvo de alta. Vigente =
 // está de alta hoy. Las fechas null son fechas que no se conocen.
 type HistorialEstadoPersona struct {
-	ID         int64   `json:"id" gorm:"column:id"`
-	FechaAlta  *string `json:"fecha_alta" gorm:"column:fecha_alta"`
-	FechaBaja  *string `json:"fecha_baja" gorm:"column:fecha_baja"`
-	Vigente    bool    `json:"vigente" gorm:"column:vigente"`
-	MotivoBaja string  `json:"motivo_baja" gorm:"column:motivo_baja"`
-	MotivoAlta string  `json:"motivo_alta" gorm:"column:motivo_alta"`
-	Detalles   string  `json:"detalles" gorm:"column:detalles"`
-	AltaPor    string  `json:"alta_por" gorm:"column:alta_por"`
-	BajaPor    string  `json:"baja_por" gorm:"column:baja_por"`
+	ID           int64   `json:"id" gorm:"column:id"`
+	FechaAlta    *string `json:"fecha_alta" gorm:"column:fecha_alta"`
+	FechaBaja    *string `json:"fecha_baja" gorm:"column:fecha_baja"`
+	Vigente      bool    `json:"vigente" gorm:"column:vigente"`
+	MotivoBaja   string  `json:"motivo_baja" gorm:"column:motivo_baja"`
+	MotivoAlta   string  `json:"motivo_alta" gorm:"column:motivo_alta"`
+	Detalles     string  `json:"detalles" gorm:"column:detalles"` // detalles de la BAJA
+	DetallesAlta string  `json:"detalles_alta" gorm:"column:detalles_alta"`
+	AltaPor      string  `json:"alta_por" gorm:"column:alta_por"`
+	BajaPor      string  `json:"baja_por" gorm:"column:baja_por"`
 }
 
 // HistorialSituacionPersona: un período de una situación (campo 1, 2 o 3).
