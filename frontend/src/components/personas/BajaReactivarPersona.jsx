@@ -11,8 +11,9 @@
  *  - La baja la saca de su grupo y deja vacante su cargo de encargado, si lo
  *    tenía. Quien es coordinador, secretario o servicio no se da de baja hasta
  *    reemplazarlo en ese rol (el backend responde con el motivo).
- * REACTIVAR: POST /api/personas/reactivar { id, fecha, motivo_id? }
- *  - Motivo opcional (catálogo de altas). Vuelve en ALTA y sin grupo.
+ * REACTIVAR: POST /api/personas/reactivar { id, fecha, motivo_id, detalles? }
+ *  - Motivo OBLIGATORIO (catálogo de altas) y detalles opcionales (100
+ *    palabras), igual que la baja. Vuelve en ALTA y sin grupo.
  *
  * Los errores del backend se muestran dentro del diálogo, sin cerrarlo, para
  * poder corregir la fecha. Todo el historial se conserva.
@@ -101,8 +102,11 @@ function BajaReactivarPersona({ persona, onListo }) {
         fecha: fechaCorta(baja),
       });
     }
-    if (d.tipo === "baja" && !d.motivoId) {
-      e.motivo = t("per_err_baja_motivo", "Elija el motivo de la baja.");
+    if (!d.motivoId) {
+      e.motivo =
+        d.tipo === "baja"
+          ? t("per_err_baja_motivo", "Elija el motivo de la baja.")
+          : t("per_err_reactivar_motivo", "Elija el motivo de la reactivación.");
     }
     if (contarPalabras(d.detalles) > MAX_PALABRAS) {
       e.detalles = t("per_err_detalles_100", "Máximo 100 palabras.");
@@ -136,8 +140,12 @@ function BajaReactivarPersona({ persona, onListo }) {
           }),
         );
       } else {
-        const cuerpo = { id: persona.id, fecha: d.fecha };
-        if (d.motivoId) cuerpo.motivo_id = Number(d.motivoId);
+        const cuerpo = {
+          id: persona.id,
+          fecha: d.fecha,
+          motivo_id: Number(d.motivoId),
+        };
+        if (d.detalles.trim()) cuerpo.detalles = d.detalles.trim();
         await axios.post("/api/personas/reactivar", cuerpo);
         setD(DIALOGO_CERRADO);
         onListo(
@@ -260,14 +268,10 @@ function BajaReactivarPersona({ persona, onListo }) {
                 ? t("per_motivo_baja", "Motivo de baja")
                 : t("per_motivo_alta", "Motivo de alta")
             }
-            obligatorio={esBaja}
+            obligatorio
             value={d.motivoId}
             error={d.errores.motivo}
-            ayuda={
-              esBaja
-                ? t("per_baja_ayuda_motivo", "Obligatorio.")
-                : t("per_ayuda_motivo", "Opcional.")
-            }
+            ayuda={t("per_baja_ayuda_motivo", "Obligatorio.")}
             onChange={(e) =>
               cambiar({
                 motivoId: e.target.value,
@@ -275,11 +279,7 @@ function BajaReactivarPersona({ persona, onListo }) {
               })
             }
           >
-            <option value="">
-              {esBaja
-                ? t("per_elegir", "Elegir…")
-                : t("per_sin_motivo", "Sin motivo")}
-            </option>
+            <option value="">{t("per_elegir", "Elegir…")}</option>
             {listaMotivos.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.nombre}
@@ -287,30 +287,32 @@ function BajaReactivarPersona({ persona, onListo }) {
             ))}
           </CampoSelect>
 
-          {esBaja && (
-            <CampoArea
-              id="est-detalles"
-              rows={3}
-              maxLength={600}
-              label={t("per_detalles", "Detalles")}
-              value={d.detalles}
-              error={d.errores.detalles}
-              placeholder={t(
-                "per_baja_ph_detalles",
-                "Ej.: Se mudó a otra ciudad",
-              )}
-              ayuda={t(
-                "per_baja_ayuda_detalles",
-                "Opcional, hasta 100 palabras. Queda en el historial de la persona.",
-              )}
-              onChange={(e) =>
-                cambiar({
-                  detalles: e.target.value,
-                  errores: { ...d.errores, detalles: "" },
-                })
-              }
-            />
-          )}
+          <CampoArea
+            id="est-detalles"
+            rows={3}
+            maxLength={600}
+            label={t("per_detalles", "Detalles")}
+            value={d.detalles}
+            error={d.errores.detalles}
+            placeholder={
+              esBaja
+                ? t("per_baja_ph_detalles", "Ej.: Se mudó a otra ciudad")
+                : t(
+                    "per_reactivar_ph_detalles",
+                    "Ej.: Regresó a la congregación",
+                  )
+            }
+            ayuda={t(
+              "per_baja_ayuda_detalles",
+              "Opcional, hasta 100 palabras. Queda en el historial de la persona.",
+            )}
+            onChange={(e) =>
+              cambiar({
+                detalles: e.target.value,
+                errores: { ...d.errores, detalles: "" },
+              })
+            }
+          />
         </div>
       </Confirmacion>
     </>

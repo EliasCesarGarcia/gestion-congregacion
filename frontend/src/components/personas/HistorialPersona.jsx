@@ -46,10 +46,7 @@ function Detalles({ lineas }) {
   return (
     <div className="mt-1 space-y-0.5">
       {lineas.map((linea, i) => (
-        <p
-          key={i}
-          className="text-xs text-jw-text-main opacity-60 break-words"
-        >
+        <p key={i} className="text-xs text-jw-text-main opacity-60 break-words">
           {linea}
         </p>
       ))}
@@ -63,8 +60,7 @@ function Detalles({ lineas }) {
  */
 function Tabla({ titulo, cabeceras, filas, vacio }) {
   const { t } = useTranslation();
-  const columna =
-    "py-2 pe-4 text-start font-medium whitespace-nowrap";
+  const columna = "py-2 pe-4 text-start font-medium whitespace-nowrap";
 
   return (
     <Tarjeta>
@@ -190,13 +186,16 @@ function HistorialPersona({ historial }) {
   // --- Altas y bajas ---
   const filasEstado = estado.map((e) => ({
     clave: `estado-${e.id}`,
-    principal: (
-      <Principal texto={t("per_h_periodo_alta", "Período de alta")} />
-    ),
+    principal: <Principal texto={t("per_h_periodo_alta", "Período de alta")} />,
     detalles: [
-      e.motivo_alta && `${t("per_motivo_alta", "Motivo de alta")}: ${e.motivo_alta}`,
-      e.motivo_baja && `${t("per_motivo_baja", "Motivo de baja")}: ${e.motivo_baja}`,
-      e.detalles,
+      e.motivo_alta &&
+        `${t("per_motivo_alta", "Motivo de alta")}: ${e.motivo_alta}`,
+      e.detalles_alta &&
+        `${t("per_detalles_alta", "Detalles del alta")}: ${e.detalles_alta}`,
+      e.motivo_baja &&
+        `${t("per_motivo_baja", "Motivo de baja")}: ${e.motivo_baja}`,
+      e.detalles &&
+        `${t("per_detalles_baja", "Detalles de la baja")}: ${e.detalles}`,
       [
         e.alta_por && `${t("per_alta_por", "Alta por")} ${e.alta_por}`,
         e.baja_por && `${t("per_baja_por", "Baja por")} ${e.baja_por}`,
@@ -229,7 +228,8 @@ function HistorialPersona({ historial }) {
     clave: `grupo-${g.id}`,
     principal: <Principal texto={nombreGrupo(g.numero_grupo)} />,
     detalles: [
-      g.motivo_entrada && `${t("per_h_entrada", "Entrada")}: ${g.motivo_entrada}`,
+      g.motivo_entrada &&
+        `${t("per_h_entrada", "Entrada")}: ${g.motivo_entrada}`,
       g.detalles_entrada,
       g.motivo_salida && `${t("per_h_salida", "Salida")}: ${g.motivo_salida}`,
       g.detalles_salida,
@@ -254,7 +254,9 @@ function HistorialPersona({ historial }) {
           texto={nombreCargo[c.cargo] || c.cargo}
           etiqueta={
             c.excepcion ? (
-              <Etiqueta tono="aviso">{t("per_excepcion", "Excepción")}</Etiqueta>
+              <Etiqueta tono="aviso">
+                {t("per_excepcion", "Excepción")}
+              </Etiqueta>
             ) : null
           }
         />
