@@ -229,12 +229,12 @@ function IntegrantesGrupo({ grupo, esSuper, congregacionId, onCerrar }) {
                 {encargados.map(([cargo, persona]) => (
                   <div
                     key={cargo}
-                    className="flex items-baseline justify-between gap-4 py-2 text-sm"
+                    className="flex items-baseline justify-between gap-4 py-2 text-sm sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start"
                   >
                     <dt className="opacity-60 shrink-0">{cargo}</dt>
-                    <dd className="font-medium text-end min-w-0 break-words">
+                    <dd className="font-medium text-end sm:text-start min-w-0 break-words">
                       {persona ? (
-                        <span className="inline-flex flex-wrap items-center justify-end gap-2">
+                        <span className="inline-flex flex-wrap items-center justify-end sm:justify-start gap-2">
                           <Link
                             to={`/personas/${persona.persona_id}`}
                             className="hover:underline"

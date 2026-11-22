@@ -34,11 +34,11 @@ import { fechaCorta } from "../lib/fechas";
 // Una fila "etiqueta ........ valor" dentro de un bloque.
 function Fila({ etiqueta, children }) {
   return (
-    <div className="flex items-baseline justify-between gap-6 py-2.5">
+    <div className="flex items-baseline justify-between gap-6 py-2.5 sm:grid sm:grid-cols-[12rem_1fr] sm:justify-start sm:gap-4">
       <dt className="text-sm text-jw-text-main opacity-60 shrink-0">
         {etiqueta}
       </dt>
-      <dd className="text-sm font-medium text-jw-text-main text-end min-w-0 break-words">
+      <dd className="text-sm font-medium text-jw-text-main text-end sm:text-start min-w-0 break-words">
         {children}
       </dd>
     </div>
@@ -73,7 +73,6 @@ function FichaPersonaPage() {
     historial: null,
     error: "",
   });
-
   // Después de una baja o reactivación se vuelve a pedir la ficha.
   const [recarga, setRecarga] = useState(0);
   const [mensaje, setMensaje] = useState("");
@@ -100,8 +99,7 @@ function FichaPersonaPage() {
           id: clave,
           ficha: null,
           historial: null,
-          error:
-            detalle || t("per_error_ficha", "No se pudo cargar la persona."),
+          error: detalle || t("per_error_ficha", "No se pudo cargar la persona."),
         });
       });
 
@@ -195,47 +193,47 @@ function FichaPersonaPage() {
       )}
 
       {/* 1. Identidad */}
-      <Tarjeta className="flex flex-wrap items-center gap-5">
-        <div className="w-20 h-20 rounded-full overflow-hidden bg-jw-body border border-jw-border flex items-center justify-center text-xl text-jw-text-main shrink-0">
-          {p.foto_url ? (
-            <img
-              src={p.foto_url}
-              alt=""
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            `${p.apellido?.[0] || ""}${p.nombre?.[0] || ""}`.toUpperCase()
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-xs text-jw-text-main opacity-60 tabular-nums">
-            {t("per_id", "ID")} {p.id}
-          </p>
-          <h1 className="text-2xl font-semibold text-jw-text-main break-words">
-            {p.apellido} {p.nombre}
-          </h1>
-          <div className="flex flex-wrap gap-1 mt-2">
-            <Etiqueta tono={deBaja ? "aviso" : "ok"}>
-              {deBaja ? t("per_baja", "Baja") : t("per_alta", "Alta")}
-            </Etiqueta>
-            <Etiqueta tono={condicionTono}>{condicionTexto}</Etiqueta>
+      <Tarjeta className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-5">
+        <div className="flex items-center gap-4 min-w-0 sm:flex-1">
+          <div className="w-20 h-20 rounded-full overflow-hidden bg-jw-body border border-jw-border flex items-center justify-center text-xl text-jw-text-main shrink-0">
+            {p.foto_url ? (
+              <img src={p.foto_url} alt="" className="w-full h-full object-cover" />
+            ) : (
+              `${p.apellido?.[0] || ""}${p.nombre?.[0] || ""}`.toUpperCase()
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs text-jw-text-main opacity-60 tabular-nums">
+              {t("per_id", "ID")} {p.id}
+            </p>
+            <h1 className="text-2xl font-semibold text-jw-text-main break-words">
+              {p.apellido} {p.nombre}
+            </h1>
+            <div className="flex flex-wrap gap-1 mt-2">
+              <Etiqueta tono={deBaja ? "aviso" : "ok"}>
+                {deBaja ? t("per_baja", "Baja") : t("per_alta", "Alta")}
+              </Etiqueta>
+              <Etiqueta tono={condicionTono}>{condicionTexto}</Etiqueta>
+            </div>
           </div>
         </div>
-        <Boton
-          variante="suave"
-          icono={Pencil}
-          className="shrink-0"
-          onClick={() => navigate(`/personas/${id}/editar`)}
-        >
-          {t("per_editar_boton", "Editar")}
-        </Boton>
-        <BajaReactivarPersona
-          persona={p}
-          onListo={(texto) => {
-            setMensaje(texto);
-            setRecarga((r) => r + 1);
-          }}
-        />
+        <div className="flex flex-wrap gap-2 sm:shrink-0">
+          <Boton
+            variante="suave"
+            icono={Pencil}
+            className="shrink-0"
+            onClick={() => navigate(`/personas/${id}/editar`)}
+          >
+            {t("per_editar_boton", "Editar")}
+          </Boton>
+          <BajaReactivarPersona
+            persona={p}
+            onListo={(texto) => {
+              setMensaje(texto);
+              setRecarga((r) => r + 1);
+            }}
+          />
+        </div>
       </Tarjeta>
 
       {/* 2. Contacto */}

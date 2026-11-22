@@ -422,18 +422,22 @@ function MoverPersonasGrupo({
                                 disabled={bloqueada}
                                 onChange={() => alternar(p.id)}
                               />
-                              <span className="min-w-0 flex-1 break-words">
-                                {nombreDe(p)}
-                                {bloqueada && (
-                                  <span className="block text-xs opacity-80">
-                                    {t(
-                                      "per_encargado_no_mueve",
-                                      "Encargado: hay que reemplazarlo antes de moverlo.",
-                                    )}
-                                  </span>
-                                )}
+                              {/* Celular: el nombre ocupa todo el ancho y las etiquetas
+                                  van debajo. PC: nombre a la izquierda y etiquetas a la derecha. */}
+                              <span className="min-w-0 flex-1 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                                <span className="min-w-0 break-words">
+                                  {nombreDe(p)}
+                                  {bloqueada && (
+                                    <span className="block text-xs opacity-80">
+                                      {t(
+                                        "per_encargado_no_mueve",
+                                        "Encargado: hay que reemplazarlo antes de moverlo.",
+                                      )}
+                                    </span>
+                                  )}
+                                </span>
+                                {chips(p)}
                               </span>
-                              {chips(p)}
                             </label>
                           </li>
                         );
@@ -546,44 +550,44 @@ function MoverPersonasGrupo({
         {paso === "confirmar" && (
           <div className="mt-4">
             <dl className="divide-y divide-jw-border text-sm">
-              <div className="flex items-baseline justify-between gap-4 py-2">
+              <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
                 <dt className="opacity-60 shrink-0">
                   {t("per_mover_personas", "Personas")}
                 </dt>
-                <dd className="font-medium text-end">
+                <dd className="font-medium text-end sm:text-start">
                   {seleccionadas.length}
                 </dd>
               </div>
-              <div className="flex items-baseline justify-between gap-4 py-2">
+              <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
                 <dt className="opacity-60 shrink-0">
                   {t("per_mover_hacia", "Destino")}
                 </dt>
-                <dd className="font-medium text-end">{textoDestino}</dd>
+                <dd className="font-medium text-end sm:text-start">{textoDestino}</dd>
               </div>
-              <div className="flex items-baseline justify-between gap-4 py-2">
+              <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
                 <dt className="opacity-60 shrink-0">
                   {t("per_mover_fecha", "Fecha del movimiento")}
                 </dt>
-                <dd className="font-medium text-end tabular-nums" dir="ltr">
+                <dd className="font-medium text-end sm:text-start tabular-nums" dir="ltr">
                   {fechaCorta(fecha)}
                 </dd>
               </div>
               {motivoElegido && (
-                <div className="flex items-baseline justify-between gap-4 py-2">
+                <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
                   <dt className="opacity-60 shrink-0">
                     {t("per_mover_motivo", "Motivo")}
                   </dt>
-                  <dd className="font-medium text-end">
+                  <dd className="font-medium text-end sm:text-start">
                     {motivoElegido.nombre}
                   </dd>
                 </div>
               )}
               {detalles.trim() && (
-                <div className="flex items-baseline justify-between gap-4 py-2">
+                <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
                   <dt className="opacity-60 shrink-0">
                     {t("per_mover_detalles", "Detalles")}
                   </dt>
-                  <dd className="text-end break-words min-w-0">
+                  <dd className="text-end sm:text-start break-words min-w-0">
                     {detalles.trim()}
                   </dd>
                 </div>

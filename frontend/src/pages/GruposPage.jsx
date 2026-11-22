@@ -62,11 +62,11 @@ const DIALOGO_CERRADO = {
 // Una fila "etiqueta ........ valor" dentro de una tarjeta de grupo.
 function Fila({ etiqueta, children }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-2">
+    <div className="flex items-baseline justify-between gap-4 py-2 sm:flex-col sm:items-start sm:justify-start sm:gap-0.5">
       <dt className="text-sm text-jw-text-main opacity-60 shrink-0">
         {etiqueta}
       </dt>
-      <dd className="text-sm font-medium text-jw-text-main text-end min-w-0 break-words">
+      <dd className="text-sm font-medium text-jw-text-main text-end sm:text-start min-w-0 break-words">
         {children}
       </dd>
     </div>
@@ -84,7 +84,7 @@ function Encargado({ persona }) {
     );
   }
   return (
-    <span className="inline-flex flex-wrap items-center justify-end gap-2">
+    <span className="inline-flex flex-wrap items-center justify-end sm:justify-start gap-2">
       <Link to={`/personas/${persona.persona_id}`} className="hover:underline">
         {persona.apellido} {persona.nombre}
       </Link>
