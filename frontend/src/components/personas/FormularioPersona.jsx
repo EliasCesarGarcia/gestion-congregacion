@@ -24,6 +24,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import Tarjeta from "../ui/Tarjeta";
+import TituloSeccion from "../ui/TituloSeccion";
 import { CampoTexto, CampoSelect, CampoArea, CampoTelefono } from "../ui/Campo";
 import { SITUACIONES_1, SITUACIONES_2 } from "../../config/personasConfig";
 import { hoyISO } from "../../lib/fechas";
@@ -36,8 +37,8 @@ import {
 function Seccion({ titulo, children }) {
   return (
     <Tarjeta>
-      <h2 className="text-sm font-semibold text-jw-text-main mb-4">{titulo}</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
+      <TituloSeccion>{titulo}</TituloSeccion>
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
     </Tarjeta>
   );
 }
@@ -222,20 +223,39 @@ function FormularioPersona({
           <option value="I">{t("per_inactivo", "Inactivo")}</option>
         </CampoSelect>
         {esAlta && (
-          <div className={ANCHO_COMPLETO}>
-            <CampoSelect
-              {...campo("motivo_alta_id")}
-              label={t("per_motivo_alta", "Motivo de alta")}
-              ayuda={t("per_ayuda_motivo", "Opcional.")}
-            >
-              <option value="">{t("per_sin_motivo", "Sin motivo")}</option>
-              {motivos.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {m.nombre}
-                </option>
-              ))}
-            </CampoSelect>
-          </div>
+          <>
+            <div className={ANCHO_COMPLETO}>
+              <CampoSelect
+                {...campo("motivo_alta_id")}
+                label={t("per_motivo_alta", "Motivo de alta")}
+                obligatorio
+                ayuda={t("per_baja_ayuda_motivo", "Obligatorio.")}
+              >
+                <option value="">{t("per_elegir", "Elegir…")}</option>
+                {motivos.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.nombre}
+                  </option>
+                ))}
+              </CampoSelect>
+            </div>
+            <div className={ANCHO_COMPLETO}>
+              <CampoArea
+                {...campo("detalles_alta")}
+                rows={3}
+                maxLength={600}
+                label={t("per_detalles_alta", "Detalles del alta")}
+                placeholder={t(
+                  "per_ph_detalles_alta",
+                  "Ej.: Se mudó a la zona",
+                )}
+                ayuda={t(
+                  "per_baja_ayuda_detalles",
+                  "Opcional, hasta 100 palabras. Queda en el historial de la persona.",
+                )}
+              />
+            </div>
+          </>
         )}
       </Seccion>
 

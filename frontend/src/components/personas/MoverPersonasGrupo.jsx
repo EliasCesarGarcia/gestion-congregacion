@@ -312,7 +312,7 @@ function MoverPersonasGrupo({
         role="dialog"
         aria-modal="true"
         aria-labelledby="mover-titulo"
-        className="relative w-full sm:max-w-xl max-h-[92vh] overflow-y-auto bg-jw-card text-jw-text-main border border-jw-border rounded-t-2xl sm:rounded-2xl p-6 shadow-xl"
+        className="relative w-full sm:max-w-xl max-h-[92vh] overflow-y-auto text-start bg-jw-card text-jw-text-main border border-jw-border rounded-t-2xl sm:rounded-2xl p-6 shadow-xl"
       >
         <div className="flex items-start justify-between gap-3">
           <h2 id="mover-titulo" className="text-lg font-semibold min-w-0">
@@ -550,44 +550,44 @@ function MoverPersonasGrupo({
         {paso === "confirmar" && (
           <div className="mt-4">
             <dl className="divide-y divide-jw-border text-sm">
-              <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
-                <dt className="opacity-60 shrink-0">
+              <div className="flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:items-baseline sm:gap-4">
+                <dt className="opacity-60">
                   {t("per_mover_personas", "Personas")}
                 </dt>
-                <dd className="font-medium text-end sm:text-start">
+                <dd className="font-medium text-start">
                   {seleccionadas.length}
                 </dd>
               </div>
-              <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
-                <dt className="opacity-60 shrink-0">
+              <div className="flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:items-baseline sm:gap-4">
+                <dt className="opacity-60">
                   {t("per_mover_hacia", "Destino")}
                 </dt>
-                <dd className="font-medium text-end sm:text-start">{textoDestino}</dd>
+                <dd className="font-medium text-start">{textoDestino}</dd>
               </div>
-              <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
-                <dt className="opacity-60 shrink-0">
+              <div className="flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:items-baseline sm:gap-4">
+                <dt className="opacity-60">
                   {t("per_mover_fecha", "Fecha del movimiento")}
                 </dt>
-                <dd className="font-medium text-end sm:text-start tabular-nums" dir="ltr">
+                <dd className="font-medium text-start tabular-nums" dir="ltr">
                   {fechaCorta(fecha)}
                 </dd>
               </div>
               {motivoElegido && (
-                <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
-                  <dt className="opacity-60 shrink-0">
+                <div className="flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:items-baseline sm:gap-4">
+                  <dt className="opacity-60">
                     {t("per_mover_motivo", "Motivo")}
                   </dt>
-                  <dd className="font-medium text-end sm:text-start">
+                  <dd className="font-medium text-start">
                     {motivoElegido.nombre}
                   </dd>
                 </div>
               )}
               {detalles.trim() && (
-                <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
-                  <dt className="opacity-60 shrink-0">
+                <div className="flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:items-baseline sm:gap-4">
+                  <dt className="opacity-60">
                     {t("per_mover_detalles", "Detalles")}
                   </dt>
-                  <dd className="text-end sm:text-start break-words min-w-0">
+                  <dd className="text-start break-words min-w-0">
                     {detalles.trim()}
                   </dd>
                 </div>

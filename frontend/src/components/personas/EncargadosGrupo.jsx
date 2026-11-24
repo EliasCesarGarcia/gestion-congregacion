@@ -52,9 +52,9 @@ const contarPalabras = (texto) =>
 // valor a la derecha; PC: dos columnas, con el valor alineado a la izquierda.
 function Resumen({ etiqueta, children }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:justify-start">
-      <dt className="opacity-60 shrink-0">{etiqueta}</dt>
-      <dd className="font-medium text-end sm:text-start break-words min-w-0">{children}</dd>
+    <div className="flex flex-col gap-0.5 py-2 sm:grid sm:grid-cols-[9rem_1fr] sm:items-baseline sm:gap-4">
+      <dt className="opacity-60">{etiqueta}</dt>
+      <dd className="font-medium text-start break-words min-w-0">{children}</dd>
     </div>
   );
 }
@@ -291,7 +291,7 @@ function EncargadosGrupo({ grupo, esSuper, congregacionId, onCerrar, onListo }) 
         role="dialog"
         aria-modal="true"
         aria-labelledby="enc-titulo"
-        className="relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto bg-jw-card text-jw-text-main border border-jw-border rounded-t-2xl sm:rounded-2xl p-6 shadow-xl"
+        className="relative w-full sm:max-w-lg max-h-[92vh] overflow-y-auto text-start bg-jw-card text-jw-text-main border border-jw-border rounded-t-2xl sm:rounded-2xl p-6 shadow-xl"
       >
         <div className="flex items-start justify-between gap-3">
           <h2 id="enc-titulo" className="text-lg font-semibold min-w-0 break-words">

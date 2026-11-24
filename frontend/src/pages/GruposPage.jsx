@@ -14,7 +14,10 @@
  *    personas ni encargados vigentes.
  *  - Renumerar no cambia el historial: cada movimiento guarda el número de
  *    su momento.
- * Mover personas y elegir encargados son los pasos G2 y G3.
+ * Desde cada grupo vigente se pueden ver sus integrantes, mover personas
+ * (una, algunas o todas) y elegir o quitar a sus encargados. Si hay personas
+ * sin grupo, se asignan desde el botón de arriba.
+ * Todo el texto va alineado a la izquierda.
  *
  * SEGURIDAD: el chequeo de abajo solo oculta la pantalla; el backend decide.
  */
@@ -32,15 +35,15 @@ import {
   Users,
 } from "lucide-react";
 import { AppContext } from "../context/AppContext";
-import IntegrantesGrupo from "../components/personas/IntegrantesGrupo";
-import MoverPersonasGrupo from "../components/personas/MoverPersonasGrupo";
-import EncargadosGrupo from "../components/personas/EncargadosGrupo";
 import Boton from "../components/ui/Boton";
 import Tarjeta from "../components/ui/Tarjeta";
 import Etiqueta from "../components/ui/Etiqueta";
 import Confirmacion from "../components/ui/Confirmacion";
 import { CampoSelect, CampoTexto } from "../components/ui/Campo";
-import { fechaCorta, hoyISO } from "../lib/fechas";
+import IntegrantesGrupo from "../components/personas/IntegrantesGrupo";
+import MoverPersonasGrupo from "../components/personas/MoverPersonasGrupo";
+import EncargadosGrupo from "../components/personas/EncargadosGrupo";
+import { fechaCorta, hoyISO, textoDuracion } from "../lib/fechas";
 
 const detalleDe = (err) =>
   typeof err.response?.data === "string" ? err.response.data.trim() : "";
@@ -59,14 +62,12 @@ const DIALOGO_CERRADO = {
   error: "",
 };
 
-// Una fila "etiqueta ........ valor" dentro de una tarjeta de grupo.
+// Una fila "rótulo arriba, valor abajo" dentro de una tarjeta de grupo, a la izquierda.
 function Fila({ etiqueta, children }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-2 sm:flex-col sm:items-start sm:justify-start sm:gap-0.5">
-      <dt className="text-sm text-jw-text-main opacity-60 shrink-0">
-        {etiqueta}
-      </dt>
-      <dd className="text-sm font-medium text-jw-text-main text-end sm:text-start min-w-0 break-words">
+    <div className="flex flex-col gap-0.5 py-2 text-start">
+      <dt className="text-sm text-jw-text-main opacity-60">{etiqueta}</dt>
+      <dd className="text-sm font-medium text-jw-text-main min-w-0 break-words">
         {children}
       </dd>
     </div>
@@ -84,7 +85,7 @@ function Encargado({ persona }) {
     );
   }
   return (
-    <span className="inline-flex flex-wrap items-center justify-end sm:justify-start gap-2">
+    <span className="inline-flex flex-wrap items-center justify-start gap-2">
       <Link to={`/personas/${persona.persona_id}`} className="hover:underline">
         {persona.apellido} {persona.nombre}
       </Link>
@@ -183,7 +184,7 @@ function GruposPage() {
   // --- Diálogo (crear, renumerar, cerrar) y mensaje de resultado ---
   const [dialogo, setDialogo] = useState(DIALOGO_CERRADO);
   const [mensaje, setMensaje] = useState("");
-  const [verGrupo, setVerGrupo] = useState(null);
+  const [verGrupo, setVerGrupo] = useState(null); // grupo abierto en "Ver integrantes"
   const [mover, setMover] = useState(null); // null | { tipo: "grupo", grupo } | { tipo: "sin" }
   const [encargadosDe, setEncargadosDe] = useState(null); // grupo abierto en "Encargados"
 
@@ -271,7 +272,9 @@ function GruposPage() {
 
   const validarFecha = (d) => {
     if (!d.fecha) {
-      return d.tipo === "cerrar" ? t("per_err_fecha", "Falta la fecha.") : "";
+      return d.tipo === "cerrar"
+        ? t("per_err_fecha", "Falta la fecha.")
+        : "";
     }
     if (d.fecha > hoyISO()) {
       return t("per_err_fecha_futura_gen", "La fecha no puede ser futura.");
@@ -390,7 +393,7 @@ function GruposPage() {
   }[dialogo.tipo || "crear"];
 
   return (
-    <div className="max-w-5xl mx-auto p-6 space-y-6">
+    <div className="max-w-5xl mx-auto p-6 space-y-6 text-start">
       <Link
         to="/personas"
         className="inline-flex items-center gap-1 text-sm text-jw-text-main opacity-70 hover:opacity-100"
@@ -496,7 +499,7 @@ function GruposPage() {
       )}
 
       {!cargando && !resultado.error && grupos.length === 0 && (
-        <Tarjeta className="text-center py-10">
+        <Tarjeta className="py-10">
           <p className="text-sm text-jw-text-main opacity-70">
             {t(
               "per_sin_grupos_cong",
@@ -533,9 +536,7 @@ function GruposPage() {
                     {g.inactivos ?? 0} {t("per_inactivos", "inactivos")})
                   </span>
                 </Fila>
-                <Fila
-                  etiqueta={t("per_cargo_superintendente", "Superintendente")}
-                >
+                <Fila etiqueta={t("per_cargo_superintendente", "Superintendente")}>
                   <Encargado persona={g.superintendente} />
                 </Fila>
                 <Fila etiqueta={t("per_cargo_auxiliar", "Auxiliar de grupo")}>
@@ -551,6 +552,25 @@ function GruposPage() {
                     <span dir="ltr" className="tabular-nums">
                       {fechaCorta(g.fecha_cierre, sinFecha)}
                     </span>
+                  </Fila>
+                )}
+                {textoDuracion(
+                  g.fecha_inicio,
+                  g.activo ? hoyISO() : g.fecha_cierre,
+                  t,
+                ) && (
+                  <Fila
+                    etiqueta={
+                      g.activo
+                        ? t("per_antiguedad", "Antigüedad")
+                        : t("per_h_duracion", "Duración")
+                    }
+                  >
+                    {textoDuracion(
+                      g.fecha_inicio,
+                      g.activo ? hoyISO() : g.fecha_cierre,
+                      t,
+                    )}
                   </Fila>
                 )}
               </dl>
@@ -592,20 +612,17 @@ function GruposPage() {
           ))}
         </div>
       )}
-      {encargadosDe && (
-        <EncargadosGrupo
-          key={encargadosDe.id}
-          grupo={encargadosDe}
+
+      {verGrupo && (
+        <IntegrantesGrupo
+          key={verGrupo.id}
+          grupo={verGrupo}
           esSuper={esSuper}
           congregacionId={congregacionId}
-          onCerrar={() => setEncargadosDe(null)}
-          onListo={(texto) => {
-            setMensaje(texto);
-            setEncargadosDe(null);
-            setRecarga((r) => r + 1);
-          }}
+          onCerrar={() => setVerGrupo(null)}
         />
       )}
+
       {mover && (
         <MoverPersonasGrupo
           key={mover.tipo === "grupo" ? mover.grupo.id : "sin"}
@@ -618,8 +635,7 @@ function GruposPage() {
             setMensaje(
               [
                 t("per_mover_ok", {
-                  defaultValue:
-                    "Personas movidas: {{n}}. Destino: {{destino}}.",
+                  defaultValue: "Personas movidas: {{n}}. Destino: {{destino}}.",
                   n: movidas,
                   destino,
                 }),
@@ -638,13 +654,19 @@ function GruposPage() {
           }}
         />
       )}
-      {verGrupo && (
-        <IntegrantesGrupo
-          key={verGrupo.id}
-          grupo={verGrupo}
+
+      {encargadosDe && (
+        <EncargadosGrupo
+          key={encargadosDe.id}
+          grupo={encargadosDe}
           esSuper={esSuper}
           congregacionId={congregacionId}
-          onCerrar={() => setVerGrupo(null)}
+          onCerrar={() => setEncargadosDe(null)}
+          onListo={(texto) => {
+            setMensaje(texto);
+            setEncargadosDe(null);
+            setRecarga((r) => r + 1);
+          }}
         />
       )}
 

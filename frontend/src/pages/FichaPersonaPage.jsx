@@ -7,11 +7,14 @@
  * Jerarquía de la pantalla (de lo más importante a lo menos):
  *  1. Identidad: foto, apellido y nombre, ID, alta/baja y condición.
  *  2. Contacto: teléfono, email y dirección (solo lo que tiene).
- *  3. Situación, por orden de prioridad: cargo en la aplicación, situación 3,
- *     situación 2 y situación 1; después grupo y condición.
- *  4. Registro: fechas de alta y baja.
+ *  3. Situación, por orden: situación 1, situación 2 y situación 3; después
+ *     el cargo en la aplicación, el grupo y la condición.
+ *  4. Registro: fechas de alta y baja, y el tiempo transcurrido.
  *  5. Detalles (notas), al final.
  *  Debajo, los historiales (HistorialPersona).
+ *
+ * Todo el texto va alineado a la izquierda; solo los títulos de sección van
+ * centrados (TituloSeccion).
  *
  * SEGURIDAD: el chequeo de abajo solo oculta la pantalla. El backend responde
  * igual a una persona inexistente que a una de otra congregación.
@@ -26,33 +29,32 @@ import { AppContext } from "../context/AppContext";
 import Tarjeta from "../components/ui/Tarjeta";
 import Boton from "../components/ui/Boton";
 import Etiqueta from "../components/ui/Etiqueta";
+import TituloSeccion from "../components/ui/TituloSeccion";
 import HistorialPersona from "../components/personas/HistorialPersona";
 import BajaReactivarPersona from "../components/personas/BajaReactivarPersona";
 import { ROLES } from "../config/personasConfig";
-import { fechaCorta } from "../lib/fechas";
+import { fechaCorta, hoyISO, textoDuracion } from "../lib/fechas";
 
-// Una fila "etiqueta ........ valor" dentro de un bloque.
+// Una fila "etiqueta / valor" dentro de un bloque, todo a la izquierda:
+// en el celular el rótulo va arriba del valor; en pantallas anchas, en dos
+// columnas alineadas.
 function Fila({ etiqueta, children }) {
   return (
-    <div className="flex items-baseline justify-between gap-6 py-2.5 sm:grid sm:grid-cols-[12rem_1fr] sm:justify-start sm:gap-4">
-      <dt className="text-sm text-jw-text-main opacity-60 shrink-0">
-        {etiqueta}
-      </dt>
-      <dd className="text-sm font-medium text-jw-text-main text-end sm:text-start min-w-0 break-words">
+    <div className="flex flex-col gap-0.5 py-2.5 text-start sm:grid sm:grid-cols-[12rem_1fr] sm:items-baseline sm:gap-4">
+      <dt className="text-sm text-jw-text-main opacity-60">{etiqueta}</dt>
+      <dd className="text-sm font-medium text-jw-text-main min-w-0 break-words">
         {children}
       </dd>
     </div>
   );
 }
 
-// Tarjeta con título pequeño y filas separadas por una línea fina.
+// Tarjeta con título de sección centrado y filas separadas por una línea fina.
 function Bloque({ titulo, children }) {
   return (
     <Tarjeta>
-      <h2 className="text-xs font-medium uppercase tracking-wide text-jw-text-main opacity-60 mb-1">
-        {titulo}
-      </h2>
-      <dl className="divide-y divide-jw-border">{children}</dl>
+      <TituloSeccion>{titulo}</TituloSeccion>
+      <dl className="mt-1 divide-y divide-jw-border">{children}</dl>
     </Tarjeta>
   );
 }
@@ -129,7 +131,7 @@ function FichaPersonaPage() {
 
   if (cargando) {
     return (
-      <div className="max-w-3xl mx-auto p-6 space-y-6">
+      <div className="max-w-3xl mx-auto p-6 space-y-6 text-start">
         {volver}
         <div className="flex justify-center py-10" role="status">
           <Loader2 className="w-5 h-5 animate-spin text-jw-accent" />
@@ -140,7 +142,7 @@ function FichaPersonaPage() {
 
   if (datos.error) {
     return (
-      <div className="max-w-3xl mx-auto p-6 space-y-6">
+      <div className="max-w-3xl mx-auto p-6 space-y-6 text-start">
         {volver}
         <p className="text-sm text-jw-text-main border border-red-500/50 bg-red-500/10 rounded-xl px-3 py-2">
           {datos.error}
@@ -179,8 +181,15 @@ function FichaPersonaPage() {
 
   const hayContacto = !!telefono || !!p.email || lineasDireccion.length > 0;
 
+  // Tiempo en alta: de la fecha de alta a la de baja (o a hoy si sigue en alta).
+  const tiempoAlta = textoDuracion(
+    p.fecha_alta,
+    deBaja ? p.fecha_baja : hoyISO(),
+    t,
+  );
+
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
+    <div className="max-w-3xl mx-auto p-6 space-y-6 text-start">
       {volver}
 
       {mensaje && (
@@ -282,22 +291,22 @@ function FichaPersonaPage() {
         )}
       </Bloque>
 
-      {/* 3. Situación, por orden de prioridad */}
+      {/* 3. Situación: 1, 2 y 3; después cargo, grupo y condición */}
       <Bloque titulo={t("per_s_situacion_ficha", "Situación")}>
+        <Fila etiqueta={t("per_f_sit1", "Situación 1")}>
+          {p.situacion_1 || "—"}
+        </Fila>
+        {p.situacion_2 && (
+          <Fila etiqueta={t("per_f_sit2", "Situación 2")}>{p.situacion_2}</Fila>
+        )}
+        {p.situacion_3 && (
+          <Fila etiqueta={t("per_f_sit3", "Situación 3")}>{p.situacion_3}</Fila>
+        )}
         {mostrarCargo && (
           <Fila etiqueta={t("per_cargo_app", "Cargo en la aplicación")}>
             {t(rol[0], rol[1])}
           </Fila>
         )}
-        {p.situacion_3 && (
-          <Fila etiqueta={t("per_f_sit3", "Situación 3")}>{p.situacion_3}</Fila>
-        )}
-        {p.situacion_2 && (
-          <Fila etiqueta={t("per_f_sit2", "Situación 2")}>{p.situacion_2}</Fila>
-        )}
-        <Fila etiqueta={t("per_f_sit1", "Situación 1")}>
-          {p.situacion_1 || "—"}
-        </Fila>
         <Fila etiqueta={t("per_f_grupo", "Grupo")}>
           {p.grupo != null
             ? `${t("per_grupo", "Grupo")} ${p.grupo}`
@@ -318,15 +327,24 @@ function FichaPersonaPage() {
             {fechaCorta(p.fecha_baja, sinFecha)}
           </Fila>
         )}
+        {tiempoAlta && (
+          <Fila
+            etiqueta={
+              deBaja
+                ? t("per_tiempo_alta", "Tiempo de alta")
+                : t("per_antiguedad", "Antigüedad")
+            }
+          >
+            {tiempoAlta}
+          </Fila>
+        )}
       </Bloque>
 
       {/* 5. Detalles, al final */}
       {p.detalles && (
         <Tarjeta>
-          <h2 className="text-xs font-medium uppercase tracking-wide text-jw-text-main opacity-60 mb-2">
-            {t("per_detalles", "Detalles")}
-          </h2>
-          <p className="text-sm text-jw-text-main whitespace-pre-line break-words">
+          <TituloSeccion>{t("per_detalles", "Detalles")}</TituloSeccion>
+          <p className="mt-3 text-sm text-jw-text-main whitespace-pre-line break-words">
             {p.detalles}
           </p>
         </Tarjeta>
