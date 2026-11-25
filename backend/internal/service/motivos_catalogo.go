@@ -5,13 +5,16 @@
  *
  * REGLAS (las hace cumplir el backend):
  *  - Un motivo existe una sola vez y sirve para uno o más USOS con código
- *    "modulo.operacion": personas.alta, personas.baja, personas.grupo...
+ *    "modulo.operacion": personas.alta, personas.baja, personas.grupo,
+ *    personas.cargo_alta, personas.cargo_baja...
  *  - Solo el superadmin crea, renombra o activa y desactiva usos (lo exige la ruta).
  *  - Un motivo no se borra: se desactiva su uso (uno por uno).
  *  - Crear un motivo con un nombre que ya existe le suma los usos nuevos.
  *  - Renombrar no cambia el historial viejo (cada fila guarda su copia del texto).
  *  - Al dar de alta, de baja o mover de grupo, el motivo es opcional; si se
  *    envía, debe existir y estar activo para ESE uso.
+ *  - Los usos de cargos (coordinador, secretario, servicio) se listan siempre
+ *    en orden alfabético.
  */
 
 package service
@@ -25,14 +28,16 @@ import (
 )
 
 // ErrMotivoUsoInvalido: el uso falta o no es uno de los que existen (400).
-var ErrMotivoUsoInvalido = errors.New("uso de motivo no válido o ausente (por ahora: personas.alta, personas.baja, personas.grupo)")
+var ErrMotivoUsoInvalido = errors.New("uso de motivo no válido o ausente (por ahora: personas.alta, personas.baja, personas.grupo, personas.cargo_alta, personas.cargo_baja)")
 
 // Usos que existen hoy. Cuando otro módulo tenga altas o bajas con motivos
 // propios se agrega acá su código ("modulo.operacion"); la base no cambia.
 var usosMotivoValidos = map[string]bool{
-	"personas.alta":  true,
-	"personas.baja":  true,
-	"personas.grupo": true,
+	"personas.alta":       true,
+	"personas.baja":       true,
+	"personas.grupo":      true,
+	"personas.cargo_alta": true,
+	"personas.cargo_baja": true,
 }
 
 // EntradaUsoMotivo: un uso que se pide al crear un motivo.
@@ -50,18 +55,19 @@ func usoMotivoCanonico(uso string) (string, error) {
 	return u, nil
 }
 
-// usoMotivoPersonas convierte "alta", "baja" o "grupo" en "personas.alta", etc.
+// usoMotivoPersonas convierte "alta", "baja", "grupo", "cargo_alta" o
+// "cargo_baja" en "personas.alta", etc.
 func usoMotivoPersonas(corto string) (string, error) {
 	c := strings.ToLower(strings.TrimSpace(corto))
 	switch c {
-	case "alta", "baja", "grupo":
+	case "alta", "baja", "grupo", "cargo_alta", "cargo_baja":
 		return "personas." + c, nil
 	}
 	return "", ErrMotivoUsoInvalido
 }
 
 // ListOpcionesMotivoPersonas: motivos activos para el desplegable de
-// personas. corto = "alta", "baja" o "grupo".
+// personas. corto = "alta", "baja", "grupo", "cargo_alta" o "cargo_baja".
 func (s *Service) ListOpcionesMotivoPersonas(corto string) ([]models.OpcionMotivo, error) {
 	uso, err := usoMotivoPersonas(corto)
 	if err != nil {

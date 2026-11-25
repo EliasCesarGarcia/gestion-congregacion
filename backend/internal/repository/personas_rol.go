@@ -7,6 +7,8 @@
  * la misma transacción. Se bloquea la congregación en cada cambio; además dos
  * índices únicos de la base impiden dos titulares del mismo rol y el mismo rol
  * repetido en una persona.
+ * Cada período puede guardar el motivo y los detalles de su inicio y de su fin
+ * (id del catálogo y copia del texto, como en los otros historiales).
  */
 
 package repository
@@ -37,6 +39,28 @@ var (
 )
 
 var rolesEncargado = []string{"coordinador", "secretario", "servicio"}
+
+// MotivoRol: motivo (id ya validado por el servicio; nil = sin motivo) y detalles
+// de un extremo de un período de rol.
+type MotivoRol struct {
+	ID       *int64
+	Detalles string
+}
+
+// MotivosRol: lo que se anota en un cargo que cambia. Baja va en el período del
+// titular que sale (su fin); Alta, en el período del nuevo titular (su inicio).
+type MotivosRol struct {
+	Alta MotivoRol
+	Baja MotivoRol
+}
+
+// motivoRolParam convierte el id opcional en un valor para la consulta (nil = NULL).
+func motivoRolParam(id *int64) interface{} {
+	if id == nil {
+		return nil
+	}
+	return *id
+}
 
 func congregacionDePersonaRol(tx *gorm.DB, personaID int) (string, error) {
 	var congs []string
@@ -85,13 +109,22 @@ func fechaRolParam(t *time.Time) interface{} {
 	return *t
 }
 
-// abrirRolPersona abre el período del rol. fecha nil = ahora (now()).
+// abrirRolPersona abre el período del rol sin motivo. fecha nil = ahora (now()).
 func abrirRolPersona(tx *gorm.DB, personaID int, cong, rol string, fecha interface{}, actorID string) error {
+	return abrirRolPersonaMotivo(tx, personaID, cong, rol, fecha, actorID, MotivoRol{})
+}
+
+// abrirRolPersonaMotivo abre el período del rol con el motivo y los detalles de
+// su inicio (el texto del motivo se copia del catálogo). fecha nil = ahora (now()).
+func abrirRolPersonaMotivo(tx *gorm.DB, personaID int, cong, rol string, fecha interface{}, actorID string, m MotivoRol) error {
 	if err := tx.Exec(`
 		INSERT INTO core_personas_roles_historial
-			(persona_id, congregacion_id, rol, fecha_inicio, asignado_por, vigente)
-		VALUES (?::integer, ?::uuid, ?::text, COALESCE(?::timestamptz, now()), NULLIF(?::text,'')::integer, true)`,
-		personaID, cong, rol, fecha, actorID).Error; err != nil {
+			(persona_id, congregacion_id, rol, fecha_inicio, asignado_por, vigente,
+			 motivo_inicio_id, motivo_inicio, detalles_inicio)
+		VALUES (?::integer, ?::uuid, ?::text, COALESCE(?::timestamptz, now()), NULLIF(?::text,'')::integer, true,
+		        ?::integer, (SELECT mo.nombre FROM core_motivos mo WHERE mo.id = ?::integer), NULLIF(?::text,''))`,
+		personaID, cong, rol, fecha, actorID,
+		motivoRolParam(m.ID), motivoRolParam(m.ID), m.Detalles).Error; err != nil {
 		if strings.Contains(err.Error(), "23505") {
 			return ErrRolOcupado // un índice único de la base lo frenó
 		}
@@ -176,7 +209,13 @@ func (r *Repository) CambiarRolPersona(personaID int, rol string, quitar bool, a
 	return cambio, nil
 }
 
-// RotarRolesPersonas: titulares = nuevo titular de cada rol que cambia
+// RotarRolesPersonas: rotación sin motivos (la hacen los tres encargados).
+// Ver RotarRolesPersonasConMotivos.
+func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[string]int, fecha *time.Time, actorID string) (bool, error) {
+	return r.RotarRolesPersonasConMotivos(congregacionID, titulares, nil, fecha, actorID)
+}
+
+// RotarRolesPersonasConMotivos: titulares = nuevo titular de cada rol que cambia
 // (rol -> id de persona). En UNA transacción: cada rol se le quita a su titular
 // actual y se le da al nuevo (nunca queda vacante en el medio), se recalcula
 // rol_app de los afectados y al final se exige que coordinador, secretario y
@@ -185,8 +224,10 @@ func (r *Repository) CambiarRolPersona(personaID int, rol string, quitar bool, a
 // si viene, es el momento del cambio (ya validada: no futura) y se exige que no
 // sea anterior al inicio del período que se cierra, al alta de los nuevos
 // titulares ni se superponga con un período anterior del nuevo titular en ese
-// rol. Devuelve false si no había nada que cambiar.
-func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[string]int, fecha *time.Time, actorID string) (bool, error) {
+// rol. motivos (puede ser nil) anota, por rol, el motivo y los detalles del fin
+// del período que se cierra (Baja) y del inicio del que se abre (Alta).
+// Devuelve false si no había nada que cambiar.
+func (r *Repository) RotarRolesPersonasConMotivos(congregacionID string, titulares map[string]int, motivos map[string]MotivosRol, fecha *time.Time, actorID string) (bool, error) {
 	hecho := false
 	fechaSQL := fechaRolParam(fecha)
 	err := r.db.Transaction(func(tx *gorm.DB) error {
@@ -240,6 +281,7 @@ func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[str
 			if !ok {
 				continue
 			}
+			m := motivos[rol] // sin motivos si motivos es nil o no trae ese rol
 			var actuales []int
 			if err := tx.Raw(`
 				SELECT persona_id FROM core_personas_roles_historial
@@ -265,9 +307,13 @@ func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[str
 				if err := tx.Exec(`
 					UPDATE core_personas_roles_historial
 					SET vigente = false, fecha_fin = COALESCE(?::timestamptz, now()),
-					    quitado_por = NULLIF(?::text,'')::integer
+					    quitado_por = NULLIF(?::text,'')::integer,
+					    motivo_fin_id = ?::integer,
+					    motivo_fin = (SELECT mo.nombre FROM core_motivos mo WHERE mo.id = ?::integer),
+					    detalles_fin = NULLIF(?::text,'')
 					WHERE congregacion_id::text = ?::text AND rol = ?::text AND vigente = true`,
-					fechaSQL, actorID, congregacionID, rol).Error; err != nil {
+					fechaSQL, actorID, motivoRolParam(m.Baja.ID), motivoRolParam(m.Baja.ID), m.Baja.Detalles,
+					congregacionID, rol).Error; err != nil {
 					return err
 				}
 				afectadas[actuales[0]] = true
@@ -285,7 +331,7 @@ func (r *Repository) RotarRolesPersonas(congregacionID string, titulares map[str
 				return ErrFechaSolapaRol
 			}
 
-			if err := abrirRolPersona(tx, nuevo, congregacionID, rol, fechaSQL, actorID); err != nil {
+			if err := abrirRolPersonaMotivo(tx, nuevo, congregacionID, rol, fechaSQL, actorID, m.Alta); err != nil {
 				return err
 			}
 			afectadas[nuevo] = true

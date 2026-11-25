@@ -58,6 +58,8 @@ func agruparMotivosCatalogo(filas []filaMotivoCatalogo) []models.MotivoCatalogo 
 }
 
 // ListOpcionesMotivo: los motivos ACTIVOS de un uso, ordenados, para el desplegable.
+// Los usos de cargos (personas.cargo_alta, personas.cargo_baja) salen siempre
+// en orden alfabético por nombre; los demás, por su número de orden.
 func (r *Repository) ListOpcionesMotivo(uso string) ([]models.OpcionMotivo, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -68,7 +70,8 @@ func (r *Repository) ListOpcionesMotivo(uso string) ([]models.OpcionMotivo, erro
 		FROM core_motivos_usos u
 		JOIN core_motivos m ON m.id = u.motivo_id
 		WHERE u.uso = ?::text AND u.activo = true
-		ORDER BY u.orden ASC, lower(m.nombre) ASC, m.id ASC`, uso).Scan(&lista).Error; err != nil {
+		ORDER BY CASE WHEN starts_with(u.uso, 'personas.cargo_') THEN 0 ELSE u.orden END ASC,
+		         lower(m.nombre) ASC, m.id ASC`, uso).Scan(&lista).Error; err != nil {
 		return nil, err
 	}
 	return lista, nil
