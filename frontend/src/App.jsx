@@ -37,6 +37,7 @@ import AdminCongregacionesPage from "./pages/AdminCongregacionesPage"; // Panel 
 import NuevaPersonaPage from "./pages/NuevaPersonaPage"; // Alta de persona
 import EditarPersonaPage from "./pages/EditarPersonaPage"; // Edición de persona
 import GruposPage from "./pages/GruposPage"; // Grupos de la congregación
+import CargosPage from "./pages/CargosPage"; // Cargos de la congregación (solo superadmin)
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -379,6 +380,23 @@ function App() {
                   />
                 </Helmet>
                 <AdminCongregacionesPage />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Panel de superadmin: cargos de la congregación (coordinador, secretario y servicio) */}
+          <Route
+            path="/admin/cargos"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Cargos de la Congregación | Administración</title>
+                  <meta
+                    name="description"
+                    content="Coordinador, secretario y servicio de cada congregación (solo superadmin)."
+                  />
+                </Helmet>
+                <CargosPage />
               </RutaProtegida>
             }
           />

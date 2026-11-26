@@ -10,6 +10,8 @@
  * - El foco arranca en "Cancelar" (la opción segura), no se escapa del
  *   diálogo con Tab y vuelve al botón de origen al cerrar.
  * - `error` muestra el mensaje del backend dentro del diálogo, sin cerrarlo.
+ * - `ancho` es la clase de ancho máximo del cuadro (por defecto "max-w-sm"); para
+ *   formularios largos se pasa, por ejemplo, "max-w-2xl".
  *
  * Uso:
  *   <Confirmacion
@@ -39,6 +41,7 @@ function Confirmacion({
   tono = "normal",
   textoAceptar,
   textoCancelar,
+  ancho = "max-w-sm",
   cargando = false,
   error = "",
   onAceptar,
@@ -112,7 +115,7 @@ function Confirmacion({
         aria-modal="true"
         aria-labelledby="confirmacion-titulo"
         aria-describedby={mensaje ? "confirmacion-mensaje" : undefined}
-        className="relative w-full max-w-sm max-h-[90vh] overflow-y-auto text-start bg-jw-card text-jw-text-main border border-jw-border rounded-2xl p-6 shadow-xl"
+        className={`relative w-full ${ancho} max-h-[90vh] overflow-y-auto text-start bg-jw-card text-jw-text-main border border-jw-border rounded-2xl p-6 shadow-xl`}
       >
         <h2 id="confirmacion-titulo" className="text-base font-semibold">
           {titulo}

@@ -75,6 +75,13 @@ i18n
     supportedLngs: supportedLngs,
     fallbackLng: "es", // Si el idioma detectado no está en la lista, usa español.
 
+    // React ya escapa el texto que muestra, así que i18next NO debe escapar
+    // los valores insertados ({{fecha}}, {{nombre}}...). Sin esto, "21/04/2026"
+    // se veía como "21&#x2F;04&#x2F;2026" y "D'Angelo" como "D&#39;Angelo".
+    interpolation: {
+      escapeValue: false,
+    },
+
     // Configuración para el backend que carga los archivos JSON
     backend: {
       loadPath: "/locales/{{lng}}/translation.json", // Ruta a los archivos. {{lng}} es una variable para el código de idioma.
