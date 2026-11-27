@@ -35,6 +35,7 @@ import axios from "axios";
 import { Loader2, UserCog } from "lucide-react";
 import Boton from "../ui/Boton";
 import Confirmacion from "../ui/Confirmacion";
+import LineaRotulada from "../ui/LineaRotulada";
 import { CampoArea, CampoSelect, CampoTexto } from "../ui/Campo";
 import { ROLES } from "../../config/personasConfig";
 import { hoyISO, fechaCorta } from "../../lib/fechas";
@@ -44,6 +45,19 @@ const ORDEN_CARGOS = ["coordinador", "secretario", "servicio"];
 const MAX_PALABRAS = 100;
 const LIMITE_PAGINA = 50; // máximo que acepta el backend
 const MAX_PAGINAS = 10; // tope de seguridad
+
+// Posición de cada campo en la cuadrícula de pantallas anchas (clases
+// escritas completas para que Tailwind las detecte).
+const POS_BAJA = [
+  "sm:col-start-1 sm:row-start-1",
+  "sm:col-start-1 sm:row-start-2",
+  "sm:col-start-1 sm:row-start-3",
+];
+const POS_ALTA = [
+  "sm:col-start-2 sm:row-start-1",
+  "sm:col-start-2 sm:row-start-2",
+  "sm:col-start-2 sm:row-start-3",
+];
 
 const CARGO_VACIO = {
   personaId: "",
@@ -158,56 +172,68 @@ function EditorCargo({
       )}
 
       {cambia && (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-x-3 gap-y-3 sm:grid-cols-2">
+          {/* En pantallas anchas, cada fila de la cuadrícula une un campo de
+              la izquierda (baja) con su par de la derecha (alta): así quedan
+              alineados aunque el nombre sea largo o aparezca un error. En el
+              celular se apilan: primero la baja y después el alta. */}
           {titular && (
-            <div className="min-w-0 space-y-3">
-              <CampoSelect
-                id={id("motivoBaja")}
-                label={t("car_motivo_baja_de", {
-                  defaultValue: "Motivo de baja de {{nombre}}",
-                  nombre: nombreTitular,
-                })}
-                obligatorio
-                value={valor.motivoBajaId}
-                error={errores[`${rol}.motivoBaja`]}
-                ayuda={t("per_baja_ayuda_motivo", "Obligatorio.")}
-                onChange={(e) =>
-                  onCambiar(rol, { motivoBajaId: e.target.value })
-                }
-              >
-                <option value="">{t("per_elegir", "Elegir…")}</option>
-                {motivosBaja.map((m) => (
-                  <option key={m.id} value={m.id}>
-                    {m.nombre}
-                  </option>
-                ))}
-              </CampoSelect>
-              <CampoArea
-                id={id("detallesBaja")}
-                rows={2}
-                maxLength={600}
-                label={t("car_detalles_baja", "Detalles de la baja")}
-                value={valor.detallesBaja}
-                error={errores[`${rol}.detallesBaja`]}
-                placeholder={t("car_ph_detalles_baja", "Ej.: Cambio de asignación")}
-                ayuda={t(
-                  "car_ayuda_detalles",
-                  "Opcional, hasta 100 palabras. Queda en el historial.",
-                )}
-                onChange={(e) =>
-                  onCambiar(rol, { detallesBaja: e.target.value })
-                }
-              />
-            </div>
+            <>
+              <p className={`min-w-0 break-words text-xs text-jw-text-main ${POS_BAJA[0]}`}>
+                <LineaRotulada rotulo={t("car_sale_rotulo", "Sale")}>
+                  {nombreTitular}
+                </LineaRotulada>
+              </p>
+              <div className={`min-w-0 ${POS_BAJA[1]}`}>
+                <CampoSelect
+                  id={id("motivoBaja")}
+                  label={t("per_motivo_baja", "Motivo de baja")}
+                  obligatorio
+                  value={valor.motivoBajaId}
+                  error={errores[`${rol}.motivoBaja`]}
+                  ayuda={t("per_baja_ayuda_motivo", "Obligatorio.")}
+                  onChange={(e) =>
+                    onCambiar(rol, { motivoBajaId: e.target.value })
+                  }
+                >
+                  <option value="">{t("per_elegir", "Elegir…")}</option>
+                  {motivosBaja.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.nombre}
+                    </option>
+                  ))}
+                </CampoSelect>
+              </div>
+              <div className={`min-w-0 ${POS_BAJA[2]}`}>
+                <CampoArea
+                  id={id("detallesBaja")}
+                  rows={2}
+                  maxLength={600}
+                  label={t("car_detalles_baja", "Detalles de la baja")}
+                  value={valor.detallesBaja}
+                  error={errores[`${rol}.detallesBaja`]}
+                  placeholder={t("car_ph_detalles_baja", "Ej.: Cambio de asignación")}
+                  ayuda={t(
+                    "car_ayuda_detalles",
+                    "Opcional, hasta 100 palabras. Queda en el historial.",
+                  )}
+                  onChange={(e) =>
+                    onCambiar(rol, { detallesBaja: e.target.value })
+                  }
+                />
+              </div>
+            </>
           )}
 
-          <div className={`min-w-0 space-y-3 ${titular ? "" : "sm:col-span-2"}`}>
+          <p className={`min-w-0 break-words text-xs text-jw-text-main ${titular ? POS_ALTA[0] : "sm:col-span-2"}`}>
+            <LineaRotulada rotulo={t("car_entra_rotulo", "Entra")}>
+              {nombreNuevo}
+            </LineaRotulada>
+          </p>
+          <div className={`min-w-0 ${titular ? POS_ALTA[1] : "sm:col-span-2"}`}>
             <CampoSelect
               id={id("motivoAlta")}
-              label={t("car_motivo_alta_de", {
-                defaultValue: "Motivo de alta de {{nombre}}",
-                nombre: nombreNuevo,
-              })}
+              label={t("per_motivo_alta", "Motivo de alta")}
               obligatorio
               value={valor.motivoAltaId}
               error={errores[`${rol}.motivoAlta`]}
@@ -221,6 +247,8 @@ function EditorCargo({
                 </option>
               ))}
             </CampoSelect>
+          </div>
+          <div className={`min-w-0 ${titular ? POS_ALTA[2] : "sm:col-span-2"}`}>
             <CampoArea
               id={id("detallesAlta")}
               rows={2}
@@ -647,18 +675,18 @@ function CambiarCargos({ congregacionId, cargos, onListo }) {
                   const nuevo = nombrePersona(d.cargos[rol].personaId);
                   return (
                     <li key={rol} className="break-words">
-                      {tit
-                        ? t("car_resumen_cambia", {
-                            defaultValue: "{{cargo}}: de {{antes}} a {{despues}}.",
-                            cargo: nombreRol(rol),
-                            antes: `${tit.apellido} ${tit.nombre}`,
-                            despues: nuevo,
-                          })
-                        : t("car_resumen_vacante", {
-                            defaultValue: "{{cargo}}: {{despues}} (estaba vacante).",
-                            cargo: nombreRol(rol),
-                            despues: nuevo,
-                          })}
+                      <LineaRotulada rotulo={nombreRol(rol)}>
+                        {tit
+                          ? t("car_resumen_cambia_texto", {
+                              defaultValue: "de {{antes}} a {{despues}}.",
+                              antes: `${tit.apellido} ${tit.nombre}`,
+                              despues: nuevo,
+                            })
+                          : t("car_resumen_vacante_texto", {
+                              defaultValue: "{{despues}} (estaba vacante).",
+                              despues: nuevo,
+                            })}
+                      </LineaRotulada>
                     </li>
                   );
                 })}

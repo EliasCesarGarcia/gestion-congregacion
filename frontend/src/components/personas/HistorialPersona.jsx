@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import Tarjeta from "../ui/Tarjeta";
 import TituloSeccion from "../ui/TituloSeccion";
 import Etiqueta from "../ui/Etiqueta";
+import LineaRotulada from "../ui/LineaRotulada";
 import { fechaCorta, hoyISO, textoDuracion } from "../../lib/fechas";
 import { ROLES } from "../../config/personasConfig";
 
@@ -69,17 +70,22 @@ function Vigencia({ vigente }) {
   );
 }
 
-// Líneas de detalle, discretas, debajo del dato principal.
+// Líneas de detalle debajo del dato principal. Cada línea es un texto suelto
+// (se ve discreto) o { rotulo, valor, dosPuntos? }: el rótulo va en negrita
+// (LineaRotulada) y el dato en peso normal.
 function Detalles({ lineas }) {
   if (!lineas || lineas.length === 0) return null;
   return (
-    <div className="mt-1 space-y-0.5">
+    <div className="mt-1 space-y-0.5 text-xs text-jw-text-main">
       {lineas.map((linea, i) => (
-        <p
-          key={i}
-          className="text-xs text-jw-text-main opacity-60 break-words"
-        >
-          {linea}
+        <p key={i} className="break-words">
+          {typeof linea === "string" ? (
+            <span className="opacity-60">{linea}</span>
+          ) : (
+            <LineaRotulada rotulo={linea.rotulo} dosPuntos={linea.dosPuntos}>
+              {linea.valor}
+            </LineaRotulada>
+          )}
         </p>
       ))}
     </div>
@@ -223,14 +229,20 @@ function HistorialPersona({ historial }) {
     hasta: t("per_h_hasta", "Hasta"),
   };
 
-  // "Asignado por X · Quitado por Y" (solo lo que hay).
+  // "Asignado por X" y "Quitado por Y" (solo lo que hay), con el rótulo en negrita.
   const quien = (asignado, quitado) =>
     [
-      asignado && `${t("per_asignado_por", "Asignado por")} ${asignado}`,
-      quitado && `${t("per_quitado_por", "Quitado por")} ${quitado}`,
-    ]
-      .filter(Boolean)
-      .join(" · ");
+      asignado && {
+        rotulo: t("per_asignado_por", "Asignado por"),
+        valor: asignado,
+        dosPuntos: false,
+      },
+      quitado && {
+        rotulo: t("per_quitado_por", "Quitado por"),
+        valor: quitado,
+        dosPuntos: false,
+      },
+    ].filter(Boolean);
 
   // Nombre de un grupo a partir del número que guardó el historial.
   const nombreGrupo = (numero) =>
@@ -245,16 +257,32 @@ function HistorialPersona({ historial }) {
       <Principal texto={t("per_h_periodo_alta", "Período de alta")} />
     ),
     detalles: [
-      e.motivo_alta && `${t("per_motivo_alta", "Motivo de alta")}: ${e.motivo_alta}`,
-      e.detalles_alta && `${t("per_detalles_alta", "Detalles del alta")}: ${e.detalles_alta}`,
-      e.motivo_baja && `${t("per_motivo_baja", "Motivo de baja")}: ${e.motivo_baja}`,
-      e.detalles && `${t("per_detalles_baja", "Detalles de la baja")}: ${e.detalles}`,
-      [
-        e.alta_por && `${t("per_alta_por", "Alta por")} ${e.alta_por}`,
-        e.baja_por && `${t("per_baja_por", "Baja por")} ${e.baja_por}`,
-      ]
-        .filter(Boolean)
-        .join(" · "),
+      e.motivo_alta && {
+        rotulo: t("per_motivo_alta", "Motivo de alta"),
+        valor: e.motivo_alta,
+      },
+      e.detalles_alta && {
+        rotulo: t("per_detalles_alta", "Detalles del alta"),
+        valor: e.detalles_alta,
+      },
+      e.motivo_baja && {
+        rotulo: t("per_motivo_baja", "Motivo de baja"),
+        valor: e.motivo_baja,
+      },
+      e.detalles && {
+        rotulo: t("per_detalles_baja", "Detalles de la baja"),
+        valor: e.detalles,
+      },
+      e.alta_por && {
+        rotulo: t("per_alta_por", "Alta por"),
+        valor: e.alta_por,
+        dosPuntos: false,
+      },
+      e.baja_por && {
+        rotulo: t("per_baja_por", "Baja por"),
+        valor: e.baja_por,
+        dosPuntos: false,
+      },
     ].filter(Boolean),
     desde: e.fecha_alta,
     hasta: e.fecha_baja,
@@ -269,7 +297,7 @@ function HistorialPersona({ historial }) {
       principal: <Principal texto={s.valor} />,
       detalles: [
         `${t("per_situacion", "Situación")} ${s.campo}`,
-        quien(s.asignado_por, s.quitado_por),
+        ...quien(s.asignado_por, s.quitado_por),
       ].filter(Boolean),
       desde: s.fecha_inicio,
       hasta: s.fecha_fin,
@@ -281,11 +309,17 @@ function HistorialPersona({ historial }) {
     clave: `grupo-${g.id}`,
     principal: <Principal texto={nombreGrupo(g.numero_grupo)} />,
     detalles: [
-      g.motivo_entrada && `${t("per_h_entrada", "Entrada")}: ${g.motivo_entrada}`,
+      g.motivo_entrada && {
+        rotulo: t("per_h_entrada", "Entrada"),
+        valor: g.motivo_entrada,
+      },
       g.detalles_entrada,
-      g.motivo_salida && `${t("per_h_salida", "Salida")}: ${g.motivo_salida}`,
+      g.motivo_salida && {
+        rotulo: t("per_h_salida", "Salida"),
+        valor: g.motivo_salida,
+      },
       g.detalles_salida,
-      quien(g.asignado_por, g.quitado_por),
+      ...quien(g.asignado_por, g.quitado_por),
     ].filter(Boolean),
     desde: g.fecha_inicio,
     hasta: g.fecha_fin,
@@ -314,7 +348,7 @@ function HistorialPersona({ historial }) {
       detalles: [
         numero != null && numero !== "" && nombreGrupo(numero),
         c.detalles,
-        quien(c.asignado_por, c.quitado_por),
+        ...quien(c.asignado_por, c.quitado_por),
       ].filter(Boolean),
       desde: c.fecha_inicio,
       hasta: c.fecha_fin,
@@ -328,7 +362,7 @@ function HistorialPersona({ historial }) {
     return {
       clave: `rol-${r.id}`,
       principal: <Principal texto={rol ? t(rol[0], rol[1]) : r.rol} />,
-      detalles: [quien(r.asignado_por, r.quitado_por)].filter(Boolean),
+      detalles: quien(r.asignado_por, r.quitado_por),
       desde: r.fecha_inicio,
       hasta: r.fecha_fin,
       vigente: r.vigente,

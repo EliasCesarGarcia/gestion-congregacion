@@ -5,9 +5,10 @@
  * Ruta: /admin/cargos. SOLO la ve el superadmin.
  *
  * Muestra los tres cargos de la congregación elegida (titular, contacto,
- * Desde, Hasta y tiempo en el cargo), avisa si alguno está vacante y permite
- * cambiarlos con el botón "Cambiar cargos" (componente CambiarCargos).
- * Todavía falta el historial de cada cargo con "Corregir" (paso siguiente).
+ * Desde, Hasta y tiempo en el cargo), avisa si alguno está vacante, permite
+ * cambiarlos con el botón "Cambiar cargos" (componente CambiarCargos) y
+ * muestra el historial de cada cargo (componente HistorialCargo) con un
+ * botón "Corregir" en cada período (componente CorregirCargo).
  *
  * CONGREGACIÓN: el selector arranca en `?congregacion=` o, si no viene, en la
  * del superadmin. Muestra todas (habilitadas o no) y NUNCA mezcla
@@ -35,7 +36,10 @@ import { Loader2, Phone, Plus } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import Boton from "../components/ui/Boton";
 import Etiqueta from "../components/ui/Etiqueta";
+import LineaRotulada from "../components/ui/LineaRotulada";
 import CambiarCargos from "../components/personas/CambiarCargos";
+import CorregirCargo from "../components/personas/CorregirCargo";
+import HistorialCargo from "../components/personas/HistorialCargo";
 import Tarjeta from "../components/ui/Tarjeta";
 import TituloSeccion from "../components/ui/TituloSeccion";
 import { CampoSelect } from "../components/ui/Campo";
@@ -174,15 +178,21 @@ function TitularCargo({ titular: p }) {
       </dl>
 
       {(p.motivo_inicio || p.detalles_inicio) && (
-        <div className="space-y-0.5">
+        <div className="space-y-0.5 text-xs text-jw-text-main">
           {p.motivo_inicio && (
-            <p className="text-xs text-jw-text-main opacity-60 break-words">
-              {t("per_motivo_alta", "Motivo de alta")}: {p.motivo_inicio}
+            <p className="break-words">
+              <LineaRotulada rotulo={t("per_motivo_alta", "Motivo de alta")}>
+                {p.motivo_inicio}
+              </LineaRotulada>
             </p>
           )}
           {p.detalles_inicio && (
-            <p className="text-xs text-jw-text-main opacity-60 break-words">
-              {t("per_detalles_alta", "Detalles del alta")}: {p.detalles_inicio}
+            <p className="break-words">
+              <LineaRotulada
+                rotulo={t("per_detalles_alta", "Detalles del alta")}
+              >
+                {p.detalles_inicio}
+              </LineaRotulada>
             </p>
           )}
         </div>
@@ -207,11 +217,13 @@ function CargosPage() {
   const listo = autorizado && congregacionId !== "";
 
   // --- Cargos. `clave` dice a qué pedido pertenecen los datos (si no
-  // coincide con el actual, se está cargando). Después de un cambio se
-  // vuelve a pedir sumando 1 a `recarga`. ---
+  // coincide con el actual, se está cargando). Después de un cambio o de una
+  // corrección se vuelve a pedir sumando 1 a `recarga`. ---
   const [datos, setDatos] = useState({ clave: "", data: null, error: "" });
   const [recarga, setRecarga] = useState(0);
   const [mensaje, setMensaje] = useState("");
+  // Período que se está corrigiendo: { rol, fila } o null.
+  const [corrigiendo, setCorrigiendo] = useState(null);
   const clave = `${congregacionId}:${recarga}`;
   const cargando = listo && datos.clave !== clave;
 
@@ -325,6 +337,7 @@ function CargosPage() {
             onChange={(e) => {
               setCongregacionId(e.target.value);
               setMensaje("");
+              setCorrigiendo(null);
             }}
             error={
               errorCong
@@ -428,6 +441,33 @@ function CargosPage() {
               )}
             </Boton>
           </div>
+
+          {/* Historial de cada cargo, con "Corregir" en cada período */}
+          <div className="space-y-4">
+            {cargos.map((c) => (
+              <HistorialCargo
+                key={c.rol}
+                cargo={c}
+                onCorregir={(fila) => setCorrigiendo({ rol: c.rol, fila })}
+              />
+            ))}
+          </div>
+
+          {corrigiendo && (
+            <CorregirCargo
+              key={corrigiendo.fila.id}
+              rol={corrigiendo.rol}
+              fila={corrigiendo.fila}
+              onCerrar={() => setCorrigiendo(null)}
+              onListo={(texto) => {
+                setCorrigiendo(null);
+                setMensaje(texto);
+                setRecarga((r) => r + 1);
+                // El aviso está arriba y el historial abajo: se sube para verlo.
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+          )}
         </>
       )}
     </div>
