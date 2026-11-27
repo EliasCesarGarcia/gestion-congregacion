@@ -82,6 +82,8 @@ func RegisterRoutes(mux *http.ServeMux, svc *service.Service) {
 	mux.Handle("GET /api/admin/cargos", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.ListCargosHandler(svc)))))
 	mux.Handle("POST /api/admin/cargos/cambiar", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CambiarCargosHandler(svc)))))
 	mux.Handle("POST /api/admin/cargos/corregir", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.CorregirCargoHandler(svc)))))
+	// Período pasado y cerrado de un cargo, por ejemplo un coordinador interino (2026-11-27), solo superadmin.
+	mux.Handle("POST /api/admin/cargos/periodo-anterior", protegida(handlers.SuperAdminMiddleware(http.HandlerFunc(handlers.PeriodoAnteriorCargoHandler(svc)))))
 	// Bajas, reactivación y motivos de baja (2026-11-06).
 	mux.Handle("POST /api/personas/baja", protegida(http.HandlerFunc(handlers.DarDeBajaPersonaHandler(svc))))
 	mux.Handle("POST /api/personas/reactivar", protegida(http.HandlerFunc(handlers.ReactivarPersonaHandler(svc))))
