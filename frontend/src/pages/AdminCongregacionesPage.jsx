@@ -18,7 +18,7 @@
  */
 
 import React, { useContext, useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import {
@@ -31,6 +31,7 @@ import {
   Power,
   Search,
   History,
+  Briefcase,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -892,6 +893,19 @@ function AdminCongregacionesPage() {
                           <Pencil className="w-4 h-4" />
                           {t("cong_editar", "Editar")}
                         </button>
+
+                        <Link
+                          to={`/admin/cargos?congregacion=${encodeURIComponent(c.id)}`}
+                          aria-label={t(
+                            "cong_ver_cargos_aria",
+                            "Ver cargos de {{nombre}}",
+                            { nombre: c.nombre },
+                          )}
+                          className={CLASE_BTN_SUAVE}
+                        >
+                          <Briefcase className="w-4 h-4" />
+                          {t("cong_ver_cargos", "Ver cargos")}
+                        </Link>
 
                         {c.activa ? (
                           <button

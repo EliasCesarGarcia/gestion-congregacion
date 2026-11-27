@@ -6,9 +6,10 @@
  *
  * Muestra los tres cargos de la congregación elegida (titular, contacto,
  * Desde, Hasta y tiempo en el cargo), avisa si alguno está vacante, permite
- * cambiarlos con el botón "Cambiar cargos" (componente CambiarCargos) y
- * muestra el historial de cada cargo (componente HistorialCargo) con un
- * botón "Corregir" en cada período (componente CorregirCargo).
+ * cambiarlos con el botón "Cambiar cargos" (componente CambiarCargos),
+ * cargar un período pasado y cerrado, como un interino (componente
+ * CargarPeriodoAnterior), y muestra el historial de cada cargo (componente
+ * HistorialCargo) con un botón "Corregir" en cada período (CorregirCargo).
  *
  * CONGREGACIÓN: el selector arranca en `?congregacion=` o, si no viene, en la
  * del superadmin. Muestra todas (habilitadas o no) y NUNCA mezcla
@@ -38,6 +39,7 @@ import Boton from "../components/ui/Boton";
 import Etiqueta from "../components/ui/Etiqueta";
 import LineaRotulada from "../components/ui/LineaRotulada";
 import CambiarCargos from "../components/personas/CambiarCargos";
+import CargarPeriodoAnterior from "../components/personas/CargarPeriodoAnterior";
 import CorregirCargo from "../components/personas/CorregirCargo";
 import HistorialCargo from "../components/personas/HistorialCargo";
 import Tarjeta from "../components/ui/Tarjeta";
@@ -424,6 +426,16 @@ function CargosPage() {
               onListo={(texto) => {
                 setMensaje(texto);
                 setRecarga((r) => r + 1);
+              }}
+            />
+            <CargarPeriodoAnterior
+              congregacionId={congregacionId}
+              cargos={cargos}
+              onListo={(texto) => {
+                setMensaje(texto);
+                setRecarga((r) => r + 1);
+                // El aviso está arriba y el historial abajo: se sube para verlo.
+                window.scrollTo({ top: 0, behavior: "smooth" });
               }}
             />
             <Boton

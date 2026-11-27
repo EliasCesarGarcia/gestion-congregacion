@@ -36,7 +36,7 @@ import { Loader2 } from "lucide-react";
 import Confirmacion from "../ui/Confirmacion";
 import LineaRotulada from "../ui/LineaRotulada";
 import { CampoArea, CampoSelect, CampoTexto } from "../ui/Campo";
-import { ROLES } from "../../config/personasConfig";
+import { ROLES, motivosAltaCargo } from "../../config/personasConfig";
 import { fechaCorta, hoyISO } from "../../lib/fechas";
 import { textoError } from "../../lib/gruposApi";
 
@@ -145,7 +145,7 @@ function CorregirCargo({ fila, rol, onCerrar, onListo }) {
   }, []);
 
   const cargandoDatos = datos === null;
-  const alta = datos?.alta || [];
+  const alta = motivosAltaCargo(datos?.alta || []);
   const baja = datos?.baja || [];
   const inicialIni = motivoInicial(fila.motivo_inicio, alta);
   const inicialFin = motivoInicial(fila.motivo_fin, baja);

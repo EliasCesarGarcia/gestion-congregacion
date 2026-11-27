@@ -33,6 +33,7 @@ import {
   Tag,
   Building2,
   Users,
+  Briefcase,
 } from "lucide-react";
 
 function Navbar() {
@@ -105,6 +106,11 @@ function Navbar() {
             icon: <Building2 size={22} />,
             label: t("nav_admin_congregaciones", "Congregaciones"),
           },
+          {
+            to: "/admin/cargos",
+            icon: <Briefcase size={22} />,
+            label: t("nav_admin_cargos", "Cargos de la congregación"),
+          },
         ]
       : []),
   ];
@@ -162,7 +168,7 @@ function Navbar() {
       return t("nav_config", "Configuración");
     if (location.pathname === "/admin/modulos")
       return t("nav_admin_modules", "Módulos del sistema");
-    if (location.pathname === "/personas") 
+    if (location.pathname.startsWith("/personas"))
       return t("nav_personas", "Personas");
     if (location.pathname === "/admin/encargados")
       return t("nav_admin_encargados", "Encargados de departamentos");
@@ -170,6 +176,8 @@ function Navbar() {
       return t("nav_admin_motivos", "Motivos de puestos");
     if (location.pathname === "/admin/congregaciones")
       return t("nav_admin_congregaciones", "Congregaciones");
+    if (location.pathname === "/admin/cargos")
+      return t("nav_admin_cargos", "Cargos de la congregación");
     return `${t("nav_congregation", "Congregación")} ${user?.congregacion_nombre || ""}`;
   };
 
@@ -229,6 +237,10 @@ function Navbar() {
     if (location.pathname === "/admin/motivos") return <Tag className={size} />;
     if (location.pathname === "/admin/congregaciones")
       return <Building2 className={size} />;
+    if (location.pathname === "/admin/cargos")
+      return <Briefcase className={size} />;
+    if (location.pathname.startsWith("/personas"))
+      return <Users className={size} />;
 
     return null; // Por seguridad, si no coincide ninguna, no muestra nada
   };
