@@ -8,15 +8,16 @@
  */
 
 // --- IMPORTACIONES DE LIBRERÍAS ---
-import { useLocation, NavLink, useNavigate } from "react-router-dom";
-import { useContext, useState, useEffect } from "react";
+import { useLocation, NavLink, useNavigate, matchPath } from "react-router-dom";
+import { useContext, useState, useEffect, useRef } from "react";
 import { AppContext } from "../context/AppContext";
 // NUEVO: Importación para el soporte de traducción de react-i18next
 import { useTranslation } from "react-i18next";
 import { MODULOS_UI } from "../config/modulosConfig";
+// Estilos propios del menú lateral (colores solo con variables de tema jw-*)
+import "../styles/menuLateral.css";
 
 // --- IMPORTACIÓN DE ICONOS (LUCIDE-REACT) ---
-// Optimizado: Se elimina ChevronDown que no se utilizaba para evitar advertencias de ESLint
 import {
   Menu,
   Home,
@@ -35,7 +36,12 @@ import {
   Users,
   Briefcase,
   ListChecks,
+  Cog,
+  ChevronDown,
 } from "lucide-react";
+
+// Texto de versión que se muestra al pie del menú lateral
+const VERSION_SISTEMA = "S.G. v2.6";
 
 function Navbar() {
   // --- 1. CONFIGURACIÓN, ESTADOS Y CONTEXTO ---
@@ -44,48 +50,39 @@ function Navbar() {
   // ✅ Solo destructuramos lo que Navbar realmente utiliza
   const { user, logout, modulos, permisos } = useContext(AppContext);
 
-  // Menú: ítems fijos + módulos del usuario que tengan pantalla (MODULOS_UI).
+  // Menú lateral. Cada entrada es un enlace ({ to, icon, label }) o un grupo
+  // desplegable ({ id, icon, label, items: [{ to, label }] }).
+  // Los módulos del usuario que tengan pantalla (MODULOS_UI) se suman como enlaces.
   // Object.hasOwn evita que un id como "constructor" coincida con la tabla.
-  const itemsMenu = [
-    { to: "/", icon: <Home size={22} />, label: t("nav_home", "Inicio") },
+  const puedeGestionarPersonas =
+    permisos.es_superadmin || permisos.es_encargado_general;
+
+  // Parte de trabajo: inicio, módulos y grupos de gestión
+  const entradasTrabajo = [
+    { to: "/", icon: <Home />, label: t("nav_home", "Inicio") },
     ...modulos
       .filter((m) => Object.hasOwn(MODULOS_UI, m.id))
       .map((m) => {
         const { to, icon: Icono, labelKey } = MODULOS_UI[m.id];
-        return { to, icon: <Icono size={22} />, label: t(labelKey, m.nombre) };
+        return { to, icon: <Icono />, label: t(labelKey, m.nombre) };
       }),
-    {
-      to: "/seguridad-tips",
-      icon: <ShieldCheck size={22} />,
-      label: t("nav_security", "Seguridad Digital"),
-    },
-    {
-      to: "/contacto",
-      icon: <Globe size={22} />,
-      label: t("nav_help", "Ayuda y Contacto"),
-    },
-    {
-      to: "/perfil",
-      icon: <User size={22} />,
-      label: t("nav_profile", "Mi Perfil"),
-    },
-    {
-      to: "/configuracion",
-      icon: <Settings size={22} />,
-      label: t("nav_config", "Configuración"),
-    },
     // Coordinador, secretario, servicio y superadmin (el backend igual valida cada ruta)
-    ...(permisos.es_superadmin || permisos.es_encargado_general
+    ...(puedeGestionarPersonas
       ? [
           {
-            to: "/personas",
-            icon: <Users size={22} />,
-            label: t("nav_personas", "Personas"),
-          },
-          {
-            to: "/admin/encargados",
-            icon: <UserCog size={22} />,
-            label: t("nav_admin_encargados", "Encargados de departamentos"),
+            id: "personas",
+            icon: <Users />,
+            label: t("nav_group_personas", "Gestión de personas"),
+            items: [
+              {
+                to: "/personas",
+                label: t("nav_personas", "Personas"),
+              },
+              {
+                to: "/admin/encargados",
+                label: t("nav_admin_encargados", "Encargados de departamentos"),
+              },
+            ],
           },
         ]
       : []),
@@ -93,42 +90,67 @@ function Navbar() {
     ...(permisos.es_superadmin
       ? [
           {
-            to: "/admin/modulos",
-            icon: <SlidersHorizontal size={22} />,
-            label: t("nav_admin_modules", "Módulos del sistema"),
-          },
-          {
-            to: "/admin/motivos",
-            icon: <Tag size={22} />,
-            label: t("nav_admin_motivos", "Motivos de puestos"),
-          },
-          {
-            to: "/admin/congregaciones",
-            icon: <Building2 size={22} />,
-            label: t("nav_admin_congregaciones", "Congregaciones"),
-          },
-          {
-            to: "/admin/cargos",
-            icon: <Briefcase size={22} />,
-            label: t("nav_admin_cargos", "Cargos de la congregación"),
-          },
-          {
-            to: "/admin/catalogo-motivos",
-            icon: <ListChecks size={22} />,
-            label: t("nav_admin_catalogo_motivos", "Motivos de personas y cargos"),
+            id: "admin",
+            icon: <Cog />,
+            label: t("nav_group_admin", "Administración"),
+            items: [
+              {
+                to: "/admin/cargos",
+                label: t("nav_admin_cargos", "Cargos de la congregación"),
+              },
+              {
+                to: "/admin/congregaciones",
+                label: t("nav_admin_congregaciones", "Congregaciones"),
+              },
+              {
+                to: "/admin/catalogo-motivos",
+                label: t(
+                  "nav_admin_catalogo_motivos",
+                  "Motivos de personas y cargos",
+                ),
+              },
+              {
+                to: "/admin/motivos",
+                label: t("nav_admin_motivos", "Motivos de puestos"),
+              },
+              {
+                to: "/admin/modulos",
+                label: t("nav_admin_modules", "Módulos del sistema"),
+              },
+            ],
           },
         ]
       : []),
+  ];
+
+  // Parte de la cuenta y la ayuda, separada del resto por una línea
+  const entradasCuenta = [
+    {
+      to: "/seguridad-tips",
+      icon: <ShieldCheck />,
+      label: t("nav_security", "Seguridad Digital"),
+    },
+    {
+      to: "/contacto",
+      icon: <Globe />,
+      label: t("nav_help", "Ayuda y Contacto"),
+    },
+    {
+      to: "/perfil",
+      icon: <User />,
+      label: t("nav_profile", "Mi Perfil"),
+    },
+    {
+      to: "/configuracion",
+      icon: <Settings />,
+      label: t("nav_config", "Configuración"),
+    },
   ];
 
   // NUEVO: Detección dinámica de dirección (LTR / RTL)
   const isRtl = i18n.dir
     ? i18n.dir() === "rtl"
     : ["ar", "he"].includes(i18n.language);
-
-  // NUEVO: Direcciones dinámicas para las animaciones del menú según el sentido de lectura
-  const rtlTranslate = isRtl ? "-translate-x-1" : "translate-x-1";
-  const rtlRotate = isRtl ? "group-hover:-rotate-3" : "group-hover:rotate-3";
 
   // Estados locales para el control de apertura de menús
   const [isMenuOpen, setIsMenuOpen] = useState(false); // Menú lateral izquierdo
@@ -137,6 +159,29 @@ function Navbar() {
   // Hooks de navegación y ubicación de React Router
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Referencias para el manejo del foco (teclado y lectores de pantalla)
+  const botonMenuRef = useRef(null);
+  const botonCerrarRef = useRef(null);
+
+  // Grupos del menú que la persona abrió o cerró a mano. Al cambiar de página
+  // se vuelve a la regla automática: se abre solo el grupo de la página actual.
+  const [gruposManual, setGruposManual] = useState({});
+  const [rutaAnterior, setRutaAnterior] = useState(location.pathname);
+  if (rutaAnterior !== location.pathname) {
+    setRutaAnterior(location.pathname);
+    setGruposManual({});
+  }
+
+  // Misma regla que usa NavLink: coincide la ruta exacta o una subruta ("/personas/12")
+  const rutaActiva = (to) =>
+    !!matchPath({ path: to, end: to === "/" }, location.pathname);
+  const grupoTieneRutaActiva = (grupo) =>
+    grupo.items.some((item) => rutaActiva(item.to));
+  const grupoAbierto = (grupo) =>
+    gruposManual[grupo.id] ?? grupoTieneRutaActiva(grupo);
+  const alternarGrupo = (grupo) =>
+    setGruposManual((prev) => ({ ...prev, [grupo.id]: !grupoAbierto(grupo) }));
 
   // --- 2. FUNCIONES DE INTERACCIÓN (LÓGICA) ---
 
@@ -284,6 +329,81 @@ function Navbar() {
     return () => document.body.classList.remove("body-freeze");
   }, [isMenuOpen, isProfileOpen]);
 
+  // Esc cierra los menús y devuelve el foco al botón que abre el menú lateral
+  useEffect(() => {
+    if (!isMenuOpen && !isProfileOpen) return;
+    const alPulsarTecla = (e) => {
+      if (e.key !== "Escape") return;
+      const estabaElMenu = isMenuOpen;
+      setIsMenuOpen(false);
+      setIsProfileOpen(false);
+      if (estabaElMenu) botonMenuRef.current?.focus();
+    };
+    document.addEventListener("keydown", alPulsarTecla);
+    return () => document.removeEventListener("keydown", alPulsarTecla);
+  }, [isMenuOpen, isProfileOpen]);
+
+  // Al abrir el menú lateral el foco entra en él
+  useEffect(() => {
+    if (isMenuOpen) botonCerrarRef.current?.focus({ preventScroll: true });
+  }, [isMenuOpen]);
+
+  // Dibuja un enlace del menú (de primer nivel o dentro de un grupo)
+  const renderEnlace = (item, esSubitem = false) => (
+    <NavLink
+      to={item.to}
+      end={item.to === "/"}
+      onClick={closeMenus}
+      className={({ isActive }) =>
+        `menu-item${esSubitem ? " menu-item--sub" : ""}${isActive ? " menu-item--activo" : ""}`
+      }
+    >
+      {!esSubitem && (
+        <span className="menu-icono" aria-hidden="true">
+          {item.icon}
+        </span>
+      )}
+      <span className="menu-texto">{item.label}</span>
+    </NavLink>
+  );
+
+  // Dibuja una entrada: enlace suelto o grupo desplegable
+  const renderEntrada = (entrada) => {
+    if (!entrada.items) {
+      return <li key={entrada.to}>{renderEnlace(entrada)}</li>;
+    }
+
+    const abierto = grupoAbierto(entrada);
+    const idSublista = `menu-sub-${entrada.id}`;
+
+    return (
+      <li key={entrada.id}>
+        <button
+          type="button"
+          className={`menu-item menu-item--grupo${grupoTieneRutaActiva(entrada) ? " menu-item--grupo-activo" : ""}`}
+          aria-expanded={abierto}
+          aria-controls={idSublista}
+          onClick={() => alternarGrupo(entrada)}
+        >
+          <span className="menu-icono" aria-hidden="true">
+            {entrada.icon}
+          </span>
+          <span className="menu-texto">{entrada.label}</span>
+          <span className="menu-chevron" aria-hidden="true">
+            <ChevronDown />
+          </span>
+        </button>
+        <div className="menu-subgrupo" data-open={abierto}>
+          <ul id={idSublista} className="menu-sublista" inert={!abierto}>
+            {entrada.items.map((item) => (
+              <li key={item.to}>{renderEnlace(item, true)}</li>
+            ))}
+          </ul>
+        </div>
+      </li>
+    );
+  };
+
   return (
     <nav className="bg-jw-navy/70 backdrop-blur-md text-jw-text-light fixed top-0 left-0 z-[100] h-16 flex items-center shadow-lg px-2 sm:px-6 w-full transition-colors duration-700">
       {/* Contenedor único que lee la imagen estática desde el CSS */}
@@ -312,12 +432,15 @@ function Navbar() {
         >
           {/* Disparador del Menú Lateral (Sidebar) */}
           <button
+            ref={botonMenuRef}
             onClick={() => {
               setIsMenuOpen((prev) => !prev);
               setIsProfileOpen(false);
             }}
             aria-label={t("nav_open_menu", "Abrir menú de navegación")}
-            className={`p-1.5 sm:p-2 hover:bg-white/20 text-jw-text-light hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] ${isRtl ? "ml-1" : "mr-1"}`}
+            aria-expanded={isMenuOpen}
+            aria-controls="menu-lateral"
+            className="p-1.5 sm:p-2 hover:bg-white/20 text-jw-text-light hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] me-1"
           >
             <Menu className="w-7 h-7" />
           </button>
@@ -327,13 +450,13 @@ function Navbar() {
             to="/"
             onClick={closeMenus}
             aria-label={t("nav_go_home", "Ir al inicio")}
-            className={`p-1.5 sm:p-2 hover:bg-white/20 text-jw-text-light hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] ${isRtl ? "ml-2 sm:ml-3" : "mr-2 sm:mr-3"}`}
+            className="p-1.5 sm:p-2 hover:bg-white/20 text-jw-text-light hover:-translate-y-1 rounded-md transition-all duration-300 active:scale-90 shrink-0 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] me-2 sm:me-3"
           >
             <Home className="w-7 h-7" />
           </NavLink>
 
           <div
-            className={`flex flex-row items-baseline gap-2 sm:gap-3 ${isRtl ? "border-r pr-3 sm:pr-4" : "border-l pl-3 sm:pl-4"} border-white/20 min-w-0 flex-grow overflow-hidden`}
+            className="flex flex-row items-baseline gap-2 sm:gap-3 border-s ps-3 sm:ps-4 border-white/20 min-w-0 flex-grow overflow-hidden"
           >
             <span className="text-base font-normal tracking-wide text-jw-text-light opacity-80 hidden lg:block italic shrink-0">
               {t("nav_system_title", "Sistema de Gestión")}
@@ -363,11 +486,9 @@ function Navbar() {
             )}
             className="flex items-center gap-3 sm:gap-5 p-0 px-1 hover:bg-white/20 rounded-full transition-all active:scale-95 border border-transparent"
           >
-            {/* Saludo y nombre de usuario (Alineación invertida dinámicamente si es RTL) */}
-            <div
-              className={`hidden md:flex flex-col ${isRtl ? "items-start text-left" : "items-end text-right"} leading-none shrink min-w-0 overflow-hidden`}
-            >
-              <span className="text-[10px] font-medium text-jw-text-light opacity-80 uppercase tracking-widest mb-1">
+            {/* Saludo y nombre de usuario (alineado al inicio del texto en cualquier idioma) */}
+            <div className="hidden md:flex flex-col items-start text-start leading-none shrink min-w-0 overflow-hidden">
+              <span className="text-[0.625rem] font-medium text-jw-text-light opacity-80 uppercase tracking-widest mb-1">
                 {t("nav_my_account", "Mi Cuenta")}
               </span>
               <span className="text-base font-light italic text-jw-text-light">
@@ -389,7 +510,7 @@ function Navbar() {
                   fetchPriority="high"
                 />
               ) : (
-                <User className="text-gray-400 w-7 h-7" />
+                <User className="text-jw-text-main/40 w-7 h-7" />
               )}
             </div>
           </button>
@@ -403,7 +524,7 @@ function Navbar() {
             >
               {/* Cabecera del Dropdown */}
               <div
-                className={`py-4 px-6 menu-header-dynamic ${isRtl ? "text-start" : "text-start"} relative z-20`}
+                className="py-4 px-6 menu-header-dynamic text-start relative z-20"
               >
                 <p className="text-lg font-bold leading-tight text-white drop-shadow-sm">
                   {user?.nombre_completo}
@@ -415,11 +536,9 @@ function Navbar() {
 
               {/* Cuerpo de información institucional */}
               <div
-                className={`p-4 text-xs text-jw-text-main leading-relaxed italic ${isRtl ? "text-right" : "text-left"}`}
+                className="p-4 text-xs text-jw-text-main leading-relaxed italic text-start"
               >
-                <div
-                  className={`px-1 ${isRtl ? "border-r-4 pr-3" : "border-l-4 pl-3"} border-jw-accent`}
-                >
+                <div className="px-1 border-s-4 ps-3 border-jw-accent">
                   <div className="mb-2">
                     <p className="font-bold not-italic text-jw-text-main text-base leading-tight">
                       {user?.congregacion_nombre}
@@ -436,12 +555,9 @@ function Navbar() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 pt-1 border-t border-gray-50 mt-2">
-                    <Globe
-                      size={13}
-                      className="shrink-0 text-jw-accent-light"
-                    />
-                    <p className="font-normal uppercase tracking-widest text-[10px] not-italic">
+                  <div className="flex items-center gap-2 pt-1 border-t border-jw-border mt-2">
+                    <Globe className="w-3.5 h-3.5 shrink-0 text-jw-accent" />
+                    <p className="font-normal uppercase tracking-widest text-[0.625rem] not-italic">
                       {t("nav_region", "Región")}{" "}
                       {user?.region
                         ? t(getRegionKey(user.region), user.region)
@@ -459,14 +575,14 @@ function Navbar() {
                       navigate("/perfil");
                       closeMenus();
                     }}
-                    className={`w-full flex items-center gap-3 p-2 hover:bg-jw-accent/20 rounded-xl text-sm transition-all text-jw-text-main group ${isRtl ? "text-right" : "text-left"} font-medium active:scale-95`}
+                    className={`w-full flex items-center gap-3 p-2 hover:bg-jw-accent/20 rounded-xl text-sm transition-all text-jw-text-main group text-start font-medium active:scale-95`}
                   >
                     <Settings className="w-4 h-4 text-jw-accent" />
                     <span>{t("nav_admin_account", "Administrar cuenta")}</span>
                   </button>
                   <button
                     onClick={handleLogout}
-                    className={`w-full flex items-center gap-3 p-2 hover:bg-red-500/20 rounded-xl text-sm transition-all text-red-500 group ${isRtl ? "text-right" : "text-left"} font-medium active:scale-95`}
+                    className={`w-full flex items-center gap-3 p-2 hover:bg-red-500/20 rounded-xl text-sm transition-all text-red-500 group text-start font-medium active:scale-95`}
                   >
                     <LogOut className="w-4 h-4 text-red-500 group-hover:text-red-600" />
                     <span>{t("nav_logout", "Cerrar sesión")}</span>
@@ -479,22 +595,21 @@ function Navbar() {
       </div>
 
       {/* 
-          --- MENÚ LATERAL (DERECHA EN RTL / IZQUIERDA EN LTR) --- 
+          --- MENÚ LATERAL (a la derecha en idiomas RTL, a la izquierda en el resto) ---
+          Estructura en columna: cabecera fija, lista con scroll propio y pie fijo.
+          "inert" mientras está cerrado: no recibe foco ni lo leen los lectores de pantalla.
       */}
       <div
-        className={`fixed top-0 h-screen w-60 md:w-70 bg-jw-card z-[150] transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] overflow-hidden shadow-2xl 
-  ${isRtl ? "right-0 border-l border-jw-border" : "left-0 border-r border-jw-border"} 
-  ${isMenuOpen ? "translate-x-0" : isRtl ? "translate-x-full" : "-translate-x-full"}`}
+        id="menu-lateral"
+        className="menu-lateral"
+        data-open={isMenuOpen}
+        inert={!isMenuOpen}
       >
-        {/* --- AHORA (Nivel Dios) --- */}
-        <div className="menu-header-dynamic py-5 px-5 text-jw-text-light flex justify-between items-start relative z-20">
+        <div className="menu-header-dynamic shrink-0 py-5 px-5 text-jw-text-light flex justify-between items-start relative z-20">
           <div className="flex items-center gap-4">
-            <LayoutGrid
-              size={32}
-              className="shrink-0 text-white drop-shadow-md"
-            />
+            <LayoutGrid className="w-8 h-8 shrink-0 text-white drop-shadow-md" />
             <div className="flex flex-col items-start text-start">
-              <span className="text-[10px] tracking-[0.3em] font-black uppercase opacity-60">
+              <span className="text-[0.625rem] tracking-[0.3em] font-black uppercase opacity-60">
                 {t("nav_menu_title", "Menú Principal")}
               </span>
               <span className="text-sm font-bold italic text-white">
@@ -502,60 +617,31 @@ function Navbar() {
               </span>
             </div>
           </div>
-          {/* Botón X de cierre corregido con inset-inline-end */}
           <button
-            onClick={() => setIsMenuOpen(false)}
+            ref={botonCerrarRef}
+            type="button"
+            onClick={() => {
+              setIsMenuOpen(false);
+              botonMenuRef.current?.focus();
+            }}
+            aria-label={t("nav_close_menu", "Cerrar menú de navegación")}
             className="hover:bg-white/20 p-2 rounded-full transition-all"
           >
             <X className="w-6 h-6 text-white" />
           </button>
         </div>
 
-        {/* Listado de navegación dinámica con i18n */}
-        <div
-          className={`p-1 space-y-1 overflow-y-auto h-[calc(100%-60px)] custom-scrollbar ${isRtl ? "text-right" : "text-left"} mt-2`}
-        >
-          {itemsMenu.map((item) => {
-            const isAct = location.pathname === item.to;
-
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={closeMenus}
-                className={({ isActive }) => `
-                  group relative flex items-center gap-3 py-2 px-5 text-sm font-medium transition-all duration-300 ${isRtl ? "border-r-4" : "border-l-4"}
-                  ${
-                    isActive
-                      ? "nav-item-selected text-jw-text-light shadow-lg z-10"
-                      : `bg-transparent text-jw-text-main hover:bg-jw-accent/30 rounded-2xl ${isRtl ? "rounded-r-none" : "rounded-l-none"} border-transparent`
-                  }
-                `}
-              >
-                <span
-                  className={`shrink-0 transition-all duration-300 ${
-                    isAct
-                      ? `scale-125 ${rtlTranslate}`
-                      : `group-hover:scale-125 group-hover:${rtlTranslate} ${rtlRotate}`
-                  }`}
-                >
-                  {item.icon}
-                </span>
-
-                <span className="relative z-10 tracking-wide">
-                  {item.label}
-                </span>
-              </NavLink>
-            );
-          })}
+        {/* Lista de navegación: es lo único que se desplaza */}
+        <div className="menu-scroll">
+          <ul className="menu-lista">
+            {entradasTrabajo.map(renderEntrada)}
+            <li className="menu-separador" role="separator" />
+            {entradasCuenta.map(renderEntrada)}
+          </ul>
         </div>
 
-        {/* Pie de Menú con branding sutil y versión del sistema */}
-        <div className="absolute bottom-1 left-0 w-full px-2 opacity-80 border-t border-jw-border pt-2">
-          <p className="text-[0.65rem] font-medium tracking-[0.4em] uppercase text-center text-jw-text-main">
-            S.G. v2.6
-          </p>
-        </div>
+        {/* Pie con la versión: ocupa su propio espacio, no tapa ninguna opción */}
+        <div className="menu-pie">{VERSION_SISTEMA}</div>
       </div>
     </nav>
   );

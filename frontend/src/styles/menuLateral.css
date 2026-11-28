@@ -1,0 +1,292 @@
+/**
+ * ARCHIVO: menuLateral.css
+ * UBICACIÓN: frontend/src/styles/menuLateral.css
+ * DESCRIPCIÓN: Estilos del menú lateral (Navbar.jsx).
+ *
+ * Reglas de este archivo:
+ *  - Colores solo con las variables de tema --color-jw-* (las escribe AppContext
+ *    en <html>, así que siguen al tema y al horario elegidos).
+ *  - Solo propiedades lógicas (inline/block, start/end): en árabe y hebreo el
+ *    menú pasa solo al otro lado.
+ *  - Tamaños en rem: escalan con el ajuste de tamaño de texto (html[data-font-size]).
+ *  - No depende de ninguna regla de index.css.
+ */
+
+/* ==========================================================
+   CONTENEDOR: columna con cabecera fija, lista con scroll y pie fijo
+   ========================================================== */
+.menu-lateral {
+  --menu-desplazamiento: -100%;
+  --menu-giro: 3deg;
+
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  z-index: 150;
+
+  display: flex;
+  flex-direction: column;
+  inline-size: 15rem;
+  max-inline-size: calc(100vw - 2rem);
+  block-size: 100vh;
+  block-size: 100dvh; /* en celular no cuenta la barra del navegador */
+  overflow: hidden;
+
+  /* #root centra el texto; el menú siempre va alineado al inicio */
+  text-align: start;
+  background: var(--color-jw-card);
+  color: var(--color-jw-text-main);
+  border-inline-end: 1px solid var(--color-jw-border);
+  box-shadow: 0 0 2.5rem rgb(0 0 0 / 0.18);
+
+  /* Cerrado: fuera de pantalla y oculto (sin sombra ni foco) */
+  transform: translateX(var(--menu-desplazamiento));
+  visibility: hidden;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0.5s;
+}
+
+@media (min-width: 48rem) {
+  .menu-lateral {
+    inline-size: 17.5rem;
+  }
+}
+
+/* En idiomas de derecha a izquierda el menú entra por el otro lado */
+html[dir="rtl"] .menu-lateral {
+  --menu-desplazamiento: 100%;
+  --menu-giro: -3deg;
+}
+
+.menu-lateral[data-open="true"] {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0s;
+}
+
+/* Con un menú abierto la página de atrás no se desplaza */
+html:has(body.body-freeze) {
+  overflow: hidden;
+  scrollbar-gutter: stable;
+}
+
+/* ==========================================================
+   ZONA CON SCROLL: es lo único que se desplaza dentro del menú
+   ========================================================== */
+.menu-scroll {
+  flex: 1 1 auto;
+  min-block-size: 0; /* sin esto una lista larga empuja al pie fuera de pantalla */
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain; /* al llegar al final no mueve la página de atrás */
+  padding-block: 0.5rem 0.75rem;
+
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--color-jw-text-main) 22%, transparent)
+    transparent;
+}
+
+.menu-scroll:hover,
+.menu-scroll:focus-within {
+  scrollbar-color: color-mix(in srgb, var(--color-jw-text-main) 45%, transparent)
+    transparent;
+}
+
+/* Navegadores que todavía no entienden scrollbar-color */
+@supports not (scrollbar-color: auto) {
+  .menu-scroll::-webkit-scrollbar {
+    inline-size: 0.5rem;
+  }
+  .menu-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .menu-scroll::-webkit-scrollbar-thumb {
+    background: color-mix(in srgb, var(--color-jw-text-main) 30%, transparent);
+    border: 0.125rem solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+}
+
+.menu-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-separador {
+  block-size: 1px;
+  margin: 0.5rem 1rem;
+  background: var(--color-jw-border);
+}
+
+/* ==========================================================
+   OPCIONES: enlaces y botones de grupo comparten la misma forma
+   ========================================================== */
+.menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  inline-size: calc(100% - 1rem);
+  min-block-size: 2.75rem; /* área táctil cómoda (44 px a tamaño normal) */
+  margin-inline: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.625rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: start;
+  text-decoration: none;
+  color: inherit;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.menu-item:hover {
+  background: color-mix(in srgb, var(--color-jw-text-main) 7%, transparent);
+}
+
+.menu-item:focus-visible {
+  outline: 2px solid var(--color-jw-accent);
+  outline-offset: -2px;
+}
+
+/* Página actual: fondo suave y una marca de color al inicio */
+.menu-item--activo {
+  font-weight: 600;
+  background: color-mix(in srgb, var(--color-jw-text-main) 11%, transparent);
+}
+
+.menu-item--activo::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.625rem;
+  inset-inline-start: 0.25rem;
+  inline-size: 0.1875rem;
+  border-radius: 999px;
+  background: var(--color-jw-accent);
+}
+
+/* Grupo cerrado que contiene la página actual */
+.menu-item--grupo-activo {
+  font-weight: 600;
+}
+.menu-item--grupo-activo[aria-expanded="false"] {
+  background: color-mix(in srgb, var(--color-jw-text-main) 7%, transparent);
+}
+
+.menu-texto {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Íconos ---------- */
+.menu-icono {
+  display: inline-flex;
+  flex: none;
+  transition: transform 0.25s ease;
+}
+
+.menu-icono > svg {
+  inline-size: 1.375rem;
+  block-size: 1.375rem;
+}
+
+.menu-item:hover .menu-icono {
+  transform: scale(1.1) rotate(var(--menu-giro));
+}
+
+.menu-item--activo .menu-icono {
+  transform: scale(1.1);
+}
+
+/* ---------- Grupos desplegables ---------- */
+.menu-chevron {
+  display: inline-flex;
+  flex: none;
+  opacity: 0.6;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-chevron > svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.menu-item--grupo[aria-expanded="true"] .menu-chevron {
+  transform: rotate(180deg);
+}
+
+/* Se abre y cierra animando la altura sin conocerla de antes */
+.menu-subgrupo {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-subgrupo[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.menu-sublista {
+  min-block-size: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  list-style: none;
+}
+
+/* El texto del subítem queda alineado con el texto del grupo:
+   0,75 (padding) + 1,375 (ícono) + 0,75 (separación) = 2,875 rem */
+.menu-item--sub {
+  min-block-size: 2.5rem;
+  padding-inline-start: 2.875rem;
+  font-weight: 400;
+}
+
+.menu-item--sub.menu-item--activo {
+  font-weight: 600;
+}
+
+/* ==========================================================
+   PIE: ocupa su propio lugar, nunca tapa una opción
+   ========================================================== */
+.menu-pie {
+  flex: none;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  border-block-start: 1px solid var(--color-jw-border);
+  background: var(--color-jw-card);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-align: start;
+  color: color-mix(in srgb, var(--color-jw-text-main) 65%, transparent);
+}
+
+/* ==========================================================
+   MOVIMIENTO REDUCIDO: quien lo pide en su sistema no ve animaciones
+   ========================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .menu-lateral,
+  .menu-lateral[data-open="true"],
+  .menu-subgrupo,
+  .menu-chevron,
+  .menu-icono,
+  .menu-item {
+    transition: none;
+  }
+
+  .menu-item:hover .menu-icono {
+    transform: none;
+  }
+}
