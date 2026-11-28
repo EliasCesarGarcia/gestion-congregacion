@@ -37,7 +37,7 @@ import Boton from "../ui/Boton";
 import Confirmacion from "../ui/Confirmacion";
 import LineaRotulada from "../ui/LineaRotulada";
 import { CampoArea, CampoSelect, CampoTexto } from "../ui/Campo";
-import { ROLES, motivosAltaCargo } from "../../config/personasConfig";
+import { ROLES } from "../../config/personasConfig";
 import { hoyISO, fechaCorta } from "../../lib/fechas";
 import { textoError } from "../../lib/gruposApi";
 
@@ -312,7 +312,7 @@ function CambiarCargos({ congregacionId, cargos, onListo }) {
         setDatos({
           clave,
           ancianos,
-          motivosAlta: motivosAltaCargo(listaMotivos(alta)),
+          motivosAlta: listaMotivos(alta),
           motivosBaja: listaMotivos(baja),
           error: false,
         }),

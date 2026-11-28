@@ -38,6 +38,7 @@ import NuevaPersonaPage from "./pages/NuevaPersonaPage"; // Alta de persona
 import EditarPersonaPage from "./pages/EditarPersonaPage"; // Edición de persona
 import GruposPage from "./pages/GruposPage"; // Grupos de la congregación
 import CargosPage from "./pages/CargosPage"; // Cargos de la congregación (solo superadmin)
+import MotivosCatalogoPage from "./pages/MotivosCatalogoPage"; // Panel de superadmin: motivos de personas y cargos
 
 function App() {
   // --- MOTOR PARALLAX LIMITADO (Suave, Inteligente y a prueba de fallos) ---
@@ -397,6 +398,23 @@ function App() {
                   />
                 </Helmet>
                 <CargosPage />
+              </RutaProtegida>
+            }
+          />
+
+          {/* Panel de superadmin: motivos de personas y cargos (catálogo único) */}
+          <Route
+            path="/admin/catalogo-motivos"
+            element={
+              <RutaProtegida>
+                <Helmet>
+                  <title>Motivos de Personas y Cargos | Administración</title>
+                  <meta
+                    name="description"
+                    content="Catálogo de motivos de alta, baja, cambio de grupo y cargos (solo superadmin)."
+                  />
+                </Helmet>
+                <MotivosCatalogoPage />
               </RutaProtegida>
             }
           />

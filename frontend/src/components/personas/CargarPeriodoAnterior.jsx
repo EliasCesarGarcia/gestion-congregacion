@@ -17,8 +17,8 @@
  *  - Solo se ofrecen ancianos en ALTA de la congregación.
  *  - El período debe caer dentro de un período de alta de la persona y no
  *    superponerse con otro período de ese cargo (se ven los ya cargados).
- *  - Los motivos de alta se limitan a los permitidos para los cargos
- *    (motivosAltaCargo, en personasConfig.js).
+ *  - Los motivos de alta son los que estén activos para "Alta de cargo" en el
+ *    panel de motivos (/admin/catalogo-motivos).
  *  - No cambia a los titulares actuales de ningún cargo.
  *
  * Props: congregacionId, cargos ([{ rol, titular, historial }]), onListo(texto).
@@ -34,7 +34,7 @@ import Boton from "../ui/Boton";
 import Confirmacion from "../ui/Confirmacion";
 import LineaRotulada from "../ui/LineaRotulada";
 import { CampoArea, CampoSelect, CampoTexto } from "../ui/Campo";
-import { ROLES, motivosAltaCargo } from "../../config/personasConfig";
+import { ROLES } from "../../config/personasConfig";
 import { fechaCorta, hoyISO, textoDuracion } from "../../lib/fechas";
 import { textoError } from "../../lib/gruposApi";
 
@@ -219,7 +219,7 @@ function CargarPeriodoAnterior({ congregacionId, cargos, onListo }) {
         setDatos({
           clave,
           ancianos,
-          motivosAlta: motivosAltaCargo(listaMotivos(alta)),
+          motivosAlta: listaMotivos(alta),
           motivosBaja: listaMotivos(baja),
           error: false,
         }),

@@ -57,31 +57,3 @@ export const FORM_PERSONA_VACIO = {
   codigo_postal: "",
   detalles: "",
 };
-
-// Motivos de ALTA que se pueden elegir al dar de alta un cargo (coordinador,
-// secretario y servicio). Las demás opciones del catálogo (uso "cargo_alta")
-// se omiten en las ventanas de cargos. Se comparan por el nombre, sin tildes ni
-// mayúsculas. Es un filtro de pantalla: el backend todavía acepta cualquier
-// motivo activo del uso cargo_alta.
-export const MOTIVOS_ALTA_CARGO = [
-  "Asignación",
-  "Cambio de asignación",
-  "Reemplazo",
-  "Reestructuración",
-];
-
-const sinTildes = (texto) =>
-  String(texto || "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
-
-// Deja solo los motivos de alta permitidos para los cargos.
-export function motivosAltaCargo(lista) {
-  const permitidos = MOTIVOS_ALTA_CARGO.map(sinTildes);
-  return (Array.isArray(lista) ? lista : []).filter((m) =>
-    permitidos.includes(sinTildes(m.nombre)),
-  );
-}

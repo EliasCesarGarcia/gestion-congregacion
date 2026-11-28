@@ -34,6 +34,7 @@ import {
   Building2,
   Users,
   Briefcase,
+  ListChecks,
 } from "lucide-react";
 
 function Navbar() {
@@ -111,6 +112,11 @@ function Navbar() {
             icon: <Briefcase size={22} />,
             label: t("nav_admin_cargos", "Cargos de la congregación"),
           },
+          {
+            to: "/admin/catalogo-motivos",
+            icon: <ListChecks size={22} />,
+            label: t("nav_admin_catalogo_motivos", "Motivos de personas y cargos"),
+          },
         ]
       : []),
   ];
@@ -178,6 +184,8 @@ function Navbar() {
       return t("nav_admin_congregaciones", "Congregaciones");
     if (location.pathname === "/admin/cargos")
       return t("nav_admin_cargos", "Cargos de la congregación");
+    if (location.pathname === "/admin/catalogo-motivos")
+      return t("nav_admin_catalogo_motivos", "Motivos de personas y cargos");
     return `${t("nav_congregation", "Congregación")} ${user?.congregacion_nombre || ""}`;
   };
 
@@ -239,6 +247,8 @@ function Navbar() {
       return <Building2 className={size} />;
     if (location.pathname === "/admin/cargos")
       return <Briefcase className={size} />;
+    if (location.pathname === "/admin/catalogo-motivos")
+      return <ListChecks className={size} />;
     if (location.pathname.startsWith("/personas"))
       return <Users className={size} />;
 
